@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="site.title">גנון משחקים — משחקים לימודיים לילדים</title>
+<meta name="description" data-i18n-content="site.description" content="אוסף משחקים לימודיים קטנים לילדים בגיל 3 עד 8. אפשר לסנן לפי גיל ולפי נושא ולבחור משחק.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<!-- Sets lang and dir before the first paint, so an English visit never flashes RTL. -->
+<script src="assets/i18n.js"></script>
+</head>
+<body>
+
+<div class="shapes" aria-hidden="true">
+  <div class="shape a"></div>
+  <div class="shape b"></div>
+  <div class="shape c"></div>
+</div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">🎠</div>
+      <div>
+        <h1 class="brand-name" data-i18n="brand.name">גנון משחקים</h1>
+        <div class="brand-tag" data-i18n="brand.tag">משחקים לימודיים לגילאי 3–8</div>
+      </div>
+    </div>
+
+    <div class="header-tools">
+      <div class="search">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <label class="visually-hidden" for="q" data-i18n="search.label">חיפוש משחק</label>
+        <input id="q" type="search" data-i18n-placeholder="search.placeholder" placeholder="איזה משחק מחפשים?" autocomplete="off">
+      </div>
+      <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h2 data-i18n-html="hero.title">משחקים קטנים<br>שלומדים מהם <span class="accent">בלי לשים לב</span></h2>
+    <p data-i18n="hero.text">בוחרים גיל, בוחרים נושא, ומתחילים לשחק. בלי הרשמה ובלי פרסומות.</p>
+  </section>
+
+  <section class="filters glass-card" data-i18n-label="filters.label" aria-label="סינון משחקים">
+    <div class="filter-row" role="group" aria-labelledby="age-label">
+      <span class="filter-label" id="age-label" data-i18n="filters.age">גיל</span>
+      <div class="filter-row" id="age-chips"></div>
+    </div>
+    <div class="filter-row" role="group" aria-labelledby="subject-label">
+      <span class="filter-label" id="subject-label" data-i18n="filters.subject">נושא</span>
+      <div class="filter-row" id="subject-chips"></div>
+      <button type="button" class="chip chip--clear" id="clear" data-i18n="filters.clear" hidden>נקה סינון ✕</button>
+    </div>
+  </section>
+
+  <p class="result-line" role="status" aria-live="polite" id="result-line"></p>
+
+  <ul class="grid" id="grid"></ul>
+
+  <div class="empty glass-card" id="empty" hidden>
+    <div class="empty-emoji" aria-hidden="true">🔎</div>
+    <h3 data-i18n="empty.title">לא מצאנו משחק כזה</h3>
+    <p data-i18n="empty.text">אפשר לנסות גיל אחר או נושא אחר.</p>
+    <button type="button" class="btn" data-clear data-i18n="empty.action">הצג את כל המשחקים</button>
+  </div>
+
+  <footer class="site-footer" data-i18n="footer">
+    נבנה באהבה לילדים סקרנים 💛
+  </footer>
+
+</div>
+
+<script src="assets/catalog.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+/* EDgames — Deep Green Light theme (house-design). Shared by index.html and
+   game.html. A misted-mint canvas rather than blush: the site is for boys and
+   girls alike, so the base reads calm and neutral and the colour that is left
+   is the per-subject tint on the cards. */
+
+:root {
+  --bg:         #eef6f0;   /* misted mint canvas */
+  --bg-raise:   #ffffff;   /* chips and inputs need a real lift off the canvas */
+  --surface:    rgba(255, 255, 255, 0.55); /* white frosted glass over mint */
+  --border:     rgba(38, 128, 68, 0.22);   /* theme hairline, opened up so 1.5px chip borders still read */
+  --text:       #14331f;   /* deep green ink */
+  --text-muted: #7f9689;
+  --accent:     #2e9c55;   /* signal green */
+  --accent-2:   #7fb0d6;   /* soft blue counter-accent */
+  --value:      #123018;
+  --pos:        #1c7a44;   /* deepened from the theme green: games fill it and put white text on top */
+  --neg:        #cf5138;
+
+  /* Contrast-safe derivations of --accent. The signal green is too light to
+     carry white text or small ink, so filled controls and green text use these. */
+  --accent-strong: #1c7a44;  /* fill behind white text — 5.4:1 */
+  --accent-ink:    #1a6b3c;  /* green text on --bg — 5.9:1 */
+  --on-accent:     #ffffff;
+  --text-soft:     #55705f;  /* --text-muted deepened to clear 4.5:1 on --bg */
+
+  /* Selected-chip pair, used when a chip has no subject of its own.
+     Raw --accent is too light to carry chip text — this pair clears 5.4:1. */
+  --sel-tint:      #dcefe2;
+  --sel-ink:       #1a6b3c;
+
+  --radius:     16px;
+  --radius-sm:  12px;
+  --shadow:     0 8px 30px rgba(24, 74, 46, 0.12);
+}
+
+/* Subject palette: pastel tint + deepened ink, one pair per subject. */
+[data-subject="letters"] { --sub-tint: #d6edf1; --sub-ink: #1d6a76; }
+[data-subject="numbers"] { --sub-tint: #ddeefb; --sub-ink: #2b6a96; }
+[data-subject="shapes"]  { --sub-tint: #ffe7d6; --sub-ink: #a1552a; }
+[data-subject="memory"]  { --sub-tint: #e9e2f8; --sub-ink: #6046a3; }
+[data-subject="nature"]  { --sub-tint: #d9f0e4; --sub-ink: #23684d; }
+[data-subject="music"]   { --sub-tint: #fbf0cf; --sub-ink: #85661a; }
+[data-subject="computer"]{ --sub-tint: #e3e6ec; --sub-ink: #4e5a6b; }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Assistant", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3, .display { font-family: "Rubik", "Assistant", system-ui, sans-serif; font-weight: 700; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ---- Signature: floating shapes ---- */
+
+.shapes { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(55px);
+  opacity: 0.34;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.shape.a { width: 340px; height: 340px; background: var(--accent);   top: -90px;    inset-inline-start: -70px; }
+.shape.b { width: 280px; height: 280px; background: var(--accent-2); bottom: -80px; inset-inline-end: -50px; animation-delay: -6s; }
+.shape.c { width: 220px; height: 220px; background: #ffd9a8;         top: 42%;      inset-inline-end: 12%; animation-delay: -11s; opacity: 0.26; }
+
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(30px, -20px) scale(1.08); }
+}
+
+.page { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 20px 64px; }
+
+/* ---- Glass ---- */
+
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+/* ---- Header + hero ---- */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 22px 0 8px;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(140deg, var(--accent), var(--accent-2));
+  display: grid; place-items: center;
+  font-size: 27px;
+  box-shadow: var(--shadow);
+}
+.brand-name { font-size: 1.5rem; margin: 0; line-height: 1.15; }
+.brand-tag { color: var(--text-soft); font-size: 0.9rem; }
+
+/* Search and the language toggle travel together, so the header stays a
+   two-part row (brand | tools) in both directions. */
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 280px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.lang-toggle { white-space: nowrap; }
+
+.search {
+  position: relative;
+  flex: 1 1 200px;
+  max-width: 340px;
+}
+.search input {
+  width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg-raise);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding-block: 12px;
+  padding-inline-start: 46px;     /* room for the icon at the start */
+  padding-inline-end: 18px;
+  text-align: start;
+}
+.search input::placeholder { color: var(--text-muted); }
+.search-icon {
+  position: absolute;
+  inset-inline-start: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.05rem;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.hero { padding: 26px 4px 30px; max-width: 620px; }
+.hero h2 { font-size: clamp(1.9rem, 5vw, 2.8rem); margin: 0 0 10px; line-height: 1.2; }
+.hero .accent { color: var(--accent-ink); }
+.hero p { margin: 0; color: var(--text-soft); font-size: 1.05rem; }
+
+/* ---- Filters ---- */
+
+.filters { display: grid; gap: 16px; margin-bottom: 22px; }
+.filter-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.filter-label {
+  font-family: "Rubik", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  min-width: 56px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg-raise);
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  padding: 10px 18px;
+  min-height: 46px;           /* comfortable for small fingers */
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.chip:hover { transform: translateY(-2px); }
+.chip .emoji { font-size: 1.15rem; }
+
+/* Selected chips change weight as well as hue, so the state doesn't rest on colour alone. */
+.chip[aria-pressed="true"] {
+  background: var(--sub-tint, var(--sel-tint));
+  border-color: var(--sub-ink, var(--sel-ink));
+  color: var(--sub-ink, var(--sel-ink));
+  box-shadow: inset 0 0 0 1px var(--sub-ink, var(--sel-ink));
+}
+.chip--clear {
+  border-style: dashed;
+  color: var(--text-soft);
+  margin-inline-start: auto;
+}
+
+/* ---- Result line ---- */
+
+.result-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 4px 16px;
+  color: var(--text-soft);
+  font-size: 0.98rem;
+}
+.result-count { font-family: "Rubik", sans-serif; font-weight: 700; color: var(--text); }
+
+/* ---- The grid ---- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  gap: 20px;
+  align-items: start;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.game-card:hover,
+.game-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 38px rgba(24, 74, 46, 0.16);
+}
+
+.game-art {
+  height: 132px;
+  display: grid;
+  place-items: center;
+  font-size: 62px;
+  background: var(--sub-tint);
+  line-height: 1;
+}
+
+.game-body { padding: 14px 16px 16px; display: flex; flex-direction: column; flex: 1; }
+
+/* Card baseline: a genuinely fixed header zone, so the badge row of every card
+   in a row starts at the same Y however long the title runs. Both title and
+   blurb are clamped, so the zone is sized for the worst case (2 lines each)
+   and content can never push past it. */
+.card-header {
+  height: 6rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.game-title {
+  font-size: 1.12rem;
+  line-height: 1.3;
+  margin: 0 0 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.game-blurb {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--text-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.badge {
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 11px;
+  background: var(--sub-tint);
+  color: var(--sub-ink);
+}
+.badge--age { background: rgba(255, 255, 255, 0.85); color: var(--text-soft); border: 1px solid var(--border); }
+.badge--age .num { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: plaintext; }
+
+.ribbon {
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 12px;
+  background: var(--bg-raise);
+  color: var(--text-soft);
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+.game-card[data-status="soon"] .game-art { filter: grayscale(0.45); opacity: 0.75; }
+
+/* ---- Empty state ---- */
+
+.empty { text-align: center; padding: 54px 20px; }
+.empty-emoji { font-size: 58px; }
+.empty h3 { margin: 12px 0 6px; font-size: 1.35rem; }
+.empty p { margin: 0 0 20px; color: var(--text-soft); }
+
+/* ---- Buttons ---- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-weight: 700;
+  background: var(--accent-strong);
+  color: var(--on-accent);
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  min-height: 48px;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.05s ease;
+}
+.btn:hover  { filter: brightness(1.08); }
+.btn:active { transform: translateY(1px); }
+.btn--ghost {
+  background: var(--bg-raise);
+  color: var(--accent-ink);
+  border: 1.5px solid var(--border);
+}
+
+/* The arrow glyph points left, which is already "back" in LTR. In RTL back is
+   the other way, so mirror it there and only there. */
+.icon-back { display: inline-block; }
+[dir="rtl"] .icon-back { transform: scaleX(-1); }
+
+/* ---- Game host page ---- */
+
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}
+.game-header h1 { font-size: 1.4rem; margin: 0; }
+.game-header .badges { margin: 0; }
+.game-header .lang-toggle { margin-inline-start: auto; }
+
+.stage { min-height: 440px; display: flex; flex-direction: column; }
+.stage-note { text-align: center; padding: 60px 20px; margin: auto; }
+.stage-note .emoji { font-size: 62px; }
+.stage-note h2 { margin: 14px 0 8px; }
+.stage-note p { color: var(--text-soft); margin: 0 0 22px; }
+
+.site-footer {
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  padding: 34px 20px 10px;
+}
+
+/* ---- Quality floor ---- */
+
+:focus-visible { outline: 3px solid var(--accent-strong); outline-offset: 3px; border-radius: 6px; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+  .game-art { height: 104px; font-size: 48px; }
+  .filter-label { min-width: 100%; }
+  .chip { padding: 9px 15px; font-size: 0.95rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

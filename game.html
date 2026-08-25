@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="game.pageTitle">משחק — גנון משחקים</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<!-- Sets lang and dir before the first paint, so an English visit never flashes RTL. -->
+<script src="assets/i18n.js"></script>
+</head>
+<body>
+
+<div class="shapes" aria-hidden="true">
+  <div class="shape a"></div>
+  <div class="shape b"></div>
+</div>
+
+<div class="page">
+
+  <header class="game-header">
+    <a class="btn btn--ghost" id="back" href="index.html"><span class="icon-back" aria-hidden="true">←</span><span data-i18n="game.back">חזרה למשחקים</span></a>
+    <h1 id="game-title" data-i18n="game.loadingTitle">טוען…</h1>
+    <div class="badges" id="game-badges"></div>
+    <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
+  </header>
+
+  <main class="stage glass-card" id="stage" data-subject="shapes"></main>
+
+</div>
+
+<script src="assets/catalog.js"></script>
+<script src="assets/game-host.js"></script>
+</body>
+</html>

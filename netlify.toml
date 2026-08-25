@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+
+# Static multi-page site: every route is a real file, so no SPA rewrite.
+# Existing files always win over redirects, so unknown paths land on the grid.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404
