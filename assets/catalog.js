@@ -46,7 +46,7 @@ const GAMES = [
       he: 'כמה ברווזים שוחים באגם? סופרים ובוחרים את המספר.',
       en: 'How many ducks are swimming in the lake? Count them and pick the number.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'shape-match',
@@ -58,7 +58,7 @@ const GAMES = [
       he: 'מתאימים כל צורה לחור המתאים לה על הלוח.',
       en: 'Match every shape to the hole it belongs in on the board.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'animal-sounds',
@@ -94,7 +94,7 @@ const GAMES = [
       he: 'הופכים קלפים וזוכרים איפה מסתתר הזוג המתאים.',
       en: 'Turn the cards over and remember where the matching pair is hiding.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'rhythm-tap',
@@ -154,7 +154,7 @@ const GAMES = [
       he: 'האות מסתתרת בין כל השאר. מי ימצא אותה ראשון?',
       en: 'The letter is hiding among all the others. Who will find it first?',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'keyboard-keys',
@@ -214,7 +214,7 @@ const GAMES = [
       he: 'תרגילי חיבור וחיסור קטנים עם עוגיות במקום מספרים.',
       en: 'Small addition and subtraction, with cookies instead of numbers.',
     },
-    status: 'soon',
+    status: 'ready',
   },
 ];
 

@@ -66,7 +66,12 @@ language toggle's reload.
 Which axis a game varies is the game's own call: colours in Color Pop, which
 mouse skill is drilled hardest (and what is on the field) in Mouse Moves, which
 part of the keyboard in Meet the Keyboard, how much the path has to bend in The
-Way Home, and how fast and how many at once in Catch and Click.
+Way Home, and how fast and how many at once in Catch and Click. The later games
+vary the same way: how far the counting goes — and whether there are frogs on
+the lake to leave out — in Counting Ducks, which shapes and whether size decides
+the hole in Find the Shape, which deck and how many pairs in Pair by Pair, how
+alike the letters on the grid are in Letter Hunt, and whether the sum still
+arrives with cookies to count in Plus and Minus.
 
 ## Adding a game
 
