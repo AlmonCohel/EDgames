@@ -13,7 +13,7 @@ assets/styles.css     theme tokens + shared components
 assets/i18n.js        the two UI string tables and the language toggle
 assets/catalog.js     subjects, age groups, and the game catalog
 assets/app.js         filtering and grid rendering
-assets/game-host.js   loads and mounts a game module by id
+assets/game-host.js   loads and mounts a game module by id, and picks its set
 games/<id>.js         one file per game
 netlify.toml          publish config
 ```
@@ -51,6 +51,23 @@ Text lives in three places, by owner:
 `assets/i18n.js` loads in `<head>` so `lang` and `dir` are set before the first
 paint and an English visit never flashes RTL.
 
+## Sets
+
+A **set** is one run of a game: the same rules with different questions. Every
+game carries at least three, so a child who presses *עוד פעם* / *Again* three
+times gets three different games rather than the same one reshuffled.
+
+The picker sits between the header and the stage, so a grown-up can put a set on
+without going into the game, and repeat one the child liked. Pressing *Again* at
+the end moves on to the next set and wraps around at the last. The set on screen
+is kept in the URL as `?set=<id>`, which makes it bookmarkable and survives the
+language toggle's reload.
+
+Which axis a game varies is the game's own call: colours in Color Pop, which
+mouse skill is drilled hardest (and what is on the field) in Mouse Moves, which
+part of the keyboard in Meet the Keyboard, how much the path has to bend in The
+Way Home, and how fast and how many at once in Catch and Click.
+
 ## Adding a game
 
 1. Add an entry to `GAMES` in `assets/catalog.js` with `status: 'soon'`. Give
@@ -63,17 +80,24 @@ A game module registers itself with the host:
 
 ```js
 EDGames.register('my-game', {
+  sets: [ { id: 'easy', emoji: '🌱', label: { he: 'קל', en: 'Easy' }, /* ...whatever the game needs */ } ],
   mount(root, ctx) { /* root is the empty stage element */ },
   unmount() { /* optional — clear timers and listeners */ },
 });
 ```
 
-`ctx` carries `{ game, lang, exit() }` — `game` is the catalog entry, `lang` is
-`'he'` or `'en'`, and `exit()` sends the child back to the grid in the same
-language. Keep a game's CSS and its text inside its own module so games cannot
-restyle or retranslate each other. `games/color-pop.js` is the worked example:
-it holds a `TEXT` table with a line per language, because a sentence rarely
-survives being assembled from slots in two grammars.
+`ctx` carries `{ game, lang, set, again(), exit() }` — `game` is the catalog
+entry, `lang` is `'he'` or `'en'`, `set` is the entry from `sets` the child is
+playing, `again()` starts the next set, and `exit()` sends the child back to the
+grid in the same language. The host only ever reads `id`, `emoji` and `label`
+off a set; the rest is yours, and `mount` should fall back to the first set if
+`ctx.set` is missing. A game with no `sets` still works — the picker stays
+hidden and `again()` simply replays it.
+
+Keep a game's CSS and its text inside its own module so games cannot restyle or
+retranslate each other. `games/color-pop.js` is the worked example: it holds a
+`TEXT` table with a line per language, because a sentence rarely survives being
+assembled from slots in two grammars.
 
 ## House rules this follows
 

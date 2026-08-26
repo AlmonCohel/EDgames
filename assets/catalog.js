@@ -121,6 +121,18 @@ const GAMES = [
     status: 'ready',
   },
   {
+    id: 'arrow-trail',
+    title: { he: 'בדרך הביתה', en: 'The Way Home' },
+    emoji: '🐢',
+    subject: 'computer',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'לוחצים על מקשי החצים ומובילים את הצב צעד אחרי צעד עד הבית.',
+      en: 'Press the arrow keys and lead the turtle home, one step at a time.',
+    },
+    status: 'ready',
+  },
+  {
     id: 'puzzle-park',
     title: { he: 'פאזל בפארק', en: 'Park Puzzle' },
     emoji: '🧩',
@@ -153,6 +165,18 @@ const GAMES = [
     blurb: {
       he: 'מחפשים את המקש שביקשנו על המקלדת האמיתית ולוחצים עליו.',
       en: 'Find the key we asked for on the real keyboard and press it.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'click-catch',
+    title: { he: 'תופסים בלחיצה', en: 'Catch and Click' },
+    emoji: '🐞',
+    subject: 'computer',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'החיפושית מסתובבת על המסך. מכוונים אליה את החץ ולוחצים בדיוק עליה.',
+      en: 'The ladybird will not hold still. Aim the arrow at it and click.',
     },
     status: 'ready',
   },

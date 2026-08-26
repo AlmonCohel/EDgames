@@ -14,6 +14,32 @@
     { id: 'green',  he: 'ירוק', en: 'green',  hex: '#4caf7d' },
     { id: 'purple', he: 'סגול', en: 'purple', hex: '#9b6fd4' },
     { id: 'orange', he: 'כתום', en: 'orange', hex: '#f28c3d' },
+    { id: 'pink',   he: 'ורוד', en: 'pink',   hex: '#ef8fb8' },
+    { id: 'brown',  he: 'חום',  en: 'brown',  hex: '#a9714b' },
+    { id: 'grey',   he: 'אפור', en: 'grey',   hex: '#9aa5a0' },
+    { id: 'black',  he: 'שחור', en: 'black',  hex: '#3a3f3c' },
+  ];
+
+  /* Three runs, and each is a different lesson rather than the same six
+     balloons reshuffled: the four colours every child meets first, the four
+     that come after them, then everything at once with a fourth balloon on
+     the row to choose from. */
+  const SETS = [
+    {
+      id: 'basics', emoji: '🔴',
+      label: { he: 'צבעים ראשונים', en: 'First colours' },
+      colors: ['red', 'blue', 'yellow', 'green'], options: 3,
+    },
+    {
+      id: 'more', emoji: '🟣',
+      label: { he: 'עוד צבעים', en: 'More colours' },
+      colors: ['purple', 'orange', 'pink', 'brown'], options: 3,
+    },
+    {
+      id: 'all', emoji: '🌈',
+      label: { he: 'כל הצבעים', en: 'All the colours' },
+      colors: COLORS.map((c) => c.id), options: 4,
+    },
   ];
 
   /* Hebrew glues the definite article to the colour ("הבלון האדום"), English
@@ -41,7 +67,6 @@
   };
 
   const ROUNDS = 6;
-  const OPTIONS = 3;
 
   const CSS = `
     .cp { display: flex; flex-direction: column; align-items: center; gap: 26px; padding: 8px 0 20px; width: 100%; }
@@ -92,6 +117,9 @@
 
   function mount(root, ctx) {
     const text = TEXT[ctx.lang] || TEXT.he;
+    const set = ctx.set || SETS[0];
+    const palette = COLORS.filter((c) => set.colors.includes(c.id));
+    const options = Math.min(set.options, palette.length);
 
     if (!document.getElementById('cp-style')) {
       const style = document.createElement('style');
@@ -111,7 +139,7 @@
       if (round >= ROUNDS) return finish();
 
       locked = false;
-      const picks = shuffle(COLORS).slice(0, OPTIONS);
+      const picks = shuffle(palette).slice(0, options);
       const target = picks[Math.floor(Math.random() * picks.length)];
 
       wrap.innerHTML = `
@@ -166,7 +194,7 @@
             <button type="button" class="btn btn--ghost" data-exit>${text.exit}</button>
           </div>
         </div>`;
-      wrap.querySelector('[data-again]').addEventListener('click', () => { round = 0; nextRound(); });
+      wrap.querySelector('[data-again]').addEventListener('click', ctx.again);
       wrap.querySelector('[data-exit]').addEventListener('click', ctx.exit);
     }
 
@@ -178,5 +206,5 @@
     timers = [];
   }
 
-  EDGames.register('color-pop', { mount, unmount });
+  EDGames.register('color-pop', { sets: SETS, mount, unmount });
 })();

@@ -10,23 +10,23 @@
    All the reading happens above the field, where direction still matters. */
 
 (function () {
-  /* Escalating, with the two harder skills coming round twice. */
-  const ROUNDS = ['point', 'click', 'double', 'drag', 'double', 'drag'];
-
   const HOVER_MS = 800;
 
+  /* Every line that names what is on the field takes the noun from the set, so
+     a run can change what the child is chasing without changing the grammar
+     around it. Hebrew glues the article on ("על הפרפר"), English keeps it
+     loose — which is why these are still one line per language. */
   const TEXT = {
     he: {
       step:      (n, of) => `שלב ${n} מתוך ${of}`,
-      point:     'מזיזים את העכבר ומניחים את החץ על הפרפר',
-      click:     'לוחצים פעם אחת על הבועה',
-      double:    'לוחצים פעמיים מהר על הביצה',
-      drag:      'גוררים את התפוח אל הסל',
+      point:     (name) => `מזיזים את העכבר ומניחים את החץ על ה${name}`,
+      click:     (name) => `לוחצים פעם אחת על ה${name}`,
+      double:    (name) => `לוחצים פעמיים מהר על ה${name}`,
+      drag:      (name) => `גוררים את ה${name} אל הסל`,
       pointHint: 'לא ללחוץ — רק להניח את החץ ולהישאר',
       clickHint: 'לחיצה אחת קצרה',
       doubleHint: 'כמעט! שתי לחיצות מהר אחת אחרי השנייה',
-      dragHint:  'לוחצים על התפוח, מחזיקים, וגוררים אל הסל',
-      target:    { point: 'פרפר', click: 'בועה', double: 'ביצה', drag: 'תפוח' },
+      dragHint:  (name) => `לוחצים על ה${name}, מחזיקים, וגוררים אל הסל`,
       basket:    'סל',
       wellDone:  'כל הכבוד!',
       allDone:   'אתם כבר יודעים להשתמש בעכבר!',
@@ -35,15 +35,14 @@
     },
     en: {
       step:      (n, of) => `Step ${n} of ${of}`,
-      point:     'Move the mouse and rest the arrow on the butterfly',
-      click:     'Click the bubble once',
-      double:    'Double-click the egg, quickly',
-      drag:      'Drag the apple into the basket',
+      point:     (name) => `Move the mouse and rest the arrow on the ${name}`,
+      click:     (name) => `Click the ${name} once`,
+      double:    (name) => `Double-click the ${name}, quickly`,
+      drag:      (name) => `Drag the ${name} into the basket`,
       pointHint: 'No clicking — just rest the arrow there and wait',
       clickHint: 'One short click',
       doubleHint: 'Almost! Two clicks, quickly one after the other',
-      dragHint:  'Press on the apple, hold, and drag it to the basket',
-      target:    { point: 'butterfly', click: 'bubble', double: 'egg', drag: 'apple' },
+      dragHint:  (name) => `Press on the ${name}, hold, and drag it to the basket`,
       basket:    'basket',
       wellDone:  'Well done!',
       allDone:   'You know how to use a mouse now!',
@@ -52,7 +51,46 @@
     },
   };
 
-  const SPRITE = { point: '🦋', click: '🫧', double: '🥚', drag: '🍎' };
+  /* Three runs. Each drills a different skill hardest — meeting the mouse,
+     then clicking, then dragging — and each brings its own things to the
+     field, so the second run does not look like the first with the butterfly
+     moved. Only four skills exist, and the sprites are what make a repeat feel
+     like a new game rather than the same one again. */
+  const SETS = [
+    {
+      id: 'garden', emoji: '🦋',
+      label: { he: 'בגינה', en: 'In the garden' },
+      rounds: ['point', 'click', 'point', 'click', 'double', 'drag'],
+      things: {
+        point:  { sprite: '🦋', he: 'פרפר', en: 'butterfly' },
+        click:  { sprite: '🫧', he: 'בועה', en: 'bubble' },
+        double: { sprite: '🥚', he: 'ביצה', en: 'egg' },
+        drag:   { sprite: '🍎', he: 'תפוח', en: 'apple' },
+      },
+    },
+    {
+      id: 'clicks', emoji: '🐝',
+      label: { he: 'לחיצות', en: 'Clicking' },
+      rounds: ['click', 'double', 'click', 'double', 'drag', 'point'],
+      things: {
+        point:  { sprite: '🐝', he: 'דבורה', en: 'bee' },
+        click:  { sprite: '🎈', he: 'בלון', en: 'balloon' },
+        double: { sprite: '🌰', he: 'אגוז', en: 'nut' },
+        drag:   { sprite: '🍋', he: 'לימון', en: 'lemon' },
+      },
+    },
+    {
+      id: 'drags', emoji: '🐠',
+      label: { he: 'גרירה', en: 'Dragging' },
+      rounds: ['drag', 'double', 'drag', 'point', 'double', 'drag'],
+      things: {
+        point:  { sprite: '🐠', he: 'דג', en: 'fish' },
+        click:  { sprite: '⭐', he: 'כוכב', en: 'star' },
+        double: { sprite: '🥥', he: 'קוקוס', en: 'coconut' },
+        drag:   { sprite: '🍓', he: 'תות', en: 'strawberry' },
+      },
+    },
+  ];
 
   const CSS = `
     .mm { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 8px 0 20px; width: 100%; }
@@ -113,6 +151,12 @@
 
   function mount(root, ctx) {
     const text = TEXT[ctx.lang] || TEXT.he;
+    const set = ctx.set || SETS[0];
+    const ROUNDS = set.rounds;
+
+    /* What a round is chasing, and what it is called on screen. */
+    const thing = (kind) => set.things[kind];
+    const nameOf = (kind) => thing(kind)[ctx.lang] || thing(kind).he;
 
     if (!document.getElementById('mm-style')) {
       const style = document.createElement('style');
@@ -151,8 +195,8 @@
       const el = document.createElement(tag);
       if (tag === 'button') el.type = 'button';
       el.className = 'mm-sprite';
-      el.textContent = SPRITE[kind];
-      el.setAttribute('aria-label', text.target[kind]);
+      el.textContent = thing(kind).sprite;
+      el.setAttribute('aria-label', nameOf(kind));
       return el;
     }
 
@@ -162,7 +206,7 @@
           ${Array.from({ length: ROUNDS.length }, (_, i) => `<span class="mm-dot ${i < round ? 'done' : ''}"></span>`).join('')}
         </div>
         <div class="mm-ask">
-          <h2 aria-live="polite">${text[ROUNDS[round]]}</h2>
+          <h2 aria-live="polite">${text[ROUNDS[round]](nameOf(ROUNDS[round]))}</h2>
           <p class="mm-hint"></p>
         </div>
         <div class="mm-field"></div>`;
@@ -255,7 +299,7 @@
         grab = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
         apple.setPointerCapture(e.pointerId);
         apple.classList.add('grabbing');
-        hint(text.dragHint);
+        hint(text.dragHint(nameOf('drag')));
         e.preventDefault();
       });
 
@@ -281,7 +325,7 @@
           win(apple);
         } else {
           /* Dropped short: it stays where it was let go, and the hint stands. */
-          hint(text.dragHint);
+          hint(text.dragHint(nameOf('drag')));
         }
       };
 
@@ -309,7 +353,7 @@
             <button type="button" class="btn btn--ghost" data-exit>${text.exit}</button>
           </div>
         </div>`;
-      wrap.querySelector('[data-again]').addEventListener('click', () => { round = 0; nextRound(); });
+      wrap.querySelector('[data-again]').addEventListener('click', ctx.again);
       wrap.querySelector('[data-exit]').addEventListener('click', ctx.exit);
     }
 
@@ -321,5 +365,5 @@
     timers = [];
   }
 
-  EDGames.register('mouse-moves', { mount, unmount });
+  EDGames.register('mouse-moves', { sets: SETS, mount, unmount });
 })();

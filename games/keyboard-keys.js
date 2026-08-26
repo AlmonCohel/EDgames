@@ -71,11 +71,18 @@
     },
   };
 
-  const LETTERS = 3;
-  const DIGITS = 2;
-  const SPECIALS = 2;
-  const ROUNDS = LETTERS + DIGITS + SPECIALS;
+  const ROUNDS = 6;
   const HINT_AFTER = 7000;
+
+  /* Three runs, one part of the keyboard each. A run used to be a handful of
+     letters, digits and specials mixed together, so a second go looked like
+     the first with different letters; a child hunting for letters is doing a
+     different job from one hunting for the space bar, and the sets say so. */
+  const SETS = [
+    { id: 'letters', emoji: '🔤', label: { he: 'אותיות', en: 'Letters' },       pool: 'letters' },
+    { id: 'numbers', emoji: '🔢', label: { he: 'מספרים', en: 'Numbers' },       pool: 'digits' },
+    { id: 'special', emoji: '⌨️', label: { he: 'מקשים מיוחדים', en: 'Special keys' }, pool: 'specials' },
+  ];
 
   const CSS = `
     .kk { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 8px 0 20px; width: 100%; }
@@ -147,6 +154,7 @@
 
   function mount(root, ctx) {
     const text = TEXT[ctx.lang] || TEXT.he;
+    const set = ctx.set || SETS[0];
 
     if (!document.getElementById('kk-style')) {
       const style = document.createElement('style');
@@ -155,9 +163,11 @@
       document.head.append(style);
     }
 
-    const letterCodes = ROWS.flat().filter((c) => c.startsWith('Key'));
-    const digitCodes = ROWS[0];
-    const specialCodes = [...Object.keys(NAMED).filter((c) => !c.startsWith('Arrow')), ...ARROWS];
+    const POOLS = {
+      letters: ROWS.flat().filter((c) => c.startsWith('Key')),
+      digits: ROWS[0],
+      specials: [...Object.keys(NAMED).filter((c) => !c.startsWith('Arrow')), ...ARROWS],
+    };
 
     let targets = [];
     let round = 0;
@@ -269,16 +279,12 @@
             <button type="button" class="btn btn--ghost" data-exit>${text.exit}</button>
           </div>
         </div>`;
-      wrap.querySelector('[data-again]').addEventListener('click', start);
+      wrap.querySelector('[data-again]').addEventListener('click', ctx.again);
       wrap.querySelector('[data-exit]').addEventListener('click', ctx.exit);
     }
 
     function start() {
-      targets = shuffle([
-        ...pick(letterCodes, LETTERS),
-        ...pick(digitCodes, DIGITS),
-        ...pick(specialCodes, SPECIALS),
-      ]);
+      targets = pick(POOLS[set.pool], ROUNDS);
       round = 0;
       finished = false;
       buildShell();
@@ -306,5 +312,5 @@
     onKeyDown = null;
   }
 
-  EDGames.register('keyboard-keys', { mount, unmount });
+  EDGames.register('keyboard-keys', { sets: SETS, mount, unmount });
 })();

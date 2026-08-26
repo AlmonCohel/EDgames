@@ -54,6 +54,7 @@ const UI = {
     'game.back':         'חזרה למשחקים',
     'game.loadingTitle': 'טוען…',
     'game.allGames':     'לכל המשחקים',
+    'game.sets.label':   'ערכה',
 
     'game.missing.title':   'משחק לא נמצא',
     'game.missing.heading': 'אופס, המשחק הזה לא קיים',
@@ -105,6 +106,7 @@ const UI = {
     'game.back':         'Back to games',
     'game.loadingTitle': 'Loading…',
     'game.allGames':     'All the games',
+    'game.sets.label':   'Set',
 
     'game.missing.title':   'Game not found',
     'game.missing.heading': 'Oops, that game does not exist',

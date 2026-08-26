@@ -4,12 +4,17 @@
    A game module registers itself:
 
      EDGames.register('my-game', {
+       sets: [ { id, emoji, label: { he, en }, ...whatever the game needs } ],
        mount(root, ctx) { ... },   // root is the empty stage element
        unmount() { ... },          // optional — clean up timers/listeners
      });
 
-   ctx gives the game { game, lang, exit() } so it can send the child back to
-   the grid and write its own text in the language on screen. */
+   ctx gives the game { game, lang, set, again(), exit() } so it can send the
+   child back to the grid and write its own text in the language on screen.
+
+   A set is one run of a game: the same rules with different questions. The host
+   owns the picker above the stage and hands the chosen entry back as ctx.set;
+   what is inside it is the game's own business. */
 
 window.EDGames = {
   registry: {},
@@ -18,6 +23,8 @@ window.EDGames = {
 
 const stage = document.getElementById('stage');
 const back = document.getElementById('back');
+const setRow = document.getElementById('game-sets');
+const setChips = document.getElementById('set-chips');
 
 /* Every way back to the grid carries the language, so leaving a game does not
    drop the child into Hebrew. */
@@ -56,6 +63,41 @@ function dressPage(game) {
     <span class="badge badge--age">${EDLang.t('card.age')} <span class="num">${game.ageMin}–${game.ageMax}</span></span>
     <span class="badge">${EDLang.pick(subject.label)}</span>`;
   stage.dataset.subject = game.subject;
+}
+
+/* ---- Sets ---- */
+
+/* The set on screen lives in the URL, so one a child likes can be bookmarked,
+   and the language toggle — which reloads the page — comes back to it. */
+function readSetIndex(sets) {
+  const wanted = new URLSearchParams(location.search).get('set');
+  const i = sets.findIndex((s) => s.id === wanted);
+  return i === -1 ? 0 : i;
+}
+
+function writeSetId(id) {
+  const p = new URLSearchParams(location.search);
+  p.set('set', id);
+  /* Rewriting the URL is refused when the site is opened as a file, and the
+     site is meant to work from a file — the picker still works without it. */
+  try { history.replaceState(null, '', `?${p}`); } catch { /* file:// */ }
+}
+
+function buildSetChips(sets, onPick) {
+  setChips.replaceChildren(...sets.map((set, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = `<span class="emoji" aria-hidden="true">${set.emoji}</span>${EDLang.pick(set.label)}`;
+    b.addEventListener('click', () => onPick(i));
+    return b;
+  }));
+  setRow.hidden = false;
+}
+
+function markSet(index) {
+  setChips.querySelectorAll('.chip').forEach((c, i) => c.setAttribute('aria-pressed', String(i === index)));
 }
 
 function loadModule(game) {
@@ -103,8 +145,31 @@ async function start() {
     return;
   }
 
-  stage.innerHTML = '';
-  module.mount(stage, { game, lang: EDLang.current, exit: () => { location.href = gridHref; } });
+  const sets = Array.isArray(module.sets) && module.sets.length ? module.sets : null;
+  let index = sets ? readSetIndex(sets) : 0;
+
+  function play() {
+    if (typeof module.unmount === 'function') module.unmount();
+    stage.innerHTML = '';
+    if (sets) {
+      markSet(index);
+      writeSetId(sets[index].id);
+    }
+    module.mount(stage, {
+      game,
+      lang: EDLang.current,
+      set: sets ? sets[index] : null,
+      /* "Again" moves on to the next set rather than replaying the one just
+         finished — that is what makes three runs in a row three different
+         games. The picker above the stage is how you go back to one on
+         purpose. */
+      again: () => { if (sets) index = (index + 1) % sets.length; play(); },
+      exit: () => { location.href = gridHref; },
+    });
+  }
+
+  if (sets) buildSetChips(sets, (i) => { index = i; play(); });
+  play();
 
   window.addEventListener('pagehide', () => {
     if (typeof module.unmount === 'function') module.unmount();
