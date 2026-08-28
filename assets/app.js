@@ -13,10 +13,27 @@ const els = {
 
 const state = { ages: new Set(), subjects: new Set(), query: '' };
 
+const FILTER_KEY = 'edgames-filters';
+
 /* ---- URL <-> state ---- */
 
+/* Rewriting the URL is refused when the site is opened as a file, and the site
+   is meant to work from a file. There the filters fall back to the tab's own
+   storage, which lasts for the tab and the session — exactly as long as the
+   URL would have carried them. */
+function readStoredFilters() {
+  try { return sessionStorage.getItem(FILTER_KEY) || ''; } catch { return ''; }
+}
+
+function saveFilters(qs) {
+  try { sessionStorage.setItem(FILTER_KEY, qs); } catch { /* then they do not survive the trip */ }
+}
+
 function readUrl() {
-  const p = new URLSearchParams(location.search);
+  /* The URL wins; the stored copy only stands in when nothing was written to it. */
+  const search = new URLSearchParams(location.search);
+  const carried = search.has('age') || search.has('subject') || search.has('q');
+  const p = carried ? search : new URLSearchParams(readStoredFilters());
   const valid = (list, ids) => list.filter((id) => ids.includes(id));
   state.ages = new Set(valid((p.get('age') || '').split(',').filter(Boolean), AGE_GROUPS.map((a) => a.id)));
   state.subjects = new Set(valid((p.get('subject') || '').split(',').filter(Boolean), SUBJECTS.map((s) => s.id)));
@@ -29,9 +46,11 @@ function writeUrl() {
   if (state.ages.size) p.set('age', [...state.ages].join(','));
   if (state.subjects.size) p.set('subject', [...state.subjects].join(','));
   if (state.query.trim()) p.set('q', state.query.trim());
+  const filters = p.toString();
   EDLang.stamp(p);
   const qs = p.toString();
-  history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+  try { history.replaceState(null, '', qs ? `?${qs}` : location.pathname); }
+  catch { saveFilters(filters); /* file:// */ }
 }
 
 /* ---- Filtering ---- */

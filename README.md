@@ -28,7 +28,10 @@ over `<script src>` so `file://` works too.
 Age groups are 3–4 / 5–6 / 7–8. A game matches a group when their ranges
 overlap, so a game marked 3–5 appears under both 3–4 and 5–6. Subject and the
 search box narrow further; several chips in the same row are an OR. The filter
-state is kept in the URL, so opening a game and coming back keeps it.
+state is kept in the URL, so opening a game and coming back keeps it. Opened as
+a file, where the browser refuses to rewrite the URL, the same state falls back
+to `sessionStorage` — for that tab and that session, which is as long as the URL
+would have held it.
 
 ## Language
 
