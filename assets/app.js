@@ -92,7 +92,20 @@ function chip(id, label, emoji, group) {
 
 function buildChips() {
   AGE_GROUPS.forEach((a) => els.ageChips.append(chip(a.id, EDLang.pick(a.label), a.emoji, 'ages')));
-  SUBJECTS.forEach((s) => els.subjectChips.append(chip(s.id, EDLang.pick(s.label), s.emoji, 'subjects')));
+
+  /* A subject whose games are all still being built is marked the way an
+     unfinished card is, so a chip that leads nowhere playable does not look
+     like one that does. It stays selectable — the games behind it are meant to
+     be visible — and the word rides on the label for anyone not seeing colour. */
+  SUBJECTS.forEach((s) => {
+    const label = EDLang.pick(s.label);
+    const c = chip(s.id, label, s.emoji, 'subjects');
+    if (!subjectHasReady(s.id)) {
+      c.dataset.status = 'soon';
+      c.setAttribute('aria-label', `${label} — ${EDLang.t('card.soon')}`);
+    }
+    els.subjectChips.append(c);
+  });
 }
 
 function card(game) {

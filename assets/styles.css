@@ -192,6 +192,13 @@ a { color: inherit; text-decoration: none; }
 .chip:hover { transform: translateY(-2px); }
 .chip .emoji { font-size: 1.15rem; }
 
+/* A subject with no finished game behind it recedes the same way an unfinished
+   card does: greyed emoji, muted label. It sits before the selected rule on
+   purpose, so picking one still reads as picked. Dimming the label rather than
+   the whole chip keeps the text above its contrast floor. */
+.chip[data-status="soon"] { color: var(--text-soft); }
+.chip[data-status="soon"] .emoji { filter: grayscale(0.45); opacity: 0.75; }
+
 /* Selected chips change weight as well as hue, so the state doesn't rest on colour alone. */
 .chip[aria-pressed="true"] {
   background: var(--sub-tint, var(--sel-tint));

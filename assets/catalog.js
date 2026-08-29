@@ -220,3 +220,5 @@ const GAMES = [
 
 const subjectById = (id) => SUBJECTS.find((s) => s.id === id);
 const gameById = (id) => GAMES.find((g) => g.id === id);
+/* Whether a subject has anything a child can actually play right now. */
+const subjectHasReady = (id) => GAMES.some((g) => g.subject === id && g.status === 'ready');
