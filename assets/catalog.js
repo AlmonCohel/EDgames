@@ -133,6 +133,18 @@ const GAMES = [
     status: 'ready',
   },
   {
+    id: 'story-order',
+    title: { he: 'מה קרה קודם?', en: 'What Happened First?' },
+    emoji: '📖',
+    subject: 'memory',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'מסדרים את תמונות האגדה — מה קרה קודם ומה אחר כך.',
+      en: 'Put the fairytale pictures in order — what happened first, and what came next.',
+    },
+    status: 'ready',
+  },
+  {
     id: 'puzzle-park',
     title: { he: 'פאזל בפארק', en: 'Park Puzzle' },
     emoji: '🧩',
@@ -153,6 +165,30 @@ const GAMES = [
     blurb: {
       he: 'האות מסתתרת בין כל השאר. מי ימצא אותה ראשון?',
       en: 'The letter is hiding among all the others. Who will find it first?',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'wizard-spell',
+    title: { he: 'הלחש של הקוסם', en: "The Wizard's Spell" },
+    emoji: '🔮',
+    subject: 'letters',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'הקוסם מהאגדה איבד אות מהלחש. מוצאים אותה ומשלימים את המילה.',
+      en: 'The fairytale wizard has lost a letter from his spell. Find it and finish the word.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'tower-steps',
+    title: { he: 'מדרגות המגדל', en: 'The Tower Stairs' },
+    emoji: '🏰',
+    subject: 'numbers',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'מדרגה אחת במגדל האגדה נעלמה. איזה מספר צריך להיות שם?',
+      en: 'One stair in the fairytale tower has vanished. Which number belongs there?',
     },
     status: 'ready',
   },

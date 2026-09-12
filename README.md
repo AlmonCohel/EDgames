@@ -74,7 +74,11 @@ vary the same way: how far the counting goes — and whether there are frogs on
 the lake to leave out — in Counting Ducks, which shapes and whether size decides
 the hole in Find the Shape, which deck and how many pairs in Pair by Pair, how
 alike the letters on the grid are in Letter Hunt, and whether the sum still
-arrives with cookies to count in Plus and Minus.
+arrives with cookies to count in Plus and Minus. The fairytale three do the
+same: how many pictures a tale is told in in What Happened First, whether the
+tower is climbed, come down or skipped up in twos in The Tower Stairs, and
+whether the missing letter is the one a word opens or closes with — and how much
+word there is behind it — in The Wizard's Spell.
 
 ## Adding a game
 
@@ -83,6 +87,12 @@ arrives with cookies to count in Plus and Minus.
    marked *בקרוב* / *Soon*, and its page explains that it is still being built.
 2. Write `games/<id>.js`. The id in the catalog and the filename must match.
 3. Flip `status` to `'ready'`.
+
+Pictures here are emoji, and the font behind them is the machine's, not ours.
+Windows 10 stops at Emoji 12, so anything newer — 🪄 🫘 🪵 🪙 🪜 and the rest of
+that batch — comes out as an empty box on the very screen this is played on. If
+an emoji arrived after about 2019, check it renders before building a round on
+it; the older, plainer one is the safer picture.
 
 A game module registers itself with the host:
 
