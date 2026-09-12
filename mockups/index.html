@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three design directions — גנון משחקים / EDgames</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #fbf9f5;
+  --card: #ffffff;
+  --ink: #201d18;
+  --ink-soft: #6b6456;
+  --rule: #e7e0d4;
+  --rule-strong: #d4c9b6;
+  --accent: #1f6f4f;
+  --warn: #b8531f;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Assistant", system-ui, sans-serif; font-size: 17px; line-height: 1.65;
+}
+h1, h2, h3 { font-family: "Frank Ruhl Libre", serif; font-weight: 700; }
+a { color: var(--accent); }
+code { background: #f0ebe0; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px 100px; }
+
+header.top { padding: 52px 0 32px; border-bottom: 1px solid var(--rule-strong); }
+.kicker { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+header.top h1 { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 900; line-height: 1.1; margin: 0 0 14px; max-width: 21ch; }
+header.top p { margin: 0 0 10px; color: var(--ink-soft); font-size: 1.08rem; max-width: 66ch; }
+
+section { padding: 44px 0 0; }
+section > h2 { font-size: 1.65rem; margin: 0 0 8px; }
+section > .lede { margin: 0 0 26px; color: var(--ink-soft); max-width: 68ch; }
+
+/* ---- What changed since last time ---- */
+.since {
+  background: #f1ece1; border: 1px solid var(--rule-strong); border-radius: 10px;
+  padding: 22px 26px; max-width: 860px;
+}
+.since h2 { margin: 0 0 8px; font-size: 1.3rem; }
+.since p { margin: 0 0 10px; }
+.since p:last-child { margin: 0; }
+
+/* ---- The diagnosis ---- */
+.tells { display: grid; border-top: 1px solid var(--rule); max-width: 880px; }
+.tell { display: grid; grid-template-columns: 34px 1fr; gap: 16px; padding: 17px 4px; border-bottom: 1px solid var(--rule); align-items: start; }
+.tell .n { font-family: "Frank Ruhl Libre", serif; font-weight: 900; font-size: 1.15rem; color: var(--rule-strong); line-height: 1.5; }
+.tell h3 { font-family: "Assistant", sans-serif; font-weight: 700; font-size: 1.02rem; margin: 0 0 3px; }
+.tell p { margin: 0; color: var(--ink-soft); font-size: 0.96rem; }
+
+/* ---- Direction cards ---- */
+.directions { display: grid; gap: 34px; }
+.dir {
+  background: var(--card); border: 1px solid var(--rule-strong); border-radius: 10px;
+  overflow: hidden; display: grid; grid-template-columns: 430px 1fr;
+}
+/* A live preview rather than a flat image, so a thumbnail can never drift out
+   of date. Rendered wide and tall, then scaled down and clipped by .thumb. */
+.thumb { position: relative; overflow: hidden; background: #eee; border-right: 1px solid var(--rule-strong); min-height: 360px; }
+.thumb iframe { position: absolute; top: 0; left: 0; width: 1280px; height: 2700px; border: 0; transform: scale(0.336); transform-origin: top left; }
+.thumb a.cover { position: absolute; inset: 0; z-index: 2; }
+
+.dir-body { padding: 28px 30px 30px; }
+.dir-tag { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 8px; }
+.dir-body h3 { font-size: 1.5rem; margin: 0 0 4px; }
+.dir-body h3 .he { font-weight: 700; color: var(--ink-soft); font-size: 1.02rem; margin-left: 8px; }
+.dir-body > p.pitch { margin: 0 0 16px; color: var(--ink-soft); }
+
+dl.facts { display: grid; grid-template-columns: 92px 1fr; gap: 8px 16px; margin: 0 0 20px; font-size: 0.94rem; }
+dl.facts dt { font-weight: 700; color: var(--ink-soft); margin: 0; }
+dl.facts dd { margin: 0; }
+dl.facts dd.risk { color: var(--warn); }
+
+.swatches { display: flex; gap: 6px; margin: 0 0 20px; }
+.sw { width: 30px; height: 30px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.12); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; font: inherit; font-weight: 700;
+  background: var(--accent); color: #fff; border: 0; border-radius: 6px;
+  padding: 12px 24px; min-height: 46px; text-decoration: none;
+}
+.btn:hover { background: #185a40; }
+
+.rec { background: #f1ece1; border: 1px solid var(--rule-strong); border-radius: 10px; padding: 26px 30px; max-width: 880px; }
+.rec h2 { margin: 0 0 10px; font-size: 1.35rem; }
+.rec p { margin: 0 0 12px; }
+.rec p:last-child { margin-bottom: 0; }
+
+.note { max-width: 70ch; color: var(--ink-soft); font-size: 0.95rem; }
+.note h2 { font-size: 1.35rem; color: var(--ink); margin: 0 0 8px; }
+.note h3 { font-family: "Assistant", sans-serif; font-size: 1rem; color: var(--ink); margin: 22px 0 4px; }
+ul.tight { margin: 0 0 14px; padding-left: 20px; }
+ul.tight li { margin-bottom: 5px; }
+
+footer.bottom { margin-top: 54px; padding-top: 24px; border-top: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.9rem; }
+
+@media (max-width: 900px) {
+  .dir { grid-template-columns: 1fr; }
+  .thumb { min-height: 280px; border-right: 0; border-bottom: 1px solid var(--rule-strong); }
+  .thumb iframe { transform: scale(0.52); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="kicker">EDgames · design proposal · round two</p>
+  <h1>Three more ways the site could stop looking like a first draft</h1>
+  <p>The brief was that something in the current design feels amateur. Below is what I think that
+  something is, and then three complete directions built on the real catalog — same nineteen games,
+  same Hebrew, same age ranges. Every one is a working page you can click around in, on a phone or
+  on a laptop.</p>
+</header>
+
+<section>
+  <div class="since">
+    <h2>These are not the three you saw before</h2>
+    <p>The first round offered Playground, Library and Arcade, and you turned all three down. Those
+    are gone and nothing here is a reshuffle of them. The first round mostly varied the
+    <em>surface</em> — flat, editorial, dark. This round varies the <em>answer</em>: one direction
+    fixes the identity, one fixes the shape of the page, and one fixes the device it is actually
+    used on. They cannot all be right, which is the point.</p>
+    <p>One thing did survive, because it was the accurate part and it is still true: the single
+    biggest tell is the artwork. What is new is a way to fix it that does not cost nineteen
+    drawings — see the first item below.</p>
+  </div>
+</section>
+
+<section>
+  <h2>What reads as amateur</h2>
+  <p class="lede">Not a taste problem. Five specific things, and the first does most of the damage.</p>
+
+  <div class="tells">
+    <div class="tell">
+      <span class="n">1</span>
+      <div>
+        <h3>The picture on every card is an emoji</h3>
+        <p>A 62px emoji floating in a pastel square is exactly what a placeholder looks like, and
+        the glyph is the machine's drawing, not yours — it is a different picture on a phone, a
+        Mac and the Windows box the site is played on. All three directions below replace it with
+        one drawn mark per <em>subject</em>: seven drawings, not nineteen, with composition and
+        field weight doing the rest so no two games in a subject wear the same cover. A game added
+        next month inherits a mark for free.</p>
+      </div>
+    </div>
+    <div class="tell">
+      <span class="n">2</span>
+      <div>
+        <h3>Frosted glass over drifting blurred blobs</h3>
+        <p>That was the house look in 2021. On a near-white mint canvas the glass does not read as
+        glass — it softens every edge and leaves the page looking slightly out of focus. None of
+        the three directions uses it.</p>
+      </div>
+    </div>
+    <div class="tell">
+      <span class="n">3</span>
+      <div>
+        <h3>The pastels are too weak to do a job</h3>
+        <p>The subject tints cannot carry text, which is why the stylesheet needs a second
+        "deepened ink" for every one of them. Colour that has to be rescued by a fallback is not
+        working. The palette here is seven saturated colours that each clear the contrast floor
+        against white on their own.</p>
+      </div>
+    </div>
+    <div class="tell">
+      <span class="n">4</span>
+      <div>
+        <h3>Nineteen identical cards in one flat grid</h3>
+        <p>No featured game, no sections, nothing with more weight than anything else. A parent
+        opening it has no idea where to start, so the page reads as a list rather than as a place.
+        Directions 2 and 3 each answer this, and answer it differently.</p>
+      </div>
+    </div>
+    <div class="tell">
+      <span class="n">5</span>
+      <div>
+        <h3>It is laid out for a screen it is not used on</h3>
+        <p>A 1180px grid reflowed into two narrow columns is what an unfinished site looks like on
+        a tablet — which is the thing a five-year-old actually plays this on, and the thing you
+        are reading this on right now.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Three directions</h2>
+  <p class="lede">Each is a real page rendering the real catalog, so what you see is the actual set
+  of games and the actual Hebrew, not filler. Click a thumbnail to open it full size — and open at
+  least one of them on a phone, because two of the three are designed for that first.</p>
+
+  <div class="directions">
+
+    <article class="dir">
+      <div class="thumb">
+        <iframe src="1-poster.html" title="Direction 1 preview" loading="lazy" scrolling="no" tabindex="-1"></iframe>
+        <a class="cover" href="1-poster.html" aria-label="Open direction 1"></a>
+      </div>
+      <div class="dir-body">
+        <p class="dir-tag">Direction 1</p>
+        <h3>Poster <span class="he">כרזה</span></h3>
+        <p class="pitch">Commit to everything. The site does not look amateur because it is ugly —
+        it looks amateur because nothing on it is committed to. So: one near-black ink instead of
+        soft greys, seven saturated subject colours strong enough to be a field with white on top,
+        a display face at four times the body size, a hard rule under the header instead of a
+        floating glass bar, and the drawn marks instead of emoji. Same page, same grid, same
+        filters. Everything is simply turned up until it means something.</p>
+        <dl class="facts">
+          <dt>Type</dt><dd>Secular One display + Heebo body</dd>
+          <dt>Fixes</dt><dd>Tells 1, 2, 3 — and 4 partly, with a featured strip</dd>
+          <dt>Cost</dt><dd>Lowest. A stylesheet swap plus the seven marks. The grid, the filters and the markup stay as they are.</dd>
+          <dt>Risk</dt><dd class="risk">Lowest, and the least ambitious. It is still a grid of cards — a better one, but a grid.</dd>
+        </dl>
+        <div class="swatches" aria-hidden="true">
+          <span class="sw" style="background:#f4f2ec"></span>
+          <span class="sw" style="background:#0e6e7a"></span>
+          <span class="sw" style="background:#1f5fa8"></span>
+          <span class="sw" style="background:#c2410c"></span>
+          <span class="sw" style="background:#6d28d9"></span>
+          <span class="sw" style="background:#16794c"></span>
+          <span class="sw" style="background:#a16207"></span>
+        </div>
+        <a class="btn" href="1-poster.html">Open direction 1 →</a>
+      </div>
+    </article>
+
+    <article class="dir">
+      <div class="thumb">
+        <iframe src="2-trail.html" title="Direction 2 preview" loading="lazy" scrolling="no" tabindex="-1"></iframe>
+        <a class="cover" href="2-trail.html" aria-label="Open direction 2"></a>
+      </div>
+      <div class="dir-body">
+        <p class="dir-tag">Direction 2</p>
+        <h3>Trail <span class="he">מסלול</span></h3>
+        <p class="pitch">Stop being a list, start being a place. The grid is gone. There is one
+        trail, walked from the top, with three stations along it, and the games are stops on the
+        way — each on its own side of the road, with the subject's mark on the marker. Scrolling
+        <em>is</em> the browsing. A child can be shown where they are without reading anything, and
+        the page finally has a beginning, a middle and an end.</p>
+        <p class="pitch">The honest cost: a trail gives every game exactly one home. Your filter
+        deliberately does the opposite — a game marked 3–5 appears under both 3–4 and 5–6, because
+        overlap is right for a filter. It is wrong for a path, where the same game turning up twice
+        reads as a bug. So the stations here key off the age a game <em>starts</em> at, and each
+        game is placed once. That is a real change to how the catalog is organised, not just to how
+        it is painted.</p>
+        <dl class="facts">
+          <dt>Type</dt><dd>Fredoka display + Heebo body</dd>
+          <dt>Fixes</dt><dd>All five, and 4 more completely than anything else here</dd>
+          <dt>Cost</dt><dd>Highest. The grid, the filter rows and the URL state all go or change, and "one home per game" is a decision, not a stylesheet.</dd>
+          <dt>Risk</dt><dd class="risk">A trail with nineteen stops is long, and it gets longer with every game you add. Past about thirty it wants sub-trails.</dd>
+        </dl>
+        <div class="swatches" aria-hidden="true">
+          <span class="sw" style="background:#fff8ec"></span>
+          <span class="sw" style="background:#fdf0dc"></span>
+          <span class="sw" style="background:#e8f5ea"></span>
+          <span class="sw" style="background:#e7edfb"></span>
+          <span class="sw" style="background:#e2542c"></span>
+          <span class="sw" style="background:#ffb545"></span>
+          <span class="sw" style="background:#2a2218"></span>
+        </div>
+        <a class="btn" href="2-trail.html">Open direction 2 →</a>
+      </div>
+    </article>
+
+    <article class="dir">
+      <div class="thumb">
+        <iframe src="3-app.html" title="Direction 3 preview" loading="lazy" scrolling="no" tabindex="-1"></iframe>
+        <a class="cover" href="3-app.html" aria-label="Open direction 3"></a>
+      </div>
+      <div class="dir-body">
+        <p class="dir-tag">Direction 3</p>
+        <h3>App <span class="he">אפליקציה</span></h3>
+        <p class="pitch">Design it for the device it is used on. A real app shell: a short top bar,
+        one rail of subjects, content in rows rather than a wall, and a fixed bottom bar so the two
+        things a grown-up does — change age, search — are always under a thumb. A "carry on from
+        yesterday" card is the whole first screen. On a laptop the bottom bar becomes a side rail
+        and the rows wrap; nothing is designed twice.</p>
+        <p class="pitch">Rows suit this catalog specifically: nineteen games across seven subjects
+        is exactly the shape that reads well as rails and badly as a wall. It is also the direction
+        that most rewards the seven marks — a row <em>is</em> a subject, so the covers have to vary
+        within one, and that is what the composition and field weight are for.</p>
+        <dl class="facts">
+          <dt>Type</dt><dd>Heebo 400–900, one family throughout</dd>
+          <dt>Fixes</dt><dd>All five, and 5 is the one only this direction really answers</dd>
+          <dt>Cost</dt><dd>Middling. The catalog and the filters survive intact; the page shell and the game page's chrome are rebuilt.</dd>
+          <dt>Risk</dt><dd class="risk">It is the most conventional of the three — competent, and it looks like every other kids' app. Judge it on the phone, not here.</dd>
+        </dl>
+        <div class="swatches" aria-hidden="true">
+          <span class="sw" style="background:#f4f5f7"></span>
+          <span class="sw" style="background:#101418"></span>
+          <span class="sw" style="background:#0e6e7a"></span>
+          <span class="sw" style="background:#1f5fa8"></span>
+          <span class="sw" style="background:#c2410c"></span>
+          <span class="sw" style="background:#6d28d9"></span>
+          <span class="sw" style="background:#475569"></span>
+        </div>
+        <a class="btn" href="3-app.html">Open direction 3 →</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section>
+  <div class="rec">
+    <h2>If you want a recommendation</h2>
+    <p><strong>Direction 3, and take the marks from it whichever way you go.</strong> The site is
+    played on a tablet and judged on a phone, and it is the only one of the three that is actually
+    designed for that. It is also the cheapest of the two ambitious ones: the catalog, the age
+    overlap rule and the filter logic all survive it untouched.</p>
+    <p>Direction 1 is the fallback if you want something visible this week — it is a stylesheet and
+    seven small SVGs, and it fixes three of the five tells on its own. Nothing in it blocks doing 3
+    later; the palette and the marks are the same set.</p>
+    <p>Direction 2 is the one with the most charm and the most risk. It is here because it is worth
+    knowing whether you want a place rather than a catalogue before you spend anything, not because
+    I think it is the safe call. If it makes you smile, that is a real signal — say so and I will
+    cost it properly.</p>
+  </div>
+</section>
+
+<section>
+  <div class="note">
+    <h2>What these are and are not</h2>
+
+    <h3>They are</h3>
+    <ul class="tight">
+      <li>Working pages. Filter chips toggle, the grid in direction 1 really filters, rails scroll,
+      and every layout is responsive down to phone width.</li>
+      <li>Rendering the real catalog — they load <code>assets/catalog.js</code>, so the games, the
+      Hebrew, the age ranges and the בקרוב marks are the live ones, not invented.</li>
+      <li>Keeping the house rules that are correctness rather than taste: logical CSS properties so
+      RTL and LTR both lay out, LTR wrappers on the number ranges, 44px+ tap targets, visible
+      focus, and <code>prefers-reduced-motion</code> honoured.</li>
+      <li>Checked on screen at 1280px and at 390px, in a real headless browser, not just read back
+      off the source.</li>
+    </ul>
+
+    <h3>They are not</h3>
+    <ul class="tight">
+      <li>Hebrew and English. The 🌐 button is drawn but does nothing — the i18n layer is untouched
+      and carries over unchanged whichever direction wins.</li>
+      <li>Wired to anything. Every card links to <code>#</code>; no game opens.</li>
+      <li>Covering the game page. <code>game.html</code> and the thirteen game modules each need a
+      pass, and how big that pass is differs between the three.</li>
+      <li>Contrast-audited by a tool. The seven subject colours were each computed against white
+      and clear 4.9:1 or better, but the full page has not been through a checker. That is a step
+      before any of this ships.</li>
+      <li>A finished mark set. The seven drawings are the argument, at the fidelity that makes the
+      argument. A real pass would tighten them.</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="bottom">
+  Prepared for the EDgames board. Nothing on the live site is changed by these — they live in
+  <code>mockups/</code> alongside it, and the grid at the live address is exactly as it was.
+</footer>
+
+</div>
+</body>
+</html>

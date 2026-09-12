@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>אפליקציה — כיוון עיצוב 3 · גנון משחקים</title>
+<meta name="theme-color" content="#f4f5f7">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   כיוון 3 — אפליקציה / App
+
+   The bet: it is played on a tablet and shown on a phone, and it is laid out
+   like a desktop web page from a template. That mismatch is a large part of
+   what reads as amateur — a 1180px grid of cards reflowed down to two narrow
+   columns is what an unfinished site looks like on the device it is actually
+   used on.
+
+   So this one is designed phone-first and means it: a real app shell. A short
+   top bar, one horizontal rail of subjects, content in rails rather than a
+   wall, and a fixed bottom bar so the two things a grown-up does — change age,
+   search — are always under a thumb. On a wide screen the bottom bar becomes a
+   side rail and the same content simply gets more room; nothing is redesigned
+   twice.
+
+   The grid is gone here too, but for a different reason than in direction 2.
+   There, scrolling a trail replaced it. Here, rails replace it: the catalog is
+   nineteen games across seven subjects, which is exactly the shape that reads
+   well as rows and badly as a wall.
+   ========================================================================== */
+
+:root {
+  --bg:        #f4f5f7;
+  --surface:   #ffffff;
+  --ink:       #101418;
+  --ink-soft:  #646d78;
+  --rule:      #e6e8ec;
+  --shadow:    0 2px 10px rgba(16, 20, 24, 0.06);
+
+  --c-letters:  #0e6e7a;
+  --c-numbers:  #1f5fa8;
+  --c-shapes:   #c2410c;
+  --c-memory:   #6d28d9;
+  --c-nature:   #16794c;
+  --c-music:    #a16207;
+  --c-computer: #475569;
+
+  --bar: 66px;   /* bottom bar height, reserved at the end of the page */
+}
+
+[data-subject="letters"]  { --c: var(--c-letters); }
+[data-subject="numbers"]  { --c: var(--c-numbers); }
+[data-subject="shapes"]   { --c: var(--c-shapes); }
+[data-subject="memory"]   { --c: var(--c-memory); }
+[data-subject="nature"]   { --c: var(--c-nature); }
+[data-subject="music"]    { --c: var(--c-music); }
+[data-subject="computer"] { --c: var(--c-computer); }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: calc(var(--bar) + 18px);
+}
+h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.015em; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+.shell { max-width: 1180px; margin: 0 auto; }
+
+/* ---- Top bar ---------------------------------------------------------------- */
+
+.appbar {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(244, 245, 247, 0.88);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+.appbar-in {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 18px;
+  max-width: 1180px; margin: 0 auto;
+}
+.avatar {
+  width: 38px; height: 38px; border-radius: 13px;
+  background: var(--ink); color: var(--bg);
+  display: grid; place-items: center; font-weight: 900; font-size: 1.1rem;
+}
+.hello { flex: 1; min-width: 0; }
+.hello .small { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.2; }
+.hello .big { font-weight: 800; font-size: 1.02rem; line-height: 1.25; }
+.icon-btn {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 1px solid var(--rule); background: var(--surface);
+  display: grid; place-items: center; cursor: pointer; flex: none;
+}
+.icon-btn svg { width: 19px; height: 19px; fill: none; stroke: var(--ink); stroke-width: 2.1; stroke-linecap: round; }
+
+/* ---- Subject rail ------------------------------------------------------------ */
+
+.rail {
+  display: flex; gap: 9px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 12px 18px;
+  scroll-snap-type: x proximity;
+}
+.rail::-webkit-scrollbar { display: none; }
+
+.sub {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--rule);
+  border-radius: 999px; padding: 0 15px; min-height: 44px;
+  font-weight: 500; white-space: nowrap; cursor: pointer; flex: none;
+  scroll-snap-align: start;
+}
+.sub .mark { width: 20px; height: 20px; color: var(--c); }
+.sub[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; }
+.sub[aria-pressed="true"] .mark { color: #fff; }
+.sub[data-status="soon"] { color: var(--ink-soft); }
+.sub[data-status="soon"] .mark { opacity: 0.5; }
+/* "All" belongs to no subject, so it takes the ink rather than borrowing a
+   subject's colour and implying one. */
+.sub--all[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); }
+
+/* ---- Sections ---------------------------------------------------------------- */
+
+section { padding-top: 16px; }
+.head {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 0 18px 10px;
+}
+.head h3 { margin: 0; font-size: 1.12rem; }
+.head .more { margin-inline-start: auto; font-size: 0.88rem; color: var(--ink-soft); font-weight: 500; }
+
+/* The one big card: pick up where the child left off. This is the page's first
+   move, and on a phone it is the whole first screen after the bar. */
+.continue {
+  margin: 0 18px;
+  display: flex; align-items: center; gap: 16px;
+  background: var(--c); color: #fff;
+  border-radius: 24px; padding: 18px 20px;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--c) 32%, transparent);
+  position: relative; overflow: hidden;
+}
+.continue .ghost {
+  position: absolute; width: 190px; inset-block-start: -42px; inset-inline-start: -46px;
+  opacity: 0.15; color: #fff;
+}
+.continue .mark-main { width: 54px; height: 54px; flex: none; position: relative; z-index: 1; }
+.continue .txt { position: relative; z-index: 1; min-width: 0; }
+.continue .kicker { font-size: 0.78rem; opacity: 0.85; font-weight: 500; }
+.continue h4 { margin: 1px 0 3px; font-size: 1.3rem; line-height: 1.2; }
+.continue p { margin: 0; font-size: 0.87rem; opacity: 0.9; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* A row of games. Fixed-width tiles that snap, which is what makes a rail feel
+   native rather than like a grid that overflowed. */
+.row {
+  display: flex; gap: 13px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 2px 18px 6px;
+  scroll-snap-type: x mandatory;
+}
+.row::-webkit-scrollbar { display: none; }
+
+.tile { flex: none; width: 148px; scroll-snap-align: start; }
+.cover {
+  aspect-ratio: 1; border-radius: 22px;
+  background: var(--c); color: #fff;
+  display: grid; place-items: center;
+  position: relative; overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.14s ease;
+}
+.tile:hover .cover { transform: translateY(-3px) scale(1.015); }
+.cover .mark { width: 46%; position: relative; z-index: 1; }
+
+/* A row here IS a subject, so without this every tile in the row would carry
+   the identical drawing. The composition — which corner the ghost bleeds from,
+   which way it leans, what pattern sits behind it — comes off the game's id.
+   See EDGlyphs.variant: seven drawings, nineteen distinguishable covers. */
+.cover .ghost { position: absolute; width: 112%; opacity: 0.15; color: #fff; }
+.cover[data-variant="0"] .ghost { inset-block-start: -28%; inset-inline-start: -36%; transform: rotate(-8deg); }
+.cover[data-variant="1"] .ghost { inset-block-end: -30%;   inset-inline-end:  -32%; transform: rotate(13deg); }
+.cover[data-variant="2"] .ghost { inset-block-start: -24%; inset-inline-end:  -38%; transform: rotate(6deg); }
+.cover[data-variant="3"] .ghost { inset-block-end: -26%;   inset-inline-start: -34%; transform: rotate(-15deg); }
+
+.cover::before { content: ""; position: absolute; inset: 0; }
+.cover[data-variant="1"]::before {
+  background: radial-gradient(circle at 20% 24%, rgba(255,255,255,0.2) 0 27%, transparent 27.5%);
+}
+.cover[data-variant="2"]::before {
+  background: radial-gradient(rgba(255,255,255,0.3) 1.6px, transparent 1.7px) 0 0 / 15px 15px;
+  opacity: 0.55;
+}
+.cover[data-variant="3"]::before {
+  background: repeating-linear-gradient(128deg, rgba(255,255,255,0.13) 0 11px, transparent 11px 30px);
+}
+.cover[data-variant="1"], .cover[data-variant="3"] {
+  background-image: linear-gradient(150deg, rgba(0,0,0,0.18), rgba(0,0,0,0) 72%);
+}
+/* Field weight, on a second axis from the composition — see EDGlyphs.tone. */
+.cover[data-tone="1"] { box-shadow: var(--shadow), inset 0 0 0 200px rgba(0, 0, 0, 0.11); }
+.cover[data-tone="2"] { box-shadow: var(--shadow), inset 0 0 0 200px rgba(255, 255, 255, 0.09); }
+.cover::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(205deg, rgba(255,255,255,0.18), transparent 60%);
+}
+.tile h4 { margin: 9px 2px 1px; font-size: 0.97rem; line-height: 1.3; font-weight: 700;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tile .meta { margin: 0 2px; font-size: 0.8rem; color: var(--ink-soft); }
+.tile .meta .num { direction: ltr; unicode-bidi: plaintext; }
+
+.tile[data-status="soon"] .cover { opacity: 0.4; }
+.tile[data-status="soon"] .meta::after { content: " · בקרוב"; }
+
+/* A wide, low list row — used for the "soon" shelf, where a square cover would
+   be giving unfinished work the same weight as finished work. */
+.list { padding: 0 18px; display: grid; gap: 9px; }
+.item {
+  display: flex; align-items: center; gap: 13px;
+  background: var(--surface); border: 1px solid var(--rule);
+  border-radius: 18px; padding: 11px 13px;
+}
+.item .chip-cover {
+  width: 46px; height: 46px; border-radius: 14px; flex: none;
+  background: var(--c); color: #fff; display: grid; place-items: center; opacity: 0.55;
+}
+.item .chip-cover .mark { width: 24px; height: 24px; }
+.item h4 { margin: 0; font-size: 0.98rem; font-weight: 700; }
+.item p { margin: 0; font-size: 0.83rem; color: var(--ink-soft);
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.item .soon-tag {
+  margin-inline-start: auto; flex: none;
+  font-size: 0.76rem; font-weight: 700; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 10px;
+}
+
+/* ---- Bottom bar -------------------------------------------------------------- */
+
+.tabs {
+  position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 30;
+  height: var(--bar);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-top: 1px solid var(--rule);
+  display: flex; align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tab {
+  flex: 1; border: 0; background: transparent; cursor: pointer;
+  display: grid; place-items: center; gap: 2px; padding: 8px 0;
+  color: var(--ink-soft); font-size: 0.72rem; font-weight: 700;
+}
+.tab svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tab[aria-current="page"] { color: var(--ink); }
+
+footer.end { padding: 26px 18px 10px; color: var(--ink-soft); font-size: 0.85rem; text-align: center; }
+
+/* ---- Wide screens: the same app, given room ---------------------------------- */
+
+@media (min-width: 900px) {
+  body { padding-bottom: 0; }
+  .shell { display: grid; grid-template-columns: 232px 1fr; gap: 0; align-items: start; }
+  .appbar { grid-column: 1 / -1; }
+  .tabs {
+    position: sticky; inset: 0 auto auto 0; top: 68px;
+    height: auto; width: 232px; border-top: 0; border-inline-end: 1px solid var(--rule);
+    background: transparent; backdrop-filter: none;
+    flex-direction: column; gap: 4px; padding: 18px 14px;
+  }
+  .tab {
+    flex: none; grid-auto-flow: column; justify-content: start; gap: 12px;
+    padding: 12px 14px; border-radius: 14px; font-size: 0.96rem; width: 100%;
+  }
+  .tab[aria-current="page"] { background: var(--surface); box-shadow: var(--shadow); }
+  .content { min-width: 0; padding-bottom: 40px; }
+  .tile { width: 176px; }
+  /* A rail is right on a phone and wrong on a desktop: a row of two tiles on a
+     900px column leaves most of the width empty and reads as a broken grid. The
+     same rows simply wrap once there is room, which is the one thing that has
+     to differ between the two shapes. */
+  .row { flex-wrap: wrap; overflow: visible; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; border-radius: 12px; }
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-in">
+    <div class="avatar" aria-hidden="true">ג</div>
+    <div class="hello">
+      <div class="small">גנון משחקים</div>
+      <div class="big">מה משחקים היום?</div>
+    </div>
+    <button class="icon-btn" type="button" aria-label="חיפוש">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+    </button>
+    <button class="icon-btn" type="button" aria-label="English">🌐</button>
+  </div>
+</header>
+
+<div class="shell">
+
+  <nav class="tabs" aria-label="ניווט">
+    <button class="tab" type="button" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>
+      <span>בית</span>
+    </button>
+    <button class="tab" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M8 9h8M8 13h5"/></svg>
+      <span>לפי גיל</span>
+    </button>
+    <button class="tab" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+      <span>חיפוש</span>
+    </button>
+  </nav>
+
+  <main class="content">
+    <div class="rail" id="subjects" role="group" aria-label="נושא"></div>
+
+    <section>
+      <div class="head"><h3>ממשיכים מאיפה שהפסקנו</h3></div>
+      <div id="continue"></div>
+    </section>
+
+    <section>
+      <div class="head"><h3>אפשר לשחק עכשיו</h3><span class="more">הכול ←</span></div>
+      <div class="row" id="ready"></div>
+    </section>
+
+    <div id="by-subject"></div>
+
+    <section>
+      <div class="head"><h3>בקרוב</h3><span class="more">עוד נבנים</span></div>
+      <div class="list" id="soon"></div>
+    </section>
+
+    <footer class="end">כיוון עיצוב 3 מתוך 3 — אפליקציה. מוקאפ בלבד, שום משחק לא נפתח מכאן.</footer>
+  </main>
+
+</div>
+
+<script src="../assets/catalog.js"></script>
+<script src="glyphs.js"></script>
+<script>
+EDGlyphs.inject();
+
+document.getElementById('subjects').innerHTML =
+  [`<button type="button" class="sub sub--all" aria-pressed="true"><span>הכול</span></button>`]
+  .concat(SUBJECTS.map((s) => `
+    <button type="button" class="sub" data-subject="${s.id}"
+            data-status="${subjectHasReady(s.id) ? 'ready' : 'soon'}" aria-pressed="false">
+      ${EDGlyphs.mark(s.id)}<span>${s.label.he}</span>
+    </button>`)).join('');
+
+document.getElementById('subjects').addEventListener('click', (e) => {
+  const b = e.target.closest('.sub'); if (!b) return;
+  document.querySelectorAll('#subjects .sub').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+});
+
+const cont = gameById('color-pop');
+document.getElementById('continue').innerHTML = `
+  <a class="continue" href="#" data-subject="${cont.subject}">
+    ${EDGlyphs.mark(cont.subject, 'mark ghost')}
+    ${EDGlyphs.mark(cont.subject, 'mark mark-main')}
+    <div class="txt">
+      <div class="kicker">שיחקתם בזה אתמול</div>
+      <h4>${cont.title.he}</h4>
+      <p>${cont.blurb.he}</p>
+    </div>
+  </a>`;
+
+function tile(g) {
+  return `
+  <a class="tile" href="#" data-subject="${g.subject}" data-status="${g.status}">
+    <div class="cover" data-variant="${EDGlyphs.variant(g.id)}" data-tone="${EDGlyphs.tone(g.id)}">
+      ${EDGlyphs.mark(g.subject, 'mark ghost')}
+      ${EDGlyphs.mark(g.subject)}
+    </div>
+    <h4>${g.title.he}</h4>
+    <div class="meta">גיל <span class="num">${g.ageMin}–${g.ageMax}</span></div>
+  </a>`;
+}
+
+const ready = GAMES.filter((g) => g.status === 'ready');
+document.getElementById('ready').innerHTML = ready.map(tile).join('');
+
+/* One rail per subject that has something finished behind it — a rail of one
+   card looks broken, so a subject with a single ready game rides in the
+   "אפשר לשחק עכשיו" row above and does not get a row of its own. */
+document.getElementById('by-subject').innerHTML = SUBJECTS
+  .map((s) => ({ s, games: ready.filter((g) => g.subject === s.id) }))
+  .filter(({ games }) => games.length > 1)
+  .map(({ s, games }) => `
+    <section>
+      <div class="head"><h3>${s.label.he}</h3><span class="more">${games.length} משחקים</span></div>
+      <div class="row">${games.map(tile).join('')}</div>
+    </section>`).join('');
+
+document.getElementById('soon').innerHTML = GAMES.filter((g) => g.status === 'soon').map((g) => `
+  <div class="item" data-subject="${g.subject}">
+    <span class="chip-cover" aria-hidden="true">${EDGlyphs.mark(g.subject)}</span>
+    <div>
+      <h4>${g.title.he}</h4>
+      <p>${g.blurb.he}</p>
+    </div>
+    <span class="soon-tag">בקרוב</span>
+  </div>`).join('');
+</script>
+</body>
+</html>

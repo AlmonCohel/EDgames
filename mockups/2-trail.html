@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מסלול — כיוון עיצוב 2 · גנון משחקים</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Varela+Round&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   כיוון 2 — מסלול / The Trail
+
+   The bet: what reads as amateur is not the styling, it is the shape. Nineteen
+   identical cards in one flat grid is a spreadsheet with pictures on it. A
+   child does not choose from a grid and a parent does not know where to begin.
+
+   So the page stops being a list and becomes a place: one trail, walked from
+   the top, with three stations along it. The games are stops on the way. The
+   grid does not come back — scrolling IS the browsing, and the page finally
+   has a first move, a middle and an end.
+
+   The cost of that is honest and worth saying out loud: a trail gives every
+   game exactly one home. The live filter deliberately does the opposite — a
+   game marked 3–5 appears under both 3–4 and 5–6, because overlap is the right
+   answer for a filter. It is the wrong answer for a path, where the same game
+   turning up at two stations reads as a bug. So the stations here are keyed to
+   the age a game STARTS at, and a game is placed once.
+   ========================================================================== */
+
+:root {
+  --ink:       #2a2218;
+  --ink-soft:  #6d6252;
+  --card:      #fffdf8;
+  --rule:      #e6ddcc;
+
+  --c-letters:  #0e6e7a;
+  --c-numbers:  #1f5fa8;
+  --c-shapes:   #c2410c;
+  --c-memory:   #6d28d9;
+  --c-nature:   #16794c;
+  --c-music:    #a16207;
+  --c-computer: #475569;
+}
+
+[data-subject="letters"]  { --c: var(--c-letters); }
+[data-subject="numbers"]  { --c: var(--c-numbers); }
+[data-subject="shapes"]   { --c: var(--c-shapes); }
+[data-subject="memory"]   { --c: var(--c-memory); }
+[data-subject="nature"]   { --c: var(--c-nature); }
+[data-subject="music"]    { --c: var(--c-music); }
+[data-subject="computer"] { --c: var(--c-computer); }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff8ec;
+  font-family: "Heebo", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fredoka carries Hebrew; Varela Round is the rounded fallback for any glyph it
+   does not, so the page never drops to a system sans mid-word. */
+h1, h2, h3, h4, .display {
+  font-family: "Fredoka", "Varela Round", "Heebo", system-ui, sans-serif;
+  font-weight: 600;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 22px; }
+
+/* ---- Header ---------------------------------------------------------------- */
+
+.top {
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(255, 248, 236, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.top .wrap { display: flex; align-items: center; gap: 14px; padding-block: 12px; }
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(150deg, #ffb545, #ff7a3d);
+  color: #fff; display: grid; place-items: center;
+  font-family: "Fredoka", "Varela Round", sans-serif; font-size: 1.3rem;
+  box-shadow: 0 4px 0 rgba(198, 96, 29, 0.35);
+}
+.brand h1 { font-size: 1.25rem; margin: 0; line-height: 1; }
+.top .spacer { flex: 1; }
+.pill {
+  border: 2px solid var(--ink); background: transparent; color: var(--ink);
+  border-radius: 999px; padding: 8px 15px; min-height: 44px;
+  font-weight: 500; font-size: 0.9rem; cursor: pointer; white-space: nowrap;
+}
+.pill:hover { background: var(--ink); color: #fff8ec; }
+
+/* ---- Opening ---------------------------------------------------------------- */
+
+.open { position: relative; overflow: hidden; padding: 58px 0 40px; text-align: center; }
+.open h2 { font-size: clamp(2.1rem, 6vw, 3.4rem); margin: 0 0 12px; line-height: 1.12; }
+.open p { margin: 0 auto 26px; max-width: 42ch; color: var(--ink-soft); font-size: 1.08rem; }
+.sun {
+  position: absolute; width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffd97a, #ffb545);
+  inset-block-start: -78px; inset-inline-end: -52px; opacity: 0.5;
+  pointer-events: none;
+}
+.go {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: #e2542c; color: #fff; border: 0; border-radius: 999px;
+  padding: 14px 30px; min-height: 52px; font-family: "Fredoka", "Varela Round", sans-serif;
+  font-size: 1.08rem; cursor: pointer;
+  box-shadow: 0 5px 0 #a83a19;
+}
+.go:active { transform: translateY(3px); box-shadow: 0 2px 0 #a83a19; }
+
+/* ---- A station ------------------------------------------------------------- */
+
+/* Each station is a scene the trail passes through, stacked with a rounded lip
+   over the one before it so the bands read as layered ground rather than as
+   three sections of a page. */
+.station { position: relative; padding: 30px 0 46px; }
+.station[data-band="1"] { background: linear-gradient(#fff8ec, #fdf0dc); }
+.station[data-band="2"] { background: linear-gradient(#fdf0dc, #e8f5ea); }
+.station[data-band="3"] { background: linear-gradient(#e8f5ea, #e7edfb); }
+.station + .station {
+  border-start-start-radius: 42px;
+  border-start-end-radius: 42px;
+  margin-block-start: -26px;
+  box-shadow: 0 -3px 0 rgba(42, 34, 24, 0.06);
+}
+
+.station-head { text-align: center; padding: 22px 0 8px; position: relative; z-index: 1; }
+.flag {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--card); border: 2px solid var(--ink);
+  border-radius: 999px; padding: 9px 22px;
+  box-shadow: 0 4px 0 rgba(42, 34, 24, 0.16);
+}
+.flag .n {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--ink); color: var(--card);
+  display: grid; place-items: center; font-size: 0.9rem;
+  font-family: "Fredoka", "Varela Round", sans-serif;
+}
+.flag h3 { margin: 0; font-size: 1.15rem; }
+.station-head p { margin: 10px 0 0; color: var(--ink-soft); font-size: 0.97rem; }
+
+/* ---- The trail itself ------------------------------------------------------- */
+
+.trail { position: relative; margin: 26px 0 0; padding: 0; list-style: none; }
+/* The road: a dashed spine the stops hang off. Drawn as a gradient on a box of
+   a known width rather than as a border on a shrink-to-fit one, so "centred on
+   the dots" is exact and does not depend on which side the inline-start edge
+   lands in RTL. Horizontal centring is the same in both directions, so `left`
+   is the honest property here. */
+.trail::before {
+  content: ""; position: absolute; inset-block: 8px 34px;
+  left: 50%; width: 4px; margin-left: -2px;
+  background: repeating-linear-gradient(
+    to bottom, rgba(42, 34, 24, 0.22) 0 11px, transparent 11px 22px);
+}
+
+.stop { position: relative; display: grid; grid-template-columns: 1fr 78px 1fr; align-items: center; margin-bottom: 16px; }
+.stop .dot { grid-column: 2; justify-self: center; position: relative; z-index: 2; }
+.dot {
+  width: 62px; height: 62px; border-radius: 50%;
+  background: var(--c); color: #fff;
+  display: grid; place-items: center;
+  border: 4px solid var(--card);
+  box-shadow: 0 4px 0 rgba(42, 34, 24, 0.18);
+}
+.dot .mark { width: 30px; height: 30px; }
+
+.stop .card { grid-column: 1; }
+.stop:nth-child(even) .card { grid-column: 3; }
+.stop .card { justify-self: stretch; }
+
+.card {
+  display: block;
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 18px;
+  padding: 15px 18px;
+  box-shadow: 0 4px 0 rgba(42, 34, 24, 0.16);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 7px 0 rgba(42, 34, 24, 0.16); }
+.card h4 { margin: 0 0 4px; font-size: 1.15rem; line-height: 1.25; }
+.card p { margin: 0; font-size: 0.9rem; line-height: 1.45; color: var(--ink-soft); }
+.card .row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 11px; align-items: center; }
+.chip {
+  font-size: 0.78rem; font-weight: 700; border-radius: 999px; padding: 3px 10px;
+  background: var(--c); color: #fff;
+}
+.chip--age { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--rule); }
+.chip--age .num { direction: ltr; unicode-bidi: plaintext; }
+.chip--soon { background: transparent; color: var(--ink-soft); border: 1.5px dashed var(--ink-soft); }
+
+/* A stop that is not built yet is still on the road — it keeps the subject's
+   colour, in outline rather than filled, so the trail does not go blank. */
+.stop[data-status="soon"] .dot {
+  background: var(--card); color: var(--c);
+  border-color: var(--card); box-shadow: 0 0 0 3px var(--c) inset;
+}
+.stop[data-status="soon"] .card { border-style: dashed; box-shadow: none; }
+
+/* The end of the trail */
+.finish { text-align: center; padding: 8px 0 0; position: relative; z-index: 1; }
+.finish .badge {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--ink); color: #fff8ec; border-radius: 999px;
+  padding: 10px 22px; font-family: "Fredoka", "Varela Round", sans-serif; font-size: 0.98rem;
+}
+
+footer.end {
+  background: #e7edfb; color: var(--ink-soft);
+  text-align: center; font-size: 0.9rem; padding: 30px 22px 46px;
+}
+
+@media (max-width: 720px) {
+  /* On a phone the road moves to the start edge and every stop sits beside it,
+     which is what a trail has to do when there is no room for two columns. Here
+     the side does depend on direction, so the logical property is the right one
+     and the 2px back-off keeps it centred on the dots. */
+  .trail::before { left: auto; margin-left: 0; inset-inline-start: 29px; }
+  .stop, .stop:nth-child(even) { grid-template-columns: 62px 1fr; gap: 14px; }
+  .stop .dot, .stop:nth-child(even) .dot { grid-column: 1; }
+  .stop .card, .stop:nth-child(even) .card { grid-column: 2; }
+  .dot { width: 54px; height: 54px; }
+  .dot .mark { width: 26px; height: 26px; }
+  .card h4 { font-size: 1.05rem; }
+  body { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">ג</div>
+      <h1>גנון משחקים</h1>
+    </div>
+    <div class="spacer"></div>
+    <button class="pill" type="button">חיפוש</button>
+    <button class="pill" type="button">🌐 English</button>
+  </div>
+</header>
+
+<section class="open">
+  <div class="sun" aria-hidden="true"></div>
+  <div class="wrap">
+    <h2>יוצאים לדרך</h2>
+    <p>המסלול מתחיל אצל הקטנים ונגמר אצל הגדולים. כל עצירה בדרך היא משחק אחד.</p>
+    <button class="go" type="button">מתחילים מההתחלה ←</button>
+  </div>
+</section>
+
+<main id="trail-root"></main>
+
+<footer class="end">
+  כיוון עיצוב 2 מתוך 3 — מסלול. מוקאפ בלבד, שום משחק לא נפתח מכאן.
+</footer>
+
+<script src="../assets/catalog.js"></script>
+<script src="glyphs.js"></script>
+<script>
+EDGlyphs.inject();
+
+/* Stations are keyed to the age a game STARTS at, so every game is placed once.
+   See the note at the top of the stylesheet for why this cannot be the site's
+   own overlapping age groups. */
+const STATIONS = [
+  { n: 1, title: 'העצירה הראשונה', from: 3, to: 3, note: 'משחקים למי שרק מתחיל — מגיל 3' },
+  { n: 2, title: 'ממשיכים בדרך',   from: 4, to: 4, note: 'קצת יותר מאתגר — מגיל 4' },
+  { n: 3, title: 'הגדולים בסוף',   from: 5, to: 9, note: 'אותיות, חשבון ומקלדת — מגיל 5 ומעלה' },
+];
+
+function stop(g) {
+  const sub = subjectById(g.subject);
+  const soon = g.status === 'soon';
+  return `
+  <li class="stop" data-subject="${g.subject}" data-status="${g.status}">
+    <span class="dot" aria-hidden="true">${EDGlyphs.mark(g.subject)}</span>
+    <a class="card" href="#">
+      <h4>${g.title.he}</h4>
+      <p>${g.blurb.he}</p>
+      <div class="row">
+        <span class="chip ${soon ? 'chip--soon' : ''}">${soon ? 'בקרוב' : sub.label.he}</span>
+        <span class="chip chip--age">גיל <span class="num">${g.ageMin}–${g.ageMax}</span></span>
+      </div>
+    </a>
+  </li>`;
+}
+
+document.getElementById('trail-root').innerHTML = STATIONS.map((s) => {
+  const games = GAMES.filter((g) => g.ageMin >= s.from && g.ageMin <= s.to);
+  return `
+  <section class="station" data-band="${s.n}">
+    <div class="wrap">
+      <div class="station-head">
+        <div class="flag"><span class="n">${s.n}</span><h3>${s.title}</h3></div>
+        <p>${s.note}</p>
+      </div>
+      <ul class="trail">${games.map(stop).join('')}</ul>
+      ${s.n === STATIONS.length
+        ? `<div class="finish"><span class="badge">סוף המסלול — כל הכבוד! 🏁</span></div>`
+        : ''}
+    </div>
+  </section>`;
+}).join('');
+</script>
+</body>
+</html>

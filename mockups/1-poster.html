@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כרזה — כיוון עיצוב 1 · גנון משחקים</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Secular+One&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   כיוון 1 — כרזה / Poster
+
+   The bet: the site does not look amateur because it is ugly, it looks amateur
+   because nothing on it is committed to. Every colour is a pastel, every type
+   size sits within half a step of every other, and every picture is borrowed
+   from the operating system. So: commit. One near-black ink, seven saturated
+   subject colours strong enough to carry white text on their own, a display
+   face at four times the body size, and drawn marks instead of emoji.
+
+   No glass, no blur, no drifting blobs. Flat colour with hairlines and one
+   deliberate shadow, which is what confident kid-brand work actually looks
+   like in 2026.
+   ========================================================================== */
+
+:root {
+  --paper:      #f4f2ec;   /* warm neutral, so the colour blocks sit on something */
+  --card:       #ffffff;
+  --ink:        #15130f;   /* near-black, not a soft grey */
+  --ink-soft:   #5d574d;
+  --rule:       #ded8cb;
+  --rule-hair:  #ebe6dc;
+
+  /* Saturated subject palette. Every one of these clears 4.5:1 against white,
+     so a subject colour can be a field with white text on it — no second
+     "deepened ink" variable needed to rescue a tint that was too weak. */
+  --c-letters:  #0e6e7a;
+  --c-numbers:  #1f5fa8;
+  --c-shapes:   #c2410c;
+  --c-memory:   #6d28d9;
+  --c-nature:   #16794c;
+  --c-music:    #a16207;
+  --c-computer: #475569;
+}
+
+[data-subject="letters"]  { --c: var(--c-letters); }
+[data-subject="numbers"]  { --c: var(--c-numbers); }
+[data-subject="shapes"]   { --c: var(--c-shapes); }
+[data-subject="memory"]   { --c: var(--c-memory); }
+[data-subject="nature"]   { --c: var(--c-nature); }
+[data-subject="music"]    { --c: var(--c-music); }
+[data-subject="computer"] { --c: var(--c-computer); }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .display {
+  font-family: "Secular One", "Heebo", system-ui, sans-serif;
+  font-weight: 400;      /* Secular One ships one weight, and it is a heavy one */
+  letter-spacing: -0.01em;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 22px; }
+
+/* ---- Header: a rule, not a floating card ---------------------------------- */
+
+.top {
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.top .wrap {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-block: 14px;
+}
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark {
+  width: 40px; height: 40px;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid; place-items: center;
+  font-family: "Secular One", sans-serif;
+  font-size: 1.35rem;
+  border-radius: 11px;
+}
+.brand-name { font-size: 1.3rem; margin: 0; line-height: 1; }
+.top .spacer { flex: 1; }
+
+.search {
+  position: relative;
+  flex: 0 1 300px;
+  min-width: 0;
+}
+.search input {
+  width: 100%;
+  font: inherit;
+  font-size: 0.97rem;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 10px 44px 10px 16px;
+  text-align: start;
+}
+.search input::placeholder { color: var(--ink-soft); }
+.search svg {
+  position: absolute; inset-inline-start: 15px; top: 50%;
+  width: 18px; height: 18px; transform: translateY(-50%);
+  stroke: var(--ink-soft); fill: none; stroke-width: 2.2; pointer-events: none;
+}
+.lang {
+  border: 2px solid var(--ink);
+  background: transparent;
+  border-radius: 999px;
+  padding: 9px 15px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+}
+.lang:hover { background: var(--ink); color: var(--paper); }
+
+/* ---- Hero: the type finally commits --------------------------------------- */
+
+.hero { padding: 54px 0 40px; }
+.hero h2 {
+  font-size: clamp(2.6rem, 7.2vw, 5.1rem);
+  line-height: 1.02;
+  margin: 0 0 18px;
+  max-width: 15ch;
+}
+.hero .mark-word {
+  background: var(--c-shapes);
+  color: #fff;
+  padding: 0 0.18em 0.06em;
+  border-radius: 8px;
+  display: inline-block;
+}
+.hero p {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  max-width: 46ch;
+}
+
+/* ---- Filters: a rail, not a form ------------------------------------------ */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 18px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.seg {
+  display: inline-flex;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--card);
+}
+.seg button {
+  border: 0;
+  background: transparent;
+  padding: 0 17px;
+  min-height: 44px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+  cursor: pointer;
+  border-inline-start: 1px solid var(--rule);
+}
+.seg button:first-child { border-inline-start: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.seg .num { direction: ltr; unicode-bidi: plaintext; font-variant-numeric: tabular-nums; }
+
+.subjects {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 100%;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.subjects::-webkit-scrollbar { display: none; }
+.sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid var(--rule);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 0 16px;
+  min-height: 44px;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.sub .mark { width: 20px; height: 20px; color: var(--c); flex: none; }
+.sub[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; }
+.sub[aria-pressed="true"] .mark { color: #fff; }
+.sub[data-status="soon"] { opacity: 0.55; }
+
+.count { margin: 22px 2px 14px; color: var(--ink-soft); font-size: 0.95rem; }
+.count b { color: var(--ink); font-family: "Secular One", sans-serif; font-weight: 400; }
+
+/* ---- Featured strip: the page has a first move ---------------------------- */
+
+.featured { padding: 34px 0 6px; }
+.section-head {
+  display: flex; align-items: baseline; gap: 12px;
+  margin: 0 2px 16px;
+}
+.section-head h3 { font-size: 1.45rem; margin: 0; }
+.section-head span { color: var(--ink-soft); font-size: 0.95rem; }
+
+.feat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.feat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--c);
+  color: #fff;
+  border-radius: 20px;
+  padding: 20px 22px;
+  min-height: 128px;
+  transition: transform 0.14s ease;
+}
+.feat:hover { transform: translateY(-3px); }
+.feat .mark { width: 52px; height: 52px; flex: none; opacity: 0.95; }
+.feat h4 { font-family: "Secular One", sans-serif; font-weight: 400; font-size: 1.3rem; margin: 0 0 4px; line-height: 1.2; }
+.feat p { margin: 0; font-size: 0.92rem; line-height: 1.45; opacity: 0.9; }
+
+/* ---- The grid -------------------------------------------------------------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  gap: 20px;
+  padding: 0 0 70px;
+  margin: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--rule-hair);
+  border-radius: 20px;
+  overflow: hidden;
+  height: 100%;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+.card:hover, .card:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 0 -6px rgba(21, 19, 15, 0.14);
+}
+
+/* The panel is the whole point: a solid subject field carrying our own mark,
+   where the live site has a pastel square carrying the machine's emoji. */
+.panel {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--c);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.panel .mark { width: 40%; max-width: 78px; position: relative; z-index: 1; }
+/* One oversized ghost of the same mark, bled off a corner — gives every panel a
+   composition instead of a centred sticker, without a second drawing. Which
+   corner, which lean and what sits behind it come from the game's id, so two
+   games in the same subject never wear the same cover. */
+.panel .ghost { position: absolute; width: 108%; opacity: 0.15; color: #fff; }
+.panel[data-variant="0"] .ghost { inset-block-start: -30%; inset-inline-start: -34%; transform: rotate(-8deg); }
+.panel[data-variant="1"] .ghost { inset-block-end: -32%;   inset-inline-end:  -30%; transform: rotate(13deg); }
+.panel[data-variant="2"] .ghost { inset-block-start: -26%; inset-inline-end:  -36%; transform: rotate(6deg); }
+.panel[data-variant="3"] .ghost { inset-block-end: -28%;   inset-inline-start: -32%; transform: rotate(-15deg); }
+
+.panel::before { content: ""; position: absolute; inset: 0; }
+.panel[data-variant="1"]::before {
+  background: radial-gradient(circle at 18% 22%, rgba(255,255,255,0.2) 0 26%, transparent 26.5%);
+}
+.panel[data-variant="2"]::before {
+  background: radial-gradient(rgba(255,255,255,0.28) 1.6px, transparent 1.7px) 0 0 / 15px 15px;
+  opacity: 0.55;
+}
+.panel[data-variant="3"]::before {
+  background: repeating-linear-gradient(128deg, rgba(255,255,255,0.13) 0 11px, transparent 11px 30px);
+}
+.panel[data-variant="1"], .panel[data-variant="3"] {
+  background-image: linear-gradient(150deg, rgba(0,0,0,0.18), rgba(0,0,0,0) 72%);
+}
+/* And a field weight on top of that, so a subject's games differ in tone as
+   well as in pattern. Inset, so the pattern above still shows through. */
+.panel[data-tone="1"] { box-shadow: inset 0 0 0 200px rgba(0, 0, 0, 0.11); }
+.panel[data-tone="2"] { box-shadow: inset 0 0 0 200px rgba(255, 255, 255, 0.09); }
+.panel::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(200deg, rgba(255,255,255,0.16), transparent 58%);
+}
+
+.body { padding: 15px 17px 17px; display: flex; flex-direction: column; flex: 1; }
+/* Card baseline kept from the live site: a fixed header zone, so the tag row of
+   every card in a row starts at the same Y however long the title runs. */
+.card-head { height: 5.6rem; overflow: hidden; }
+.card h4 {
+  font-family: "Secular One", sans-serif; font-weight: 400;
+  font-size: 1.22rem; line-height: 1.25; margin: 0 0 5px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card p {
+  margin: 0; font-size: 0.9rem; line-height: 1.45; color: var(--ink-soft);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: auto; padding-top: 12px; }
+.tag {
+  font-size: 0.8rem; font-weight: 700; border-radius: 7px; padding: 3px 9px;
+  background: var(--c); color: #fff;
+}
+.tag--age { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--rule); }
+.tag--age .num { direction: ltr; unicode-bidi: plaintext; }
+
+/* "Soon" is not a washed-out version of the finished card — a faded field just
+   looks like the weak pastel this direction is trying to get away from. It is a
+   plain paper field with the mark drawn in the subject's own colour: clearly
+   the same family, clearly not made yet. */
+.card[data-status="soon"] .panel { background: #eae5da; color: var(--c); }
+.card[data-status="soon"] .panel::after { background: none; }
+.card[data-status="soon"] .panel .ghost { color: var(--c); opacity: 0.13; }
+.card[data-status="soon"] .tag { background: transparent; color: var(--ink-soft); border: 1.5px dashed var(--rule); }
+
+footer.end {
+  border-top: 2px solid var(--ink);
+  padding: 26px 0 44px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 860px) {
+  .feat-row { grid-template-columns: 1fr; }
+  .feat { min-height: 0; }
+}
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .hero { padding: 34px 0 26px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 13px; }
+  .card h4 { font-size: 1.05rem; }
+  .card-head { height: 5rem; }
+  .search { flex-basis: 100%; order: 3; }
+  .brand-tag { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">ג</div>
+      <h1 class="brand-name">גנון משחקים</h1>
+    </div>
+    <div class="spacer"></div>
+    <div class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+      <label class="visually-hidden" for="q" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">חיפוש משחק</label>
+      <input id="q" type="search" placeholder="איזה משחק מחפשים?" autocomplete="off">
+    </div>
+    <button class="lang" type="button">🌐 English</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <h2>משחקים קטנים שלומדים מהם <span class="mark-word">בלי לשים לב</span></h2>
+    <p>בוחרים גיל, בוחרים נושא, ומתחילים לשחק. בלי הרשמה ובלי פרסומות.</p>
+  </section>
+
+  <section class="bar" aria-label="סינון משחקים">
+    <div class="seg" id="ages" role="group" aria-label="גיל"></div>
+    <div class="subjects" id="subjects" role="group" aria-label="נושא"></div>
+  </section>
+
+  <p class="count" id="count" role="status" aria-live="polite"></p>
+
+  <section class="featured" id="featured-wrap">
+    <div class="section-head">
+      <h3>אפשר להתחיל מפה</h3>
+      <span>שלושה משחקים אהובים</span>
+    </div>
+    <div class="feat-row" id="featured"></div>
+  </section>
+
+  <section class="featured">
+    <div class="section-head">
+      <h3>כל המשחקים</h3>
+    </div>
+    <ul class="grid" id="grid"></ul>
+  </section>
+
+</main>
+
+<footer class="end">
+  <div class="wrap">כיוון עיצוב 1 מתוך 3 — כרזה. מוקאפ בלבד, שום משחק לא נפתח מכאן.</div>
+</footer>
+
+<script src="../assets/catalog.js"></script>
+<script src="glyphs.js"></script>
+<script>
+/* Mockup wiring only — the real app.js keeps filter state in the URL and speaks
+   two languages. Here the chips just have to move so the states can be judged. */
+EDGlyphs.inject();
+
+const state = { age: null, subject: null };
+
+const ages = document.getElementById('ages');
+ages.innerHTML = [`<button type="button" data-age="" aria-pressed="true">כל הגילים</button>`]
+  .concat(AGE_GROUPS.map((a) => `<button type="button" data-age="${a.id}" aria-pressed="false">${a.label.he.replace(/([\d–]+)/, '<span class="num">$1</span>')}</button>`))
+  .join('');
+
+const subjects = document.getElementById('subjects');
+subjects.innerHTML = SUBJECTS.map((s) => `
+  <button type="button" class="sub" data-subject="${s.id}" data-sub="${s.id}"
+          data-status="${subjectHasReady(s.id) ? 'ready' : 'soon'}" aria-pressed="false">
+    ${EDGlyphs.mark(s.id)}<span>${s.label.he}</span>
+  </button>`).join('');
+
+function matches(g) {
+  if (state.subject && g.subject !== state.subject) return false;
+  if (state.age) {
+    const grp = AGE_GROUPS.find((a) => a.id === state.age);
+    if (g.ageMax < grp.min || g.ageMin > grp.max) return false;
+  }
+  return true;
+}
+
+function card(g) {
+  const sub = subjectById(g.subject);
+  const soon = g.status === 'soon';
+  return `
+  <li>
+    <a class="card" href="#" data-subject="${g.subject}" data-status="${g.status}">
+      <div class="panel" data-variant="${EDGlyphs.variant(g.id)}" data-tone="${EDGlyphs.tone(g.id)}">
+        ${EDGlyphs.mark(g.subject, 'mark ghost')}
+        ${EDGlyphs.mark(g.subject)}
+      </div>
+      <div class="body">
+        <div class="card-head">
+          <h4>${g.title.he}</h4>
+          <p>${g.blurb.he}</p>
+        </div>
+        <div class="tags">
+          <span class="tag">${soon ? 'בקרוב' : sub.label.he}</span>
+          <span class="tag tag--age">גיל <span class="num">${g.ageMin}–${g.ageMax}</span></span>
+        </div>
+      </div>
+    </a>
+  </li>`;
+}
+
+function render() {
+  const list = GAMES.filter(matches);
+  document.getElementById('grid').innerHTML = list.map(card).join('');
+  document.getElementById('count').innerHTML = `<b>${list.length}</b> משחקים מחכים`;
+  /* The featured strip is about the whole catalog, not the current filter. */
+  document.getElementById('featured-wrap').hidden = !!(state.age || state.subject);
+}
+
+document.getElementById('featured').innerHTML = ['color-pop', 'memory-pairs', 'letter-hunt']
+  .map(gameById)
+  .map((g) => `
+    <a class="feat" href="#" data-subject="${g.subject}">
+      ${EDGlyphs.mark(g.subject)}
+      <div><h4>${g.title.he}</h4><p>${g.blurb.he}</p></div>
+    </a>`).join('');
+
+ages.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  state.age = b.dataset.age || null;
+  ages.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  render();
+});
+
+subjects.addEventListener('click', (e) => {
+  const b = e.target.closest('.sub'); if (!b) return;
+  const on = b.getAttribute('aria-pressed') === 'true';
+  state.subject = on ? null : b.dataset.sub;
+  subjects.querySelectorAll('.sub').forEach((x) => x.setAttribute('aria-pressed', String(!on && x === b)));
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
