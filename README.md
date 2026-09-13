@@ -1,22 +1,47 @@
 # גנון משחקים — EDgames
 
 A small static site of educational games for children aged 3–8. Hebrew (RTL) by
-default with an English (LTR) toggle, Deep Green Light theme. No build step, no
-framework, no backend — plain HTML/CSS/JS served as files.
+default with an English (LTR) toggle. No build step, no framework, no backend —
+plain HTML/CSS/JS served as files.
 
 ## Layout
 
 ```
-index.html            the grid: hero, filters, game cards
+index.html            the home screen: app bar, subject rail, shelves, bottom bar
 game.html             the host page a game runs inside
 assets/styles.css     theme tokens + shared components
 assets/i18n.js        the two UI string tables and the language toggle
 assets/catalog.js     subjects, age groups, and the game catalog
-assets/app.js         filtering and grid rendering
+assets/glyphs.js      the seven drawn subject marks and the interface icons
+assets/app.js         the home screen: filtering, shelves and results
+assets/recent.js      the last game opened, for the card at the top of the home screen
 assets/game-host.js   loads and mounts a game module by id, and picks its set
 games/<id>.js         one file per game
+mockups/              the three design directions; direction 3 is the one that was built
 netlify.toml          publish config
 ```
+
+## The shape of the home screen
+
+It is an app shell, phone first: an app bar, one horizontal rail of subjects,
+and a fixed bottom bar holding the two things a grown-up does — filter by age,
+search. On a screen 900px or wider the bottom bar becomes a side rail and the
+rows wrap into a grid; nothing is designed twice.
+
+There are two modes over the one catalog, and which is on screen depends only on
+whether anything is filtered:
+
+- **Browse** — the game last played, a row of everything ready, a row per
+  subject with more than one finished game, and a list of what is still being
+  built. Nineteen games across seven subjects reads well as rows and badly as a
+  wall.
+- **Results** — the same tiles laid flat, with the count line and the empty
+  state. Picking a subject, an age or a search term is a question, and a
+  question deserves an answer rather than a rearranged shelf.
+
+The two filter drawers open from the bottom bar, so on a phone they appear just
+above it, where the thumb already is; Escape closes them, as does pressing the
+same tab again.
 
 ## Running it
 
@@ -32,6 +57,26 @@ state is kept in the URL, so opening a game and coming back keeps it. Opened as
 a file, where the browser refuses to rewrite the URL, the same state falls back
 to `sessionStorage` — for that tab and that session, which is as long as the URL
 would have held it.
+
+A page opened on a link that already carries a filter opens the drawer that
+filter came from, so a narrowed list is never unexplained.
+
+## Pictures
+
+The artwork is the site's own: seven drawn subject marks in `assets/glyphs.js`,
+one per subject, plus the few interface icons the chrome needs. Emoji used to do
+this job and that is most of what read as unfinished — an emoji is the machine's
+drawing, not ours, it differs on every device, and it looks like a placeholder
+nobody got round to replacing.
+
+Seven marks across nineteen games would put the same picture on every tile of a
+shelf, so a game's cover is a mark plus a field: one of four compositions and
+one of three weights, picked off the game's id and then spread so no two games
+in one subject collide — `EDGlyphs.covers`. A game keeps its cover for good
+unless a game is later added to the same subject ahead of it.
+
+A game's own text and pictures are still its own business, and several games use
+emoji inside their rounds on purpose — a ladybird is a ladybird.
 
 ## Language
 
@@ -83,16 +128,18 @@ word there is behind it — in The Wizard's Spell.
 ## Adding a game
 
 1. Add an entry to `GAMES` in `assets/catalog.js` with `status: 'soon'`. Give
-   `title` and `blurb` in both languages. It appears in the grid right away,
-   marked *בקרוב* / *Soon*, and its page explains that it is still being built.
+   `title` and `blurb` in both languages. It appears on the home screen right
+   away, in the *בקרוב* / *Coming soon* list, and its page explains that it is
+   still being built.
 2. Write `games/<id>.js`. The id in the catalog and the filename must match.
-3. Flip `status` to `'ready'`.
+3. Flip `status` to `'ready'`. It moves up into the shelves, and it inherits its
+   subject's drawn mark and a cover of its own — there is no picture to draw.
 
-Pictures here are emoji, and the font behind them is the machine's, not ours.
-Windows 10 stops at Emoji 12, so anything newer — 🪄 🫘 🪵 🪙 🪜 and the rest of
-that batch — comes out as an empty box on the very screen this is played on. If
-an emoji arrived after about 2019, check it renders before building a round on
-it; the older, plainer one is the safer picture.
+Inside a game's own rounds, pictures are usually emoji, and the font behind them
+is the machine's, not ours. Windows 10 stops at Emoji 12, so anything newer —
+🪄 🫘 🪵 🪙 🪜 and the rest of that batch — comes out as an empty box on the very
+screen this is played on. If an emoji arrived after about 2019, check it renders
+before building a round on it; the older, plainer one is the safer picture.
 
 A game module registers itself with the host:
 
@@ -119,13 +166,15 @@ assembled from slots in two grammars.
 
 ## House rules this follows
 
-- Deep Green Light tokens from the house design system; glass cards; floating
-  shapes used once, behind content. The canvas stays neutral on purpose — the
-  colour a child sees belongs to the subject of the card, not to the site.
+- One set of theme tokens in `assets/styles.css`, and a game module reads them
+  rather than hard-coding a colour — `--pos`, `--border`, `--text-soft`, the
+  per-subject `--sub-solid` / `--sub-tint` / `--sub-ink` triple and the rest. The
+  canvas stays neutral on purpose: the colour a child sees belongs to the
+  subject of the game, not to the site.
 - Direction-agnostic: logical CSS properties throughout, so `dir="rtl"` and
   `dir="ltr"` both lay out correctly. The back arrow is mirrored under
   `[dir="rtl"]` only, and number ranges keep their LTR wrappers in both.
-- Big tap targets (46px+ chips, 48px buttons) because the audience has small
-  fingers, and wrong answers never punish.
-- Focus is visible, `prefers-reduced-motion` is respected, and the grid has a
-  real empty state.
+- Big tap targets (44px+ chips, 46px buttons, a 66px bottom bar) because the
+  audience has small fingers, and wrong answers never punish.
+- Focus is visible, `prefers-reduced-motion` is respected, and the results view
+  has a real empty state.

@@ -4,40 +4,53 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-i18n="game.pageTitle">משחק — גנון משחקים</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎠</text></svg>">
+<meta name="theme-color" content="#f4f5f7">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2316794c'/><g transform='translate(4 4) scale(0.75)' fill='none' stroke='%23ffffff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='5.5'/><path d='M21.5 5.5 27 16h-11z'/><rect x='9' y='20' width='14' height='8' rx='2'/></g></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
 <!-- Sets lang and dir before the first paint, so an English visit never flashes RTL. -->
 <script src="assets/i18n.js"></script>
 </head>
 <body>
 
-<div class="shapes" aria-hidden="true">
-  <div class="shape a"></div>
-  <div class="shape b"></div>
-</div>
+<!-- The drawings go in before any markup that references them, so every <use>
+     below resolves as the page is parsed rather than after it. -->
+<script src="assets/glyphs.js"></script>
+<script>EDGlyphs.inject();</script>
 
-<div class="page">
-
-  <header class="game-header">
-    <a class="btn btn--ghost" id="back" href="index.html"><span class="icon-back" aria-hidden="true">←</span><span data-i18n="game.back">חזרה למשחקים</span></a>
-    <h1 id="game-title" data-i18n="game.loadingTitle">טוען…</h1>
-    <div class="badges" id="game-badges"></div>
+<header class="appbar">
+  <div class="appbar-in">
+    <a class="btn btn--ghost" id="back" href="index.html">
+      <svg class="ico icon-back" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-back"/></svg>
+      <span data-i18n="game.back">חזרה למשחקים</span>
+    </a>
     <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
-  </header>
-
-  <div class="game-sets" id="game-sets" hidden>
-    <span class="game-sets-label" id="set-label" data-i18n="game.sets.label">ערכה</span>
-    <div class="game-sets-chips" id="set-chips" role="group" aria-labelledby="set-label"></div>
   </div>
+</header>
 
-  <main class="stage glass-card" id="stage" data-subject="shapes"></main>
+<div class="shell">
+  <main class="content">
 
+    <div class="game-header" id="game-header" data-subject="shapes">
+      <span class="game-mark" id="game-mark" aria-hidden="true"></span>
+      <h1 id="game-title" data-i18n="game.loadingTitle">טוען…</h1>
+      <div class="badges" id="game-badges"></div>
+    </div>
+
+    <div class="game-sets" id="game-sets" hidden>
+      <span class="game-sets-label" id="set-label" data-i18n="game.sets.label">ערכה</span>
+      <div class="game-sets-chips" id="set-chips" role="group" aria-labelledby="set-label"></div>
+    </div>
+
+    <section class="stage" id="stage" data-subject="shapes"></section>
+
+  </main>
 </div>
 
 <script src="assets/catalog.js"></script>
+<script src="assets/recent.js"></script>
 <script src="assets/game-host.js"></script>
 </body>
 </html>

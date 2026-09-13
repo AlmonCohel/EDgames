@@ -5,78 +5,124 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-i18n="site.title">גנון משחקים — משחקים לימודיים לילדים</title>
 <meta name="description" data-i18n-content="site.description" content="אוסף משחקים לימודיים קטנים לילדים בגיל 3 עד 8. אפשר לסנן לפי גיל ולפי נושא ולבחור משחק.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎠</text></svg>">
+<meta name="theme-color" content="#f4f5f7">
+<!-- The site's own mark, not the machine's: the same drawn shapes glyph the
+     cards use, so the tab matches the page it opens. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2316794c'/><g transform='translate(4 4) scale(0.75)' fill='none' stroke='%23ffffff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='5.5'/><path d='M21.5 5.5 27 16h-11z'/><rect x='9' y='20' width='14' height='8' rx='2'/></g></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
 <!-- Sets lang and dir before the first paint, so an English visit never flashes RTL. -->
 <script src="assets/i18n.js"></script>
 </head>
-<body>
+<body class="app">
 
-<div class="shapes" aria-hidden="true">
-  <div class="shape a"></div>
-  <div class="shape b"></div>
-  <div class="shape c"></div>
-</div>
+<!-- The drawings go in before any markup that references them, so every <use>
+     below resolves as the page is parsed rather than after it. -->
+<script src="assets/glyphs.js"></script>
+<script>EDGlyphs.inject();</script>
 
-<div class="page">
+<header class="appbar">
+  <div class="appbar-in">
+    <div class="avatar" aria-hidden="true" data-i18n="brand.initial">ג</div>
+    <div class="hello">
+      <h1 class="small" data-i18n="brand.name">גנון משחקים</h1>
+      <div class="big" data-i18n="appbar.greeting">מה משחקים היום?</div>
+    </div>
+    <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
+  </div>
+</header>
 
-  <header class="site-header">
-    <div class="brand">
-      <div class="brand-mark" aria-hidden="true">🎠</div>
-      <div>
-        <h1 class="brand-name" data-i18n="brand.name">גנון משחקים</h1>
-        <div class="brand-tag" data-i18n="brand.tag">משחקים לימודיים לגילאי 3–8</div>
+<div class="shell">
+
+  <nav class="tabs" data-i18n-label="nav.label" aria-label="ניווט">
+    <button type="button" class="tab" id="tab-home" aria-current="page">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-home"/></svg>
+      <span data-i18n="tabs.home">בית</span>
+    </button>
+    <button type="button" class="tab" id="tab-age" aria-expanded="false" aria-controls="age-sheet">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-age"/></svg>
+      <span data-i18n="tabs.age">לפי גיל</span>
+    </button>
+    <button type="button" class="tab" id="tab-search" aria-expanded="false" aria-controls="search-sheet">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
+      <span data-i18n="tabs.search">חיפוש</span>
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <div class="rail" id="subject-rail" role="group" data-i18n-label="filters.subject" aria-label="נושא"></div>
+
+    <div class="sheet" id="age-sheet" hidden>
+      <span class="sheet-label" id="age-label" data-i18n="filters.age">גיל</span>
+      <div class="sheet-row" id="age-chips" role="group" aria-labelledby="age-label"></div>
+    </div>
+
+    <div class="sheet" id="search-sheet" hidden>
+      <div class="sheet-row">
+        <div class="search">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
+          <label class="visually-hidden" for="q" data-i18n="search.label">חיפוש משחק</label>
+          <input id="q" type="search" data-i18n-placeholder="search.placeholder" placeholder="איזה משחק מחפשים?" autocomplete="off">
+        </div>
       </div>
     </div>
 
-    <div class="header-tools">
-      <div class="search">
-        <span class="search-icon" aria-hidden="true">🔍</span>
-        <label class="visually-hidden" for="q" data-i18n="search.label">חיפוש משחק</label>
-        <input id="q" type="search" data-i18n-placeholder="search.placeholder" placeholder="איזה משחק מחפשים?" autocomplete="off">
-      </div>
-      <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
-    </div>
-  </header>
-
-  <section class="hero">
-    <h2 data-i18n-html="hero.title">משחקים קטנים<br>שלומדים מהם <span class="accent">בלי לשים לב</span></h2>
-    <p data-i18n="hero.text">בוחרים גיל, בוחרים נושא, ומתחילים לשחק. בלי הרשמה ובלי פרסומות.</p>
-  </section>
-
-  <section class="filters glass-card" data-i18n-label="filters.label" aria-label="סינון משחקים">
-    <div class="filter-row" role="group" aria-labelledby="age-label">
-      <span class="filter-label" id="age-label" data-i18n="filters.age">גיל</span>
-      <div class="filter-row" id="age-chips"></div>
-    </div>
-    <div class="filter-row" role="group" aria-labelledby="subject-label">
-      <span class="filter-label" id="subject-label" data-i18n="filters.subject">נושא</span>
-      <div class="filter-row" id="subject-chips"></div>
+    <!-- Shown only while something is filtered, which is also the only time
+         there is anything to clear. -->
+    <div class="result-bar" id="result-bar" hidden>
+      <p class="result-line" role="status" aria-live="polite" id="result-line"></p>
       <button type="button" class="chip chip--clear" id="clear" data-i18n="filters.clear" hidden>נקה סינון ✕</button>
     </div>
-  </section>
 
-  <p class="result-line" role="status" aria-live="polite" id="result-line"></p>
+    <!-- Browse: the shelves, shown while nothing is filtered. -->
+    <div class="browse" id="browse">
+      <section class="shelf" id="continue-shelf" hidden>
+        <div class="head"><h2 data-i18n="browse.continue">ממשיכים מאיפה שהפסקנו</h2></div>
+        <div id="continue"></div>
+      </section>
 
-  <ul class="grid" id="grid"></ul>
+      <section class="shelf">
+        <div class="head">
+          <h2 data-i18n="browse.ready">אפשר לשחק עכשיו</h2>
+          <span class="more" id="ready-count"></span>
+        </div>
+        <ul class="row" id="ready"></ul>
+      </section>
 
-  <div class="empty glass-card" id="empty" hidden>
-    <div class="empty-emoji" aria-hidden="true">🔎</div>
-    <h3 data-i18n="empty.title">לא מצאנו משחק כזה</h3>
-    <p data-i18n="empty.text">אפשר לנסות גיל אחר או נושא אחר.</p>
-    <button type="button" class="btn" data-clear data-i18n="empty.action">הצג את כל המשחקים</button>
-  </div>
+      <div id="by-subject"></div>
 
-  <footer class="site-footer" data-i18n="footer">
-    נבנה באהבה לילדים סקרנים 💛
-  </footer>
+      <section class="shelf">
+        <div class="head">
+          <h2 data-i18n="browse.soon">בקרוב</h2>
+          <span class="more" data-i18n="browse.soonMore">עוד נבנים</span>
+        </div>
+        <ul class="list" id="soon"></ul>
+      </section>
+    </div>
+
+    <!-- Results: the same tiles, laid flat, shown the moment anything is filtered. -->
+    <ul class="tiles" id="grid" hidden></ul>
+
+    <div class="empty" id="empty" hidden>
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
+      <h2 data-i18n="empty.title">לא מצאנו משחק כזה</h2>
+      <p data-i18n="empty.text">אפשר לנסות גיל אחר או נושא אחר.</p>
+      <button type="button" class="btn" data-clear data-i18n="empty.action">הצג את כל המשחקים</button>
+    </div>
+
+    <footer class="site-footer" data-i18n="footer">
+      נבנה באהבה לילדים סקרנים 💛
+    </footer>
+
+  </main>
 
 </div>
 
 <script src="assets/catalog.js"></script>
+<script src="assets/recent.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>

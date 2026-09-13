@@ -20,15 +20,25 @@ const UI = {
     'site.title':       'גנון משחקים — משחקים לימודיים לילדים',
     'site.description': 'אוסף משחקים לימודיים קטנים לילדים בגיל 3 עד 8. אפשר לסנן לפי גיל ולפי נושא ולבחור משחק.',
     'brand.name':       'גנון משחקים',
-    'brand.tag':        'משחקים לימודיים לגילאי 3–8',
+    'brand.initial':    'ג',
+    'appbar.greeting':  'מה משחקים היום?',
 
     'search.label':       'חיפוש משחק',
     'search.placeholder': 'איזה משחק מחפשים?',
 
-    'hero.title': 'משחקים קטנים<br>שלומדים מהם <span class="accent">בלי לשים לב</span>',
-    'hero.text':  'בוחרים גיל, בוחרים נושא, ומתחילים לשחק. בלי הרשמה ובלי פרסומות.',
+    'nav.label':   'ניווט',
+    'tabs.home':   'בית',
+    'tabs.age':    'לפי גיל',
+    'tabs.search': 'חיפוש',
 
-    'filters.label':   'סינון משחקים',
+    'rail.all':         'הכול',
+    'browse.continue':  'ממשיכים מאיפה שהפסקנו',
+    'continue.kicker':  'המשחק האחרון ששיחקתם',
+    'browse.ready':     'אפשר לשחק עכשיו',
+    'browse.soon':      'בקרוב',
+    'browse.soonMore':  'עוד נבנים',
+    'browse.count':     '{count} משחקים',
+
     'filters.age':     'גיל',
     'filters.subject': 'נושא',
     'filters.clear':   'נקה סינון ✕',
@@ -75,15 +85,25 @@ const UI = {
     'site.title':       'EDgames — educational games for kids',
     'site.description': 'A small collection of educational games for children aged 3 to 8. Filter by age and by subject and pick a game.',
     'brand.name':       'EDgames',
-    'brand.tag':        'Educational games for ages 3–8',
+    'brand.initial':    'E',
+    'appbar.greeting':  'What shall we play today?',
 
     'search.label':       'Search for a game',
     'search.placeholder': 'Which game shall we play?',
 
-    'hero.title': 'Little games<br>they learn from <span class="accent">without noticing</span>',
-    'hero.text':  'Pick an age, pick a subject, and start playing. No sign-up and no ads.',
+    'nav.label':   'Navigation',
+    'tabs.home':   'Home',
+    'tabs.age':    'By age',
+    'tabs.search': 'Search',
 
-    'filters.label':   'Filter games',
+    'rail.all':         'All',
+    'browse.continue':  'Carry on where you left off',
+    'continue.kicker':  'The last game you played',
+    'browse.ready':     'Ready to play now',
+    'browse.soon':      'Coming soon',
+    'browse.soonMore':  'Still being built',
+    'browse.count':     '{count} games',
+
     'filters.age':     'Age',
     'filters.subject': 'Subject',
     'filters.clear':   'Clear filters ✕',
@@ -187,7 +207,7 @@ const EDLang = {
     btn.lang = next;
     btn.dir = next === 'he' ? 'rtl' : 'ltr';
     btn.setAttribute('aria-label', this.t('lang.switch'));
-    btn.innerHTML = `<span class="emoji" aria-hidden="true">🌐</span>${UI[next]['lang.name']}`;
+    btn.innerHTML = `${EDGlyphs.icon('globe')}${UI[next]['lang.name']}`;
     btn.addEventListener('click', () => this.set(next));
   },
 };

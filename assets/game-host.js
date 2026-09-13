@@ -62,6 +62,10 @@ function dressPage(game) {
   document.getElementById('game-badges').innerHTML = `
     <span class="badge badge--age">${EDLang.t('card.age')} <span class="num">${game.ageMin}–${game.ageMax}</span></span>
     <span class="badge">${EDLang.pick(subject.label)}</span>`;
+  /* The subject's drawn mark and its colour, the same pair the tile on the home
+     screen wears, so arriving here looks like the card that was pressed. */
+  document.getElementById('game-mark').innerHTML = EDGlyphs.mark(game.subject);
+  document.getElementById('game-header').dataset.subject = game.subject;
   stage.dataset.subject = game.subject;
 }
 
@@ -167,6 +171,11 @@ async function start() {
       exit: () => { location.href = gridHref; },
     });
   }
+
+  /* Remembered for the card at the top of the home screen, and only once the
+     game has really loaded — a broken link or a half-built module should never
+     become the thing the child is offered to carry on with. */
+  EDRecent.write(game.id);
 
   if (sets) buildSetChips(sets, (i) => { index = i; play(); });
   play();

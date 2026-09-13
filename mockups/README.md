@@ -1,5 +1,11 @@
 # Design directions — how to open them away from this machine
 
+> **Direction 3 was chosen, and the site is now built as it.** These three pages
+> stay as the record of what was decided and what was turned down; the live
+> `index.html` and `game.html` are the finished version of direction 3, not
+> these. Where the two differ, the site wins — a mockup is a drawing and it is
+> allowed to be out of date.
+
 These are ordinary files in this folder, so opening them normally means having
 the repo checked out, which is no use on a phone. The links below serve the same
 files straight off the `design-mockups-v2` branch over HTTPS, without putting
@@ -49,8 +55,12 @@ a third party staying up.
 | `index.html` | the comparison page: the diagnosis, the three directions, costs, a recommendation |
 | `1-poster.html` | direction 1 — same page shape, everything turned up until it means something |
 | `2-trail.html` | direction 2 — the grid becomes one walked trail with three stations |
-| `3-app.html` | direction 3 — a phone-first app shell; rails instead of a wall |
-| `glyphs.js` | the seven drawn subject marks the three directions share, and the two hashes that keep two games in one subject from wearing the same cover |
+| `3-app.html` | direction 3 — a phone-first app shell; rails instead of a wall. **The one that was built.** |
 
-None of this is loaded by the live site. `index.html` and `game.html` at the
-repo root do not reference this folder.
+The seven drawn subject marks all three directions share moved to
+`../assets/glyphs.js` when direction 3 was built, because the live site needs
+them too and one copy of a drawing is the whole point. These pages load it from
+there.
+
+Nothing else in here is loaded by the live site: `index.html` and `game.html` at
+the repo root do not reference this folder.
