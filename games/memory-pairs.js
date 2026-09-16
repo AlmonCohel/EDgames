@@ -76,7 +76,11 @@
       cursor: pointer; perspective: 700px;
     }
     .mp-card[disabled] { cursor: default; }
+    /* The span this lands on is inline by default, and an inline box ignores
+       width, height and transform — so without display:block the faces have no
+       area to paint and the flip never moves. */
     .mp-face {
+      display: block;
       position: relative; width: 100%; height: 100%;
       transform-style: preserve-3d;
       transition: transform 0.34s ease;
