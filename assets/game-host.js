@@ -62,9 +62,10 @@ function dressPage(game) {
   document.getElementById('game-badges').innerHTML = `
     <span class="badge badge--age">${EDLang.t('card.age')} <span class="num">${game.ageMin}–${game.ageMax}</span></span>
     <span class="badge">${EDLang.pick(subject.label)}</span>`;
-  /* The subject's drawn mark and its colour, the same pair the tile on the home
-     screen wears, so arriving here looks like the card that was pressed. */
-  document.getElementById('game-mark').innerHTML = EDGlyphs.mark(game.subject);
+  /* The game's own drawing on its subject's colour, the same pair the tile on
+     the home screen wears, so arriving here looks like the card that was
+     pressed. */
+  document.getElementById('game-mark').innerHTML = EDScenes.picture(game);
   document.getElementById('game-header').dataset.subject = game.subject;
   stage.dataset.subject = game.subject;
 }

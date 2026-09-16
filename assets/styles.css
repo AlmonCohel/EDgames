@@ -305,7 +305,7 @@ button { font: inherit; }
   opacity: 0.15;
   color: #fff;
 }
-.continue .mark-main { width: 54px; height: 54px; flex: none; position: relative; z-index: 1; }
+.continue .scene-main { width: 58px; flex: none; position: relative; z-index: 1; }
 .continue .txt { position: relative; z-index: 1; min-width: 0; }
 .continue .kicker { font-size: 0.78rem; opacity: 0.85; font-weight: 500; }
 .continue h3 { margin: 1px 0 3px; font-size: 1.3rem; line-height: 1.2; }
@@ -363,12 +363,13 @@ button { font: inherit; }
 }
 .tile:hover .cover,
 .tile:focus-visible .cover { transform: translateY(-3px) scale(1.015); box-shadow: var(--shadow-lift); }
-.cover .mark { width: 46%; position: relative; z-index: 1; }
+.cover .scene { width: 58%; position: relative; z-index: 1; }
 
-/* A row here IS a subject, so without this every tile in the row would carry
-   the identical drawing. The composition — which corner the ghost bleeds from,
-   which way it leans, what pattern sits behind it — comes off the game's id.
-   See EDGlyphs.variant: seven drawings, nineteen distinguishable covers. */
+/* The picture on the field is the game's own (EDScenes); the field it sits on
+   belongs to the subject. The composition — which corner the ghost mark bleeds
+   from, which way it leans, what pattern sits behind it — comes off the game's
+   id, so a row that IS one subject still has some variety in it rather than
+   nineteen pictures on one flat colour. See EDGlyphs.variant. */
 .cover .ghost { position: absolute; width: 112%; opacity: 0.15; color: #fff; }
 .cover[data-variant="0"] .ghost { inset-block-start: -28%; inset-inline-start: -36%; transform: rotate(-8deg); }
 .cover[data-variant="1"] .ghost { inset-block-end: -30%;   inset-inline-end:  -32%; transform: rotate(13deg); }
@@ -437,7 +438,7 @@ button { font: inherit; }
   display: grid; place-items: center;
   opacity: 0.55;
 }
-.item .chip-cover .mark { width: 24px; height: 24px; }
+.item .chip-cover .scene { width: 30px; }
 .item .txt { min-width: 0; }
 .item h3 { margin: 0; font-size: 0.98rem; font-weight: 700; }
 .item p {
@@ -545,7 +546,7 @@ button { font: inherit; }
 
 /* ---- Drawn marks ---- */
 
-.mark, .ico {
+.mark, .ico, .scene {
   display: inline-block;
   vertical-align: middle;
   color: currentColor;
@@ -562,14 +563,14 @@ button { font: inherit; }
   flex-wrap: wrap;
 }
 .game-header .game-mark {
-  width: 40px; height: 40px;
+  width: 48px; height: 48px;
   border-radius: var(--radius-sm);
   background: var(--sub-solid);
   color: #fff;
   display: grid; place-items: center;
   flex: none;
 }
-.game-header .game-mark .mark { width: 22px; height: 22px; }
+.game-header .game-mark .scene { width: 34px; }
 .game-header h1 { font-size: 1.25rem; margin: 0; }
 .game-header .badges { margin: 0; }
 

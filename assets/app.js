@@ -111,9 +111,10 @@ function gameHref(game) {
   return `game.html?${params}`;
 }
 
-/* Which drawn field each game wears, decided once for the whole catalog: seven
-   marks across nineteen games means a shelf would otherwise carry the same
-   picture several times over. */
+/* Which drawn field each game wears, decided once for the whole catalog. The
+   picture on top of it is the game's own now, so the field is no longer what
+   tells two tiles apart — it is the colour and texture the row is made of, and
+   spreading it still keeps a shelf from reading as one flat block. */
 const COVERS = EDGlyphs.covers(GAMES);
 
 function tile(game) {
@@ -124,7 +125,7 @@ function tile(game) {
     <a class="tile" href="${gameHref(game)}" data-subject="${game.subject}" data-status="${game.status}">
       <div class="cover" data-variant="${cover.variant}" data-tone="${cover.tone}">
         ${EDGlyphs.mark(game.subject, 'mark ghost')}
-        ${EDGlyphs.mark(game.subject)}
+        ${EDScenes.picture(game)}
       </div>
       <h3>${EDLang.pick(game.title)}</h3>
       <div class="meta">${EDLang.t('card.age')} <span class="num">${game.ageMin}–${game.ageMax}</span>${soon ? ` · ${EDLang.t('card.soon')}` : ''}</div>
@@ -136,7 +137,7 @@ function soonItem(game) {
   const li = document.createElement('li');
   li.innerHTML = `
     <a class="item" href="${gameHref(game)}" data-subject="${game.subject}">
-      <span class="chip-cover" aria-hidden="true">${EDGlyphs.mark(game.subject)}</span>
+      <span class="chip-cover" aria-hidden="true">${EDScenes.picture(game)}</span>
       <div class="txt">
         <h3>${EDLang.pick(game.title)}</h3>
         <p>${EDLang.pick(game.blurb)}</p>
@@ -168,7 +169,7 @@ function buildBrowse() {
     els.continueBox.innerHTML = `
       <a class="continue" href="${gameHref(last)}" data-subject="${last.subject}">
         ${EDGlyphs.mark(last.subject, 'mark ghost')}
-        ${EDGlyphs.mark(last.subject, 'mark mark-main')}
+        ${EDScenes.picture(last, 'scene scene-main')}
         <div class="txt">
           <div class="kicker">${EDLang.t('continue.kicker')}</div>
           <h3>${EDLang.pick(last.title)}</h3>

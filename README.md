@@ -13,6 +13,7 @@ assets/styles.css     theme tokens + shared components
 assets/i18n.js        the two UI string tables and the language toggle
 assets/catalog.js     subjects, age groups, and the game catalog
 assets/glyphs.js      the seven drawn subject marks and the interface icons
+assets/scenes.js      one drawn picture per game, for the tiles and the game page
 assets/app.js         the home screen: filtering, shelves and results
 assets/recent.js      the last game opened, for the card at the top of the home screen
 assets/game-host.js   loads and mounts a game module by id, and picks its set
@@ -63,17 +64,32 @@ filter came from, so a narrowed list is never unexplained.
 
 ## Pictures
 
-The artwork is the site's own: seven drawn subject marks in `assets/glyphs.js`,
-one per subject, plus the few interface icons the chrome needs. Emoji used to do
-this job and that is most of what read as unfinished — an emoji is the machine's
-drawing, not ours, it differs on every device, and it looks like a placeholder
-nobody got round to replacing.
+The artwork is the site's own, drawn in two sizes of idea:
 
-Seven marks across nineteen games would put the same picture on every tile of a
-shelf, so a game's cover is a mark plus a field: one of four compositions and
-one of three weights, picked off the game's id and then spread so no two games
-in one subject collide — `EDGlyphs.covers`. A game keeps its cover for good
-unless a game is later added to the same subject ahead of it.
+- **A subject is a mark** — seven of them in `assets/glyphs.js`, plus the few
+  interface icons the chrome needs. They are what the rail chips wear and what
+  bleeds oversized across a card as the ghost behind the picture.
+- **A game is a scene** — nineteen of them in `assets/scenes.js`, one per game:
+  balloons and a burst for Color Pop, a duck on the water for Counting Ducks, a
+  staircase with one step missing for The Tower Stairs. This is the site for
+  children who cannot read the title yet, so a tile has to say what the game is
+  before it is pressed, and a shelf of seven repeating marks did not.
+
+Emoji used to do both jobs and that is most of what read as unfinished — an
+emoji is the machine's drawing, not ours, it differs on every device, and it
+looks like a placeholder nobody got round to replacing.
+
+Both are one pen: a 32×32 viewBox, round caps, `currentColor` so a drawing is
+white on its subject's field and takes any other colour without being redrawn.
+Scenes use a slightly lighter stroke than the marks, because a scene carries
+more lines in the same square.
+
+Under the picture a game's cover still carries a field: one of four
+compositions and one of three weights, picked off the game's id and then spread
+so no two games in one subject collide — `EDGlyphs.covers`. That began as the
+way to tell two tiles of one subject apart; now that the picture does that, the
+field is the texture a row is made of. A game keeps its field for good unless a
+game is later added to the same subject ahead of it.
 
 A game's own text and pictures are still its own business, and several games use
 emoji inside their rounds on purpose — a ladybird is a ladybird.
@@ -132,8 +148,12 @@ word there is behind it — in The Wizard's Spell.
    away, in the *בקרוב* / *Coming soon* list, and its page explains that it is
    still being built.
 2. Write `games/<id>.js`. The id in the catalog and the filename must match.
-3. Flip `status` to `'ready'`. It moves up into the shelves, and it inherits its
-   subject's drawn mark and a cover of its own — there is no picture to draw.
+3. Draw it a scene in `assets/scenes.js`, under the same id — a few strokes
+   saying what happens in the game. Until there is one it borrows its subject's
+   mark, so nothing is ever an empty square, but a game the child can tell
+   apart at a glance is the whole point of that file.
+4. Flip `status` to `'ready'`. It moves up into the shelves with a field of its
+   own.
 
 Inside a game's own rounds, pictures are usually emoji, and the font behind them
 is the machine's, not ours. Windows 10 stops at Emoji 12, so anything newer —

@@ -7,12 +7,12 @@
    differs on every device and it reads as a placeholder that nobody got round
    to replacing.
 
-   The obvious fix is to draw nineteen pictures, one per game, and that is a
-   real project. This is the cheap version of the same fix: draw seven, one per
-   SUBJECT, and let colour and composition do the rest. A card then carries a
-   mark that is ours, on a field that says what the game is about, and no two
-   subjects look alike. Nineteen games become seven drawings — and every game
-   added later inherits one for free.
+   The obvious fix is to draw nineteen pictures, one per game. That is a real
+   project and it now exists, in `scenes.js`. What stayed here is the seven:
+   one drawing per SUBJECT, which is a different job and still a needed one —
+   it is what the rail chips wear, what bleeds across a card as the ghost
+   behind the game's own picture, and what a game whose scene has yet to be
+   drawn borrows in the meantime.
 
    Stroke-based on purpose: one path set scales from a 28px chip to a 120px
    card panel, and takes its colour from `currentColor` so a mark is never
@@ -95,14 +95,15 @@ const EDGlyphs = (() => {
     document.body.insertAdjacentHTML('afterbegin', sprite());
   }
 
-  /* Seven marks across nineteen games means a subject's games would otherwise
-     all wear the identical picture — which is most visible in direction 3,
-     where a row IS a subject and four grey cursors in a line look like a
-     rendering fault. So each game also gets one of four field compositions,
-     picked off its id: where the oversized ghost mark bleeds in from, which way
-     it leans, and whether the field carries a circle, a dot grid or stripes
-     behind it. Same seven drawings, nineteen distinguishable covers, and a game
-     keeps its own cover for good because the id never changes. */
+  /* Each game also gets one of four field compositions, picked off its id:
+     where the oversized ghost mark bleeds in from, which way it leans, and
+     whether the field carries a circle, a dot grid or stripes behind it. This
+     began as the answer to seven marks across nineteen games — a row IS a
+     subject here, and four grey cursors in a line look like a rendering fault.
+     The picture on top is the game's own now, so the field is texture rather
+     than the thing that tells two tiles apart; it is kept because a shelf of
+     one flat colour is duller than a shelf that varies, and a game keeps its
+     own field for good because the id never changes. */
   function variant(id) {
     let h = 0;
     for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
