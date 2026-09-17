@@ -95,7 +95,10 @@
 
       <div id="by-subject"></div>
 
-      <section class="shelf">
+      <!-- Shown only while something is still being built. Every game in the
+           catalog is finished at the moment, and a heading over an empty list
+           reads as a section that failed to load. -->
+      <section class="shelf" id="soon-shelf" hidden>
         <div class="head">
           <h2 data-i18n="browse.soon">בקרוב</h2>
           <span class="more" data-i18n="browse.soonMore">עוד נבנים</span>

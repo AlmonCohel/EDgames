@@ -29,6 +29,7 @@ const els = {
   readyCount: document.getElementById('ready-count'),
   bySubject: document.getElementById('by-subject'),
   soon: document.getElementById('soon'),
+  soonShelf: document.getElementById('soon-shelf'),
   tabs: {
     home: document.getElementById('tab-home'),
     age: document.getElementById('tab-age'),
@@ -193,7 +194,11 @@ function buildBrowse() {
       els.bySubject.append(shelf(EDLang.pick(s.label), gameCount(games.length), games));
     });
 
-  els.soon.append(...GAMES.filter((g) => g.status !== 'ready').map(soonItem));
+  /* The shelf follows the list: a "coming soon" heading with nothing under it
+     says the section is broken, not that the work is done. */
+  const soon = GAMES.filter((g) => g.status !== 'ready');
+  els.soon.append(...soon.map(soonItem));
+  els.soonShelf.hidden = soon.length === 0;
 }
 
 /* ---- Chips ---- */

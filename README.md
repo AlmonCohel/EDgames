@@ -16,6 +16,7 @@ assets/glyphs.js      the seven drawn subject marks and the interface icons
 assets/scenes.js      one drawn picture per game, for the tiles and the game page
 assets/app.js         the home screen: filtering, shelves and results
 assets/recent.js      the last game opened, for the card at the top of the home screen
+assets/sound.js       tones made on the spot, for the three games that listen
 assets/game-host.js   loads and mounts a game module by id, and picks its set
 games/<id>.js         one file per game
 mockups/              the three design directions; direction 3 is the one that was built
@@ -35,7 +36,10 @@ whether anything is filtered:
 - **Browse** — the game last played, a row of everything ready, a row per
   subject with more than one finished game, and a list of what is still being
   built. Nineteen games across seven subjects reads well as rows and badly as a
-  wall.
+  wall. All nineteen are finished, so the *בקרוב* / *Coming soon* list is empty
+  and its shelf hides itself — a heading with nothing under it reads as a
+  section that failed to load, not as work that is done. Add a game with
+  `status: 'soon'` and the shelf comes back on its own.
 - **Results** — the same tiles laid flat, with the count line and the empty
   state. Picking a subject, an age or a search term is a question, and a
   question deserves an answer rather than a rearranged shelf.
@@ -144,6 +148,40 @@ same: how many pictures a tale is told in in What Happened First, whether the
 tower is climbed, come down or skipped up in twos in The Tower Stairs, and
 whether the missing letter is the one a word opens or closes with — and how much
 word there is behind it — in The Wizard's Spell.
+
+The six that finished the catalog vary the same way: which animals are in
+earshot in Who Said That?, whether the keyboard is free to play with or has a
+tune to copy back — and how long the tune is — in Animal Piano, whether a rhythm
+is only counted or has short and long gaps in it in Clap the Beat, how much of
+the picture is missing *and whether the finished one stays on screen to copy
+from* in Park Puzzle, how many days are in play and how much of the rack suits
+none of them in What Is the Weather?, and how long the word is — and whether a
+letter is on the table that belongs to no part of it — in Build a Word.
+
+## Sound
+
+Three games listen: Who Said That?, Animal Piano and Clap the Beat. There are no
+sound files. A folder of mp3s would be the first thing here that has to be
+fetched, cached and kept in step with the code, and this site has no build step
+to keep it there — so `assets/sound.js` makes the sounds out of an oscillator
+and a pitch curve, the same way the tiles are made out of an SVG path rather
+than a photograph. Only `game.html` loads it.
+
+    EDSound.wake();                       // from inside a click
+    EDSound.note(440, { seconds: 0.4 });  // one pitch
+    EDSound.note([300, 520, 240]);        // a pitch that slides through them
+    EDSound.drum();                       // a beat
+    EDSound.hush();                       // on unmount, or the last note follows
+                                          // the child back to the home screen
+
+Two things follow from making sound this way rather than recording it. The first
+is that a curve through an oscillator is a cartoon of a cow, not a cow — so Who
+Said That? writes the call out as well, מו / Moo, and a child is never asked to
+recognise a sound the file cannot really make. The second is that nothing plays
+before the page has been touched, because no browser allows it; every one of the
+three opens on a button that asks to be pressed, which is the round starting
+anyway. A device with no Web Audio at all still gets a playable game, and is
+told so rather than left in silence.
 
 ## Adding a game
 

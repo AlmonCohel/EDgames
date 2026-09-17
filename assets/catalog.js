@@ -70,7 +70,7 @@ const GAMES = [
       he: 'שומעים קול של חיה ומנחשים למי הוא שייך.',
       en: 'Listen to an animal sound and guess who it belongs to.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'piano-pets',
@@ -82,7 +82,7 @@ const GAMES = [
       he: 'כל קליד הוא חיה אחרת. מנגנים ומגלים איך היא נשמעת.',
       en: 'Every key is a different animal. Play and find out how it sounds.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'memory-pairs',
@@ -106,7 +106,7 @@ const GAMES = [
       he: 'מקשיבים לקצב ומנסים לחזור עליו בדיוק אותו הדבר.',
       en: 'Listen to a rhythm and try to repeat it exactly the same way.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'mouse-moves',
@@ -154,7 +154,7 @@ const GAMES = [
       he: 'מרכיבים תמונה של הפארק חתיכה אחרי חתיכה.',
       en: 'Put a picture of the park together piece after piece.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'letter-hunt',
@@ -226,7 +226,7 @@ const GAMES = [
       he: 'מתאימים בגדים ליום שמשי, גשום או מושלג.',
       en: 'Match the clothes to a sunny, a rainy or a snowy day.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'build-a-word',
@@ -234,11 +234,14 @@ const GAMES = [
     emoji: '✏️',
     subject: 'letters',
     ageMin: 6, ageMax: 8,
+    /* Not dragged: this site taps, because a small hand on a tablet loses a
+       dragged piece halfway. The blurb said "drag" while the game was still a
+       sentence rather than a screen. */
     blurb: {
-      he: 'גוררים אותיות למקום ומרכיבים את המילה שבתמונה.',
-      en: 'Drag the letters into place and build the word in the picture.',
+      he: 'לוחצים על האותיות לפי הסדר ובונים את המילה שבתמונה.',
+      en: 'Tap the letters in order and build the word in the picture.',
     },
-    status: 'soon',
+    status: 'ready',
   },
   {
     id: 'plus-minus',
