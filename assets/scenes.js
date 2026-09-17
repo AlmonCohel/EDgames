@@ -19,10 +19,12 @@
 
 const EDScenes = (() => {
   const SCENES = {
-    /* A balloon on its string, and the one next to it going pop. */
+    /* A balloon on its string — knot and all, or it is a magnifying glass —
+       and the one next to it going pop. */
     'color-pop': `
       <ellipse cx="10.5" cy="12" rx="6" ry="7.5"/>
-      <path d="M10.5 19.5c0 2.6-2 3.4-2 6.4"/>
+      <path d="M9 19.4h3l-1.5 2.2z" fill="currentColor" stroke="none"/>
+      <path d="M10.5 21.6c0 1.8-2.2 2-2.2 3.8s1.8 1.8 1.8 3.4"/>
       <path d="M23.5 6.4v3.2M23.5 16.6v3.2M17.4 13h3.2M26.4 13h3.2
                M19.2 8.7l2.3 2.3M27.8 8.7l-2.3 2.3M19.2 17.3l2.3-2.3M27.8 17.3l-2.3-2.3"/>`,
 
@@ -37,14 +39,16 @@ const EDScenes = (() => {
       <circle cx="15" cy="6" r="1.5" fill="currentColor" stroke="none"/>`,
 
     /* The sorting board with its three holes, and the round piece on its way
-       into the one that fits. */
+       into the one that fits. The holes are dashed because solid outlines read
+       as three things already sitting on a panel, which is the opposite of
+       what the game asks. Dashed means "nothing there yet" everywhere below. */
     'shape-match': `
-      <rect x="2.5" y="14" width="27" height="14" rx="2.6"/>
-      <circle cx="8.5" cy="21" r="3.2"/>
-      <rect x="14.8" y="17.8" width="6.4" height="6.4" rx="1.2"/>
-      <path d="M24.8 17.6l3.4 6.6h-6.8z"/>
-      <circle cx="8.5" cy="5.6" r="3.2" fill="currentColor" stroke="none"/>
-      <path d="M8.5 9.6v1.6M6.6 10.2 8.5 12.1l1.9-1.9"/>`,
+      <rect x="2.5" y="15.5" width="27" height="13" rx="2.6"/>
+      <circle cx="8.6" cy="22" r="3.1" stroke-dasharray="2.4 2"/>
+      <rect x="14.9" y="18.9" width="6.2" height="6.2" rx="1.2" stroke-dasharray="2.4 2"/>
+      <path d="M24.9 18.7l3.3 6.4h-6.6z" stroke-dasharray="2.4 2"/>
+      <circle cx="8.6" cy="5.2" r="3.4" fill="currentColor" stroke="none"/>
+      <path d="M8.6 9.2v2.6M5.9 10.4 8.6 13.1l2.7-2.7"/>`,
 
     /* An animal, and the sound coming out of it. */
     'animal-sounds': `
@@ -65,15 +69,22 @@ const EDScenes = (() => {
       <circle cx="16" cy="3.2" r="1.4" fill="currentColor" stroke="none"/>
       <circle cx="20.6" cy="4.8" r="1.4" fill="currentColor" stroke="none"/>`,
 
-    /* Two cards turned over carrying the same star, and one still face down
-       between them. */
+    /* Two cards turned over carrying the same thing, and one still face down
+       between them. The back is the patterned grid a real card back has —
+       drawn as crossed lines it read as a card struck through, which is a
+       different thing entirely. */
     'memory-pairs': `
-      <rect x="2.5" y="9" width="8.4" height="15" rx="2"/>
-      <rect x="11.8" y="9" width="8.4" height="15" rx="2"/>
-      <rect x="21.1" y="9" width="8.4" height="15" rx="2"/>
-      <path d="M6.7 12.8l1.1 2.6 2.6 1.1-2.6 1.1-1.1 2.6-1.1-2.6-2.6-1.1 2.6-1.1z"/>
-      <path d="M25.3 12.8l1.1 2.6 2.6 1.1-2.6 1.1-1.1 2.6-1.1-2.6-2.6-1.1 2.6-1.1z"/>
-      <path d="M13.6 19.4l4.8-4.8M13.6 15.2l2.6-2.6"/>`,
+      <rect x="1.4" y="7.5" width="8.8" height="17" rx="2"/>
+      <rect x="11.6" y="7.5" width="8.8" height="17" rx="2"/>
+      <rect x="21.8" y="7.5" width="8.8" height="17" rx="2"/>
+      <circle cx="5.8" cy="16" r="2.7" fill="currentColor" stroke="none"/>
+      <circle cx="26.2" cy="16" r="2.7" fill="currentColor" stroke="none"/>
+      <circle cx="14.4" cy="12.4" r="0.95" fill="currentColor" stroke="none"/>
+      <circle cx="17.6" cy="12.4" r="0.95" fill="currentColor" stroke="none"/>
+      <circle cx="14.4" cy="16" r="0.95" fill="currentColor" stroke="none"/>
+      <circle cx="17.6" cy="16" r="0.95" fill="currentColor" stroke="none"/>
+      <circle cx="14.4" cy="19.6" r="0.95" fill="currentColor" stroke="none"/>
+      <circle cx="17.6" cy="19.6" r="0.95" fill="currentColor" stroke="none"/>`,
 
     /* A drum, two sticks coming down on it, and the beat underneath. */
     'rhythm-tap': `
@@ -113,11 +124,13 @@ const EDScenes = (() => {
       <path d="M4 24h22.6"/>
       <path d="M23.8 21.2 26.8 24l-3 2.8"/>`,
 
-    /* A puzzle piece, and the park it belongs to. */
+    /* A puzzle piece — knob one side, socket the other, or it is only a square
+       — and the park it belongs to. */
     'puzzle-park': `
-      <path d="M3.5 6h5.2a2.4 2.4 0 0 1 4.8 0h5.2v5.2a2.4 2.4 0 0 1 0 4.8V22H3.5z"/>
-      <circle cx="26" cy="15" r="4"/>
-      <path d="M26 26v-7"/>`,
+      <path d="M2.5 4.5h10.5v3.1a2.1 2.1 0 0 1 0 4.2V15H2.5v-3.1a2.1 2.1 0 0 0 0-4.2z"/>
+      <path d="M22.5 11 27 18h-9z"/>
+      <path d="M22.5 15.5 28.6 24H16.4z"/>
+      <path d="M22.5 24v3.6"/>`,
 
     /* A wall of letters with the glass over the one being hunted. */
     'letter-hunt': `
@@ -196,6 +209,15 @@ const EDScenes = (() => {
       <path d="M19 20.5h7"/>`,
   };
 
+  /* Two of the nineteen say something with their direction rather than only
+     with their shapes: the arrow under the three story panels, and the
+     staircase that climbs. Both games lay their own board out with the page,
+     so in Hebrew the picture on the tile points one way and the board it opens
+     points the other. These turn round with the page — the same thing
+     `.icon-back` does to the back arrow, and for the same reason. Nothing else
+     here has a direction worth mirroring: a duck facing right is a duck. */
+  const FLIP = ['story-order', 'tower-steps'];
+
   /* One hidden sprite per page, same as the marks: nineteen drawings are
      parsed once and every tile that wants one references it by <use>. */
   function sprite() {
@@ -212,7 +234,8 @@ const EDScenes = (() => {
   /* Decorative, like the marks: the game's title is always next to the picture,
      so nothing here ever has to be read out. */
   function scene(id, cls) {
-    return `<svg class="${cls || 'scene'}" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#scene-${id}"/></svg>`;
+    const classes = `${cls || 'scene'}${FLIP.includes(id) ? ' scene-turns' : ''}`;
+    return `<svg class="${classes}" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#scene-${id}"/></svg>`;
   }
 
   /* What a card should show for a game: its own scene, or its subject's mark

@@ -82,7 +82,11 @@ looks like a placeholder nobody got round to replacing.
 Both are one pen: a 32×32 viewBox, round caps, `currentColor` so a drawing is
 white on its subject's field and takes any other colour without being redrawn.
 Scenes use a slightly lighter stroke than the marks, because a scene carries
-more lines in the same square.
+more lines in the same square. Two conventions run through them: a dashed
+outline is always a place with nothing in it yet — the hole in the sorting
+board, the missing stair, the gap in the spell — and the two scenes whose
+meaning is their direction are listed in `EDScenes.FLIP` and turn round with
+the page, so the arrow on the tile runs the way the board it opens runs.
 
 Under the picture a game's cover still carries a field: one of four
 compositions and one of three weights, picked off the game's id and then spread

@@ -553,6 +553,11 @@ button { font: inherit; }
 }
 .ico { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
+/* A scene whose meaning is its direction — see EDScenes.FLIP. Same mirror the
+   back arrow above gets, so the picture on the tile runs the way the board it
+   opens runs. */
+[dir="rtl"] .scene-turns { transform: scaleX(-1); }
+
 /* ---- Game host page ---- */
 
 .game-header {
