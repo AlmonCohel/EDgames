@@ -1,4 +1,4 @@
-# גנון משחקים — EDgames
+# הגנון של עלמון — EDgames
 
 A small static site of educational games for children aged 3–8. Hebrew (RTL) by
 default with an English (LTR) toggle. No build step, no framework, no backend —

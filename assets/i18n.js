@@ -17,9 +17,9 @@ const UI = {
     'lang.name':   'עברית',
     'lang.switch': 'מעבר לאנגלית',
 
-    'site.title':       'גנון משחקים — משחקים לימודיים לילדים',
+    'site.title':       'הגנון של עלמון — משחקים לימודיים לילדים',
     'site.description': 'אוסף משחקים לימודיים קטנים לילדים בגיל 3 עד 8. אפשר לסנן לפי גיל ולפי נושא ולבחור משחק.',
-    'brand.name':       'גנון משחקים',
+    'brand.name':       'הגנון של עלמון',
     'brand.initial':    'ג',
     'appbar.greeting':  'מה משחקים היום?',
 
@@ -60,7 +60,7 @@ const UI = {
 
     'footer': 'נבנה באהבה לילדים סקרנים 💛',
 
-    'game.pageTitle':    'משחק — גנון משחקים',
+    'game.pageTitle':    'משחק — הגנון של עלמון',
     'game.back':         'חזרה למשחקים',
     'game.loadingTitle': 'טוען…',
     'game.allGames':     'לכל המשחקים',
