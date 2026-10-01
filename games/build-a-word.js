@@ -172,7 +172,7 @@
     .bw-picture { font-size: 64px; line-height: 1; }
     .bw-slots { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
     .bw-slot {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: clamp(1.5rem, 6vw, 2rem);
+      font-weight: 700; font-size: clamp(1.5rem, 6vw, 2rem);
       width: 54px; height: 62px; border-radius: var(--radius-sm);
       display: grid; place-items: center;
       background: transparent; border: 2px dashed var(--sub-ink, var(--border)); color: var(--text);
@@ -185,7 +185,7 @@
 
     .bw-letters { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
     .bw-letter {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 1.9rem;
+      font-weight: 700; font-size: 1.9rem;
       width: 78px; height: 78px; border-radius: 22px;
       background: var(--bg-raise); color: var(--text);
       border: 2px solid var(--border); cursor: pointer;

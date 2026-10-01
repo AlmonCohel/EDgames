@@ -172,7 +172,7 @@
     /* Kept in the layout while it is empty, so the panel does not jump taller
        the first time the call is played. */
     .an-says {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 1.5rem;
+      font-weight: 700; font-size: 1.5rem;
       min-height: 1.5em; color: var(--text); visibility: hidden;
     }
     .an-says.shown { visibility: visible; }

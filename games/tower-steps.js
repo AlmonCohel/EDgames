@@ -91,7 +91,7 @@
     .ts-block {
       width: 100%; height: var(--ts-h); border-radius: var(--radius-sm);
       display: grid; place-items: end center; padding-bottom: 8px;
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 1.5rem;
+      font-weight: 700; font-size: 1.5rem;
       font-variant-numeric: tabular-nums; direction: ltr;
       background: var(--sub-tint, var(--sel-tint));
       border: 2px solid var(--sub-ink, var(--border));
@@ -101,7 +101,7 @@
     .ts-block.yes { background: var(--pos); border-color: var(--pos); color: var(--on-accent); }
     .ts-numbers { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
     .ts-number {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 2rem;
+      font-weight: 700; font-size: 2rem;
       font-variant-numeric: tabular-nums; direction: ltr;
       width: 86px; height: 86px; border-radius: 24px;
       background: var(--bg-raise); color: var(--text);

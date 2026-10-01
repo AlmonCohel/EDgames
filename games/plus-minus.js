@@ -81,18 +81,18 @@
     .pm-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 260px; }
     .pm-cookie { font-size: 34px; line-height: 1.1; }
     .pm-cookie.eaten { opacity: 0.28; filter: grayscale(1); }
-    .pm-op { font-family: "Rubik", sans-serif; font-weight: 700; font-size: 2rem; color: var(--text-soft); }
+    .pm-op { font-weight: 700; font-size: 2rem; color: var(--text-soft); }
 
     .pm-sum {
       direction: ltr;
-      font-family: "Rubik", sans-serif; font-weight: 700;
+      font-weight: 700;
       font-size: clamp(2rem, 8vw, 3rem); font-variant-numeric: tabular-nums;
       letter-spacing: 2px;
     }
 
     .pm-numbers { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
     .pm-number {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 2rem;
+      font-weight: 700; font-size: 2rem;
       font-variant-numeric: tabular-nums;
       width: 86px; height: 86px; border-radius: 24px;
       background: var(--bg-raise); color: var(--text);

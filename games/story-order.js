@@ -151,7 +151,7 @@
     .so-slot { border: 2px dashed var(--border); background: var(--bg-raise); }
     .so-slot.full { border-style: solid; border-color: var(--pos); background: var(--sub-tint, var(--sel-tint)); }
     .so-order {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 1.1rem;
+      font-weight: 700; font-size: 1.1rem;
       font-variant-numeric: tabular-nums; color: var(--text-soft);
     }
     .so-card {

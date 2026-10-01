@@ -95,7 +95,7 @@
     }
     .mp-front {
       background: var(--sub-ink, var(--accent-strong)); color: var(--on-accent);
-      font-family: "Rubik", sans-serif; font-weight: 700;
+      font-weight: 700;
     }
     .mp-back {
       transform: rotateY(180deg);

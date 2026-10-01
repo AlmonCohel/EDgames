@@ -86,7 +86,7 @@
     @keyframes cd-bob { 50% { transform: translateY(-6px); } }
     .cd-numbers { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
     .cd-number {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 2rem;
+      font-weight: 700; font-size: 2rem;
       font-variant-numeric: tabular-nums;
       width: 86px; height: 86px; border-radius: 24px;
       background: var(--bg-raise); color: var(--text);

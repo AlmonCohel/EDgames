@@ -91,14 +91,14 @@
     .kk-dot.done { background: var(--pos); }
     .kk-ask { text-align: center; }
     .kk-ask h2 { margin: 0 0 6px; font-size: 1.5rem; }
-    .kk-lit { display: inline-block; font-family: "Rubik", system-ui, sans-serif; color: var(--accent-ink); }
+    .kk-lit { display: inline-block; color: var(--accent-ink); }
     .kk-lead { margin: 0; color: var(--text-soft); font-size: 0.95rem; min-height: 1.6em; }
     /* The board is a picture of a physical keyboard, so it stays LTR in both
        languages — a mirrored QWERTY would be a picture of nothing. */
     .kk-board { direction: ltr; display: flex; flex-direction: column; align-items: center; gap: 7px; width: 100%; }
     .kk-row { display: flex; gap: 7px; justify-content: center; width: 100%; }
     .kk-key {
-      font: inherit; font-weight: 700; font-family: "Rubik", system-ui, sans-serif;
+      font: inherit; font-weight: 700;
       width: clamp(30px, 7.2vw, 54px); height: clamp(38px, 8vw, 54px);
       display: inline-flex; align-items: center; justify-content: center;
       background: var(--bg-raise); color: var(--text);

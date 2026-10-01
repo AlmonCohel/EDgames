@@ -81,7 +81,7 @@
     .lh-ask h2 { margin: 0 0 6px; font-size: 1.4rem; }
     .lh-hint { margin: 0; color: var(--text-soft); font-size: 0.95rem; min-height: 1.6em; }
     .lh-target {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 3rem; line-height: 1.2;
+      font-weight: 700; font-size: 3rem; line-height: 1.2;
       width: 96px; height: 96px; margin: 0 auto; border-radius: 24px;
       display: grid; place-items: center;
       background: var(--sub-tint, var(--sel-tint)); color: var(--sub-ink, var(--sel-ink));
@@ -93,7 +93,7 @@
     }
     .lh-cell {
       aspect-ratio: 1 / 1;
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: clamp(1.6rem, 6vw, 2.2rem);
+      font-weight: 700; font-size: clamp(1.6rem, 6vw, 2.2rem);
       background: var(--bg-raise); color: var(--text);
       border: 2px solid var(--border); border-radius: var(--radius-sm);
       cursor: pointer;

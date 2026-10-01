@@ -168,7 +168,7 @@
     .at-cell.nope { animation: at-shake 0.36s ease; }
     .at-pad { display: grid; grid-template-columns: repeat(3, auto); gap: 7px; justify-content: center; direction: ltr; }
     .at-key {
-      font: inherit; font-weight: 700; font-family: "Rubik", system-ui, sans-serif;
+      font: inherit; font-weight: 700;
       width: clamp(46px, 12vw, 58px); height: clamp(46px, 12vw, 58px);
       display: inline-flex; align-items: center; justify-content: center;
       background: var(--bg-raise); color: var(--text);

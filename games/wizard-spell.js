@@ -138,7 +138,7 @@
     .ws-picture { font-size: 64px; line-height: 1; }
     .ws-word { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
     .ws-tile {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: clamp(1.5rem, 6vw, 2rem);
+      font-weight: 700; font-size: clamp(1.5rem, 6vw, 2rem);
       width: 54px; height: 62px; border-radius: var(--radius-sm);
       display: grid; place-items: center;
       background: var(--bg-raise); border: 2px solid var(--border); color: var(--text);
@@ -147,7 +147,7 @@
     .ws-tile.yes { background: var(--pos); border-color: var(--pos); color: var(--on-accent); }
     .ws-letters { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
     .ws-letter {
-      font-family: "Rubik", sans-serif; font-weight: 700; font-size: 2rem;
+      font-weight: 700; font-size: 2rem;
       width: 86px; height: 86px; border-radius: 24px;
       background: var(--bg-raise); color: var(--text);
       border: 2px solid var(--border); cursor: pointer;

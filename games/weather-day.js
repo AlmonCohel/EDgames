@@ -106,7 +106,7 @@
       background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius);
     }
     .wd-sky { font-size: 74px; line-height: 1; }
-    .wd-day { font-family: "Rubik", sans-serif; font-weight: 700; font-size: 1.2rem; }
+    .wd-day { font-weight: 700; font-size: 1.2rem; }
 
     .wd-rack { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; max-width: 640px; }
     .wd-item {
