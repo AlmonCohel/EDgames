@@ -73,10 +73,11 @@ function writeUrl() {
   if (state.subjects.size) p.set('subject', [...state.subjects].join(','));
   if (state.query.trim()) p.set('q', state.query.trim());
   const filters = p.toString();
+  saveFilters(filters);
   EDLang.stamp(p);
   const qs = p.toString();
   try { history.replaceState(null, '', qs ? `?${qs}` : location.pathname); }
-  catch { saveFilters(filters); /* file:// */ }
+  catch { /* file:// */ }
 }
 
 /* ---- Filtering ---- */
