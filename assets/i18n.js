@@ -184,9 +184,13 @@ const EDLang = {
     saveLang(lang);
     const p = new URLSearchParams(location.search);
     if (lang === FALLBACK_LANG) p.delete('lang'); else p.set('lang', lang);
-    /* Assigning search rather than href keeps the path alone, which matters
-       when the site is opened as a file. */
-    location.search = p.toString();
+    const qs = p.toString();
+    /* A history-replacing navigation, not a push: assigning location.search
+       added a second entry for this same page, so the back button's first
+       press after a toggle landed here again instead of the grid. Building
+       the path by hand (rather than location.href) keeps it relative, which
+       matters when the site is opened as a file. */
+    location.replace(`${location.pathname}${qs ? `?${qs}` : ''}`);
   },
 
   /* Swaps the text of every element carrying a data-i18n key. */
