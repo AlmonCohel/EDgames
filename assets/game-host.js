@@ -160,6 +160,10 @@ async function start() {
       markSet(index);
       writeSetId(sets[index].id);
     }
+    /* Remembered for the card at the top of the home screen — on every play,
+       not just the first, so "again" and the set picker keep it true to
+       whichever set is on screen when the child leaves. */
+    EDRecent.write(game.id, sets ? sets[index].id : null);
     module.mount(stage, {
       game,
       lang: EDLang.current,
@@ -172,11 +176,6 @@ async function start() {
       exit: () => { location.href = gridHref; },
     });
   }
-
-  /* Remembered for the card at the top of the home screen, and only once the
-     game has really loaded — a broken link or a half-built module should never
-     become the thing the child is offered to carry on with. */
-  EDRecent.write(game.id);
 
   if (sets) buildSetChips(sets, (i) => { index = i; play(); });
   play();

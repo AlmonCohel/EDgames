@@ -107,8 +107,9 @@ function matches(game) {
 
 /* The language rides along on the link so a card shared from an English page
    opens in English. */
-function gameHref(game) {
+function gameHref(game, setId) {
   const params = new URLSearchParams({ id: game.id });
+  if (setId) params.set('set', setId);
   EDLang.stamp(params);
   return `game.html?${params}`;
 }
@@ -169,7 +170,7 @@ function buildBrowse() {
   const last = EDRecent.game();
   if (last) {
     els.continueBox.innerHTML = `
-      <a class="continue" href="${gameHref(last)}" data-subject="${last.subject}">
+      <a class="continue" href="${gameHref(last, last.lastSetId)}" data-subject="${last.subject}">
         ${EDGlyphs.mark(last.subject, 'mark ghost')}
         ${EDScenes.picture(last, 'scene scene-main')}
         <div class="txt">

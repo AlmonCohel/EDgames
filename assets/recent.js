@@ -17,14 +17,19 @@ const EDRecent = {
     try { return localStorage.getItem(RECENT_KEY); } catch { return null; }
   },
 
-  write(id) {
-    try { localStorage.setItem(RECENT_KEY, id); } catch { /* then the card simply stays hidden */ }
+  /* setId is optional — a game with no sets has nothing to remember beyond
+     its id. Stored as id and setId joined by a separator a game id can't
+     contain, so an older visit's plain id still reads back fine. */
+  write(id, setId) {
+    const value = setId ? `${id}|${setId}` : id;
+    try { localStorage.setItem(RECENT_KEY, value); } catch { /* then the card simply stays hidden */ }
   },
 
   /* The catalog is the authority: an id from an older visit whose game has
      since been renamed, or gone back to being built, is not offered. */
   game() {
-    const g = gameById(this.read() || '');
-    return g && g.status === 'ready' ? g : null;
+    const [id, setId] = (this.read() || '').split('|');
+    const g = gameById(id);
+    return g && g.status === 'ready' ? { ...g, lastSetId: setId } : null;
   },
 };
