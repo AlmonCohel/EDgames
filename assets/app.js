@@ -126,9 +126,8 @@ function tile(game) {
   const li = document.createElement('li');
   li.innerHTML = `
     <a class="tile" href="${gameHref(game)}" data-subject="${game.subject}" data-status="${game.status}">
-      <div class="cover" data-variant="${cover.variant}" data-tone="${cover.tone}">
-        ${EDGlyphs.mark(game.subject, 'mark ghost')}
-        ${EDScenes.picture(game)}
+      <div class="cover${EDCovers.has(game.id) ? ' cover--art' : ''}" data-variant="${cover.variant}" data-tone="${cover.tone}">
+        ${EDCovers.has(game.id) ? EDCovers.art(game.id) : `${EDGlyphs.mark(game.subject, 'mark ghost')}${EDScenes.picture(game)}`}
       </div>
       <h3>${EDLang.pick(game.title)}</h3>
       <div class="meta">${EDLang.t('card.age')} <span class="num">${game.ageMin}–${game.ageMax}</span>${soon ? ` · ${EDLang.t('card.soon')}` : ''}</div>
@@ -172,7 +171,7 @@ function buildBrowse() {
     els.continueBox.innerHTML = `
       <a class="continue" href="${gameHref(last, last.lastSetId)}" data-subject="${last.subject}">
         ${EDGlyphs.mark(last.subject, 'mark ghost')}
-        ${EDScenes.picture(last, 'scene scene-main')}
+        ${EDCovers.has(last.id) ? EDCovers.art(last.id, 'art art-main') : EDScenes.picture(last, 'scene scene-main')}
         <div class="txt">
           <div class="kicker">${EDLang.t('continue.kicker')}</div>
           <h3>${EDLang.pick(last.title)}</h3>

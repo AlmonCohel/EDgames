@@ -244,6 +244,42 @@ const GAMES = [
     status: 'ready',
   },
   {
+    id: 'first-letter',
+    title: { he: 'מה האות הראשונה?', en: 'First Letter' },
+    emoji: '🍎',
+    subject: 'letters',
+    ageMin: 4, ageMax: 6,
+    blurb: {
+      he: 'רואים תמונה, אומרים את המילה בקול ובוחרים באיזו אות היא מתחילה.',
+      en: 'See a picture, say the word out loud and pick the letter it starts with.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'final-letters',
+    title: { he: 'אותיות סופיות', en: 'Final Letters' },
+    emoji: '🔗',
+    subject: 'letters',
+    ageMin: 6, ageMax: 8,
+    blurb: {
+      he: 'כ מ נ פ צ משנות צורה בסוף מילה. מוצאים לכל אחת את הזוג הסופי שלה.',
+      en: 'Five Hebrew letters change shape at the end of a word. Match each to its final form.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'letter-trace',
+    title: { he: 'כותבים אות', en: 'Trace the Letter' },
+    emoji: '✏️',
+    subject: 'letters',
+    ageMin: 3, ageMax: 6,
+    blurb: {
+      he: 'עוברים עם האצבע על האות הגדולה וצובעים אותה עד שהיא מתמלאת.',
+      en: 'Go over the big letter with your finger until it is all coloured in.',
+    },
+    status: 'ready',
+  },
+  {
     id: 'plus-minus',
     title: { he: 'ועוד ופחות', en: 'Plus and Minus' },
     emoji: '➕',

@@ -13,13 +13,17 @@ assets/styles.css     theme tokens + shared components
 assets/i18n.js        the two UI string tables and the language toggle
 assets/catalog.js     subjects, age groups, and the game catalog
 assets/glyphs.js      the seven drawn subject marks and the interface icons
-assets/scenes.js      one drawn picture per game, for the tiles and the game page
+assets/scenes.js      one line drawing per game, the fallback picture
+assets/covers.js      one full-colour illustrated cover per game, the picture on its tile
+assets/music.js       the site's tune (home screen), tap sounds, and the sound switch
 assets/app.js         the home screen: filtering, shelves and results
 assets/recent.js      the last game opened, for the card at the top of the home screen
 assets/sound.js       tones made on the spot, for the three games that listen
 assets/game-host.js   loads and mounts a game module by id, and picks its set
 games/<id>.js         one file per game
-mockups/              the three design directions; direction 3 is the one that was built
+mockups/              design directions: the first three (3 was built), v3/ = four looks
+                      (Chunky is live, Sticker pop / Jelly / Big pictures kept as options),
+                      logos/ = five logo ideas
 netlify.toml          publish config
 ```
 
@@ -35,8 +39,8 @@ whether anything is filtered:
 
 - **Browse** — the game last played, a row of everything ready, a row per
   subject with more than one finished game, and a list of what is still being
-  built. Nineteen games across seven subjects reads well as rows and badly as a
-  wall. All nineteen are finished, so the *בקרוב* / *Coming soon* list is empty
+  built. Twenty-two games across seven subjects reads well as rows and badly as a
+  wall. All twenty-two are finished, so the *בקרוב* / *Coming soon* list is empty
   and its shelf hides itself — a heading with nothing under it reads as a
   section that failed to load, not as work that is done. Add a game with
   `status: 'soon'` and the shelf comes back on its own.
@@ -66,6 +70,16 @@ would have held it.
 A page opened on a link that already carries a filter opens the drawer that
 filter came from, so a narrowed list is never unexplained.
 
+## The look
+
+Since October 2026 the shell wears the **Chunky** look, picked from the four in
+`mockups/v3`: every tile, chip and button is a fat toy button with a darker
+edge under it (`--edge`, and `--sub-edge` per subject) that squashes when
+pressed, the type is Fredoka, and tiles pop in one after another. Its rules are
+the "Chunky look" section at the end of `assets/styles.css`. The other three
+looks are still in `mockups/v3`, each on a frozen copy of the older stylesheet
+(`mockups/v3/base.css`), as options for a later refresh.
+
 ## Pictures
 
 The artwork is the site's own, drawn in two sizes of idea:
@@ -78,6 +92,14 @@ The artwork is the site's own, drawn in two sizes of idea:
   staircase with one step missing for The Tower Stairs. This is the site for
   children who cannot read the title yet, so a tile has to say what the game is
   before it is pressed, and a shelf of seven repeating marks did not.
+
+- **A game's cover is an illustration** — `assets/covers.js`, one small
+  full-colour scene per game: the ducks on the pond with their numbers, the
+  balloons and the one bursting, the cookies on two plates with a plus between
+  them. A child should know what a game is from its tile alone, the way a real
+  games site sells a game with a picture of it. They are SVG, so there are no
+  image files, and they share one set of gradients (`EDCovers.inject()`). A tile
+  uses the cover when there is one and the line scene below otherwise.
 
 Emoji used to do both jobs and that is most of what read as unfinished — an
 emoji is the machine's drawing, not ours, it differs on every device, and it
@@ -101,6 +123,22 @@ game is later added to the same subject ahead of it.
 
 A game's own text and pictures are still its own business, and several games use
 emoji inside their rounds on purpose — a ladybird is a ladybird.
+
+## The letters games
+
+Six games teach the Hebrew letters (and the Latin ones in English): Letter Hunt,
+The Wizard's Spell and Build a Word, plus three added in October 2026 after the
+exercises common on Hebrew early-reading sites:
+
+- **מה האות הראשונה? / First Letter** — a picture, say its name, pick the letter
+  it starts with; the word appears only after the answer. Sets: three letters,
+  four letters, look-alike letters as the wrong answers.
+- **אותיות סופיות / Final Letters** — כ מ נ פ צ and their end-of-word shapes, in
+  the three steps sites teach them: find the pair, finish a word with the right
+  shape, spot the final letter in a word.
+- **כותבים אות / Trace the Letter** — go over a big letter with a finger; the
+  letter is sampled into points and counts as written once most are covered.
+  Nothing is marked wrong. Sets: first letters, all letters, final letters.
 
 ## Language
 
@@ -160,6 +198,14 @@ letter is on the table that belongs to no part of it — in Build a Word.
 
 ## Sound
 
+The site itself has a sound too (`assets/music.js`): a short, quiet pentatonic
+tune that loops on the home screen, and a soft tap under every button. The
+switch in the app bar cycles **music → sounds only → quiet** and is remembered
+in localStorage. The tune never plays on a game page, where the game's own
+sounds belong, and nothing starts until the page has been touched.
+
+### In the games
+
 Three games listen: Who Said That?, Animal Piano and Clap the Beat. There are no
 sound files. A folder of mp3s would be the first thing here that has to be
 fetched, cached and kept in step with the code, and this site has no build step
@@ -190,7 +236,8 @@ told so rather than left in silence.
    away, in the *בקרוב* / *Coming soon* list, and its page explains that it is
    still being built.
 2. Write `games/<id>.js`. The id in the catalog and the filename must match.
-3. Draw it a scene in `assets/scenes.js`, under the same id — a few strokes
+3. Draw it a cover in `assets/covers.js` (the tile picture) and a line scene in
+   `assets/scenes.js` (the fallback), both under the same id — a few strokes
    saying what happens in the game. Until there is one it borrows its subject's
    mark, so nothing is ever an empty square, but a game the child can tell
    apart at a glance is the whole point of that file.

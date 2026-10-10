@@ -65,7 +65,7 @@ function dressPage(game) {
   /* The game's own drawing on its subject's colour, the same pair the tile on
      the home screen wears, so arriving here looks like the card that was
      pressed. */
-  document.getElementById('game-mark').innerHTML = EDScenes.picture(game);
+  document.getElementById('game-mark').innerHTML = EDCovers.has(game.id) ? EDCovers.art(game.id) : EDScenes.picture(game);
   document.getElementById('game-header').dataset.subject = game.subject;
   stage.dataset.subject = game.subject;
 }

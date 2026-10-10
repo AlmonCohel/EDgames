@@ -1,0 +1,400 @@
+/* Game covers — a full-colour illustration per game, the picture on its tile.
+
+   `scenes.js` draws each game as a few white strokes, and that was enough to
+   tell tiles apart but not enough for a child to know what a game *is* before
+   pressing it. A real games site sells each game with a picture of the game:
+   the ducks on the pond, the balloons about to pop, the cookies on the plate.
+   That is what these are — small illustrated scenes, drawn in SVG so they stay
+   sharp at every size, need no image files, and load with the page.
+
+   One house style runs through all of them: a full-bleed background (sky,
+   water, wood, a room), objects with a soft shadow under them and a shine on
+   top, rounded shapes, bright colours. Shared gradients live once in `defs()`
+   and every cover points at them.
+
+   A game with no cover falls back to its line scene on its subject's colour,
+   so adding a game never leaves a hole — see `has()` and app.js. */
+
+const EDCovers = (() => {
+  /* ---- shared paint ---- */
+  const defs = () => `
+    <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+      <defs>
+        <linearGradient id="cv-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fd0ff"/><stop offset="1" stop-color="#d9f2ff"/></linearGradient>
+        <linearGradient id="cv-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fd0f5"/><stop offset="1" stop-color="#1e88cc"/></linearGradient>
+        <linearGradient id="cv-grass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#93e36f"/><stop offset="1" stop-color="#46a836"/></linearGradient>
+        <linearGradient id="cv-wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0a96d"/><stop offset="1" stop-color="#a86d38"/></linearGradient>
+        <linearGradient id="cv-room" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1d6"/><stop offset="1" stop-color="#ffd89e"/></linearGradient>
+        <linearGradient id="cv-night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3f9e"/><stop offset="1" stop-color="#7b5ce0"/></linearGradient>
+        <linearGradient id="cv-lav" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9ccff"/><stop offset="1" stop-color="#9f80ff"/></linearGradient>
+        <linearGradient id="cv-pink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0ec"/><stop offset="1" stop-color="#ff9fc6"/></linearGradient>
+        <linearGradient id="cv-mint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4fbe9"/><stop offset="1" stop-color="#6fd7ad"/></linearGradient>
+        <linearGradient id="cv-desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8e0ff"/><stop offset="1" stop-color="#5b9ff0"/></linearGradient>
+        <linearGradient id="cv-sunny" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ffb347"/></linearGradient>
+        <linearGradient id="cv-teal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b6f0f4"/><stop offset="1" stop-color="#36b9c9"/></linearGradient>
+        <linearGradient id="cv-paper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf7"/><stop offset="1" stop-color="#f3e9d6"/></linearGradient>
+        <radialGradient id="cv-gloss"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <radialGradient id="cv-shade"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+        <radialGradient id="cv-sun"><stop offset="0" stop-color="#fff6b0"/><stop offset=".6" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffb000"/></radialGradient>
+      </defs>
+    </svg>`;
+
+  /* ---- small parts several covers share ---- */
+  const shadow = (cx, cy, rx, ry = rx * 0.28) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#cv-shade)"/>`;
+  const gloss = (cx, cy, rx, ry, rot = -25) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#cv-gloss)" transform="rotate(${rot} ${cx} ${cy})"/>`;
+  const bg = (paint) => `<rect width="200" height="200" fill="url(#${paint})"/>`;
+  const sun = (x, y, r) => `<g><circle cx="${x}" cy="${y}" r="${r * 1.45}" fill="#fff3a6" opacity=".45"/><circle cx="${x}" cy="${y}" r="${r}" fill="url(#cv-sun)"/></g>`;
+  const cloud = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})" fill="#fff"><ellipse cx="0" cy="6" rx="26" ry="11"/><circle cx="-10" cy="0" r="11"/><circle cx="7" cy="-4" r="14"/><circle cx="19" cy="3" r="9"/></g>`;
+  const star = (x, y, r, c = '#ffd23f') => {
+    let d = '';
+    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.45 : r; d += `${i ? 'L' : 'M'}${(x + Math.cos(a) * rr).toFixed(1)} ${(y + Math.sin(a) * rr).toFixed(1)}`; }
+    return `<path d="${d}Z" fill="${c}" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>`;
+  };
+  const sparkle = (x, y, r, c = '#fff') => `<path d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="${c}"/>`;
+  const eye = (x, y, r = 3) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#1e2a44"/><circle cx="${x + r * .35}" cy="${y - r * .35}" r="${r * .38}" fill="#fff"/>`;
+
+  /* A rubber duck, facing right, about 60 wide at s = 1. */
+  const duck = (x, y, s = 1, flip = false) => `
+    <g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})">
+      <ellipse cx="0" cy="18" rx="30" ry="6" fill="#0b5f97" opacity=".25"/>
+      <path d="M-28 4c0-14 12-22 28-22 18 0 28 8 28 20 0 9-7 14-18 14h-24c-9 0-14-5-14-12z" fill="#ffd43b"/>
+      <path d="M-24 10c6 6 30 8 44 0-2 8-10 10-20 10h-12c-6 0-10-4-12-10z" fill="#f0b400"/>
+      <path d="M-10 0c6 8 18 8 24 2" stroke="#e8a600" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="16" cy="-22" r="15" fill="#ffd43b"/>
+      ${gloss(10, -28, 6, 4)}
+      <path d="M29 -24l14 4-14 7z" fill="#ff8a1f"/>
+      ${eye(20, -26, 3.2)}
+      <circle cx="12" cy="-16" r="3" fill="#ff9e7a" opacity=".6"/>
+    </g>`;
+
+  /* A wooden letter block with a front face and a top/side for depth. */
+  const block = (x, y, size, letter, face, ink = '#fff', rot = 0) => {
+    const d = size * 0.16;
+    return `
+    <g transform="rotate(${rot} ${x + size / 2} ${y + size / 2})">
+      ${shadow(x + size / 2 + 4, y + size + 4, size * 0.62, size * 0.14)}
+      <path d="M${x} ${y}l${d} ${-d}h${size}l${-d} ${d}z" fill="#fff" opacity=".55"/>
+      <path d="M${x + size} ${y}l${d} ${-d}v${size}l${-d} ${d}z" fill="#000" opacity=".18"/>
+      <rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${size * .14}" fill="${face}"/>
+      <rect x="${x + 4}" y="${y + 4}" width="${size - 8}" height="${size - 8}" rx="${size * .1}" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2"/>
+      <text x="${x + size / 2}" y="${y + size * 0.72}" text-anchor="middle" font-family="Fredoka, Heebo, sans-serif" font-weight="700" font-size="${size * 0.62}" fill="${ink}">${letter}</text>
+    </g>`;
+  };
+
+  const ART = {
+    /* Balloons on a blue sky, one bursting into confetti. */
+    'color-pop': () => `
+      ${bg('cv-sky')}${cloud(150, 40, .9)}${cloud(40, 160, .7)}
+      <path d="M58 118q-6 20 4 40" stroke="#5b6b86" stroke-width="2" fill="none"/>
+      <path d="M104 98q6 26-2 58" stroke="#5b6b86" stroke-width="2" fill="none"/>
+      <g><ellipse cx="58" cy="88" rx="26" ry="31" fill="#ff4d6d"/><path d="M53 118h10l-5 6z" fill="#e0304f"/>${gloss(48, 74, 7, 12)}</g>
+      <g><ellipse cx="104" cy="70" rx="27" ry="32" fill="#3d7bff"/><path d="M99 101h10l-5 6z" fill="#2457cc"/>${gloss(94, 56, 7, 12)}</g>
+      <g transform="translate(150 104)">
+        <path d="M0-30l6 18 18-8-10 16 18 6-19 4 6 18-15-12-12 15 2-19-19 1 15-11-12-15 18 5z" fill="#ffd23f"/>
+        <circle r="10" fill="#fff"/>
+      </g>
+      <g fill="#2fc57d"><rect x="132" y="60" width="7" height="12" rx="2" transform="rotate(30 135 66)"/><rect x="178" y="132" width="7" height="12" rx="2" transform="rotate(-20 181 138)"/></g>
+      <g fill="#ff4d6d"><circle cx="174" cy="74" r="4"/><circle cx="124" cy="140" r="4"/></g>
+      <g fill="#8a4dff"><rect x="166" y="150" width="6" height="10" rx="2" transform="rotate(50 169 155)"/></g>`,
+
+    /* Three ducks on a pond, the third counted. */
+    'count-the-ducks': () => `
+      ${bg('cv-sky')}${sun(160, 34, 16)}${cloud(50, 34, .8)}
+      <path d="M0 92c30-8 60 6 100 0s70-10 100 0v108H0z" fill="#5fc94a"/>
+      <path d="M0 104c40-6 70 6 100 2s70-8 100 0v96H0z" fill="url(#cv-water)"/>
+      <g stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round" fill="none"><path d="M20 150q10-5 20 0"/><path d="M140 176q10-5 20 0"/><path d="M90 186q8-4 16 0"/></g>
+      <g><ellipse cx="168" cy="160" rx="16" ry="6" fill="#3fae4a"/><path d="M168 160l12-5" stroke="#2c8a36" stroke-width="2"/></g>
+      <g fill="#2e8a3a"><path d="M14 112c-2-18 0-30 4-38l3 38z"/><path d="M22 112c0-14 4-24 8-30l-3 30z"/></g>
+      ${duck(44, 128, .62)}${duck(100, 146, .7, true)}${duck(152, 124, .58)}
+      <g font-family="Fredoka, Heebo, sans-serif" font-weight="700" font-size="16" text-anchor="middle">
+        <circle cx="54" cy="96" r="12" fill="#fff"/><text x="54" y="102" fill="#2f6ae8">1</text>
+        <circle cx="92" cy="112" r="12" fill="#fff"/><text x="92" y="118" fill="#2f6ae8">2</text>
+        <circle cx="162" cy="92" r="12" fill="#ffc531"/><text x="162" y="98" fill="#5a3b00">3</text>
+      </g>`,
+
+    /* A wooden sorting board, two pieces in, one on its way. */
+    'shape-match': () => `
+      ${bg('cv-pink')}
+      ${shadow(100, 176, 86, 12)}
+      <rect x="18" y="92" width="164" height="80" rx="16" fill="url(#cv-wood)"/>
+      <rect x="18" y="92" width="164" height="12" rx="6" fill="#fff" opacity=".2"/>
+      <circle cx="56" cy="132" r="21" fill="#7a4a22"/>
+      <rect x="82" y="112" width="40" height="40" rx="6" fill="#7a4a22"/>
+      <path d="M150 112l22 38h-44z" fill="#7a4a22"/>
+      <rect x="84" y="110" width="36" height="36" rx="6" fill="#3d7bff"/>${gloss(94, 120, 7, 5)}
+      <path d="M150 116l18 31h-36z" fill="#ffc531"/>
+      ${shadow(56, 132, 20, 8)}
+      <g transform="translate(0 -6)"><circle cx="56" cy="62" r="21" fill="#ff4d6d"/>${gloss(48, 54, 7, 5)}</g>
+      <path d="M56 86v10M50 92l6 6 6-6" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      ${sparkle(150, 70, 9)}${sparkle(30, 30, 6)}`,
+
+    /* A cow on the farm, mooing, and a chick listening. */
+    'animal-sounds': () => `
+      ${bg('cv-sky')}${cloud(40, 30, .7)}
+      <path d="M0 120c50-14 120-12 200 0v80H0z" fill="url(#cv-grass)"/>
+      <g stroke="#c98a4a" stroke-width="4"><path d="M8 140h60M14 128v28M38 128v28M62 128v28"/></g>
+      ${shadow(92, 182, 50, 9)}
+      <g transform="translate(92 118)">
+        <path d="M-40-28c-12-6-20 0-18 8 10 0 16-2 20-6z" fill="#fff" stroke="#e8e3d8" stroke-width="2"/>
+        <path d="M40-28c12-6 20 0 18 8-10 0-16-2-20-6z" fill="#fff" stroke="#e8e3d8" stroke-width="2"/>
+        <path d="M-26-40l-6-14 12 8zM26-40l6-14-12 8z" fill="#f4d9a8"/>
+        <ellipse cx="0" cy="-12" rx="40" ry="38" fill="#fff"/>
+        <path d="M-30-40c10-6 20-4 22 6-8 8-24 8-28 0z" fill="#3a3a48"/>
+        <path d="M28-34c-6 10-4 22 6 22 6-8 4-18-6-22z" fill="#3a3a48"/>
+        ${eye(-14, -16, 5)}${eye(14, -16, 5)}
+        <ellipse cx="0" cy="14" rx="30" ry="20" fill="#ffb3c1"/>
+        <ellipse cx="-10" cy="12" rx="5" ry="7" fill="#c9566c"/><ellipse cx="10" cy="12" rx="5" ry="7" fill="#c9566c"/>
+        <ellipse cx="0" cy="28" rx="12" ry="5" fill="#a83850"/>
+      </g>
+      <g stroke="#2f6ae8" stroke-width="5" fill="none" stroke-linecap="round"><path d="M146 76a16 16 0 0 1 0 26"/><path d="M158 66a30 30 0 0 1 0 46"/><path d="M170 56a44 44 0 0 1 0 66"/></g>
+      <g transform="translate(160 160)">${shadow(0, 16, 14, 4)}<ellipse cx="0" cy="4" rx="13" ry="12" fill="#ffd43b"/><circle cx="2" cy="-10" r="9" fill="#ffd43b"/><path d="M10-10l7 2-7 4z" fill="#ff8a1f"/>${eye(5, -12, 2)}</g>`,
+
+    /* Piano keys, each with an animal face, and notes rising. */
+    'piano-pets': () => `
+      ${bg('cv-lav')}
+      ${shadow(100, 182, 88, 10)}
+      <rect x="10" y="78" width="180" height="100" rx="14" fill="#2b2459"/>
+      ${[0, 1, 2, 3, 4].map((i) => `<rect x="${18 + i * 33.6}" y="88" width="31" height="84" rx="6" fill="#fff"/>`).join('')}
+      ${[0, 1, 3].map((i) => `<rect x="${41 + i * 33.6}" y="88" width="18" height="50" rx="4" fill="#1e1a40"/>`).join('')}
+      <g transform="translate(33 152)"><circle r="11" fill="#ff9e3d"/><path d="M-9-6l2-10 6 6zM9-6l-2-10-6 6z" fill="#ff9e3d"/>${eye(-4, -2, 2)}${eye(4, -2, 2)}<path d="M-2 4l2 2 2-2" stroke="#1e2a44" stroke-width="1.5" fill="none"/></g>
+      <g transform="translate(67 152)"><circle r="11" fill="#c8915a"/><ellipse cx="-11" cy="-2" rx="4" ry="8" fill="#8a5a2f"/><ellipse cx="11" cy="-2" rx="4" ry="8" fill="#8a5a2f"/>${eye(-4, -2, 2)}${eye(4, -2, 2)}<ellipse cx="0" cy="4" rx="3" ry="2" fill="#1e2a44"/></g>
+      <g transform="translate(101 152)"><circle r="11" fill="#ffd43b"/><path d="M4 0l9 3-9 4z" fill="#ff8a1f"/>${eye(-2, -3, 2)}</g>
+      <g transform="translate(134 152)"><circle r="11" fill="#ffb3c1"/><ellipse cx="0" cy="3" rx="6" ry="4" fill="#ff7a9a"/>${eye(-4, -4, 2)}${eye(4, -4, 2)}</g>
+      <g transform="translate(168 152)"><circle r="11" fill="#eee"/><path d="M-7-8c-2-10 2-14 4-10zM7-8c2-10-2-14-4-10z" fill="#eee" stroke="#ccc"/>${eye(-4, -2, 2)}${eye(4, -2, 2)}</g>
+      <g fill="#fff"><path d="M60 22v28a7 6 0 1 1-4-5V22h18v8H60z"/><path d="M130 30v24a6 5 0 1 1-4-5V30z"/><path d="M150 14v26a6 5 0 1 1-4-5V18l12-4v8z"/></g>`,
+
+    /* Memory cards: most face down, one matching pair turned up. */
+    'memory-pairs': () => `
+      ${bg('cv-mint')}
+      ${[[22, 22], [80, 22], [138, 22], [22, 106], [80, 106], [138, 106]].map(([x, y], i) => {
+        const up = i === 1 || i === 5;
+        return `${shadow(x + 22, y + 82, 24, 5)}
+          <rect x="${x}" y="${y}" width="44" height="78" rx="9" fill="${up ? '#fff' : '#7c4ced'}"/>
+          ${up ? `<g transform="translate(${x + 22} ${y + 42})"><path d="M0 14c-12-6-16-14-14-22 2-6 10-8 14-2 4-6 12-4 14 2 2 8-2 16-14 22z" fill="#ff4d6d"/><path d="M-4-14c2-6 8-8 10-6-2 2-4 6-10 6z" fill="#2fc57d"/>${gloss(-6, -2, 4, 3)}</g>`
+              : `<rect x="${x + 5}" y="${y + 5}" width="34" height="68" rx="6" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/><text x="${x + 22}" y="${y + 50}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="26" fill="#fff" opacity=".85">?</text>`}`;
+      }).join('')}
+      ${sparkle(106, 18, 8)}${sparkle(186, 112, 7)}`,
+
+    /* A drum with its sticks, and the beat flying off it. */
+    'rhythm-tap': () => `
+      ${bg('cv-sunny')}
+      ${shadow(100, 184, 62, 10)}
+      <path d="M44 100v58c0 12 25 22 56 22s56-10 56-22v-58z" fill="#ff4d6d"/>
+      <path d="M44 120c0 12 25 22 56 22s56-10 56-22" stroke="#ffd23f" stroke-width="6" fill="none"/>
+      <g stroke="#fff" stroke-width="3" opacity=".8"><path d="M56 112l14 52M86 118l6 56M114 118l-6 56M144 112l-14 52"/></g>
+      <ellipse cx="100" cy="100" rx="56" ry="20" fill="#fff4e0"/><ellipse cx="100" cy="100" rx="56" ry="20" fill="none" stroke="#e0c9a0" stroke-width="4"/>
+      ${gloss(84, 96, 22, 6, 0)}
+      <g stroke-linecap="round"><path d="M40 30l52 62" stroke="#a86d38" stroke-width="7"/><circle cx="92" cy="92" r="7" fill="#f4d9a8"/><path d="M168 36l-58 56" stroke="#a86d38" stroke-width="7"/><circle cx="110" cy="92" r="7" fill="#f4d9a8"/></g>
+      <g stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none"><path d="M28 78l-12-6M30 96H16M172 80l12-6M170 98h14"/></g>
+      ${star(30, 150, 9)}${star(172, 146, 9, '#2fc57d')}`,
+
+    /* A computer mouse clicking, with the pointer and click rings. */
+    'mouse-moves': () => `
+      ${bg('cv-desk')}
+      <rect x="20" y="120" width="160" height="70" rx="14" fill="#2b4a8a" opacity=".35"/>
+      ${shadow(102, 176, 40, 9)}
+      <path d="M100 74c-26 0-38 18-38 46v14c0 26 16 40 38 40s38-14 38-40v-14c0-28-12-46-38-46z" fill="#fff"/>
+      <path d="M100 74v44M62 118h76" stroke="#d3e2f5" stroke-width="3"/>
+      <path d="M100 74c-26 0-38 18-38 44h38z" fill="#ffc531"/>
+      <rect x="96" y="88" width="8" height="18" rx="4" fill="#52607c"/>
+      ${gloss(80, 96, 10, 16, -20)}
+      <path d="M100 74c0-26 20-34 30-50" stroke="#52607c" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <g transform="translate(140 40)"><path d="M0 0v40l11-10 8 18 8-4-8-17h15z" fill="#fff" stroke="#1e2a44" stroke-width="3" stroke-linejoin="round"/></g>
+      <g stroke="#ffc531" stroke-width="4" fill="none" stroke-linecap="round"><circle cx="70" cy="48" r="10"/><circle cx="70" cy="48" r="20" opacity=".5"/></g>`,
+
+    /* A turtle on a path of tiles, heading home, arrow keys below. */
+    'arrow-trail': () => `
+      ${bg('cv-grass')}
+      ${[[28, 28], [70, 28], [112, 28], [112, 70], [112, 112], [154, 112]].map(([x, y]) => `<rect x="${x - 18}" y="${y - 18}" width="36" height="36" rx="8" fill="#f6dfae"/><rect x="${x - 18}" y="${y + 12}" width="36" height="6" rx="3" fill="#c9a064"/>`).join('')}
+      <g stroke="#fff" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round" fill="none"><path d="M44 28h50M112 46v50M128 112h10"/></g>
+      <g transform="translate(28 30)">${shadow(0, 12, 16, 4)}<ellipse cx="0" cy="2" rx="15" ry="11" fill="#2fa35b"/><path d="M-8-2h16M0-8v14" stroke="#1f7a43" stroke-width="2"/><circle cx="17" cy="0" r="6" fill="#8fd16a"/>${eye(19, -2, 1.6)}</g>
+      <g transform="translate(154 108)">${shadow(0, 20, 18, 4)}<rect x="-14" y="-4" width="28" height="22" rx="3" fill="#fff"/><path d="M-19-2l19-17 19 17z" fill="#ff4d6d"/><rect x="-4" y="6" width="9" height="12" rx="2" fill="#7a4a22"/></g>
+      <g transform="translate(70 152)">
+        ${[[0, -18, 'M0-6l-6 8h12z'], [-26, 8, 'M-6 0l8-6v12z'], [0, 8, 'M0 6l-6-8h12z'], [26, 8, 'M6 0l-8-6v12z']].map(([x, y, d]) => `<g transform="translate(${x} ${y})"><rect x="-12" y="-11" width="24" height="24" rx="5" fill="#3a4660"/><rect x="-12" y="-13" width="24" height="23" rx="5" fill="#52607c"/><path d="${d}" fill="#fff" transform="translate(0 -1)"/></g>`).join('')}
+      </g>`,
+
+    /* A little story in three frames: seed, sprout, flower. */
+    'story-order': () => `
+      ${bg('cv-lav')}
+      ${[0, 1, 2].map((i) => `${shadow(38 + i * 62, 150, 28, 5)}<rect x="${12 + i * 62}" y="62" width="52" height="84" rx="9" fill="#fff" transform="rotate(${[-5, 0, 5][i]} ${38 + i * 62} 104)"/>`).join('')}
+      <g transform="rotate(-5 38 104)"><rect x="18" y="68" width="40" height="52" rx="5" fill="#d9f2ff"/><path d="M18 108h40v12H18z" fill="#8a5a2f"/><ellipse cx="38" cy="106" rx="6" ry="4" fill="#a86d38"/></g>
+      <rect x="80" y="68" width="40" height="52" rx="5" fill="#d9f2ff"/><path d="M80 108h40v12H80z" fill="#8a5a2f"/><path d="M100 108V90" stroke="#2fa35b" stroke-width="3"/><path d="M100 94c-8-2-10-8-8-10 6 0 8 4 8 10zM100 92c6-4 10-4 12-2-2 4-6 4-12 2z" fill="#2fc57d"/>
+      <g transform="rotate(5 162 104)"><rect x="142" y="68" width="40" height="52" rx="5" fill="#d9f2ff"/><path d="M142 108h40v12h-40z" fill="#8a5a2f"/><path d="M162 108V84" stroke="#2fa35b" stroke-width="3"/><g transform="translate(162 80)">${[0, 1, 2, 3, 4].map((k) => `<ellipse cx="0" cy="-7" rx="4.5" ry="7" fill="#ff7aa8" transform="rotate(${k * 72})"/>`).join('')}<circle r="4" fill="#ffd23f"/></g></g>
+      <g font-family="Fredoka, Heebo, sans-serif" font-weight="700" font-size="15" text-anchor="middle" fill="#fff">
+        ${[0, 1, 2].map((i) => `<circle cx="${38 + i * 62}" cy="${136 + [-2, 0, 2][i]}" r="10" fill="#7c4ced"/><text x="${38 + i * 62}" y="${141 + [-2, 0, 2][i]}">${i + 1}</text>`).join('')}
+      </g>
+      ${sparkle(30, 30, 7)}${sparkle(176, 40, 9)}`,
+
+    /* A park picture as a jigsaw, one piece lifted out. */
+    'puzzle-park': () => `
+      <rect width="200" height="200" fill="url(#cv-sky)"/>
+      ${sun(156, 44, 16)}${cloud(56, 40, .8)}
+      <path d="M0 120c40-12 120-12 200 0v80H0z" fill="url(#cv-grass)"/>
+      <g transform="translate(60 100)"><rect x="-5" y="0" width="10" height="34" fill="#8a5a2f"/><circle cx="0" cy="-12" r="26" fill="#2fa35b"/><circle cx="-12" cy="-4" r="16" fill="#3fbf6a"/>${gloss(-8, -22, 10, 6)}</g>
+      <path d="M118 150h56" stroke="#a86d38" stroke-width="5"/><path d="M124 150v16M168 150v16" stroke="#a86d38" stroke-width="4"/><path d="M118 140h56" stroke="#c98a4a" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="#1e2a44" stroke-opacity=".25" stroke-width="2" fill="none"><path d="M100 0v200M0 100h200"/></g>
+      <path d="M100 100h46c0 10 8 10 8 0s8-10 8 0h38v100H100v-40c10 0 10-8 0-8s-10-8 0-8z" fill="#1e2a44" opacity=".18"/>
+      <g transform="translate(14 -16) rotate(8 150 150)">
+        ${shadow(156, 168, 46, 8)}
+        <path d="M100 100h46c0 10 8 10 8 0s8-10 8 0h38v52h-100v-12c10 0 10-8 0-8s-10-8 0-8z" fill="url(#cv-grass)" stroke="#fff" stroke-width="3"/>
+        <path d="M118 128h44" stroke="#a86d38" stroke-width="4"/><path d="M118 120h44" stroke="#c98a4a" stroke-width="5" stroke-linecap="round"/>
+      </g>`,
+
+    /* A magnifying glass finding one letter among many. */
+    'letter-hunt': () => `
+      ${bg('cv-teal')}
+      ${[['א', 18, 22, '#ff4d6d'], ['ג', 74, 18, '#3d7bff'], ['ד', 132, 26, '#ffc531'], ['ה', 26, 84, '#2fc57d'], ['ש', 140, 92, '#7c4ced'], ['ל', 20, 142, '#ff8a1f'], ['מ', 136, 148, '#ff4d6d']].map(([l, x, y, c], i) => block(x, y, 40, l, c, '#fff', [-8, 6, -4, 5, -6, 8, -3][i])).join('')}
+      ${shadow(104, 150, 30, 6)}
+      <circle cx="96" cy="96" r="38" fill="#fff" opacity=".35"/>
+      ${block(78, 80, 38, 'ב', '#ffffff', '#0f8ea0')}
+      <circle cx="96" cy="96" r="38" fill="none" stroke="#3a4660" stroke-width="9"/>
+      ${gloss(80, 78, 14, 8)}
+      <path d="M124 124l26 26" stroke="#3a4660" stroke-width="14" stroke-linecap="round"/><path d="M128 128l22 22" stroke="#ff8a1f" stroke-width="8" stroke-linecap="round"/>`,
+
+    /* A wizard's hat and wand, and the one missing letter of the spell glowing. */
+    'wizard-spell': () => `
+      ${bg('cv-night')}
+      ${[[20, 24], [170, 18], [150, 70], [30, 90], [100, 14]].map(([x, y]) => sparkle(x, y, 5, '#fff6b0')).join('')}
+      <path d="M38 110l34-86 30 84z" fill="#3d7bff"/><path d="M60 52l-6 16M80 40l4 18" stroke="#ffd23f" stroke-width="3"/>
+      ${star(66, 78, 9)}${star(84, 58, 6)}
+      <ellipse cx="70" cy="110" rx="46" ry="11" fill="#2457cc"/>
+      <path d="M128 94l44-44" stroke="#5a3b00" stroke-width="7" stroke-linecap="round"/><path d="M164 58l8-8" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+      ${star(176, 46, 12)}${sparkle(158, 34, 7, '#fff6b0')}
+      ${block(22, 138, 44, 'ק', '#7c4ced')}
+      <g><rect x="78" y="138" width="44" height="44" rx="7" fill="#ffd23f" opacity=".25"/><rect x="78" y="138" width="44" height="44" rx="7" fill="none" stroke="#ffd23f" stroke-width="3" stroke-dasharray="6 5"/><text x="100" y="170" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="28" fill="#ffd23f">?</text></g>
+      ${block(134, 138, 44, 'ם', '#7c4ced')}`,
+
+    /* A fairy-tale tower whose numbered stairs have one gap. */
+    'tower-steps': () => `
+      ${bg('cv-sky')}${cloud(40, 40, .8)}
+      <path d="M0 170c60-10 140-10 200 0v30H0z" fill="url(#cv-grass)"/>
+      <rect x="112" y="40" width="64" height="134" fill="#e3d4ff"/><rect x="112" y="40" width="64" height="134" fill="none" stroke="#c4b2f5" stroke-width="3"/>
+      <path d="M106 42l38-34 38 34z" fill="#7c4ced"/><path d="M144 8v-10" stroke="#5a30c2" stroke-width="3"/><path d="M144-2l14 5-14 5z" fill="#ff4d6d"/>
+      <rect x="132" y="66" width="24" height="30" rx="12" fill="#5a30c2"/><rect x="132" y="140" width="24" height="34" rx="12" fill="#a86d38"/>
+      ${[0, 1, 2, 3].map((i) => {
+        const x = 18 + i * 24, y = 156 - i * 24;
+        return i === 2
+          ? `<rect x="${x}" y="${y}" width="30" height="20" rx="4" fill="#fff" fill-opacity=".4" stroke="#3a4660" stroke-width="2.5" stroke-dasharray="5 4"/><text x="${x + 15}" y="${y + 16}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="15" fill="#3a4660">?</text>`
+          : `<rect x="${x}" y="${y}" width="30" height="20" rx="4" fill="#ffc531"/><rect x="${x}" y="${y + 14}" width="30" height="6" rx="3" fill="#d49a00"/><text x="${x + 15}" y="${y + 15}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="14" fill="#5a3b00">${i + 1}</text>`;
+      }).join('')}`,
+
+    /* A keyboard with one key lit and being pressed. */
+    'keyboard-keys': () => `
+      ${bg('cv-desk')}
+      ${shadow(100, 172, 92, 10)}
+      <rect x="8" y="70" width="184" height="100" rx="14" fill="#3a4660"/>
+      ${[0, 1, 2, 3].map((r) => [0, 1, 2, 3, 4, 5, 6].map((c) => {
+        const x = 18 + c * 24.5 + (r % 2) * 6, y = 80 + r * 21;
+        if (x > 170) return '';
+        const lit = r === 1 && c === 3;
+        return `<rect x="${x}" y="${y + 2}" width="21" height="18" rx="4" fill="${lit ? '#d49a00' : '#1e2a44'}"/><rect x="${x}" y="${y}" width="21" height="17" rx="4" fill="${lit ? '#ffc531' : '#eef3f8'}"/>`;
+      }).join('')).join('')}
+      <text x="${18 + 3 * 24.5 + 6 + 10.5}" y="115" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" fill="#5a3b00">A</text>
+      <g transform="translate(104 34)"><path d="M0 70V20c0-8 12-8 12 0v26c0-6 10-6 10 0v6c0-6 10-6 10 0v6c0-6 9-6 9 1v16c0 16-8 24-22 24h-4C6 98 0 88 0 76z" fill="#ffd2b0" stroke="#e8a985" stroke-width="2"/></g>
+      ${sparkle(86, 40, 9)}${sparkle(160, 46, 6)}`,
+
+    /* A ladybird on a screen, with the pointer about to catch it. */
+    'click-catch': () => `
+      ${bg('cv-mint')}
+      ${shadow(100, 182, 70, 8)}
+      <rect x="22" y="30" width="156" height="118" rx="12" fill="#3a4660"/><rect x="30" y="38" width="140" height="102" rx="6" fill="#d9f2ff"/>
+      <path d="M88 148h24l6 26H82z" fill="#52607c"/><rect x="66" y="172" width="68" height="8" rx="4" fill="#3a4660"/>
+      <g transform="translate(92 86) rotate(-20)">
+        <ellipse cx="0" cy="0" rx="24" ry="20" fill="#ff3b4a"/><path d="M0-20v40" stroke="#1e2a44" stroke-width="3"/>
+        <circle cx="-11" cy="-6" r="5" fill="#1e2a44"/><circle cx="11" cy="-6" r="5" fill="#1e2a44"/><circle cx="-10" cy="9" r="4" fill="#1e2a44"/><circle cx="10" cy="9" r="4" fill="#1e2a44"/>
+        <circle cx="0" cy="-24" r="10" fill="#1e2a44"/>${eye(-4, -26, 2)}${eye(4, -26, 2)}
+        ${gloss(-10, -10, 8, 5)}
+      </g>
+      <g stroke="#ff8a1f" stroke-width="3" fill="none"><circle cx="92" cy="86" r="34" stroke-dasharray="6 6"/></g>
+      <g transform="translate(124 100)"><path d="M0 0v34l9-8 7 15 7-3-7-15h13z" fill="#fff" stroke="#1e2a44" stroke-width="3" stroke-linejoin="round"/></g>`,
+
+    /* Half sunny, half rainy, with the right clothes for each. */
+    'weather-day': () => `
+      <rect width="100" height="200" fill="url(#cv-sunny)"/><rect x="100" width="100" height="200" fill="#8fa3c8"/>
+      ${sun(48, 46, 20)}
+      <g transform="translate(150 40)"><ellipse cx="0" cy="8" rx="30" ry="13" fill="#e8eef8"/><circle cx="-12" cy="0" r="13" fill="#e8eef8"/><circle cx="8" cy="-4" r="16" fill="#e8eef8"/></g>
+      <g stroke="#3d7bff" stroke-width="3" stroke-linecap="round"><path d="M130 72l-4 10M150 70l-4 10M170 72l-4 10M140 92l-4 10M160 90l-4 10"/></g>
+      <path d="M0 160h200v40H0z" fill="#5fc94a"/>
+      <g transform="translate(48 132)">${shadow(0, 30, 26, 5)}<path d="M-30-4l-6-6M30-4l6-6" stroke="#ff4d6d" stroke-width="4" stroke-linecap="round"/><path d="M-5 0q5-6 10 0" stroke="#ff4d6d" stroke-width="4" fill="none"/><circle cx="-17" cy="2" r="13" fill="#2b3b66" stroke="#ff4d6d" stroke-width="4"/><circle cx="17" cy="2" r="13" fill="#2b3b66" stroke="#ff4d6d" stroke-width="4"/>${gloss(-21, -2, 5, 3)}${gloss(13, -2, 5, 3)}</g>
+      <g transform="translate(150 120)"><path d="M-34 0a34 30 0 0 1 68 0z" fill="#ff4d6d"/><path d="M-34 0q8.5-6 17 0t17 0 17 0 17 0" fill="#ff4d6d" stroke="#e0304f" stroke-width="2"/><path d="M0 0v34c0 8 10 8 10 0" stroke="#3a4660" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g transform="translate(150 178)"><path d="M-14-10h10l2 12h-14z M4-10h10l2 12H2z" fill="#ffc531"/></g>`,
+
+    /* A fish, and the word for it built from letter blocks. */
+    'build-a-word': () => `
+      ${bg('cv-water')}
+      <g fill="#fff" opacity=".45"><circle cx="40" cy="30" r="5"/><circle cx="48" cy="18" r="3"/><circle cx="160" cy="40" r="4"/></g>
+      <g transform="translate(100 66)">
+        <path d="M-40 0c14-24 54-26 70 0-16 26-56 24-70 0z" fill="#ff8a1f"/>
+        <path d="M28 0l22-18v36z" fill="#ff6a00"/>
+        <path d="M-10-18c4 10 4 26 0 36" stroke="#ffb36b" stroke-width="4" fill="none"/>
+        ${eye(-26, -4, 5)}${gloss(-16, -10, 12, 5, 0)}
+      </g>
+      <path d="M0 150c40-8 80 8 120 0s60-8 80 0v50H0z" fill="#f6dfae"/>
+      ${block(48, 118, 46, 'ד', '#2fa35b', '#fff', -4)}${block(106, 118, 46, 'ג', '#3d7bff', '#fff', 5)}
+      ${sparkle(170, 110, 8)}${sparkle(30, 110, 6)}`,
+
+    /* Cookies on plates: two plus one. */
+    'plus-minus': () => `
+      ${bg('cv-room')}
+      <rect x="0" y="130" width="200" height="70" fill="#e0a96d"/><rect x="0" y="130" width="200" height="8" fill="#c98a4a"/>
+      ${[[50, 120], [150, 120]].map(([x, y]) => `${shadow(x, y + 18, 40, 7)}<ellipse cx="${x}" cy="${y + 10}" rx="40" ry="13" fill="#fff"/><ellipse cx="${x}" cy="${y + 8}" rx="30" ry="8" fill="#eef3f8"/>`).join('')}
+      ${[[36, 100], [62, 104], [150, 100]].map(([x, y]) => `<g transform="translate(${x} ${y})"><circle r="17" fill="#d9a066"/><circle r="17" fill="none" stroke="#b67a3c" stroke-width="3"/><g fill="#5a3218"><circle cx="-6" cy="-5" r="3"/><circle cx="6" cy="-2" r="3"/><circle cx="-2" cy="7" r="3"/><circle cx="9" cy="8" r="2.4"/></g>${gloss(-6, -8, 7, 4)}</g>`).join('')}
+      <g transform="translate(100 104)"><circle r="15" fill="#2f6ae8"/><path d="M-8 0h16M0-8v16" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g>
+      <g font-family="Fredoka, sans-serif" font-weight="700" text-anchor="middle"><rect x="70" y="20" width="60" height="44" rx="12" fill="#fff"/><text x="100" y="54" font-size="34" fill="#2f6ae8">?</text></g>
+      ${sparkle(30, 40, 8)}${sparkle(172, 50, 7)}`,
+
+    /* NEW — a picture of an apple, and its first letter picked from three. */
+    'first-letter': () => `
+      ${bg('cv-pink')}
+      ${shadow(64, 118, 40, 8)}
+      <rect x="22" y="22" width="84" height="94" rx="14" fill="#fff"/>
+      <g transform="translate(64 72)">
+        <path d="M0-18c-20-12-38 4-34 24 4 22 18 34 34 28 16 6 30-6 34-28 4-20-14-36-34-24z" fill="#ff3b4a"/>
+        <path d="M0-18c0-8 2-14 6-18" stroke="#7a4a22" stroke-width="4" stroke-linecap="round"/>
+        <path d="M4-26c8-10 18-8 20-4-6 6-14 8-20 4z" fill="#2fc57d"/>
+        ${gloss(-16, -4, 8, 12, 20)}
+      </g>
+      <path d="M112 66h22" stroke="#7c4ced" stroke-width="5" stroke-linecap="round"/><path d="M128 58l9 8-9 8" stroke="#7c4ced" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      ${block(142, 44, 46, 'ת', '#ffc531', '#5a3b00')}
+      ${block(24, 140, 40, 'ב', '#ffffff', '#c2410c', -6)}${block(80, 144, 40, 'מ', '#ffffff', '#c2410c', 4)}${block(136, 140, 40, 'ש', '#ffffff', '#c2410c', -3)}
+      ${sparkle(170, 26, 8)}`,
+
+    /* NEW — the final letters, each tied to its everyday partner. */
+    'final-letters': () => `
+      ${bg('cv-teal')}
+      ${[['מ', 'ם', 26], ['נ', 'ן', 84], ['כ', 'ך', 142]].map(([a, b, y], i) => {
+        const col = ['#ff4d6d', '#3d7bff', '#2fa35b'][i];
+        return `${block(22, y - 18, 40, a, '#ffffff', col, -4)}
+          <path d="M70 ${y + 2}c20 -14 40 14 60 0" stroke="${col}" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="1 9"/>
+          ${block(136, y - 18, 40, b, col, '#fff', 4)}`;
+      }).join('')}
+      ${sparkle(100, 12, 7)}${sparkle(100, 190, 6)}`,
+
+    /* NEW — a big letter traced by a pencil along its dotted path. */
+    'letter-trace': () => `
+      ${bg('cv-paper')}
+      <g stroke="#cfe0f5" stroke-width="2"><path d="M0 40h200M0 80h200M0 120h200M0 160h200"/></g>
+      <path d="M16 0v200" stroke="#f3a7a7" stroke-width="2"/>
+      <text x="96" y="162" text-anchor="middle" font-family="Fredoka, Heebo, sans-serif" font-weight="700" font-size="160" fill="none" stroke="#c3d5ec" stroke-width="5" stroke-dasharray="3 9" stroke-linecap="round">א</text>
+      <path d="M58 54c18 30 40 66 66 100" stroke="#7c4ced" stroke-width="13" fill="none" stroke-linecap="round"/>
+      <g transform="translate(124 154) rotate(-35)">
+        ${shadow(10, 20, 24, 5)}
+        <rect x="0" y="-8" width="70" height="16" rx="3" fill="#ffc531"/><rect x="52" y="-8" width="18" height="16" fill="#ff8fa3"/><rect x="48" y="-8" width="5" height="16" fill="#c9ced6"/>
+        <path d="M0-8l-16 8 16 8z" fill="#f4d9a8"/><path d="M-11-3l-5 3 5 3z" fill="#7c4ced"/>
+      </g>
+      ${star(166, 36, 13)}${sparkle(40, 180, 8, '#ffc531')}`,
+  };
+
+  const has = (id) => Boolean(ART[id]);
+
+  /* The cover itself. Decorative: the game's title is printed right under it. */
+  function art(id, cls) {
+    return `<svg class="${cls || 'art'}" viewBox="0 0 200 200" aria-hidden="true" focusable="false">${ART[id]()}</svg>`;
+  }
+
+  function inject() {
+    document.body.insertAdjacentHTML('afterbegin', defs());
+  }
+
+  return { has, art, inject };
+})();

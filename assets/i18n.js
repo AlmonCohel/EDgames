@@ -23,6 +23,11 @@ const UI = {
     'brand.initial':    'ג',
     'appbar.greeting':  'מה משחקים היום?',
 
+    'sound.label':   'צלילים: {state}. לחיצה מחליפה',
+    'sound.all':     'מוזיקה',
+    'sound.effects': 'צלילים',
+    'sound.off':     'שקט',
+
     'search.label':       'חיפוש משחק',
     'search.placeholder': 'איזה משחק מחפשים?',
 
@@ -87,6 +92,11 @@ const UI = {
     'brand.name':       'EDgames',
     'brand.initial':    'E',
     'appbar.greeting':  'What shall we play today?',
+
+    'sound.label':   'Sound: {state}. Press to change',
+    'sound.all':     'Music',
+    'sound.effects': 'Sounds',
+    'sound.off':     'Quiet',
 
     'search.label':       'Search for a game',
     'search.placeholder': 'Which game shall we play?',

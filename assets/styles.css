@@ -1,7 +1,11 @@
 /* EDgames — the app shell. Shared by index.html and game.html.
 
    This is design direction 3 of the three that were drawn in mockups/, built
-   for real. The bet it makes: the site is played on a tablet and shown on a
+   for real, and since October 2026 wearing the "Chunky" look picked from
+   mockups/v3: every tile, chip and button is a fat toy button with a darker
+   edge under it that squashes when pressed. The rules for that look are the
+   last section of this file; the other three looks drawn alongside it are
+   still in mockups/v3 as options. The bet it makes: the site is played on a tablet and shown on a
    phone, and it used to be laid out like a desktop page from a template — a
    wide grid of glass cards reflowed down to two narrow columns, which is what
    an unfinished site looks like on the device it is actually used on.
@@ -17,14 +21,15 @@
    keeps its name and its job here — only the values moved. */
 
 :root {
-  --bg:         #f4f5f7;   /* paper grey, so a white card is a real surface */
+  --bg:         #eef5ff;   /* a pale sky, so a white card is a real surface */
   --bg-raise:   #ffffff;
   --surface:    #ffffff;
-  --border:     #e6e8ec;
-  --text:       #101418;
+  --border:     #d3e2f5;
+  --edge:       #c3d5ec;   /* the toy edge under white chips, bars and the stage */
+  --text:       #1e2a44;
   --text-muted: #8a929c;
-  --text-soft:  #646d78;   /* 5.6:1 on --bg */
-  --value:      #101418;
+  --text-soft:  #56657f;   /* 5.4:1 on --bg */
+  --value:      #1e2a44;
 
   --accent:        #1c8a5a;
   --accent-strong: #16794c;  /* fill behind white text — 5.5:1 */
@@ -37,7 +42,7 @@
   --sel-tint:   #e7ebf0;
   --sel-ink:    #2b3440;
 
-  --radius:     18px;
+  --radius:     22px;
   --radius-sm:  14px;
   --shadow:     0 2px 10px rgba(16, 20, 24, 0.06);
   --shadow-lift: 0 10px 26px rgba(16, 20, 24, 0.12);
@@ -50,13 +55,14 @@
    carries white text (all seven clear 4.5:1), which is what the covers and the
    continue card are made of. The pastel tint/ink pair stays exactly as it was,
    because badges and a dozen game modules are built on it. */
-[data-subject="letters"]  { --sub-solid: #0e6e7a; --sub-tint: #d6edf1; --sub-ink: #1d6a76; }
-[data-subject="numbers"]  { --sub-solid: #1f5fa8; --sub-tint: #ddeefb; --sub-ink: #2b6a96; }
-[data-subject="shapes"]   { --sub-solid: #c2410c; --sub-tint: #ffe7d6; --sub-ink: #a1552a; }
-[data-subject="memory"]   { --sub-solid: #6d28d9; --sub-tint: #e9e2f8; --sub-ink: #6046a3; }
-[data-subject="nature"]   { --sub-solid: #16794c; --sub-tint: #d9f0e4; --sub-ink: #23684d; }
-[data-subject="music"]    { --sub-solid: #a16207; --sub-tint: #fbf0cf; --sub-ink: #85661a; }
-[data-subject="computer"] { --sub-solid: #475569; --sub-tint: #e3e6ec; --sub-ink: #4e5a6b; }
+/* --sub-edge is the Chunky look's: the darker band under a subject's tile. */
+[data-subject="letters"]  { --sub-solid: #0f8ea0; --sub-edge: #0a6876; --sub-tint: #d6edf1; --sub-ink: #1d6a76; }
+[data-subject="numbers"]  { --sub-solid: #2f6ae8; --sub-edge: #2150b8; --sub-tint: #ddeefb; --sub-ink: #2b6a96; }
+[data-subject="shapes"]   { --sub-solid: #e8621c; --sub-edge: #b64a10; --sub-tint: #ffe7d6; --sub-ink: #a1552a; }
+[data-subject="memory"]   { --sub-solid: #7c4ced; --sub-edge: #5a30c2; --sub-tint: #e9e2f8; --sub-ink: #6046a3; }
+[data-subject="nature"]   { --sub-solid: #1c9a57; --sub-edge: #13733f; --sub-tint: #d9f0e4; --sub-ink: #23684d; }
+[data-subject="music"]    { --sub-solid: #d98a00; --sub-edge: #a66800; --sub-tint: #fbf0cf; --sub-ink: #85661a; }
+[data-subject="computer"] { --sub-solid: #52607c; --sub-edge: #3a4660; --sub-tint: #e3e6ec; --sub-ink: #4e5a6b; }
 
 * { box-sizing: border-box; }
 
@@ -64,7 +70,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: "Heebo", system-ui, sans-serif;
+  font-family: "Fredoka", "Heebo", system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.55;
   min-height: 100vh;
@@ -702,4 +708,102 @@ button { font: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ==== The Chunky look ====
+   Picked from the four looks in mockups/v3 (October 2026). Everything a child
+   presses is a toy button: a darker edge sits under it and squashes when it is
+   pressed, so a tap feels like pushing something. Rounder letters (Fredoka),
+   brighter subject colours, tiles that pop in one after another. These rules
+   restyle the shell above; they do not change its layout. */
+
+body {
+  background:
+    radial-gradient(circle, #d9e7fa 1.4px, transparent 1.6px) 0 0 / 22px 22px,
+    var(--bg);
+}
+h1, h2, h3 { font-weight: 700; letter-spacing: 0; }
+
+.appbar { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 0; box-shadow: 0 4px 0 var(--edge); }
+.avatar { background: #ffc531; color: #5a3b00; border-radius: 14px; box-shadow: 0 4px 0 #d49a00; transform: rotate(-6deg); font-size: 1.25rem; font-weight: 700; }
+.hello .big { font-size: 1.2rem; font-weight: 700; }
+.hello .small { font-weight: 500; }
+
+.chip { border: 2px solid var(--border); box-shadow: 0 4px 0 var(--edge); font-weight: 600; min-height: 46px; transition: transform .08s, box-shadow .08s, background .15s; }
+.chip:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--edge); }
+.chip[aria-pressed="true"] { box-shadow: 0 4px 0 var(--sub-edge, #0f1626); border-color: var(--sub-solid, var(--text)); }
+.chip--clear { box-shadow: none; }
+.rail { padding-block: 14px 16px; }
+
+.head h2 { font-size: 1.3rem; }
+.head .more { background: #fff; border: 2px solid var(--border); border-radius: 999px; padding: 1px 10px; font-size: .8rem; font-weight: 600; }
+
+.row { padding-bottom: 14px; }
+.cover { border-radius: 26px; box-shadow: 0 7px 0 var(--sub-edge); transition: transform .1s, box-shadow .1s; }
+.cover[data-tone] { box-shadow: 0 7px 0 var(--sub-edge); }
+.tile:hover .cover, .tile:focus-visible .cover { transform: translateY(-3px); box-shadow: 0 10px 0 var(--sub-edge); }
+.tile:active .cover { transform: translateY(5px); box-shadow: 0 2px 0 var(--sub-edge); }
+.tile h3 { text-align: center; font-size: 1.02rem; font-weight: 600; margin-top: 14px; }
+.tile .meta { text-align: center; }
+.tile .meta .num { background: #fff; border: 2px solid var(--border); border-radius: 999px; padding: 0 8px; font-weight: 600; color: var(--text); }
+
+.row > li, .tiles > li { animation: pop-in .45s cubic-bezier(.3,1.6,.5,1) backwards; }
+.row > li:nth-child(2) { animation-delay: .05s; }
+.row > li:nth-child(3) { animation-delay: .1s; }
+.row > li:nth-child(4) { animation-delay: .15s; }
+.row > li:nth-child(5) { animation-delay: .2s; }
+.row > li:nth-child(n+6) { animation-delay: .25s; }
+@keyframes pop-in { from { transform: scale(.7) translateY(14px); opacity: 0; } }
+
+.continue { border-radius: 28px; box-shadow: 0 8px 0 var(--sub-edge); padding-inline-end: 84px; }
+.continue::after { content: "▶"; position: absolute; inset-inline-end: 18px; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; border-radius: 50%; background: #fff; color: var(--sub-solid); display: grid; place-items: center; font-size: 22px; box-shadow: 0 4px 0 rgba(0,0,0,.18); }
+.continue h3 { font-size: 1.45rem; }
+
+.tabs { inset-inline: 12px; inset-block-end: calc(10px + env(safe-area-inset-bottom)); height: 68px; border-radius: 24px; border: 2px solid var(--border); box-shadow: 0 5px 0 var(--edge); background: #fff; padding-bottom: 0; padding-inline: 6px; gap: 4px; align-items: center; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.tab { border-radius: 18px; height: 56px; font-weight: 600; font-size: .78rem; }
+.tab[aria-current="page"] { background: #ffc531; color: #5a3b00; box-shadow: 0 4px 0 #d49a00; }
+.sheet { inset-inline: 12px; inset-block-end: calc(88px + env(safe-area-inset-bottom)); border-radius: 24px; border: 2px solid var(--border); box-shadow: 0 6px 0 var(--edge); margin-bottom: 0; }
+body.app { padding-bottom: 110px; }
+
+.btn { box-shadow: 0 4px 0 #0f5c39; font-weight: 600; }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #0f5c39; }
+.btn--ghost { box-shadow: 0 4px 0 var(--edge); border: 2px solid var(--border); }
+.btn--ghost:active { box-shadow: 0 1px 0 var(--edge); }
+.game-header .game-mark { border-radius: 16px; box-shadow: 0 4px 0 var(--sub-edge); width: 56px; height: 56px; }
+.game-header h1 { font-size: 1.5rem; }
+.badge { font-weight: 600; }
+.stage { border: 2px solid var(--border); box-shadow: 0 8px 0 var(--edge); border-radius: 30px; }
+.empty { border: 2px solid var(--border); box-shadow: 0 6px 0 var(--edge); }
+.item { border: 2px solid var(--border); box-shadow: 0 4px 0 var(--edge); }
+
+@media (min-width: 900px) {
+  .tabs { inset: auto; height: auto; border-radius: 24px; margin: 18px 14px; width: 204px; position: sticky; top: 84px; }
+  .tab { height: auto; }
+  .sheet { inset: auto; margin: 4px var(--gutter) 0; }
+  body.app { padding-bottom: 0; }
+}
+
+/* ---- Covers: the illustrated picture of each game (assets/covers.js) ----
+   Full bleed inside the tile, so the field, ghost mark and pattern behind a
+   line scene step aside; the subject's colour stays as the toy edge under it. */
+.cover--art::before, .cover--art::after { display: none; }
+.cover .art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.cover--art { background: var(--sub-tint); }
+.continue .art-main { width: 76px; height: 76px; flex: none; border-radius: 20px; position: relative; z-index: 1; box-shadow: 0 4px 0 rgba(0,0,0,.18); background: #fff; }
+.game-header .game-mark { overflow: hidden; }
+.game-header .game-mark .art { width: 100%; height: 100%; display: block; }
+
+/* ---- The sound switch (assets/music.js) ---- */
+.sound-toggle { gap: 6px; padding: 0 13px; }
+.sound-toggle .ico { width: 20px; height: 20px; }
+.sound-toggle[data-state="all"] { background: #ffc531; border-color: #ffc531; color: #5a3b00; box-shadow: 0 4px 0 #d49a00; }
+.sound-toggle[data-state="off"] { color: var(--text-soft); }
+@media (max-width: 480px) {
+  .sound-toggle span { display: none; }
+  .sound-toggle { padding: 0; width: 46px; justify-content: center; }
+  .appbar-in { gap: 8px; }
+}
+@media (max-width: 480px) {
+  .hello .big { font-size: 1.05rem; }
+  .lang-toggle { padding: 0 12px; }
 }

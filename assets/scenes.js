@@ -28,6 +28,26 @@ const EDScenes = (() => {
       <path d="M23.5 6.4v3.2M23.5 16.6v3.2M17.4 13h3.2M26.4 13h3.2
                M19.2 8.7l2.3 2.3M27.8 8.7l-2.3 2.3M19.2 17.3l2.3-2.3M27.8 17.3l-2.3-2.3"/>`,
 
+    /* An apple, an arrow, and the letter its name begins with. */
+    'first-letter': `
+      <path d="M9.5 12.5c-3.6-2.2-6.8.6-6 4.4.8 4 3.2 6.2 6 5.2 2.8 1 5.2-1.2 6-5.2.8-3.8-2.4-6.6-6-4.4z"/>
+      <path d="M9.5 12.5c0-1.6.4-2.6 1.2-3.4"/>
+      <path d="M18 17h4.5M20.5 15l2 2-2 2"/>
+      <rect x="24" y="12" width="6.5" height="10" rx="1.6"/>`,
+
+    /* An ordinary letter tied to its final shape. */
+    'final-letters': `
+      <rect x="2.5" y="8" width="10" height="11" rx="2"/>
+      <rect x="19.5" y="8" width="10" height="16" rx="2"/>
+      <path d="M12.5 13.5c2-2 5-2 7 0" stroke-dasharray="1.6 2.2"/>
+      <path d="M24.5 12v8"/>`,
+
+    /* A dotted letter with a pencil going over it. */
+    'letter-trace': `
+      <path d="M6 6l14 20M6 26c3-6 6-8 9-8M17 12c3 0 6 2 9 8" stroke-dasharray="2.2 2.6"/>
+      <path d="M20 26l8-8 3 3-8 8-4 1z"/>
+      <path d="M6 6l7 10"/>`,
+
     /* A duck on the lake, with something to count above it. */
     'count-the-ducks': `
       <path d="M7 21.4c0-3.4 3.1-6 7-6 4.3 0 7.4 2.3 7.4 5.4 0 1.9-1.5 3-3.6 3H10c-1.7 0-3-1-3-2.4z"/>
