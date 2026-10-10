@@ -20,7 +20,6 @@ const UI = {
     'site.title':       'הגנון של עלמון — משחקים לימודיים לילדים',
     'site.description': 'אוסף משחקים לימודיים קטנים לילדים בגיל 3 עד 8. אפשר לסנן לפי גיל ולפי נושא ולבחור משחק.',
     'brand.name':       'הגנון של עלמון',
-    'brand.initial':    'ג',
     'appbar.greeting':  'מה משחקים היום?',
 
     'sound.label':   'צלילים: {state}. לחיצה מחליפה',
@@ -90,7 +89,6 @@ const UI = {
     'site.title':       'EDgames — educational games for kids',
     'site.description': 'A small collection of educational games for children aged 3 to 8. Filter by age and by subject and pick a game.',
     'brand.name':       'EDgames',
-    'brand.initial':    'E',
     'appbar.greeting':  'What shall we play today?',
 
     'sound.label':   'Sound: {state}. Press to change',
