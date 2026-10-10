@@ -1,0 +1,92 @@
+/* Look 1 — Chunky. Everything is a fat, pressable toy button: a thick darker
+   edge under every tile and chip that squashes when pressed, rounder letters,
+   brighter subject colours. Same markup, same layout as the live site. */
+
+:root {
+  --bg: #EEF5FF;
+  --surface: #FFFFFF;
+  --border: #D3E2F5;
+  --edge: #C3D5EC;
+  --text: #1E2A44;
+  --text-soft: #5B6B86;
+  --accent-strong: #3D7BFF;
+  --accent-ink: #2F62D6;
+  --radius: 22px;
+}
+[data-subject="letters"]  { --sub-solid: #14A7BB; --sub-edge: #0D7D8C; }
+[data-subject="numbers"]  { --sub-solid: #3D7BFF; --sub-edge: #2A57C2; }
+[data-subject="shapes"]   { --sub-solid: #FF7A2F; --sub-edge: #CC5512; }
+[data-subject="memory"]   { --sub-solid: #8B5CF6; --sub-edge: #6337C9; }
+[data-subject="nature"]   { --sub-solid: #22B565; --sub-edge: #16844A; }
+[data-subject="music"]    { --sub-solid: #F2A100; --sub-edge: #B87900; }
+[data-subject="computer"] { --sub-solid: #5B6B86; --sub-edge: #3E4B63; }
+
+body {
+  font-family: "Fredoka", "Heebo", system-ui, sans-serif;
+  background:
+    radial-gradient(circle, #D9E7FA 1.4px, transparent 1.6px) 0 0 / 22px 22px,
+    var(--bg);
+}
+h1, h2, h3 { font-weight: 700; letter-spacing: 0; }
+
+/* app bar: a white slab with a toy edge */
+.appbar { background: #fff; backdrop-filter: none; border-bottom: 0; box-shadow: 0 4px 0 var(--edge); }
+.avatar { background: #FFC531; color: #5A3B00; border-radius: 14px; box-shadow: 0 4px 0 #D49A00; transform: rotate(-6deg); font-size: 1.25rem; }
+.hello .big { font-size: 1.2rem; font-weight: 700; }
+.hello .small { font-weight: 500; }
+
+/* chips: chunky pills that press down */
+.chip { border: 2px solid var(--border); box-shadow: 0 4px 0 var(--edge); font-weight: 600; min-height: 46px; transition: transform .08s, box-shadow .08s; }
+.chip:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--edge); }
+.chip[aria-pressed="true"] { box-shadow: 0 4px 0 var(--sub-edge, #0F1626); border-color: var(--sub-solid, var(--text)); }
+#subject-all[aria-pressed="true"] { background: var(--text); border-color: var(--text); box-shadow: 0 4px 0 #0F1626; }
+.rail { padding-block: 14px 16px; }
+
+/* shelf heads */
+.head h2 { font-size: 1.3rem; }
+.head .more { background: #fff; border: 2px solid var(--border); border-radius: 999px; padding: 1px 10px; font-size: .8rem; font-weight: 600; }
+
+/* tiles: the toy block */
+.row { padding-bottom: 14px; }
+.cover { border-radius: 26px; box-shadow: 0 7px 0 var(--sub-edge); transition: transform .1s, box-shadow .1s; }
+.cover .scene { width: 62%; filter: drop-shadow(0 3px 0 rgba(0,0,0,.15)); }
+.cover::after { background: radial-gradient(120% 70% at 30% 0%, rgba(255,255,255,.28), transparent 60%); }
+.tile:hover .cover, .tile:focus-visible .cover { transform: translateY(-3px); box-shadow: 0 10px 0 var(--sub-edge); }
+.tile:active .cover { transform: translateY(5px); box-shadow: 0 2px 0 var(--sub-edge); }
+.tile h3 { text-align: center; font-size: 1.02rem; font-weight: 600; margin-top: 14px; }
+.tile .meta { text-align: center; }
+.tile .meta .num { background: #fff; border: 2px solid var(--border); border-radius: 999px; padding: 0 8px; font-weight: 600; color: var(--text); }
+
+/* tiles pop in, one after another */
+.row > li, .tiles > li { animation: pop-in .45s cubic-bezier(.3,1.6,.5,1) backwards; }
+.row > li:nth-child(2) { animation-delay: .05s; } .row > li:nth-child(3) { animation-delay: .1s; }
+.row > li:nth-child(4) { animation-delay: .15s; } .row > li:nth-child(5) { animation-delay: .2s; }
+.row > li:nth-child(n+6) { animation-delay: .25s; }
+@keyframes pop-in { from { transform: scale(.7) translateY(14px); opacity: 0; } }
+
+/* continue card: a big play button */
+.continue { border-radius: 28px; box-shadow: 0 8px 0 var(--sub-edge); padding-inline-end: 84px; }
+.continue::after { content: "▶"; position: absolute; inset-inline-end: 18px; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; border-radius: 50%; background: #fff; color: var(--sub-solid); display: grid; place-items: center; font-size: 22px; box-shadow: 0 4px 0 rgba(0,0,0,.18); }
+.continue h3 { font-size: 1.45rem; }
+
+/* bottom bar: a floating toy tray */
+.tabs { inset-inline: 12px; bottom: calc(10px + env(safe-area-inset-bottom)); height: 68px; border-radius: 24px; border: 2px solid var(--border); box-shadow: 0 5px 0 var(--edge); background: #fff; padding-bottom: 0; padding-inline: 6px; gap: 4px; align-items: center; }
+.tab { border-radius: 18px; height: 56px; font-weight: 600; font-size: .78rem; }
+.tab[aria-current="page"] { background: #FFC531; color: #5A3B00; box-shadow: 0 4px 0 #D49A00; }
+.sheet { inset-inline: 12px; bottom: calc(88px + env(safe-area-inset-bottom)); border-radius: 24px; border: 2px solid var(--border); box-shadow: 0 6px 0 var(--edge); }
+body.app { padding-bottom: 110px; }
+
+/* game page */
+.btn { box-shadow: 0 4px 0 #2A57C2; font-weight: 600; }
+.btn--ghost { box-shadow: 0 4px 0 var(--edge); border: 2px solid var(--border); }
+.game-header .game-mark { border-radius: 16px; box-shadow: 0 4px 0 var(--sub-edge); width: 56px; height: 56px; }
+.game-header h1 { font-size: 1.5rem; }
+.badge { font-weight: 600; }
+.stage { border: 2px solid var(--border); box-shadow: 0 8px 0 var(--edge); border-radius: 30px; }
+
+@media (min-width: 900px) {
+  .tabs { inset: auto; bottom: auto; height: auto; border-radius: 24px; margin: 18px 14px; width: 204px; }
+  .tab { height: auto; }
+  .sheet { inset: auto; }
+  body.app { padding-bottom: 0; }
+}

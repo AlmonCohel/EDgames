@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>לוגו — הגנון של עלמון</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Five logo ideas for the site, each shown as a full set: the app icon, the
+     name beside it, and the small sizes it has to survive (a 32px tab, a 16px
+     favicon). Mock-ups only — none of these is on the site yet. */
+  :root { --bg: #eef5ff; --ink: #1e2a44; --soft: #56657f; --edge: #c3d5ec; --border: #d3e2f5; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: radial-gradient(circle, #d9e7fa 1.4px, transparent 1.6px) 0 0 / 22px 22px, var(--bg); color: var(--ink); font-family: "Fredoka", system-ui, sans-serif; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 16px 60px; }
+  header h1 { margin: 0 0 6px; font-size: clamp(28px, 5vw, 44px); }
+  header p { margin: 0 0 22px; color: var(--soft); font-size: 17px; max-width: 60ch; }
+  .logo { background: #fff; border: 2px solid var(--border); border-radius: 30px; box-shadow: 0 7px 0 var(--edge); padding: 22px; margin-bottom: 26px; display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: center; }
+  .icon { width: 200px; height: 200px; border-radius: 46px; box-shadow: 0 9px 0 var(--e); overflow: hidden; transition: transform .25s cubic-bezier(.3,1.7,.5,1); }
+  .icon:hover { transform: translateY(-6px) rotate(-3deg); }
+  .icon svg { width: 100%; height: 100%; display: block; }
+  .num { font-size: 14px; font-weight: 600; color: var(--soft); }
+  .logo h2 { margin: 2px 0 6px; font-size: 26px; }
+  .logo p { margin: 0 0 14px; color: var(--soft); font-size: 16px; line-height: 1.5; }
+  .lockups { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .lock { display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 14px; border-radius: 20px; background: var(--bg); }
+  .lock.dark { background: #1e2a44; color: #fff; }
+  .lock .mini { width: 52px; height: 52px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 0 var(--e); flex: none; }
+  .lock .mini svg { width: 100%; height: 100%; display: block; }
+  .lock b { font-size: 24px; line-height: 1; display: block; }
+  .lock small { font-size: 13px; opacity: .7; }
+  .sizes { display: flex; gap: 12px; align-items: flex-end; }
+  .sizes div { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: var(--soft); }
+  .sizes svg { display: block; }
+  .tab { display: flex; align-items: center; gap: 6px; background: #dfe6ef; border-radius: 10px 10px 0 0; padding: 6px 12px; font-size: 12px; color: #333; }
+  @media (max-width: 640px) { .logo { grid-template-columns: 1fr; justify-items: center; text-align: center; } .lockups { justify-content: center; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>חמישה רעיונות ללוגו</h1>
+    <p dir="auto">Five logo ideas for הגנון של עלמון. Each one is a picture you can name at a glance, shown as an app icon, next to the name (light and dark), and at the small sizes a logo has to survive: 64, 32 and 16 pixels.</p>
+  </header>
+  <div id="list"></div>
+</div>
+
+<script>
+/* Each logo is one SVG on a 200×200 square, so the same drawing serves the
+   icon, the lockup and the favicon sizes. */
+const LOGOS = [
+  {
+    name: 'קוביות האותיות', en: 'Letter blocks', edge: '#b64a10',
+    about: 'Three toy blocks stacked like a child builds them, with א, ב and ג: learning that is a toy. It reads at a glance and works for both letters and play.',
+    svg: `
+      <rect width="200" height="200" fill="#ffe7d6"/>
+      <ellipse cx="100" cy="176" rx="74" ry="9" fill="#000" opacity=".12"/>
+      <g transform="translate(26 104)"><path d="M0 0l12-12h62l-12 12z" fill="#fff" opacity=".5"/><path d="M62 0l12-12v62l-12 12z" fill="#000" opacity=".2"/><rect width="62" height="62" rx="9" fill="#e8621c"/><text x="31" y="47" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="42" fill="#fff">א</text></g>
+      <g transform="translate(100 104)"><path d="M0 0l12-12h62l-12 12z" fill="#fff" opacity=".5"/><path d="M62 0l12-12v62l-12 12z" fill="#000" opacity=".2"/><rect width="62" height="62" rx="9" fill="#2f6ae8"/><text x="31" y="47" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="42" fill="#fff">ב</text></g>
+      <g transform="translate(64 38) rotate(-8 31 31)"><path d="M0 0l12-12h62l-12 12z" fill="#fff" opacity=".5"/><path d="M62 0l12-12v62l-12 12z" fill="#000" opacity=".2"/><rect width="62" height="62" rx="9" fill="#ffc531"/><text x="31" y="47" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="42" fill="#5a3b00">ג</text></g>`,
+  },
+  {
+    name: 'הגן', en: 'The kindergarten', edge: '#13733f',
+    about: 'A little kindergarten house whose door is a "play" button: the gan (גנון) and the games in one picture. The roof and the button stay clear even at 16 pixels.',
+    svg: `
+      <rect width="200" height="200" fill="#d9f0e4"/>
+      <circle cx="160" cy="44" r="18" fill="#ffd23f"/>
+      <ellipse cx="100" cy="178" rx="78" ry="8" fill="#000" opacity=".12"/>
+      <rect x="44" y="86" width="112" height="88" rx="10" fill="#fff"/>
+      <path d="M30 94l70-58 70 58z" fill="#e8621c" stroke="#e8621c" stroke-width="10" stroke-linejoin="round"/>
+      <rect x="54" y="104" width="24" height="24" rx="5" fill="#7fd0ff"/><rect x="122" y="104" width="24" height="24" rx="5" fill="#7fd0ff"/>
+      <rect x="76" y="118" width="48" height="56" rx="24" fill="#1c9a57"/>
+      <path d="M93 134v24l20-12z" fill="#fff"/>
+      <path d="M100 36v-14" stroke="#7a4a22" stroke-width="4"/><path d="M100 22l18 6-18 6z" fill="#2f6ae8"/>`,
+  },
+  {
+    name: 'השלט', en: 'The game controller', edge: '#5a30c2',
+    about: 'A chunky game controller in toy colours, the universal sign for "games", with a ג on its face so it is ours and not any games site\'s.',
+    svg: `
+      <rect width="200" height="200" fill="#e9e2f8"/>
+      <ellipse cx="100" cy="160" rx="80" ry="9" fill="#000" opacity=".12"/>
+      <path d="M50 64h100c26 0 40 24 40 52 0 26-14 40-30 40-14 0-20-12-30-22H70c-10 10-16 22-30 22-16 0-30-14-30-40 0-28 14-52 40-52z" fill="#7c4ced"/>
+      <path d="M50 64h100c18 0 30 12 36 28-40-10-132-10-172 0 6-16 18-28 36-28z" fill="#fff" opacity=".18"/>
+      <rect x="40" y="96" width="36" height="12" rx="4" fill="#fff"/><rect x="52" y="84" width="12" height="36" rx="4" fill="#fff"/>
+      <circle cx="146" cy="88" r="9" fill="#ffc531"/><circle cx="164" cy="104" r="9" fill="#2fc57d"/><circle cx="128" cy="104" r="9" fill="#ff4d6d"/><circle cx="146" cy="120" r="9" fill="#3d7bff"/>
+      <circle cx="100" cy="104" r="17" fill="#fff"/><text x="100" y="114" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="26" fill="#7c4ced">ג</text>`,
+  },
+  {
+    name: 'הצבע והשמש', en: 'Crayon and sun', edge: '#a66800',
+    about: 'A fat crayon that has just drawn a smiling sun: the joy of a child making something. Warm and friendly, and the most "kindergarten" of the five.',
+    svg: `
+      <rect width="200" height="200" fill="#fbf0cf"/>
+      <g transform="translate(86 82)">
+        <g stroke="#ff9f1c" stroke-width="9" stroke-linecap="round">${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4; return `<path d="M${(Math.cos(a) * 46).toFixed(1)} ${(Math.sin(a) * 46).toFixed(1)}L${(Math.cos(a) * 62).toFixed(1)} ${(Math.sin(a) * 62).toFixed(1)}"/>`; }).join('')}</g>
+        <circle r="36" fill="#ffd23f" stroke="#ff9f1c" stroke-width="6"/>
+        <circle cx="-12" cy="-6" r="5" fill="#5a3b00"/><circle cx="12" cy="-6" r="5" fill="#5a3b00"/>
+        <path d="M-15 10q15 14 30 0" stroke="#5a3b00" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <circle cx="-22" cy="8" r="5" fill="#ff8fa3" opacity=".7"/><circle cx="22" cy="8" r="5" fill="#ff8fa3" opacity=".7"/>
+      </g>
+      <g transform="translate(128 150) rotate(-40)">
+        <rect x="0" y="-13" width="78" height="26" rx="5" fill="#ff4d6d"/><rect x="14" y="-13" width="10" height="26" fill="#fff" opacity=".45"/><rect x="54" y="-13" width="10" height="26" fill="#fff" opacity=".45"/>
+        <path d="M0-13l-24 13 24 13z" fill="#f4d9a8"/><path d="M-14-5l-10 5 10 5z" fill="#ff4d6d"/>
+      </g>`,
+  },
+  {
+    name: 'דודו הברווז', en: 'Dudu the duck', edge: '#2150b8',
+    about: 'A mascot: the rubber duck from Counting Ducks in a little graduation cap. A character a child can love and look for, and it can also appear inside the games.',
+    svg: `
+      <rect width="200" height="200" fill="#ddeefb"/>
+      <path d="M0 150c40-10 80 8 120 0s60-8 80 0v50H0z" fill="#7fd0ff"/>
+      <ellipse cx="96" cy="160" rx="58" ry="9" fill="#1e88cc" opacity=".3"/>
+      <path d="M40 132c0-26 24-40 54-40 34 0 54 16 54 38 0 16-12 26-32 26H66c-16 0-26-10-26-24z" fill="#ffd43b"/>
+      <path d="M70 124c12 12 36 12 50 2" stroke="#e8a600" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <circle cx="118" cy="78" r="30" fill="#ffd43b"/>
+      <ellipse cx="106" cy="66" rx="10" ry="6" fill="#fff" opacity=".55" transform="rotate(-25 106 66)"/>
+      <path d="M144 76l26 7-26 12z" fill="#ff8a1f"/>
+      <circle cx="126" cy="72" r="6" fill="#1e2a44"/><circle cx="128" cy="70" r="2.2" fill="#fff"/>
+      <circle cx="112" cy="90" r="6" fill="#ff9e7a" opacity=".6"/>
+      <path d="M84 50l34-14 34 14-34 14z" fill="#1e2a44"/><rect x="104" y="50" width="28" height="12" rx="3" fill="#1e2a44"/>
+      <path d="M150 50v20" stroke="#ffc531" stroke-width="3"/><circle cx="150" cy="72" r="4" fill="#ffc531"/>`,
+  },
+];
+
+const list = document.getElementById('list');
+LOGOS.forEach((l, i) => {
+  const svg = (size) => `<svg viewBox="0 0 200 200" width="${size}" height="${size}" style="border-radius:${size * .23}px" aria-hidden="true">${l.svg}</svg>`;
+  list.insertAdjacentHTML('beforeend', `
+    <section class="logo" style="--e:${l.edge}">
+      <div class="icon">${svg(200)}</div>
+      <div>
+        <span class="num">רעיון ${i + 1} · ${l.en}</span>
+        <h2>${l.name}</h2>
+        <p dir="auto">${l.about}</p>
+        <div class="lockups">
+          <div class="lock"><span class="mini">${svg(52)}</span><span><b>הגנון של עלמון</b><small>משחקים לימודיים לילדים</small></span></div>
+          <div class="lock dark"><span class="mini">${svg(52)}</span><span><b>הגנון של עלמון</b><small>משחקים לימודיים לילדים</small></span></div>
+          <div class="sizes">
+            <div>${svg(64)}64</div><div>${svg(32)}32</div><div>${svg(16)}16</div>
+            <div><span class="tab">${svg(16)}הגנון של עלמון</span>tab</div>
+          </div>
+        </div>
+      </div>
+    </section>`);
+});
+</script>
+</body>
+</html>

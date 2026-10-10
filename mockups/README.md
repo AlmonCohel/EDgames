@@ -1,4 +1,15 @@
-# Design directions — how to open them away from this machine
+# Design directions
+
+> **October 2026 — round v3 and logos.** `v3/` holds four looks for the same
+> app shell. **Chunky was picked and is the live site**; Sticker pop, Jelly and
+> Big pictures stay in `v3/` as options for a future refresh, each on a frozen
+> copy of the stylesheet from before Chunky (`v3/base.css`) so they still look
+> as they did. Open `v3/index.html` to compare them side by side. `logos/` holds
+> five logo ideas, not yet chosen. Both are served by GitHub Pages with the site:
+> https://almoncohel.github.io/EDgames/mockups/v3/ and
+> https://almoncohel.github.io/EDgames/mockups/logos/
+
+## The first three directions — how to open them away from this machine
 
 > **Direction 3 was chosen, and the site is now built as it.** These three pages
 > stay as the record of what was decided and what was turned down; the live
