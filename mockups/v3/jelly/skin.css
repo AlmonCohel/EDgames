@@ -1,0 +1,91 @@
+/* Look 3 — Jelly. A soft pastel sky behind frosted bars, and every game tile is a
+   glossy candy with a shine across the top, like a sweet you want to tap.
+   Same markup, same layout as the live site. */
+
+:root {
+  --bg: #F6F1FF;
+  --surface: rgba(255,255,255,.62);
+  --border: rgba(255,255,255,.85);
+  --text: #2B2459;
+  --text-soft: #5E5791;
+  --accent-strong: #7B5CFF;
+  --accent-ink: #6A4BEF;
+  --glass: rgba(255,255,255,.55);
+}
+[data-subject="letters"]  { --sub-solid: #1FB3CC; --sub-hi: #7EE6F5; }
+[data-subject="numbers"]  { --sub-solid: #4C74FF; --sub-hi: #A6BDFF; }
+[data-subject="shapes"]   { --sub-solid: #FF6F55; --sub-hi: #FFB8A4; }
+[data-subject="memory"]   { --sub-solid: #9C62FF; --sub-hi: #D2B6FF; }
+[data-subject="nature"]   { --sub-solid: #23BF78; --sub-hi: #93EDC2; }
+[data-subject="music"]    { --sub-solid: #FFA51F; --sub-hi: #FFD98A; }
+[data-subject="computer"] { --sub-solid: #6878A8; --sub-hi: #B8C3E6; }
+
+body {
+  font-family: "Varela Round", "Heebo", system-ui, sans-serif;
+  background:
+    radial-gradient(40% 30% at 10% 5%, #FFD9CC 0, transparent 70%),
+    radial-gradient(45% 35% at 95% 15%, #D9CCFF 0, transparent 70%),
+    radial-gradient(50% 35% at 20% 60%, #C8F3E3 0, transparent 70%),
+    radial-gradient(50% 40% at 90% 85%, #CFE6FF 0, transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+h1, h2, h3 { font-weight: 400; letter-spacing: 0; }
+.head h2, .hello .big, .continue h3, .game-header h1 { font-weight: 400; text-shadow: 0 1px 0 #fff; }
+
+/* frosted glass bars */
+.appbar { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); }
+.avatar { border-radius: 50%; background: linear-gradient(160deg, #B79CFF, #7B5CFF); color: #fff; box-shadow: inset 0 2px 0 rgba(255,255,255,.5), 0 6px 14px rgba(123,92,255,.35); font-weight: 400; }
+.hello .big { font-size: 1.15rem; }
+
+.chip { background: var(--glass); border: 1px solid var(--border); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 4px 14px rgba(43,36,89,.08); }
+.chip[aria-pressed="true"] { background: linear-gradient(170deg, var(--sub-hi, #9C8CFF), var(--sub-solid, #6A4BEF)); border-color: transparent; box-shadow: inset 0 2px 0 rgba(255,255,255,.45), 0 8px 18px color-mix(in srgb, var(--sub-solid, #6A4BEF) 40%, transparent); }
+#subject-all[aria-pressed="true"] { background: linear-gradient(170deg, #9C8CFF, #6A4BEF); }
+
+.head h2 { font-size: 1.25rem; }
+.head .more { background: var(--glass); border: 1px solid var(--border); border-radius: 999px; padding: 0 10px; }
+
+/* tiles: glossy candy */
+.row { padding-block: 6px 22px; }
+.cover, .tile .cover[data-variant] {
+  border-radius: 34% / 30%;
+  background: linear-gradient(165deg, var(--sub-hi) 0%, var(--sub-solid) 62%);
+  box-shadow: inset 0 -8px 16px rgba(0,0,0,.12), inset 0 3px 0 rgba(255,255,255,.55), 0 14px 22px -8px color-mix(in srgb, var(--sub-solid) 60%, transparent);
+  transition: transform .3s cubic-bezier(.3,1.6,.5,1);
+}
+.cover .ghost { opacity: .12; }
+.cover::before { background: none !important; }
+.cover::after { background: radial-gradient(70% 40% at 50% 8%, rgba(255,255,255,.75), rgba(255,255,255,0) 70%); }
+.cover[data-tone] { box-shadow: inset 0 -8px 16px rgba(0,0,0,.12), inset 0 3px 0 rgba(255,255,255,.55), 0 14px 22px -8px color-mix(in srgb, var(--sub-solid) 60%, transparent); }
+.cover .scene { width: 60%; filter: drop-shadow(0 4px 6px rgba(0,0,0,.18)); }
+.tile:hover .cover, .tile:focus-visible .cover { transform: translateY(-5px) scale(1.04) rotate(-2deg); }
+.tile:active .cover { transform: scale(.94); }
+.tile h3 { text-align: center; font-size: 1rem; margin-top: 11px; }
+.tile .meta { text-align: center; }
+
+/* each tile wobbles like jelly when it appears */
+.row > li, .tiles > li { animation: jelly .8s ease-out backwards; }
+.row > li:nth-child(2) { animation-delay: .06s; } .row > li:nth-child(3) { animation-delay: .12s; } .row > li:nth-child(n+4) { animation-delay: .18s; }
+@keyframes jelly { 0% { transform: scale(.6, .6); opacity: 0; } 40% { transform: scale(1.12, .9); opacity: 1; } 60% { transform: scale(.94, 1.06); } 80% { transform: scale(1.03, .98); } }
+
+.continue { background: linear-gradient(160deg, var(--sub-hi), var(--sub-solid) 70%); border-radius: 32px; box-shadow: inset 0 3px 0 rgba(255,255,255,.5), 0 18px 30px -10px color-mix(in srgb, var(--sub-solid) 70%, transparent); }
+.continue::after { content: ""; position: absolute; inset: 0 0 55% 0; background: linear-gradient(rgba(255,255,255,.35), transparent); border-radius: 32px 32px 0 0; pointer-events: none; }
+
+/* bottom bar: a floating glass capsule */
+.tabs { inset-inline: 14px; bottom: calc(12px + env(safe-area-inset-bottom)); border-radius: 26px; background: var(--glass); border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(43,36,89,.15); padding-bottom: 0; backdrop-filter: blur(20px) saturate(170%); -webkit-backdrop-filter: blur(20px) saturate(170%); }
+.tab[aria-current="page"] { color: var(--accent-ink); }
+.tab[aria-current="page"] .ico { background: linear-gradient(170deg, #B79CFF, #7B5CFF); color: #fff; border-radius: 12px; padding: 5px; width: 32px; height: 32px; box-shadow: 0 6px 12px rgba(123,92,255,.35); }
+.sheet { inset-inline: 14px; bottom: calc(90px + env(safe-area-inset-bottom)); border-radius: 26px; background: rgba(255,255,255,.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); }
+body.app { padding-bottom: 110px; }
+
+/* game page */
+.btn { background: linear-gradient(170deg, #9C8CFF, #6A4BEF); box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 8px 16px rgba(106,75,239,.3); }
+.btn--ghost { background: var(--glass); color: var(--text); border: 1px solid var(--border); box-shadow: none; }
+.game-header .game-mark { border-radius: 34% / 30%; background: linear-gradient(165deg, var(--sub-hi), var(--sub-solid) 62%); box-shadow: inset 0 3px 0 rgba(255,255,255,.5); }
+.stage { background: rgba(255,255,255,.7); border: 1px solid var(--border); border-radius: 32px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 20px 40px rgba(43,36,89,.1); }
+
+@media (min-width: 900px) {
+  .tabs { inset: auto; bottom: auto; margin: 18px 14px; width: 204px; border-radius: 26px; }
+  .sheet { inset: auto; }
+  body.app { padding-bottom: 0; }
+}

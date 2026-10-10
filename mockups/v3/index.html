@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDgames new looks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Rubik:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#F3F1FA; --surface:#FFFFFF; --ink:#1D1A2E; --soft:#5E5A75; --line:#DEDAEC; --accent:#5B3FD6;
+    --c0:#8a929c; --c1:#3D7BFF; --c2:#E0457B; --c3:#7B5CFF; --c4:#1AA663;
+    --display:"Bricolage Grotesque","Rubik",system-ui,sans-serif;
+    --body:"Rubik",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){color-scheme:dark;--bg:#14121E;--surface:#1E1B2C;--ink:#F1EEFA;--soft:#A9A4C2;--line:#332F48;--accent:#A893FF;--c3:#A893FF}
+  }
+  :root[data-theme="dark"]{color-scheme:dark;--bg:#14121E;--surface:#1E1B2C;--ink:#F1EEFA;--soft:#A9A4C2;--line:#332F48;--accent:#A893FF;--c3:#A893FF}
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+  .wrap{max-width:1680px;margin:0 auto;padding-inline:16px;padding-block:28px 60px}
+  header{max-width:760px;margin-bottom:26px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.4vw,52px);line-height:1.02;margin:6px 0 12px;text-wrap:balance}
+  header p{margin:0 0 8px;color:var(--soft);max-width:65ch}
+  header p b{color:var(--ink);font-weight:500}
+
+  .tabs{display:none;gap:6px;position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);padding-block:8px;margin-bottom:8px;overflow-x:auto}
+  .tabs button{flex:1;min-width:max-content;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 14px var(--body);cursor:pointer}
+  .tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+  .grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px}
+  .dir{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .phone{position:relative;width:100%;aspect-ratio:390/844;border-radius:38px;background:#111;padding:9px;box-shadow:0 24px 50px -20px rgba(29,26,46,.45)}
+  .phone .screen{position:relative;width:100%;height:100%;border-radius:30px;overflow:hidden;background:#000}
+  .phone iframe{position:absolute;top:0;left:0;width:390px;height:844px;border:0;transform-origin:0 0}
+  .phone{margin-bottom:22px}
+  .full{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);z-index:2;min-height:40px;padding:0 16px;border-radius:999px;border:0;background:rgba(255,255,255,.92);color:#1D1A2E;font:500 13px var(--body);cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+  .meta h2{font-family:var(--display);font-weight:800;font-size:24px;line-height:1.1;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .meta h2 .he{font-family:var(--body);font-weight:700;font-size:18px;color:var(--c)}
+  .meta .num{font-family:var(--display);font-size:13px;color:var(--soft)}
+  .meta p{margin:6px 0 0;color:var(--soft)}
+  .meta p.big{color:var(--ink);font-weight:500}
+  dl{margin:10px 0 0;display:grid;grid-template-columns:max-content 1fr;gap:6px 12px;font-size:14px}
+  dt{color:var(--soft);font-weight:500}
+  dd{margin:0}
+  .chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--line)}
+
+  .note{margin-top:32px;padding:16px 18px;border-radius:16px;border:1px dashed var(--line);color:var(--soft);max-width:900px}
+  .note b{color:var(--ink);font-weight:500}
+
+  .fs{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column}
+  .fs iframe{flex:1;width:100%;border:0}
+  .fs button{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:10px;z-index:2;min-height:44px;padding:0 16px;border-radius:999px;border:0;background:rgba(255,255,255,.92);color:#1D1A2E;font:700 14px var(--body);cursor:pointer}
+  button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+  @media (max-width:1400px){ .grid{grid-template-columns:repeat(3,minmax(0,1fr))} .phone{max-width:390px} }
+  @media (max-width:720px){
+    .tabs{display:flex}
+    .grid{grid-template-columns:1fr}
+    .dir:not(.on){display:none}
+    .phone{max-width:420px;margin-inline:auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">EDgames · design mock-ups, round 3 · 10 Oct 2026</div>
+    <h1>The same site, four new looks</h1>
+    <p>Everything that's there today stays: all 19 games, the subject row, the shelves, the age and search filters, and the game pages. <b>Only the look changes.</b> Each one is the real site with one extra stylesheet on top, so everything works: filter, search, open any game and play it.</p>
+  </header>
+
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" aria-selected="true" data-i="0">Today</button>
+    <button role="tab" aria-selected="false" data-i="1">1 · Chunky</button>
+    <button role="tab" aria-selected="false" data-i="2">2 · Stickers</button>
+    <button role="tab" aria-selected="false" data-i="3">3 · Jelly</button>
+    <button role="tab" aria-selected="false" data-i="4">4 · Big</button>
+  </div>
+
+  <div class="grid" id="grid">
+    <article class="dir on" style="--c:var(--c0)">
+      <div class="phone"><div class="screen"><iframe src="../../index.html" title="The live site" loading="lazy"></iframe></div><button class="full" data-src="../../index.html">Open full screen</button></div>
+      <div class="meta">
+        <span class="num">Today, for comparison</span>
+        <h2>The live site <span class="he">היום</span></h2>
+        <p class="big">What is online now.</p>
+        <p>The app layout stays exactly as it is in all four looks: the subject row, the continue card, the shelves, the bottom bar and the age and search filters.</p>
+        
+      </div>
+    </article>
+    <article class="dir" style="--c:var(--c1)">
+      <div class="phone"><div class="screen"><iframe src="chunky/index.html" title="Chunky" loading="lazy"></iframe></div><button class="full" data-src="chunky/index.html">Open full screen</button></div>
+      <div class="meta">
+        <span class="num">Look 1</span>
+        <h2>Chunky <span class="he">לחיץ</span></h2>
+        <p class="big">Every tile and button is a fat toy button that squashes when pressed.</p>
+        <p>Thick darker edges under everything, rounder letters (Fredoka), brighter subject colours, tiles that pop in one after another, a big round play button on the continue card, and a floating bottom tray.</p>
+        <dl><dt>Feels like</dt><dd>Duolingo-style; tactile and very tappable</dd></dl>
+      </div>
+    </article>
+    <article class="dir" style="--c:var(--c2)">
+      <div class="phone"><div class="screen"><iframe src="stickers/index.html" title="Sticker pop" loading="lazy"></iframe></div><button class="full" data-src="stickers/index.html">Open full screen</button></div>
+      <div class="meta">
+        <span class="num">Look 2</span>
+        <h2>Sticker pop <span class="he">מדבקות</span></h2>
+        <p class="big">Comic outlines, and each game is a die-cut sticker.</p>
+        <p>Each shelf sits on its own bright band with a scalloped top. Tiles have a thick white sticker border and lean slightly left or right. Headings look like stuck-on labels, the top bar is yellow and the bottom bar is a black comic panel.</p>
+        <dl><dt>Feels like</dt><dd>The loudest and most playful; a sticker album</dd></dl>
+      </div>
+    </article>
+    <article class="dir" style="--c:var(--c3)">
+      <div class="phone"><div class="screen"><iframe src="jelly/index.html" title="Jelly" loading="lazy"></iframe></div><button class="full" data-src="jelly/index.html">Open full screen</button></div>
+      <div class="meta">
+        <span class="num">Look 3</span>
+        <h2>Jelly <span class="he">ג׳לי</span></h2>
+        <p class="big">Soft pastel sky, and every game is a glossy candy.</p>
+        <p>Tiles are shiny jelly sweets with a shine across the top and a soft coloured glow, and they wobble like jelly as they appear. The bars are frosted glass, and the bottom bar is a floating glass capsule.</p>
+        <dl><dt>Feels like</dt><dd>Soft, sweet and calm; the gentlest</dd></dl>
+      </div>
+    </article>
+    <article class="dir" style="--c:var(--c4)">
+      <div class="phone"><div class="screen"><iframe src="big/index.html" title="Big pictures" loading="lazy"></iframe></div><button class="full" data-src="big/index.html">Open full screen</button></div>
+      <div class="meta">
+        <span class="num">Look 4</span>
+        <h2>Big pictures <span class="he">תמונות גדולות</span></h2>
+        <p class="big">Made for a child who can’t read yet: bigger pictures, fewer words in the way.</p>
+        <p>Subjects become big round story bubbles, like on Instagram. The continue card becomes a large hero with a המשך button. Tiles are bigger with the name on the picture, and each subject shelf has its own tile shape (round, square, tall). Search is a big round button.</p>
+        <dl><dt>Feels like</dt><dd>A kids’ app store; the most modern</dd></dl>
+      </div>
+    </article>
+  </div>
+
+  <div class="note"><b>What these are.</b> These are mock-ups on a separate branch (design-mockups-v3); the live site hasn't changed. Picking a look means its stylesheet goes into assets/styles.css, and parts of different looks can be mixed.</div>
+</div>
+<script>
+(() => {
+  // scale each 390×844 page into its phone frame
+  const fit = () => document.querySelectorAll('.phone').forEach(p => {
+    const s = p.querySelector('.screen'), f = p.querySelector('iframe');
+    f.style.transform = `scale(${s.clientWidth / 390})`;
+    f.style.height = (s.clientHeight / (s.clientWidth / 390)) + 'px';
+  });
+  fit(); addEventListener('resize', fit);
+
+  const dirs = [...document.querySelectorAll('.dir')];
+  document.getElementById('tabs').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+    dirs.forEach((d, i) => d.classList.toggle('on', i === +b.dataset.i));
+    requestAnimationFrame(fit);
+  });
+
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.full'); if (!b) return;
+    const fs = document.createElement('div'); fs.className = 'fs';
+    fs.innerHTML = `<button type="button">✕ Close</button><iframe src="${b.dataset.src}" title="Full screen mock-up"></iframe>`;
+    fs.querySelector('button').onclick = () => fs.remove();
+    document.body.appendChild(fs);
+  });
+})();
+</script>

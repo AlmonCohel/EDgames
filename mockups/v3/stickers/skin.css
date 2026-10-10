@@ -1,0 +1,97 @@
+/* Look 2 — Sticker pop. Comic-book outlines, a bright colour band behind every
+   shelf, and each game tile is a die-cut sticker with a thick white border,
+   tilted a little this way or that. Same markup, same layout as the live site. */
+
+:root {
+  --bg: #FFF9EC;
+  --surface: #FFFFFF;
+  --border: #1A1A2E;
+  --text: #1A1A2E;
+  --text-soft: #4A4A63;
+  --line: 2.5px solid #1A1A2E;
+  --pop: 0 4px 0 #1A1A2E;
+}
+[data-subject="letters"]  { --sub-solid: #00A6B4; }
+[data-subject="numbers"]  { --sub-solid: #2F6BFF; }
+[data-subject="shapes"]   { --sub-solid: #FF5E3A; }
+[data-subject="memory"]   { --sub-solid: #8A4DFF; }
+[data-subject="nature"]   { --sub-solid: #16A85A; }
+[data-subject="music"]    { --sub-solid: #E09400; }
+[data-subject="computer"] { --sub-solid: #3F4A66; }
+
+body {
+  font-family: "Rubik", "Heebo", system-ui, sans-serif;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='none' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M14 20l8 8M22 20l-8 8' stroke='%23FF9EC4'/%3E%3Ccircle cx='84' cy='30' r='6' stroke='%237FD7FF'/%3E%3Cpath d='M40 90q6-8 12 0t12 0' stroke='%23FFC531'/%3E%3Cpath d='M96 84l6 10h-12z' stroke='%23A6EB7A'/%3E%3C/g%3E%3C/svg%3E"),
+    var(--bg);
+}
+h1, h2, h3 { font-family: "Secular One", "Rubik", sans-serif; font-weight: 400; letter-spacing: 0; }
+
+/* app bar: a yellow comic strip */
+.appbar { background: #FFD43B; backdrop-filter: none; border-bottom: var(--line); }
+.avatar { background: #fff; color: var(--text); border: var(--line); border-radius: 50%; box-shadow: var(--pop); width: 44px; height: 44px; font-family: "Secular One", sans-serif; font-weight: 400; font-size: 1.3rem; transform: rotate(-8deg); }
+.hello .small { color: var(--text); font-weight: 500; }
+.hello .big { font-family: "Secular One", sans-serif; font-weight: 400; font-size: 1.3rem; }
+.lang-toggle { border: var(--line); box-shadow: var(--pop); }
+
+/* chips: outlined stickers */
+.chip { border: var(--line); box-shadow: var(--pop); font-weight: 700; min-height: 46px; }
+.chip:active { transform: translateY(3px); box-shadow: 0 1px 0 #1A1A2E; }
+.chip[aria-pressed="true"] { border: var(--line); transform: rotate(-2deg); box-shadow: var(--pop); }
+.rail .mark { color: var(--sub-solid); }
+.rail { padding-block: 16px 18px; }
+
+/* every shelf sits on its own colour band with a wavy top */
+.shelf { position: relative; padding-top: 34px; padding-bottom: 10px; margin-top: 8px; }
+.shelf::before { content: ""; position: absolute; inset: 14px 0 0; z-index: -1; background: var(--band, #7FD7FF); border-top: var(--line); border-bottom: var(--line);
+  -webkit-mask: radial-gradient(14px at 50% 0, transparent 98%, #000) 50% 0 / 40px 100% repeat-x; mask: radial-gradient(14px at 50% 0, transparent 98%, #000) 50% 0 / 40px 100% repeat-x; }
+.browse > .shelf:nth-of-type(2)::before { --band: #FFD43B; }
+#by-subject .shelf:nth-child(4n+1)::before { --band: #7FD7FF; }
+#by-subject .shelf:nth-child(4n+2)::before { --band: #FF9EC4; }
+#by-subject .shelf:nth-child(4n+3)::before { --band: #A6EB7A; }
+#by-subject .shelf:nth-child(4n+4)::before { --band: #FFB86B; }
+#continue-shelf::before { display: none; }
+.content { position: relative; z-index: 0; }
+.head h2 { font-size: 1.5rem; background: #fff; border: var(--line); box-shadow: var(--pop); padding: 2px 14px; border-radius: 12px; transform: rotate(-1.5deg); }
+.head .more { color: var(--text); font-weight: 700; }
+
+/* tiles: die-cut stickers */
+.row { padding-block: 8px 18px; }
+.tile { background: #fff; border: var(--line); border-radius: 26px; padding: 8px 8px 10px; box-shadow: 0 6px 0 #1A1A2E; transition: transform .2s cubic-bezier(.3,1.6,.5,1); }
+.row > li:nth-child(odd) .tile, .tiles > li:nth-child(odd) .tile { transform: rotate(-2deg); }
+.row > li:nth-child(even) .tile, .tiles > li:nth-child(even) .tile { transform: rotate(1.6deg); }
+.tile:hover, .tile:focus-visible { transform: rotate(0) scale(1.05) !important; }
+.tile:active { transform: rotate(0) scale(.96) !important; }
+.cover { border-radius: 18px; box-shadow: none; border: 2px solid #1A1A2E; }
+.cover .scene { width: 62%; }
+.tile:hover .cover, .tile:focus-visible .cover { transform: none; box-shadow: none; }
+.tile h3 { font-size: 1.05rem; text-align: center; margin: 8px 2px 0; line-height: 1.2; }
+.tile .meta { text-align: center; color: var(--text-soft); font-weight: 500; }
+
+/* continue: a big stamped ticket */
+.continue { border: var(--line); box-shadow: 0 6px 0 #1A1A2E; border-radius: 22px; transform: rotate(-1deg); }
+.continue h3 { font-size: 1.5rem; }
+.continue .kicker { font-weight: 700; }
+
+/* bottom bar: a black comic panel */
+.tabs { background: #1A1A2E; border-top: var(--line); }
+.tab { color: #B9B9D0; font-weight: 700; }
+.tab[aria-current="page"] { color: #1A1A2E; }
+.tab[aria-current="page"]::before { content: ""; position: absolute; inset: 8px 18%; background: #FFD43B; border-radius: 14px; z-index: -1; }
+.tab { z-index: 0; }
+.sheet { border-top: var(--line); }
+
+/* game page */
+.btn { border: var(--line); box-shadow: var(--pop); background: #FFD43B; color: var(--text); }
+.btn--ghost { background: #fff; }
+.game-header h1 { font-size: 1.7rem; }
+.game-header .game-mark { border: var(--line); box-shadow: var(--pop); transform: rotate(-4deg); }
+.badge { border: 2px solid #1A1A2E; }
+.stage { border: var(--line); box-shadow: 0 8px 0 #1A1A2E; border-radius: 26px; }
+
+@media (min-width: 900px) {
+  .tabs { background: transparent; border-top: 0; border-inline-end: var(--line); }
+  .tab { color: var(--text-soft); }
+  .tab[aria-current="page"] { background: #FFD43B; border: var(--line); box-shadow: var(--pop); }
+  .tab[aria-current="page"]::before { display: none; }
+}
