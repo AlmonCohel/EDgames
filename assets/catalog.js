@@ -3,7 +3,11 @@
    Set status to 'ready' once that module exists; until then it shows as 'soon'.
 
    Every piece of text a child or a parent reads is written in both languages,
-   { he, en }, and rendered through EDLang.pick. */
+   { he, en }, and rendered through EDLang.pick.
+
+   `sound: true` marks a game that makes its own sounds (the listening games):
+   the site's tune stops while it is open. Every other game plays with the tune
+   under it. */
 
 const SUBJECTS = [
   { id: 'letters', label: { he: 'אותיות ומילים',  en: 'Letters & words'   }, emoji: '🔤' },
@@ -13,6 +17,7 @@ const SUBJECTS = [
   { id: 'nature',  label: { he: 'חיות וטבע',      en: 'Animals & nature'  }, emoji: '🦋' },
   { id: 'music',   label: { he: 'צלילים ומוזיקה', en: 'Sounds & music'    }, emoji: '🎵' },
   { id: 'computer', label: { he: 'מקלדת ועכבר',   en: 'Keyboard & mouse'  }, emoji: '💻' },
+  { id: 'fairytale', label: { he: 'נסיכות וקסמים', en: 'Princesses & magic' }, emoji: '👑' },
 ];
 
 /* Age groups the filter offers. A game matches a group when their ranges overlap,
@@ -70,6 +75,7 @@ const GAMES = [
       he: 'שומעים קול של חיה ומנחשים למי הוא שייך.',
       en: 'Listen to an animal sound and guess who it belongs to.',
     },
+    sound: true,
     status: 'ready',
   },
   {
@@ -82,6 +88,7 @@ const GAMES = [
       he: 'כל קליד הוא חיה אחרת. מנגנים ומגלים איך היא נשמעת.',
       en: 'Every key is a different animal. Play and find out how it sounds.',
     },
+    sound: true,
     status: 'ready',
   },
   {
@@ -106,6 +113,7 @@ const GAMES = [
       he: 'מקשיבים לקצב ומנסים לחזור עליו בדיוק אותו הדבר.',
       en: 'Listen to a rhythm and try to repeat it exactly the same way.',
     },
+    sound: true,
     status: 'ready',
   },
   {
@@ -288,6 +296,151 @@ const GAMES = [
     blurb: {
       he: 'תרגילי חיבור וחיסור קטנים עם עוגיות במקום מספרים.',
       en: 'Small addition and subtraction, with cookies instead of numbers.',
+    },
+    status: 'ready',
+  },
+  /* ---- October 2026: numbers for 3–5, princesses, and more letters ---- */
+  {
+    id: 'birthday-candles',
+    title: { he: 'עוגת יום הולדת', en: 'Birthday Cake' },
+    emoji: '🎂',
+    subject: 'numbers',
+    ageMin: 3, ageMax: 5,
+    blurb: {
+      he: 'שמים על העוגה בדיוק כמה נרות שביקשו, סופרים בקול ומכבים.',
+      en: 'Put exactly the number of candles asked for on the cake, count them out loud, then blow them out.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'frog-hops',
+    title: { he: 'הצפרדע קופצת', en: 'Frog Hops' },
+    emoji: '🐸',
+    subject: 'numbers',
+    ageMin: 3, ageMax: 5,
+    blurb: {
+      he: 'מוצאים את העלה עם המספר, והצפרדע קופצת אליו וסופרת כל קפיצה.',
+      en: 'Find the lily pad with the number, and the frog hops there counting every hop.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'more-or-less',
+    title: { he: 'איפה יש יותר?', en: 'Which Has More?' },
+    emoji: '🧺',
+    subject: 'numbers',
+    ageMin: 3, ageMax: 5,
+    blurb: {
+      he: 'שני סלים של פירות — באיזה יש יותר, באיזה פחות, ובאיזה בדיוק המספר.',
+      en: 'Two baskets of fruit — which has more, which has less, and which has exactly the number.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'princess-dress',
+    title: { he: 'מלבישים את הנסיכה', en: 'Dress the Princess' },
+    emoji: '👗',
+    subject: 'fairytale',
+    ageMin: 3, ageMax: 6,
+    blurb: {
+      he: 'הנסיכה אומרת מה היא רוצה ללבוש לנשף — מקשיבים ומלבישים אותה.',
+      en: 'The princess says what she wants to wear to the ball — listen and dress her.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'unicorn-rainbow',
+    title: { he: 'הקשת של חד-הקרן', en: "The Unicorn's Rainbow" },
+    emoji: '🦄',
+    subject: 'fairytale',
+    ageMin: 3, ageMax: 6,
+    blurb: {
+      he: 'צובעים קשת לפי התוכנית כדי שחד-הקרן יגיע לטירה בעננים.',
+      en: 'Paint a rainbow to the plan so the unicorn can reach the castle in the clouds.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'castle-shadows',
+    title: { he: 'צללים בטירה', en: 'Shadows in the Castle' },
+    emoji: '🪞',
+    subject: 'fairytale',
+    ageMin: 3, ageMax: 6,
+    blurb: {
+      he: 'במראה הקסומה יש רק צל. של מי הוא — הכתר, הנעל או הדרקון?',
+      en: 'The magic mirror shows only a shadow. Whose is it — the crown, the slipper or the dragon?',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'castle-builder',
+    title: { he: 'בונים טירה', en: 'Build the Castle' },
+    emoji: '🏰',
+    subject: 'fairytale',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'בונים לנסיכה טירה לפי התוכנית — כל חלק הוא צורה אחרת.',
+      en: 'Build the princess a castle to the plan — every part is a different shape.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'letter-listen',
+    title: { he: 'איזו אות שמעתי?', en: 'Which Letter Did You Hear?' },
+    emoji: '👂',
+    subject: 'letters',
+    ageMin: 3, ageMax: 6,
+    blurb: {
+      he: 'שומעים את שם האות ומוצאים אותה בין הכרטיסים.',
+      en: "Hear a Hebrew letter's name and find it among the cards.",
+    },
+    status: 'ready',
+  },
+  {
+    id: 'letter-balloons',
+    title: { he: 'בלוני אותיות', en: 'Letter Balloons' },
+    emoji: '🎈',
+    subject: 'letters',
+    ageMin: 4, ageMax: 6,
+    blurb: {
+      he: 'בלונים עם אותיות עפים למעלה. מפוצצים את כל הבלונים עם האות שביקשו.',
+      en: 'Balloons with Hebrew letters float up. Pop every balloon with the letter asked for.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'alefbet-dots',
+    title: { he: 'מחברים נקודות א-ב', en: 'Alef-Bet Dot to Dot' },
+    emoji: '✨',
+    subject: 'letters',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'מחברים את הנקודות לפי סדר האלף-בית ומגלים איזו תמונה יצאה.',
+      en: 'Join the dots in Alef-Bet order and find out what picture comes out.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'abc-big-small',
+    title: { he: 'ABC — גדולות וקטנות', en: 'ABC: Big and Small' },
+    emoji: '🐥',
+    subject: 'letters',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'לכל אות באנגלית יש צורה גדולה וקטנה. מוצאים לאמא ברווזה את הברווזון שלה.',
+      en: 'Every English letter has a big and a small shape. Find Mother Duck her duckling.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'abc-caterpillar',
+    title: { he: 'זחל ה-ABC', en: 'The ABC Caterpillar' },
+    emoji: '🐛',
+    subject: 'letters',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'לזחל חסרה אות באמצע. איזו אות באנגלית באה שם?',
+      en: 'The caterpillar is missing a letter. Which English letter goes there?',
     },
     status: 'ready',
   },

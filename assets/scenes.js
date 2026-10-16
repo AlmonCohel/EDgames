@@ -227,6 +227,50 @@ const EDScenes = (() => {
       <circle cx="26.2" cy="9.8" r="1" fill="currentColor" stroke="none"/>
       <path d="M6 20.5h7M9.5 17v7"/>
       <path d="M19 20.5h7"/>`,
+  
+    /* October 2026 — one line drawing each, the fallback under the covers. */
+    'birthday-candles': `
+      <rect x="5" y="17" width="22" height="10" rx="2"/>
+      <path d="M11 17v-6M16 17v-6M21 17v-6"/>
+      <path d="M11 8.5v-1M16 8.5v-1M21 8.5v-1"/>`,
+    'frog-hops': `
+      <ellipse cx="6" cy="25" rx="4.5" ry="2"/><ellipse cx="16" cy="25" rx="4.5" ry="2"/><ellipse cx="26" cy="25" rx="4.5" ry="2"/>
+      <path d="M6 21c3-12 14-12 20-4" stroke-dasharray="2 3"/>
+      <circle cx="16" cy="9" r="3.5"/>`,
+    'more-or-less': `
+      <path d="M3 18h11l-1.5 8h-8z"/><path d="M18 18h11l-1.5 8h-8z"/>
+      <circle cx="8.5" cy="15" r="2"/><circle cx="21" cy="15" r="2"/><circle cx="26" cy="15" r="2"/><circle cx="23.5" cy="11" r="2"/>`,
+    'princess-dress': `
+      <circle cx="16" cy="8" r="3.5"/>
+      <path d="M13 13h6l1.5 5c3 3 4.5 6 5 9H6.5c.5-3 2-6 5-9z"/>
+      <path d="M13 4l1-2.5 2 1.5 2-1.5 1 2.5"/>`,
+    'unicorn-rainbow': `
+      <path d="M4 26a12 12 0 0 1 24 0"/><path d="M8 26a8 8 0 0 1 16 0"/><path d="M12 26a4 4 0 0 1 8 0"/>
+      <path d="M22 9l3-6 1 6"/>`,
+    'castle-shadows': `
+      <ellipse cx="16" cy="15" rx="8.5" ry="11.5"/>
+      <path d="M11.5 19l-1-7 3.5 3 2-4 2 4 3.5-3-1 7z" fill="currentColor" stroke="none"/>
+      <path d="M12 28h8"/>`,
+    'castle-builder': `
+      <rect x="4" y="13" width="7" height="14"/><rect x="21" y="13" width="7" height="14" stroke-dasharray="2 2.4"/>
+      <rect x="11" y="18" width="10" height="9"/>
+      <path d="M3 13l4.5-7 4.5 7"/><path d="M14 27v-3.5a2 2 0 0 1 4 0V27"/>`,
+    'letter-listen': `
+      <path d="M4 12h4l5-4v14l-5-4H4z"/>
+      <path d="M16.5 10.5c1.6 2.4 1.6 5.6 0 8M20 8c3 4 3 10 0 14"/>
+      <rect x="22.5" y="19" width="7" height="9" rx="1.5"/>`,
+    'letter-balloons': `
+      <ellipse cx="10" cy="11" rx="5.5" ry="7"/><ellipse cx="22" cy="9" rx="5.5" ry="7"/>
+      <path d="M10 18c0 3-2 5 0 9M22 16c0 3 2 6 0 11"/>`,
+    'alefbet-dots': `
+      <path d="M16 4l3.4 7.6 8.1.8-6.1 5.4 1.8 8L16 21.7l-7.2 4.1 1.8-8-6.1-5.4 8.1-.8z" stroke-dasharray="2.2 2.6"/>
+      <circle cx="16" cy="4" r="1.6" fill="currentColor" stroke="none"/><circle cx="27.5" cy="12.4" r="1.6" fill="currentColor" stroke="none"/>`,
+    'abc-big-small': `
+      <path d="M4 22l5-14 5 14M6 17.5h6"/>
+      <circle cx="23" cy="20" r="3.5"/><path d="M26.5 16.5V24"/>`,
+    'abc-caterpillar': `
+      <circle cx="5" cy="20" r="3.5"/><circle cx="12" cy="18" r="3.5"/><circle cx="19" cy="20" r="3.5" stroke-dasharray="1.8 2"/>
+      <circle cx="26" cy="16" r="4"/><path d="M24.5 12l-1-3M27.5 12l1-3"/>`,
   };
 
   /* Two of the nineteen say something with their direction rather than only

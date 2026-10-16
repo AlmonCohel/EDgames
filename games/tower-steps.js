@@ -83,7 +83,7 @@
     .ts-stairs {
       display: flex; align-items: flex-end; justify-content: center; gap: 8px;
       width: 100%; max-width: 560px; padding: 18px 14px 14px;
-      background: linear-gradient(180deg, #eef4fa, #e3ecf5);
+      background: var(--surface);
       border: 1.5px solid var(--border); border-radius: var(--radius);
     }
     .ts-stair { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }

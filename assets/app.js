@@ -76,7 +76,8 @@ function writeUrl() {
   saveFilters(filters);
   EDLang.stamp(p);
   const qs = p.toString();
-  try { history.replaceState(null, '', qs ? `?${qs}` : location.pathname); }
+  /* The state and the #play mark belong to the game layer (player.js). */
+  try { history.replaceState(history.state, '', (qs ? `?${qs}` : location.pathname) + location.hash); }
   catch { /* file:// */ }
 }
 
@@ -165,7 +166,7 @@ const gameCount = (n) => EDLang.t('browse.count').replace('{count}', n);
    Built once: it is the catalog, which does not change while the page is open,
    and the language toggle reloads. Filtering only hides it. */
 
-function buildBrowse() {
+function buildContinue() {
   const last = EDRecent.game();
   if (last) {
     els.continueBox.innerHTML = `
@@ -180,6 +181,10 @@ function buildBrowse() {
       </a>`;
     els.continueShelf.hidden = false;
   }
+}
+
+function buildBrowse() {
+  buildContinue();
 
   const ready = GAMES.filter((g) => g.status === 'ready');
   els.ready.append(...ready.map(tile));
@@ -356,3 +361,6 @@ readUrl();
 if (state.query.trim()) showSheet('search');
 else if (state.ages.size) showSheet('age');
 render();
+
+/* The game layer refreshes the carry-on card when a game is put away. */
+window.EDApp = { refreshContinue: buildContinue };

@@ -1,14 +1,15 @@
 /* מי אמר את זה? / Who Said That? — a call goes out and the child says whose it was.
 
-   The site has no sound files and no way to fetch any, so every call here is
-   drawn in frequency and played through `EDSound` — see the note at the top of
-   `assets/sound.js`. An oscillator sliding from 180Hz down to 110 is a cartoon
-   of a cow, not a cow, and asking a four-year-old to recognise a cartoon of a
-   cow would be asking them to lose. So the call is also written out, the way it
-   is written in a picture book — מו, Moo — and appears the moment the sound
-   does. A child who cannot read still has the sound; a child who can has both;
-   a tablet with no audio at all still has a game, which is the case the written
-   line really earns its place in.
+   Since October 2026 every call is a real recording of the animal (assets/
+   sounds/animals/<id>.mp3, from Wikimedia Commons — see assets/sounds/
+   CREDITS.md). The first version drew each call in frequency through an
+   oscillator, and a cartoon of a cow is not a cow: a child could not tell the
+   animals apart by ear, which is the whole game. The drawn calls below are kept
+   only as the fallback for a page opened as a file, where nothing can be
+   fetched.
+
+   The call is still written out under the speaker the way a picture book writes
+   it — מו, Moo — and once the right animal is picked its name is said out loud.
 
    Nothing plays until the speaker is pressed. That is the browser's rule about
    sound before a gesture, and it happens to be the right shape for the game
@@ -247,7 +248,13 @@
 
       /* The first press is also what lets this browser make a sound at all. */
       mute = !EDSound.wake();
-      if (!mute) target.voice.forEach((n) => EDSound.note(n.pitch, n));
+      if (!mute) {
+        EDVoice.stop();
+        EDSound.hush();
+        const drawn = target;
+        EDSound.sample(`assets/sounds/animals/${drawn.id}.mp3`)
+          .catch(() => drawn.voice.forEach((n) => EDSound.note(n.pitch, n)));
+      }
 
       says.classList.add('shown');
       hint(mute ? text.noSound : text.hearAgain);
@@ -313,9 +320,11 @@
       locked = true;
       round += 1;
       button.classList.add('yes');
+      EDSound.hush();
+      EDVoice.say(`animal-${animal.id}`, lang);
       wrap.querySelectorAll('.an-animal').forEach((b) => { b.disabled = true; });
       hint('');
-      later(nextRound, 700);
+      later(nextRound, 1500);
     }
 
     function finish() {
@@ -333,6 +342,8 @@
       wrap.querySelector('[data-exit]').addEventListener('click', ctx.exit);
     }
 
+    /* Fetched ahead, so the first press is heard at once. */
+    cast.forEach((a) => EDSound.load(`assets/sounds/animals/${a.id}.mp3`).catch(() => {}));
     nextRound();
   }
 

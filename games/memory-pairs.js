@@ -6,7 +6,12 @@
 
    Cards keep their place in the grid once matched instead of vanishing — the
    whole skill is remembering positions, and a board that reflows underneath a
-   child destroys the map they just built. */
+   child destroys the map they just built.
+
+   The board is sized to the screen it is on: on a laptop the biggest run (16
+   cards) used to run off the bottom of the window. It now fits the height
+   that is left under the header, and the − / + buttons make the cards smaller
+   or bigger for this game only (remembered in this browser). */
 
 (function () {
   /* Three runs, growing board by board. Each has its own deck as well as its
@@ -39,6 +44,8 @@
       found:     (n, of) => `נמצאו ${n} זוגות מתוך ${of}`,
       tryAgain:  'לא זוג הפעם. זוכרים איפה הם היו?',
       card:      'קלף הפוך',
+      smaller:   'קלפים קטנים יותר',
+      bigger:    'קלפים גדולים יותר',
       wellDone:  'כל הכבוד!',
       foundAll:  'מצאתם את כל הזוגות!',
       again:     'עוד פעם 🧠',
@@ -49,6 +56,8 @@
       found:     (n, of) => `${n} of ${of} pairs found`,
       tryAgain:  'Not a pair this time. Remember where they were?',
       card:      'face-down card',
+      smaller:   'Smaller cards',
+      bigger:    'Bigger cards',
       wellDone:  'Well done!',
       foundAll:  'You found every pair!',
       again:     'Again 🧠',
@@ -68,8 +77,10 @@
     .mp-board {
       display: grid; gap: 12px;
       grid-template-columns: repeat(var(--mp-cols), minmax(0, 1fr));
-      width: 100%; max-width: 560px;
+      width: 100%; max-width: var(--mp-width, 560px);
     }
+    .mp-size { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
+    .mp-size .chip { min-width: 46px; justify-content: center; font-size: 1.15rem; font-weight: 700; }
     .mp-card {
       aspect-ratio: 3 / 4;
       background: none; border: none; padding: 0; margin: 0;
@@ -91,7 +102,7 @@
       display: grid; place-items: center;
       border-radius: var(--radius-sm);
       backface-visibility: hidden;
-      font-size: clamp(26px, 7vw, 44px); line-height: 1;
+      font-size: var(--mp-face, clamp(26px, 7vw, 44px)); line-height: 1;
     }
     .mp-front {
       background: var(--sub-ink, var(--accent-strong)); color: var(--on-accent);
@@ -118,6 +129,8 @@
 
   let timers = [];
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const SCALE_KEY = 'edgames-memory-scale';
+  let onResize = null;
 
   function mount(root, ctx) {
     const text = TEXT[ctx.lang] || TEXT.he;
@@ -142,12 +155,59 @@
       <div class="mp-ask">
         <h2>${text.ask}</h2>
         <p class="mp-hint" aria-live="polite">${text.found(0, set.pairs)}</p>
+        <div class="mp-size">
+          <button type="button" class="chip" data-size="-1" aria-label="${text.smaller}">−</button>
+          <button type="button" class="chip" data-size="1" aria-label="${text.bigger}">+</button>
+        </div>
       </div>
       <div class="mp-board"></div>`;
 
     const hint = (line) => { wrap.querySelector('.mp-hint').textContent = line; };
     const board = wrap.querySelector('.mp-board');
     board.style.setProperty('--mp-cols', set.columns);
+
+    /* ---- fitting the board to the screen ---- */
+    const GAP = 12;
+    const cards = set.pairs * 2;
+    let scale = 1;
+    try { scale = Number(localStorage.getItem(SCALE_KEY)) || 1; } catch { /* default */ }
+
+    function fit() {
+      if (!board.isConnected) return;
+      const top = board.getBoundingClientRect().top + window.scrollY;
+      /* The height under the header, never less than a usable minimum. */
+      const room = Math.max(260, window.innerHeight - top - 18);
+      const width = Math.min(wrap.clientWidth, 980);
+      /* A wide, short screen (a laptop) gets more columns and fewer rows when
+         that makes every card bigger. Decided when the board is laid out, never
+         while a child is mid-game on it. */
+      let best = { cols: set.columns, w: 0 };
+      [set.columns, 5, 6, 8].filter((c) => c >= set.columns && c <= cards).forEach((cols) => {
+        const rows = Math.ceil(cards / cols);
+        const byHeight = (((room - GAP * (rows - 1)) / rows) * 3) / 4;
+        const byWidth = (width - GAP * (cols - 1)) / cols;
+        const w = Math.min(byHeight, byWidth, 150);
+        if (w > best.w * 1.08) best = { cols, w };
+      });
+      if (!laidOut) { cols = best.cols; laidOut = true; }
+      const rows = Math.ceil(cards / cols);
+      const byHeight = (((room - GAP * (rows - 1)) / rows) * 3) / 4;
+      const byWidth = (width - GAP * (cols - 1)) / cols;
+      const cardW = Math.max(44, Math.min(byWidth, byHeight, 150) * scale);
+      board.style.setProperty('--mp-cols', cols);
+      board.style.setProperty('--mp-width', `${Math.round(cardW * cols + GAP * (cols - 1))}px`);
+      board.style.setProperty('--mp-face', `${Math.round(Math.min(56, cardW * 0.5))}px`);
+    }
+
+    let cols = set.columns;
+    let laidOut = false;
+    wrap.querySelectorAll('[data-size]').forEach((b) => b.addEventListener('click', () => {
+      scale = Math.min(1.6, Math.max(0.5, scale + Number(b.dataset.size) * 0.15));
+      try { localStorage.setItem(SCALE_KEY, String(scale)); } catch { /* this visit only */ }
+      fit();
+    }));
+    onResize = fit;
+    window.addEventListener('resize', fit);
 
     const faces = shuffle(set.deck).slice(0, set.pairs);
     shuffle([...faces, ...faces]).forEach((face) => {
@@ -164,6 +224,8 @@
       b.addEventListener('click', () => turn(b));
       board.append(b);
     });
+
+    fit();
 
     function turn(card) {
       if (locked || card.classList.contains('up') || card.disabled) return;
@@ -216,6 +278,7 @@
   function unmount() {
     timers.forEach(clearTimeout);
     timers = [];
+    if (onResize) { window.removeEventListener('resize', onResize); onResize = null; }
   }
 
   EDGames.register('memory-pairs', { sets: SETS, mount, unmount });

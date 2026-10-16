@@ -18,8 +18,15 @@ assets/covers.js      one full-colour illustrated cover per game, the picture on
 assets/music.js       the site's tune (home screen), tap sounds, and the sound switch
 assets/app.js         the home screen: filtering, shelves and results
 assets/recent.js      the last game opened, for the card at the top of the home screen
-assets/sound.js       tones made on the spot, for the three games that listen
-assets/game-host.js   loads and mounts a game module by id, and picks its set
+assets/player.js      the game layer: games open over the home screen and stay alive behind it
+assets/sound.js       tones, real recordings, and the microphone (Clap the Beat)
+assets/voice-lines.js every line the site says out loud, in both languages
+assets/voice.js       says those lines (recordings, else the browser's own speech)
+assets/kit.js         shared game furniture: speaker button, dots, end screen, confetti
+assets/sounds/        the animal recordings (Wikimedia Commons, see CREDITS.md)
+assets/voice/         the spoken lines as mp3, made by scripts/make-voice.mjs
+assets/game-host.js   loads and mounts a game module by id, picks its set, the reset button
+scripts/make-voice.mjs records assets/voice-lines.js into assets/voice (Mac: say + ffmpeg)
 games/<id>.js         one file per game
 mockups/              design directions: the first three (3 was built), v3/ = four looks
                       (Chunky is live, Sticker pop / Jelly / Big pictures kept as options),
@@ -39,8 +46,8 @@ whether anything is filtered:
 
 - **Browse** — the game last played, a row of everything ready, a row per
   subject with more than one finished game, and a list of what is still being
-  built. Twenty-two games across seven subjects reads well as rows and badly as a
-  wall. All twenty-two are finished, so the *בקרוב* / *Coming soon* list is empty
+  built. Thirty-four games across eight subjects reads well as rows and badly as a
+  wall. All thirty-four are finished, so the *בקרוב* / *Coming soon* list is empty
   and its shelf hides itself — a heading with nothing under it reads as a
   section that failed to load, not as work that is done. Add a game with
   `status: 'soon'` and the shelf comes back on its own.
@@ -51,6 +58,28 @@ whether anything is filtered:
 The two filter drawers open from the bottom bar, so on a phone they appear just
 above it, where the thumb already is; Escape closes them, as does pressing the
 same tab again.
+
+## Games keep their place (the game layer)
+
+A child presses "back" by mistake all the time, and a game used to be a page
+of its own that was thrown away on the way out. Since October 2026 a game
+opened from the home screen runs in a frame laid over it (`assets/player.js`).
+"Back" — the game's button, the browser's, a phone's back gesture — only hides
+the frame; opening the same game again shows the same frame, exactly where it
+was left. Up to four games stay alive at once.
+
+- Opening a game pushes one history entry (`#play=<id>`), so the browser's back
+  closes the layer instead of leaving the site, and a reload reopens the game.
+- A hidden game is paused: `game.html` wraps `setTimeout`/`setInterval` so their
+  callbacks are held while hidden and run on return, and fires `edpause` /
+  `edresume`, which the sound and voice listen to. `requestAnimationFrame`
+  stops by itself in a hidden frame.
+- Inside the layer the language toggle is hidden (the home screen owns it).
+- `game.html` still works on its own for a shared link or a bookmark.
+
+Every game page also has a **מתחילים את השלב מחדש / Start this step over**
+button: it restarts the set (step) on screen from its first round — never the
+whole game from its first set.
 
 ## Running it
 
@@ -199,19 +228,46 @@ letter is on the table that belongs to no part of it — in Build a Word.
 ## Sound
 
 The site itself has a sound too (`assets/music.js`): a short, quiet pentatonic
-tune that loops on the home screen, and a soft tap under every button. The
-switch in the app bar cycles **music → sounds only → quiet** and is remembered
-in localStorage. The tune never plays on a game page, where the game's own
-sounds belong, and nothing starts until the page has been touched.
+tune that loops on the home screen and under every game that has no sounds of
+its own, and a soft tap under every button. A game marked `sound: true` in the
+catalog (Who Said That?, Animal Piano, Clap the Beat) stops the tune while it
+is open. The switch in the app bar cycles **music → sounds only → quiet**, is
+remembered in localStorage, and the two windows (home and game layer) keep it
+in step through the `storage` event. **Quiet silences everything**, the games'
+own sounds and the voice included. Nothing starts until the page has been
+touched.
+
+### The voice
+
+Children of three to five cannot read the instructions, so the newer games say
+them out loud, and letters and numbers are named as they are touched.
+`assets/voice-lines.js` holds every line in both languages; `EDVoice.say(keys,
+lang)` plays `assets/voice/<lang>/<key>.mp3` and falls back to the browser's
+speech (never Hebrew in an English voice). A sentence that ends in a letter or
+a number is two keys played back to back: `['listen-find', EDVoiceLines.letter('ב')]`.
+Hebrew letters are always said in Hebrew and Latin ones in English, whatever
+the page's language. The tune ducks while the voice speaks.
+
+To add a line: add it to `voice-lines.js` in both languages, then on the Mac run
+`node scripts/make-voice.mjs` (uses the Carmit and Samantha system voices and
+ffmpeg; only new or changed lines are recorded) and commit the mp3s.
 
 ### In the games
 
-Three games listen: Who Said That?, Animal Piano and Clap the Beat. There are no
-sound files. A folder of mp3s would be the first thing here that has to be
-fetched, cached and kept in step with the code, and this site has no build step
-to keep it there — so `assets/sound.js` makes the sounds out of an oscillator
-and a pitch curve, the same way the tiles are made out of an SVG path rather
-than a photograph. Only `game.html` loads it.
+Three games listen: Who Said That?, Animal Piano and Clap the Beat. Tones and
+drums are made on the spot by `assets/sound.js` out of an oscillator and a
+pitch curve. The animals are not: a cartoon of a cow was not recognisable, so
+since October 2026 Who Said That? (and the Animal Piano's free play) play real
+recordings from `assets/sounds/animals/` — short trimmed excerpts from
+Wikimedia Commons, credited in `assets/sounds/CREDITS.md`. The drawn calls stay
+as the fallback for a page opened as a file, where nothing can be fetched.
+
+Clap the Beat can also **hear claps**: the first time the beat is asked for,
+the browser's own pop-up asks for the microphone. With it, a child claps the
+rhythm with their hands (tapping the drum still works). `EDSound.listen()`
+reads the level every 20ms and counts a sudden jump over the room's noise as a
+clap; it is deaf while the drum plays and for a moment after an on-screen tap,
+so the game never counts its own sound. Nothing is recorded or sent.
 
     EDSound.wake();                       // from inside a click
     EDSound.note(440, { seconds: 0.4 });  // one pitch
@@ -219,15 +275,38 @@ than a photograph. Only `game.html` loads it.
     EDSound.drum();                       // a beat
     EDSound.hush();                       // on unmount, or the last note follows
                                           // the child back to the home screen
+    EDSound.sample(url);                  // a recording; resolves when it ends
+    EDSound.listen(onClap);               // the microphone (Clap the Beat)
 
-Two things follow from making sound this way rather than recording it. The first
-is that a curve through an oscillator is a cartoon of a cow, not a cow — so Who
-Said That? writes the call out as well, מו / Moo, and a child is never asked to
-recognise a sound the file cannot really make. The second is that nothing plays
-before the page has been touched, because no browser allows it; every one of the
-three opens on a button that asks to be pressed, which is the round starting
-anyway. A device with no Web Audio at all still gets a playable game, and is
-told so rather than left in silence.
+Nothing plays before the page has been touched, because no browser allows it;
+the listening games open on a button that asks to be pressed, and every spoken
+instruction has a 🔊 button that bounces when the browser held the first one
+back. A device with no Web Audio at all still gets a playable game, and is told
+so rather than left in silence.
+
+## The October 2026 games
+
+Twelve games added on 2026-10-16, all voiced, built on `assets/kit.js`:
+
+- **Numbers, ages 3–5:** Birthday Cake (put exactly N candles on the cake,
+  counted aloud, then blow them out), Frog Hops (the number line as lily pads;
+  the frog counts every hop), Which Has More? (more / less / exactly N, then
+  the basket is counted out loud).
+- **Princesses & magic** (a new subject, pink): Dress the Princess (listen to
+  what she wants — dress, crown jewel, shoes — and dress the drawn princess),
+  The Unicorn's Rainbow (paint the rainbow to the plan, the unicorn crosses;
+  then patterns on its path), Shadows in the Castle (whose shadow is in the
+  magic mirror), Build the Castle (shapes on a blueprint).
+- **Hebrew letters:** Which Letter Did You Hear? (name → shape), Letter
+  Balloons (pop the balloons with the letter that was said), Alef-Bet Dot to
+  Dot (join the dots in alef-bet order, a picture appears).
+- **English letters** (always the Latin alphabet, said in English): ABC: Big
+  and Small (Mother Duck's capital, find her duckling's small letter), The ABC
+  Caterpillar (which letter is missing).
+
+Also in that round: Trace the Letter says the letter's name at the start of
+every round; Pair by Pair sizes its board to the screen (a laptop gets 8×2
+instead of 4×4) and has − / + to change the card size, remembered per browser.
 
 ## Adding a game
 
@@ -243,6 +322,9 @@ told so rather than left in silence.
    apart at a glance is the whole point of that file.
 4. Flip `status` to `'ready'`. It moves up into the shelves with a field of its
    own.
+5. If the game makes its own sounds, add `sound: true` so the tune steps aside.
+   If it speaks, add its lines to `assets/voice-lines.js` and record them (see
+   *The voice*). `assets/kit.js` has the speaker button, dots and end screen.
 
 Inside a game's own rounds, pictures are usually emoji, and the font behind them
 is the machine's, not ours. Windows 10 stops at Emoji 12, so anything newer —

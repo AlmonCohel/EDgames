@@ -226,9 +226,13 @@
 
     /* ---- Free play: meet all eight ---- */
 
+    /* Free play is meeting the animals, so a key there plays the animal's real
+       call (the same recordings as Who Said That?). The tune runs keep the
+       notes — a tune needs pitches, not a moo. */
     function pressFree(i) {
       EDSound.wake();
-      sound(i);
+      EDSound.hush();
+      EDSound.sample(`assets/sounds/animals/${KEYS[i].en}.mp3`).catch(() => sound(i));
       light(i);
       if (met.has(i)) return;
 

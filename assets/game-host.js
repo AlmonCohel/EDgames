@@ -25,6 +25,23 @@ const stage = document.getElementById('stage');
 const back = document.getElementById('back');
 const setRow = document.getElementById('game-sets');
 const setChips = document.getElementById('set-chips');
+const resetBtn = document.getElementById('game-reset');
+
+/* Inside the home screen's layer (see assets/player.js) "back" hides the layer
+   and keeps this page alive underneath, so the game is still where the child
+   left it when they come back to it. */
+const embedded = Boolean(window.EDPause && EDPause.embedded);
+function leave() {
+  if (embedded) { try { window.parent.EDPlayer.close(); return; } catch { /* fall through */ } }
+  location.href = gridHref;
+}
+
+/* Read by game.html before the game is loaded: the site's tune plays under a
+   game that makes no sounds of its own, and never on top of one that does. */
+window.EDHost = (() => {
+  const g = gameById(new URLSearchParams(location.search).get('id'));
+  return { wantsMusic: !embedded && Boolean(g) && !g.sound };
+})();
 
 /* Every way back to the grid carries the language, so leaving a game does not
    drop the child into Hebrew. */
@@ -38,9 +55,22 @@ back.href = gridHref;
 /* Going back through history keeps the grid's filters and scroll position;
    the href is the fallback for a game opened directly from a link. */
 back.addEventListener('click', (e) => {
+  if (embedded) {
+    e.preventDefault();
+    leave();
+    return;
+  }
   if (history.length > 1 && document.referrer.includes(location.host)) {
     e.preventDefault();
     history.back();
+  }
+});
+
+/* The "all games" links on the notes below lead out the same way. */
+document.addEventListener('click', (e) => {
+  if (embedded && !e.defaultPrevented && e.target.closest('a[href^="index.html"]')) {
+    e.preventDefault();
+    leave();
   }
 });
 
@@ -98,7 +128,7 @@ function buildSetChips(sets, onPick) {
     b.addEventListener('click', () => onPick(i));
     return b;
   }));
-  setRow.hidden = false;
+  document.getElementById('set-label').hidden = false;
 }
 
 function markSet(index) {
@@ -173,11 +203,18 @@ async function start() {
          games. The picker above the stage is how you go back to one on
          purpose. */
       again: () => { if (sets) index = (index + 1) % sets.length; play(); },
-      exit: () => { location.href = gridHref; },
+      exit: leave,
     });
   }
 
   if (sets) buildSetChips(sets, (i) => { index = i; play(); });
+  /* Back to the start of this step — the same set, from its first round. */
+  resetBtn.hidden = false;
+  resetBtn.addEventListener('click', () => {
+    if (window.EDVoice) EDVoice.stop();
+    if (window.EDSound) EDSound.hush();
+    play();
+  });
   play();
 
   window.addEventListener('pagehide', () => {

@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#f4f5f7">
 <!-- The site's own mark, not the machine's: the same drawn shapes glyph the
      cards use, so the tab matches the page it opens. -->
-<link rel="icon" href="favicon.svg" type="image/svg+xml"><rect width='32' height='32' rx='7' fill='%2316794c'/><g transform='translate(4 4) scale(0.75)' fill='none' stroke='%23ffffff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='5.5'/><path d='M21.5 5.5 27 16h-11z'/><rect x='9' y='20' width='14' height='8' rx='2'/></g></svg>">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -133,5 +133,7 @@
 <!-- The site's tune (home screen only) and tap sounds, with the switch in the app bar. -->
 <script src="assets/music.js"></script>
 <script>EDMusic.init({ music: true });</script>
+<!-- Games open in a layer over this page and stay alive behind it. -->
+<script src="assets/player.js"></script>
 </body>
 </html>

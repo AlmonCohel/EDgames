@@ -77,7 +77,7 @@
       display: flex; flex-wrap: wrap; align-content: center; justify-content: center;
       gap: 10px 16px; padding: 22px;
       width: 100%; max-width: 640px; min-height: 210px;
-      background: linear-gradient(180deg, #e6f2fb, #d6eaf8);
+      background: var(--surface);
       border: 1.5px solid var(--border); border-radius: var(--radius);
     }
     .cd-swimmer { font-size: 46px; line-height: 1; animation: cd-bob 2.6s ease-in-out infinite; }

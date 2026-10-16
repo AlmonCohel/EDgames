@@ -383,6 +383,193 @@ const EDCovers = (() => {
         <path d="M0-8l-16 8 16 8z" fill="#f4d9a8"/><path d="M-11-3l-5 3 5 3z" fill="#7c4ced"/>
       </g>
       ${star(166, 36, 13)}${sparkle(40, 180, 8, '#ffc531')}`,
+
+    /* ---- October 2026 ---- */
+
+    /* A pink birthday cake with four lit candles. */
+    'birthday-candles': () => `
+      ${bg('cv-pink')}
+      ${sparkle(30, 34, 8)}${sparkle(172, 48, 7)}${sparkle(160, 20, 5)}
+      ${shadow(100, 176, 76, 10)}
+      <ellipse cx="100" cy="168" rx="76" ry="12" fill="#e8eef7"/>
+      <rect x="38" y="110" width="124" height="56" rx="10" fill="#ff7eb6"/>
+      <rect x="38" y="136" width="124" height="8" fill="#fff" opacity=".7"/>
+      <ellipse cx="100" cy="110" rx="62" ry="14" fill="#ffd1e4"/>
+      <path d="M38 110c0 14 8 12 11 4 3 14 11 14 13 2 3 14 12 13 13 2 3 14 12 14 14 1 3 14 12 14 13 2 3 13 12 14 14 2 3 12 11 12 12 4 2 10 8 10 10-12z" fill="#fff"/>
+      ${[66, 88, 110, 132].map((x, i) => `
+        <rect x="${x}" y="66" width="10" height="38" rx="3" fill="${['#2f9bff', '#ffc531', '#7c4ced', '#1cc47a'][i]}"/>
+        <path d="M${x + 1} 74l8-6M${x + 1} 86l8-6M${x + 1} 98l8-6" stroke="#fff" stroke-width="2.5" opacity=".8"/>
+        <path d="M${x + 5} 66v-6" stroke="#444" stroke-width="2"/>
+        <ellipse cx="${x + 5}" cy="50" rx="7" ry="11" fill="#ffc531"/><ellipse cx="${x + 5}" cy="53" rx="3.5" ry="6" fill="#fff6c2"/>`).join('')}
+`,
+
+    /* A frog mid-hop over numbered lily pads. */
+    'frog-hops': () => `
+      ${bg('cv-water')}
+      <path d="M0 150q50-10 100 0t100 0v50H0z" fill="#1e88cc" opacity=".35"/>
+      ${[[38, 150, '1'], [100, 160, '2'], [162, 150, '3']].map(([x, y, n]) => `
+        <ellipse cx="${x}" cy="${y + 6}" rx="30" ry="10" fill="#0b5f97" opacity=".3"/>
+        <path d="M${x} ${y} L${x + 30} ${y - 4} A30 14 0 1 1 ${x + 20} ${y - 11} Z" fill="#3cc46a" stroke="#1f9a4c" stroke-width="2"/>
+        <text x="${x}" y="${y + 7}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="20" fill="#fff">${n}</text>`).join('')}
+      <path d="M44 124q28-70 58-20" stroke="#fff" stroke-width="3" stroke-dasharray="4 7" fill="none" stroke-linecap="round"/>
+      <g transform="translate(118 74)">
+        ${shadow(0, 50, 22, 5)}
+        <ellipse cx="0" cy="18" rx="26" ry="20" fill="#5bd36b"/>
+        <ellipse cx="0" cy="24" rx="16" ry="11" fill="#b8f0a8"/>
+        <circle cx="-12" cy="-2" r="10" fill="#5bd36b"/><circle cx="12" cy="-2" r="10" fill="#5bd36b"/>
+        <circle cx="-12" cy="-3" r="6" fill="#fff"/><circle cx="12" cy="-3" r="6" fill="#fff"/>
+        ${eye(-11, -3, 3.4)}${eye(13, -3, 3.4)}
+        <path d="M-10 14q10 8 20 0" stroke="#1e6b2c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M-24 30l-14 14M24 30l14 14" stroke="#4cbf5c" stroke-width="7" stroke-linecap="round"/>
+      </g>
+      ${sparkle(170, 30, 8, '#fff6b0')}`,
+
+    /* Two baskets: a few apples in one, a heap in the other. */
+    'more-or-less': () => {
+      const basket = (x, n) => `
+        ${shadow(x, 168, 44, 8)}
+        ${[[0, -6], [-18, -4], [18, -4], [-9, -20], [9, -20], [0, -34]].slice(0, n).map(([dx, dy]) => `<circle cx="${x + dx}" cy="${120 + dy}" r="11" fill="#ff4d4d"/><path d="M${x + dx} ${110 + dy}q3-6 7-6" stroke="#2e7d32" stroke-width="3" fill="none"/>${gloss(x + dx - 4, 116 + dy, 3, 2)}`).join('')}
+        <path d="M${x - 44} 122h88l-9 40c-1 4-4 6-8 6h-54c-4 0-7-2-8-6z" fill="#d79a52"/>
+        <path d="M${x - 40} 136h80M${x - 36} 150h72" stroke="#b77a36" stroke-width="3"/>
+        <rect x="${x - 47}" y="116" width="94" height="10" rx="5" fill="#c4843c"/>`;
+      return `${bg('cv-sunny')}${sun(170, 34, 16)}${basket(54, 2)}${basket(146, 6)}
+        <text x="100" y="64" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="40" fill="#fff" stroke="#e08a00" stroke-width="2">?</text>`;
+    },
+
+    /* The princess in her ball gown, with colour swatches to choose from. */
+    'princess-dress': () => `
+      ${bg('cv-pink')}
+      ${sparkle(30, 30, 8)}${sparkle(176, 40, 9)}${sparkle(160, 150, 6)}
+      <g transform="translate(40 14) scale(.62)">
+        <ellipse cx="100" cy="292" rx="70" ry="7" fill="#000" opacity=".12"/>
+        <path d="M58 70c-6 40-2 92 10 120h64c12-28 16-80 10-120-4-30-24-44-42-44s-38 14-42 44z" fill="#f2b33d"/>
+        <path d="M78 112h44l6 40c22 30 36 76 40 122H32c4-46 18-92 40-122z" fill="#a66cff"/>
+        <path d="M50 230c16 10 34 14 50 14s34-4 50-14l6 22c-18 10-36 14-56 14s-38-4-56-14z" fill="#fff" opacity=".35"/>
+        <circle cx="72" cy="118" r="13" fill="#a66cff"/><circle cx="128" cy="118" r="13" fill="#a66cff"/>
+        <rect x="93" y="96" width="14" height="18" rx="5" fill="#f7d1b5"/>
+        <circle cx="100" cy="72" r="30" fill="#f7d1b5"/>
+        <path d="M70 70c0-22 14-34 30-34s30 12 30 34c-8-12-20-18-30-18s-22 6-30 18z" fill="#f2b33d"/>
+        ${eye(89, 74, 3.6)}${eye(111, 74, 3.6)}
+        <circle cx="82" cy="84" r="5" fill="#ff9eb8" opacity=".6"/><circle cx="118" cy="84" r="5" fill="#ff9eb8" opacity=".6"/>
+        <path d="M92 88c5 5 11 5 16 0" stroke="#c0505f" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <path d="M76 44l8-20 10 14 6-18 6 18 10-14 8 20z" fill="#ffd23f" stroke="#e0a800" stroke-width="2"/>
+        <circle cx="100" cy="36" r="5.5" fill="#4aa3ff" stroke="#fff" stroke-width="1.5"/>
+      </g>
+      ${['#ff7eb6', '#4aa3ff', '#ffd23f'].map((c, i) => `<circle cx="${28}" cy="${92 + i * 30}" r="11" fill="${c}" stroke="#fff" stroke-width="3"/>`).join('')}`,
+
+    /* A unicorn at the foot of a rainbow, a castle on the cloud across. */
+    'unicorn-rainbow': () => `
+      ${bg('cv-sky')}
+      ${['#ff4d4d', '#ff9a1f', '#ffd23f', '#3ccf7a', '#4aa3ff', '#a66cff'].map((c, i) => `<path d="M${18 + i * 9} 170A${82 - i * 9} ${82 - i * 9} 0 0 1 ${182 - i * 9} 170" stroke="${c}" stroke-width="9" fill="none"/>`).join('')}
+      ${cloud(28, 170, 1)}${cloud(168, 166, 1.1)}
+      <g transform="translate(150 118)">
+        <rect x="0" y="0" width="34" height="34" fill="#ffd1e4"/><rect x="-6" y="-14" width="12" height="48" fill="#ffb3d1"/><rect x="28" y="-14" width="12" height="48" fill="#ffb3d1"/>
+        <path d="M-8-14l8-14 8 14zM26-14l8-14 8 14z" fill="#a66cff"/><path d="M12 34v-14a5 5 0 0 1 10 0v14z" fill="#a66cff"/>
+      </g>
+      <g transform="translate(46 108)">
+        ${shadow(0, 46, 26, 6)}
+        <path d="M-6 -6l8 -34 8 30z" fill="#ffd23f" stroke="#e0a800" stroke-width="1.5"/>
+        <path d="M-2-22l8 3M-4-12l10 3" stroke="#e0a800" stroke-width="1.5"/>
+        <ellipse cx="0" cy="12" rx="22" ry="20" fill="#fff"/>
+        <ellipse cx="16" cy="24" rx="12" ry="10" fill="#fff"/>
+        <circle cx="20" cy="24" r="2" fill="#ffb3c7"/>
+        ${eye(4, 8, 3.4)}
+        <circle cx="-10" cy="-2" r="8" fill="#ff7eb6"/><circle cx="-18" cy="10" r="8" fill="#a66cff"/><circle cx="-20" cy="24" r="7" fill="#4aa3ff"/>
+        <path d="M-8-12l-6-8 8 2z" fill="#fff"/>
+      </g>
+      ${sparkle(100, 40, 8, '#fff')}${sparkle(130, 70, 5, '#fff')}`,
+
+    /* A golden magic mirror holding a crown's shadow. */
+    'castle-shadows': () => `
+      ${bg('cv-night')}
+      ${sparkle(26, 30, 5)}${sparkle(170, 26, 7)}${sparkle(40, 150, 4)}${sparkle(178, 120, 5)}
+      ${shadow(100, 186, 50, 8)}
+      <ellipse cx="100" cy="98" rx="56" ry="74" fill="#e09a00"/>
+      <ellipse cx="100" cy="98" rx="48" ry="66" fill="#ffcf3f"/>
+      <ellipse cx="100" cy="98" rx="40" ry="58" fill="#dff3ff"/>
+      ${gloss(84, 64, 10, 22, -20)}
+      <path d="M70 120l-4-36 18 16 16-26 16 26 18-16-4 36z" fill="#1e2a44" opacity=".85"/>
+      <path d="M100 18l8 10-8 6-8-6z" fill="#ff7eb6" stroke="#fff" stroke-width="2"/>
+      <g transform="translate(150 150) scale(.5)">
+        <path d="M-30 20l-4-36 18 16 16-26 16 26 18-16-4 36z" fill="#ffd23f" stroke="#e0a800" stroke-width="3"/>
+        <circle cx="0" cy="8" r="6" fill="#ff4d8d"/>
+      </g>`,
+
+    /* A castle on blueprint paper, its last tower still a dashed outline. */
+    'castle-builder': () => `
+      <rect width="200" height="200" fill="#2f6ae8"/>
+      <g stroke="#fff" stroke-opacity=".14"><path d="M0 20h200M0 40h200M0 60h200M0 80h200M0 100h200M0 120h200M0 140h200M0 160h200M0 180h200M20 0v200M40 0v200M60 0v200M80 0v200M100 0v200M120 0v200M140 0v200M160 0v200M180 0v200"/></g>
+      <rect x="26" y="78" width="40" height="96" fill="#b99cff"/>
+      <path d="M18 78l28-40 28 40z" fill="#ff6f91"/>
+      <rect x="66" y="108" width="68" height="66" fill="#ff9fc6"/>
+      <path d="M86 174v-24a14 14 0 0 1 28 0v24z" fill="#c98a4b"/>
+      <circle cx="46" cy="104" r="9" fill="#8fd3ff"/>
+      <rect x="134" y="78" width="40" height="96" fill="none" stroke="#fff6aa" stroke-width="3" stroke-dasharray="7 6"/>
+      <path d="M126 78l28-40 28 40z" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="7 6"/>
+      <path d="M46 38v-18" stroke="#fff" stroke-width="2"/><path d="M46 20h16l-4 5 4 5H46z" fill="#ffd23f"/>
+      ${sparkle(154, 118, 10, '#fff6aa')}`,
+
+    /* A big speaker calling out, and three Hebrew letter cards. */
+    'letter-listen': () => `
+      ${bg('cv-teal')}
+      <g transform="translate(36 30)">
+        <path d="M0 24h18l22-18v68L18 56H0z" fill="#fff"/>
+        <path d="M52 22q12 18 0 36M62 12q22 28 0 56" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+      </g>
+      ${[['ב', '#ff7eb6', 30, -8], ['ג', '#ffc531', 82, 4], ['א', '#7c4ced', 134, -6]].map(([l, c, x, r]) => `
+        <g transform="rotate(${r} ${x + 18} 150)">
+          ${shadow(x + 18, 182, 22, 5)}
+          <rect x="${x}" y="118" width="36" height="58" rx="8" fill="#fff"/>
+          <text x="${x + 18}" y="162" text-anchor="middle" font-family="Heebo, sans-serif" font-weight="800" font-size="36" fill="${c}">${l}</text>
+        </g>`).join('')}
+      ${sparkle(170, 40, 9)}`,
+
+    /* Balloons with letters, one popping. */
+    'letter-balloons': () => `
+      ${bg('cv-sky')}
+      ${cloud(40, 40, .8)}${cloud(160, 160, .7)}
+      ${[['מ', '#ff5d8f', 52, 96], ['ש', '#4aa3ff', 104, 70], ['ב', '#3ccf7a', 150, 110]].map(([l, c, x, y]) => `
+        <path d="M${x} ${y + 34}q-6 20 4 40" stroke="#6b7a90" stroke-width="1.5" fill="none"/>
+        <ellipse cx="${x}" cy="${y}" rx="26" ry="32" fill="${c}"/>
+        <path d="M${x - 5} ${y + 32}h10l-5 6z" fill="${c}"/>
+        ${gloss(x - 10, y - 12, 7, 11)}
+        <text x="${x}" y="${y + 12}" text-anchor="middle" font-family="Heebo, sans-serif" font-weight="800" font-size="30" fill="#fff">${l}</text>`).join('')}
+      <path d="M160 40l6 10M176 34l-4 12M186 50l-12 2M150 54l10 0" stroke="#ff8a1f" stroke-width="4" stroke-linecap="round"/>`,
+
+    /* A star drawn by joining lettered dots, the last line still to go. */
+    'alefbet-dots': () => {
+      const pts = Array.from({ length: 10 }, (_, i) => { const a = -Math.PI / 2 + i * Math.PI / 5; const r = i % 2 ? 32 : 76; return [100 + Math.cos(a) * r, 108 + Math.sin(a) * r]; });
+      const L = [...'אבגדהוזחטי'];
+      return `${bg('cv-paper')}
+        <polyline points="${pts.slice(0, 8).map((p) => p.join(',')).join(' ')}" fill="none" stroke="#0f8ea0" stroke-width="4" stroke-linejoin="round"/>
+        ${pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="5" fill="${i < 8 ? '#0f8ea0' : '#fff'}" stroke="#52607c" stroke-width="1.5"/>
+          <text x="${x + (x - 100) * .18}" y="${y + (y - 108) * .18 + 5}" text-anchor="middle" font-family="Heebo, sans-serif" font-weight="800" font-size="14" fill="#1e2a44">${L[i]}</text>`).join('')}
+        <g transform="translate(150 166) rotate(-30)"><rect x="0" y="-6" width="44" height="12" rx="3" fill="#ffc531"/><path d="M0-6l-12 6 12 6z" fill="#f4d9a8"/></g>`;
+    },
+
+    /* Mother Duck with a big A, her duckling with a small a. */
+    'abc-big-small': () => `
+      ${bg('cv-water')}
+      <path d="M0 140q50-10 100 0t100 0v60H0z" fill="#1e88cc" opacity=".35"/>
+      ${duck(70, 124, 1.15)}
+      ${duck(150, 150, .55)}
+      ${block(40, 22, 50, 'A', '#ff6f91')}
+      ${block(132, 90, 34, 'a', '#7c4ced')}
+      ${sparkle(176, 30, 8)}`,
+
+    /* A caterpillar of letters, A B _ D. */
+    'abc-caterpillar': () => `
+      ${bg('cv-mint')}
+      <path d="M0 150q60-16 120-4t80 0v54H0z" fill="#46a836" opacity=".45"/>
+      <path d="M150 40q30 10 34 40-26 4-40-14z" fill="#5cc94e"/>
+      ${['A', 'B', '', 'D'].map((l, i) => `
+        <circle cx="${32 + i * 34}" cy="${124 - (i % 2) * 8}" r="20" fill="${l ? ['#7bd96b', '#5cc94e', '', '#4fbf6a'][i] : '#fff'}" ${l ? '' : 'stroke="#4fbf6a" stroke-width="3" stroke-dasharray="5 4"'}/>
+        <text x="${32 + i * 34}" y="${135 - (i % 2) * 8}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="24" fill="#1e5a2a">${l}</text>`).join('')}
+      <circle cx="170" cy="110" r="24" fill="#ff6f91"/>
+      ${eye(164, 104, 4)}${eye(180, 104, 4)}
+      <path d="M164 118q8 6 16 0" stroke="#1e2a44" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M162 88l-6-16M180 88l6-16" stroke="#1e2a44" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="156" cy="72" r="4" fill="#1e2a44"/><circle cx="186" cy="72" r="4" fill="#1e2a44"/>`,
   };
 
   const has = (id) => Boolean(ART[id]);

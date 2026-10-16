@@ -5,13 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-i18n="game.pageTitle">משחק — הגנון של עלמון</title>
 <meta name="theme-color" content="#f4f5f7">
-<link rel="icon" href="favicon.svg" type="image/svg+xml"><rect width='32' height='32' rx='7' fill='%2316794c'/><g transform='translate(4 4) scale(0.75)' fill='none' stroke='%23ffffff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='5.5'/><path d='M21.5 5.5 27 16h-11z'/><rect x='9' y='20' width='14' height='8' rx='2'/></g></svg>">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
 <!-- Sets lang and dir before the first paint, so an English visit never flashes RTL. -->
 <script src="assets/i18n.js"></script>
+<script>
+/* A game opened from the home screen runs in a layer over it (assets/player.js)
+   and is kept alive when the child goes back, so coming back to it carries on
+   where they were. While it waits behind the home screen it must not go on
+   playing by itself: its timers are held and run on return, and the
+   `edpause` / `edresume` events tell the sound and voice to stop and start. */
+(function () {
+  let embedded = false;
+  try { embedded = window.parent !== window && Boolean(window.parent.EDPlayer); } catch { /* another origin */ }
+  if (embedded) document.documentElement.classList.add('embedded');
+  const setT = window.setTimeout.bind(window);
+  const setI = window.setInterval.bind(window);
+  let paused = false;
+  const held = [];
+  window.setTimeout = (fn, ms, ...args) => setT(() => {
+    if (typeof fn !== 'function') return;
+    if (paused) held.push(() => fn(...args)); else fn(...args);
+  }, ms);
+  window.setInterval = (fn, ms, ...args) => setI(() => { if (!paused && typeof fn === 'function') fn(...args); }, ms);
+  window.EDPause = {
+    embedded,
+    get paused() { return paused; },
+    pause() { if (paused) return; paused = true; window.dispatchEvent(new Event('edpause')); },
+    resume() {
+      if (!paused) return;
+      paused = false;
+      window.dispatchEvent(new Event('edresume'));
+      held.splice(0).forEach((fn) => fn());
+    },
+  };
+})();
+</script>
 </head>
 <body>
 
@@ -42,9 +74,15 @@
       <div class="badges" id="game-badges"></div>
     </div>
 
-    <div class="game-sets" id="game-sets" hidden>
-      <span class="game-sets-label" id="set-label" data-i18n="game.sets.label">ערכה</span>
+    <div class="game-sets" id="game-sets">
+      <span class="game-sets-label" id="set-label" data-i18n="game.sets.label" hidden>ערכה</span>
       <div class="game-sets-chips" id="set-chips" role="group" aria-labelledby="set-label"></div>
+      <!-- Starts the step on screen over — the set the child is in, never the
+           whole game from its first set. -->
+      <button type="button" class="chip game-reset" id="game-reset" hidden>
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>
+        <span data-i18n="game.reset">מתחילים מחדש</span>
+      </button>
     </div>
 
     <section class="stage" id="stage" data-subject="shapes"></section>
@@ -57,9 +95,20 @@
 <!-- The listening games make their sounds rather than fetching them; only the
      game page ever needs it. -->
 <script src="assets/sound.js"></script>
-<script src="assets/game-host.js"></script>
-<!-- The site's tune (home screen only) and tap sounds, with the switch in the app bar. -->
+<!-- Spoken instructions, letter names and numbers. -->
+<script src="assets/voice-lines.js"></script>
+<script src="assets/voice.js"></script>
+<!-- Shared furniture for the games: speaker button, dots, end screen. -->
+<script src="assets/kit.js"></script>
+<!-- The site's tune and tap sounds, with the switch in the app bar. -->
 <script src="assets/music.js"></script>
-<script>EDMusic.init({ music: false });</script>
+<script src="assets/game-host.js"></script>
+<script>
+  /* The tune plays under a game with no sounds of its own. Inside the home
+     screen's layer the home screen is already playing it. */
+  EDMusic.init({ music: EDHost.wantsMusic });
+  /* Any touch on the page is what lets it make a sound at all. */
+  document.addEventListener('pointerdown', () => EDSound.wake(), { capture: true });
+</script>
 </body>
 </html>

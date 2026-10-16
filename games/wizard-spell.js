@@ -132,7 +132,7 @@
     .ws-scroll {
       display: grid; place-items: center; gap: 14px;
       padding: 20px 24px; width: 100%; max-width: 420px;
-      background: linear-gradient(180deg, #fbf6ea, #f3ead6);
+      background: var(--surface);
       border: 1.5px solid var(--border); border-radius: var(--radius);
     }
     .ws-picture { font-size: 64px; line-height: 1; }

@@ -11,12 +11,16 @@
    Rules it keeps:
    - Nothing sounds before the page is touched (no browser allows it anyway);
      the first press anywhere starts the tune if the switch says so.
-   - The tune plays on the home screen only. A game page gets the taps, and its
-     own sounds — three games are about listening and must not compete.
+   - The tune plays on the home screen and, since October 2026, under every
+     game that has no sound of its own (catalog `sound: true` marks the ones
+     that do — the listening games must not compete with it). A game opened
+     from the home screen runs in a layer over it (assets/player.js), so the
+     tune simply carries on; a game opened on its own plays it itself.
+   - A spoken instruction ducks the tune while it is said (`duck()`).
    - The choice is remembered in localStorage, per browser, like the language.
    - A hidden tab goes quiet, and comes back where it was. */
 
-const EDMusic = (() => {
+const EDMusic = window.EDMusic = (() => {
   const KEY = 'edgames-sound';
   const STATES = ['all', 'effects', 'off'];
   let state = 'all';
@@ -80,9 +84,20 @@ const EDMusic = (() => {
     nextAt = ac.currentTime + 0.05;
     musicBus.gain.cancelScheduledValues(ac.currentTime);
     musicBus.gain.setValueAtTime(musicBus.gain.value, ac.currentTime);
-    musicBus.gain.linearRampToValueAtTime(0.32, ac.currentTime + 1.5);   // fade in
+    musicBus.gain.linearRampToValueAtTime(ducked ? 0.06 : 0.32, ac.currentTime + 1.5);   // fade in
     schedule();
     timer = setInterval(schedule, 100);
+  }
+
+  /* While a voice speaks the tune steps back, then returns. */
+  let ducked = 0;
+  function duck(on) {
+    ducked = Math.max(0, ducked + (on ? 1 : -1));
+    if (!ac || !playing) return;
+    const t = ac.currentTime;
+    musicBus.gain.cancelScheduledValues(t);
+    musicBus.gain.setValueAtTime(musicBus.gain.value, t);
+    musicBus.gain.linearRampToValueAtTime(ducked ? 0.06 : 0.32, t + 0.25);
   }
 
   function stopMusic() {
@@ -142,6 +157,14 @@ const EDMusic = (() => {
       else if (e.target.closest('button, .chip, .tab, .btn, a')) tap();
     }, { capture: true });
     document.addEventListener('keydown', startMusic, { once: true });
+    /* The switch on a game page and the one on the home screen are the same
+       setting: a change in one window reaches the other through storage. */
+    window.addEventListener('storage', (e) => {
+      if (e.key !== KEY || !STATES.includes(e.newValue)) return;
+      state = e.newValue;
+      if (btn) paint(btn);
+      if (state === 'all') startMusic(); else stopMusic();
+    });
     document.addEventListener('visibilitychange', () => { if (document.hidden) stopMusic(); else startMusic(); });
   }
 
@@ -153,6 +176,13 @@ const EDMusic = (() => {
       else mount();
     },
     tap,
+    duck,
+    /* The home screen turns the tune off while a game with its own sounds is
+       in front, and back on when it is not. */
+    want(on) {
+      wantsMusic = Boolean(on);
+      if (wantsMusic) startMusic(); else stopMusic();
+    },
     get state() { return state; },
   };
 })();

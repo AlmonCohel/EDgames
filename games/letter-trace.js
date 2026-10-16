@@ -7,7 +7,12 @@
    letter is done — close enough is the point at this age, not a perfect stroke,
    and nothing is ever marked wrong.
 
-   The alphabet follows the language on screen, like Letter Hunt. */
+   The alphabet follows the language on screen, like Letter Hunt.
+
+   Every round opens with the letter's name said out loud ("כותבים את האות
+   בית"), because the children this is for know the letters by name long
+   before they can read the line above the pad. The speaker button says it
+   again, and bounces when the browser would not let the first one play. */
 
 (function () {
   const ALPHA = {
@@ -29,6 +34,7 @@
       almost: 'עוד קצת! צובעים את כל האות',
       right: 'איזו אות יפה!',
       clear: 'מחיקה',
+      hear: 'לשמוע שוב',
       wellDone: 'כל הכבוד!',
       done: 'כתבתם את כל האותיות!',
       again: 'עוד פעם ✏️',
@@ -41,6 +47,7 @@
       almost: 'A little more! Colour in the whole letter',
       right: 'What a lovely letter!',
       clear: 'Clear',
+      hear: 'Hear it again',
       wellDone: 'Well done!',
       done: 'You wrote every letter!',
       again: 'Again ✏️',
@@ -65,6 +72,12 @@
     .lt-meter { width: min(100%, 340px); height: 14px; border-radius: 7px; background: var(--border); overflow: hidden; }
     .lt-meter i { display: block; height: 100%; width: 0; background: var(--pos); border-radius: 7px; transition: width .15s; }
     .lt-row { display: flex; gap: 10px; }
+    .lt-head { display: flex; align-items: center; gap: 12px; justify-content: center; }
+    .lt-say { width: 54px; height: 54px; flex: none; border-radius: 50%; border: none; cursor: pointer; font-size: 26px; line-height: 1;
+      background: var(--sub-solid, var(--accent-strong)); color: #fff; box-shadow: 0 5px 0 var(--sub-edge, rgba(0,0,0,.2)); }
+    .lt-say:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--sub-edge, rgba(0,0,0,.2)); }
+    .lt-say.nudge { animation: lt-nudge 1s ease infinite; }
+    @keyframes lt-nudge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
     .lt-pop { position: absolute; inset: 0; display: grid; place-items: center; font-size: 90px; pointer-events: none; transform: scale(0); transition: transform .4s cubic-bezier(.3,1.8,.5,1); }
     .lt-pop.on { transform: scale(1); }
     .lt-end { text-align: center; margin: auto; }
@@ -106,11 +119,26 @@
         <div class="lt-progress" role="img" aria-label="${text.step(round + 1, ROUNDS)}">
           ${Array.from({ length: ROUNDS }, (_, i) => `<span class="lt-dot ${i < round ? 'done' : ''}"></span>`).join('')}
         </div>
-        <h2>${text.ask(letter)}</h2>
+        <div class="lt-head">
+          <button type="button" class="lt-say" aria-label="${text.hear}">🔊</button>
+          <h2>${text.ask(letter)}</h2>
+        </div>
         <div class="lt-pad"><canvas class="lt-guide"></canvas><canvas class="lt-ink"></canvas><div class="lt-pop" aria-hidden="true">⭐</div></div>
         <div class="lt-meter" aria-hidden="true"><i></i></div>
         <p class="lt-hint" aria-live="polite">${text.hint}</p>
         <div class="lt-row"><button type="button" class="btn btn--ghost" data-clear>${text.clear}</button></div>`;
+      /* The letter's name, out loud. Latin small letters are "the small
+         letter b"; everything else is just its name. */
+      const sayBtn = wrap.querySelector('.lt-say');
+      const spoken = EDVoiceLines.letter(letter);
+      const opening = lang === 'en' && letter !== letter.toUpperCase() ? 'trace-ask-small' : 'trace-ask';
+      const speak = () => {
+        sayBtn.classList.remove('nudge');
+        EDVoice.say(spoken ? [opening, spoken] : [opening], lang).then((heard) => { if (!heard) sayBtn.classList.add('nudge'); });
+      };
+      sayBtn.addEventListener('click', speak);
+      speak();
+
       const pad = wrap.querySelector('.lt-pad');
       const guide = wrap.querySelector('.lt-guide');
       const ink = wrap.querySelector('.lt-ink');
@@ -150,6 +178,7 @@
         if (!solved && share >= DONE_AT) {
           solved = true;
           hint.textContent = text.right;
+          EDVoice.say(`praise-${1 + Math.floor(Math.random() * 4)}`, lang);
           wrap.querySelector('.lt-pop').classList.add('on');
           later(() => { round += 1; next(); }, 1300);
         }
@@ -194,6 +223,7 @@
   function unmount() {
     timers.forEach(clearTimeout);
     timers = [];
+    EDVoice.stop();
     cleanup.forEach((fn) => fn());
     cleanup = [];
   }

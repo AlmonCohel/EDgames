@@ -15,7 +15,15 @@
    still right. Play four even claps where three were even and one was long, and
    it is not, and the drum says so by playing the pattern again.
 
-   Nothing is ever counted against a child here. A miss replays the beat. */
+   Nothing is ever counted against a child here. A miss replays the beat.
+
+   Since October 2026 the game can also hear real claps. The first time the
+   beat is asked for, the browser's own pop-up asks for the microphone; say yes
+   and a child can clap the rhythm with their hands instead of tapping the drum
+   (both still work). The microphone is deaf while the drum plays, so the game
+   never mistakes its own beat for a clap, and nothing it hears is kept or sent
+   anywhere — see `EDSound.listen`. A grown-up can switch it off with the
+   microphone chip. */
 
 (function () {
   /* Three runs, and the first is not an easier rhythm — it is a different
@@ -49,6 +57,12 @@
       tooFast:   'קצת מהר מדי. נשמע עוד פעם ומנסים לאט',
       notYet:    'כמעט! נשמע את הקצב עוד פעם',
       listen:    'לשמוע את הקצב 🎧',
+      yourTurnClap: (n) => `עכשיו אתם — ${n} מחיאות כפיים (או על התוף)`,
+      stalled:   'נשמע את הקצב עוד פעם?',
+      micOn:     '🎤 שומע מחיאות כפיים',
+      micOff:    '🎤 מחיאות כפיים כבויות',
+      micAsking: 'מבקשים רשות להשתמש במיקרופון…',
+      micDenied: 'אין גישה למיקרופון — מתופפים על התוף',
       drum:      'התוף',
       wellDone:  'כל הכבוד!',
       tappedAll: 'מחאתם את כל הקצבים!',
@@ -64,6 +78,12 @@
       tooFast:   'A bit too fast. Listen again and take your time',
       notYet:    'Nearly! Let us hear the beat once more',
       listen:    'Hear the beat 🎧',
+      yourTurnClap: (n) => `Your turn — ${n} claps (or taps on the drum)`,
+      stalled:   'Shall we hear the beat again?',
+      micOn:     '🎤 Listening for claps',
+      micOff:    '🎤 Claps off',
+      micAsking: 'Asking to use the microphone…',
+      micDenied: 'No microphone — tap the drum instead',
       drum:      'the drum',
       wellDone:  'Well done!',
       tappedAll: 'You clapped every beat!',
@@ -112,7 +132,12 @@
     .rt-tap { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); }
     .rt-tap.on { background: var(--pos); border-color: var(--pos); }
 
-    .rt-listen { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .rt-listen { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; align-items: center; }
+    .rt-mic[aria-pressed="true"] { background: var(--sub-tint, var(--sel-tint)); color: var(--sub-ink, var(--text)); }
+    .rt-mic[disabled] { opacity: .6; }
+    .rt-mic[hidden] { display: none; }
+    /* A clap heard: the drum glows, since a clap makes no drum sound. */
+    .rt-drum.clap { box-shadow: 0 0 0 10px rgba(255, 197, 49, .55), 0 12px 28px rgba(0,0,0,0.16); }
 
     .rt-end { text-align: center; margin: auto; }
     .rt-end .rt-stars { font-size: 46px; letter-spacing: 4px; }
@@ -133,6 +158,8 @@
 
   let timers = [];
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  /* The microphone, while it is on. Module-level so unmount can close it. */
+  let ears = null;
 
   function mount(root, ctx) {
     const lang = TEXT[ctx.lang] ? ctx.lang : 'he';
@@ -167,12 +194,48 @@
       </div>
       <div class="rt-taps" aria-hidden="true"></div>
       <button type="button" class="rt-drum" aria-label="${text.drum}" disabled>🥁</button>
-      <div class="rt-listen"><button type="button" class="btn" data-listen>${text.listen}</button></div>`;
+      <div class="rt-listen">
+        <button type="button" class="btn" data-listen>${text.listen}</button>
+        <button type="button" class="chip rt-mic" data-mic hidden aria-pressed="false"></button>
+      </div>`;
 
     const hint = (line) => { wrap.querySelector('.rt-hint').textContent = line; };
     const drum = wrap.querySelector('.rt-drum');
     const dots = wrap.querySelector('.rt-progress');
     const tapRow = wrap.querySelector('.rt-taps');
+
+    const listenBtn = wrap.querySelector('[data-listen]');
+    const micBtn = wrap.querySelector('[data-mic]');
+    /* 'unasked' until the first beat; then 'on', 'off' (a grown-up switched
+       it off) or 'denied' (the browser said no, or there is no microphone). */
+    let mic = 'unasked';
+    let playingBeat = false;
+    let stallTimer = null;
+
+    function paintMic() {
+      micBtn.hidden = mic === 'unasked' || mic === 'asking';
+      micBtn.disabled = mic === 'denied';
+      micBtn.setAttribute('aria-pressed', String(mic === 'on'));
+      micBtn.textContent = mic === 'on' ? text.micOn : mic === 'denied' ? text.micDenied : text.micOff;
+    }
+
+    async function askMic() {
+      mic = 'asking';
+      hint(text.micAsking);
+      try {
+        ears = await EDSound.listen(() => tap(true));
+        ears.deaf = true;
+        mic = 'on';
+      } catch {
+        mic = 'denied';
+      }
+      paintMic();
+    }
+
+    micBtn.addEventListener('click', () => {
+      if (mic === 'on') { mic = 'off'; if (ears) { ears.stop(); ears = null; } paintMic(); return; }
+      if (mic === 'off') askMic().then(() => { if (ears) ears.deaf = !listening; });
+    });
 
     const wanted = () => beats[round];
     const wantedTaps = () => wanted().length + 1;
@@ -194,8 +257,15 @@
       drum.classList.add('hit');
     }
 
-    function playBeat() {
+    async function playBeat() {
+      /* Never on top of a beat already playing, or of a turn the child has
+         already started — that used to wipe their taps without a word. */
+      if (playingBeat || mic === 'asking' || (listening && taps.length)) return;
       EDSound.wake();
+      if (mic === 'unasked') await askMic();
+      playingBeat = true;
+      listenBtn.disabled = true;
+      if (ears) ears.deaf = true;
       listening = false;
       drum.disabled = true;
       taps = [];
@@ -213,19 +283,45 @@
       }
 
       later(() => {
+        playingBeat = false;
         listening = true;
         drum.disabled = false;
-        hint(text.yourTurn(wantedTaps()));
+        listenBtn.disabled = false;
+        hint(mic === 'on' ? text.yourTurnClap(wantedTaps()) : text.yourTurn(wantedTaps()));
       }, at + 420);
+      /* The drum's last hit rings on in the room a little longer than it
+         plays; the microphone waits it out. */
+      later(() => { if (ears && !playingBeat) ears.deaf = false; }, at + 650);
     }
 
-    function tap() {
+    function tap(clapped = false) {
       if (!listening) return;
       taps.push(performance.now());
-      EDSound.drum();
+      if (clapped) {
+        drum.classList.add('clap');
+        later(() => drum.classList.remove('clap'), 160);
+      } else {
+        EDSound.drum();
+        /* The microphone would hear that drum and count it a second time. */
+        if (ears) {
+          ears.deaf = true;
+          later(() => { if (ears && listening) ears.deaf = false; }, 260);
+        }
+      }
       thump();
       drawTaps();
-      if (taps.length >= wantedTaps()) judge();
+      /* A turn begun is the child's: the beat button waits until it is done,
+         and a turn left half-way for a few seconds is cleared gently. */
+      listenBtn.disabled = true;
+      clearTimeout(stallTimer);
+      if (taps.length >= wantedTaps()) return judge();
+      stallTimer = setTimeout(() => {
+        if (!listening || !taps.length) return;
+        taps = [];
+        drawTaps();
+        listenBtn.disabled = false;
+        hint(text.stalled);
+      }, 4000);
     }
 
     /* The gaps the child left, read as shorts and longs in their own tempo
@@ -240,6 +336,8 @@
     function judge() {
       listening = false;
       drum.disabled = true;
+      if (ears) ears.deaf = true;
+      clearTimeout(stallTimer);
 
       /* The first run only ever asks how many, and reaching this point is the
          answer to that. Nothing about its timing is looked at. */
@@ -256,6 +354,7 @@
       later(() => {
         taps = [];
         drawTaps();
+        listenBtn.disabled = false;
         hint(text.listenFirst);
       }, 800);
     }
@@ -286,8 +385,8 @@
       wrap.querySelector('[data-exit]').addEventListener('click', ctx.exit);
     }
 
-    drum.addEventListener('click', tap);
-    wrap.querySelector('[data-listen]').addEventListener('click', playBeat);
+    drum.addEventListener('click', () => tap(false));
+    listenBtn.addEventListener('click', playBeat);
     drawProgress();
     drawTaps();
   }
@@ -296,6 +395,7 @@
     timers.forEach(clearTimeout);
     timers = [];
     EDSound.hush();
+    if (ears) { ears.stop(); ears = null; }
   }
 
   EDGames.register('rhythm-tap', { sets: SETS, mount, unmount });

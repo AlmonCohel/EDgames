@@ -48,6 +48,11 @@ const EDGlyphs = (() => {
       <ellipse cx="9.2" cy="23.4" rx="3.6" ry="3"/>
       <ellipse cx="21.2" cy="20.4" rx="3.6" ry="3"/>
       <path d="M12.5 12.5l12-2.5"/>`,
+    /* A crown with a jewel — the princesses, unicorns and castles. */
+    fairytale: `
+      <path d="M5.5 24.5 4 10l7 6.5L16 6.5l5 10 7-6.5-1.5 14.5z"/>
+      <path d="M6.5 27.5h19"/>
+      <circle cx="16" cy="19" r="2" fill="currentColor" stroke="none"/>`,
     computer: `
       <path d="M8 5.5 23 15.2l-6.6 1.4L13.9 23z"/>
       <path d="M24 22.5l3.2 3.2M20 26.4l1.2 1.2M27.4 18.2l1.4 1.4"/>`,
