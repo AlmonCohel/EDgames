@@ -20,7 +20,7 @@
   };
 
   const SETS = [
-    { id: 'easy', emoji: '🪞', label: { he: 'צללים שונים', en: 'Different shadows' }, pool: ['crown', 'unicorn', 'castle', 'frog', 'shoe', 'pumpkin', 'dragon', 'apple', 'key'], options: 3 },
+    { id: 'easy', emoji: '👻', label: { he: 'צללים שונים', en: 'Different shadows' }, pool: ['crown', 'unicorn', 'castle', 'frog', 'shoe', 'pumpkin', 'dragon', 'apple', 'key'], options: 3 },
     { id: 'more', emoji: '👑', label: { he: 'יותר לבחור', en: 'More to choose' }, pool: Object.keys(ITEMS), options: 4 },
     { id: 'alike', emoji: '🧚', label: { he: 'צללים דומים', en: 'Look-alike shadows' }, groups: [['princess', 'fairy', 'mermaid', 'prince'], ['ring', 'gem', 'crown', 'key'], ['unicorn', 'horse', 'dragon', 'swan'], ['rose', 'apple', 'pumpkin', 'gem']], options: 4 },
   ];

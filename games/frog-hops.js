@@ -15,7 +15,7 @@
 (function () {
   const SETS = [
     { id: 'five', emoji: '🐸', label: { he: 'עד 5', en: 'Up to 5' }, pads: 5, hidden: false },
-    { id: 'ten', emoji: '🪷', label: { he: 'עד 10', en: 'Up to 10' }, pads: 10, hidden: false },
+    { id: 'ten', emoji: '🦆', label: { he: 'עד 10', en: 'Up to 10' }, pads: 10, hidden: false },
     { id: 'count', emoji: '🔍', label: { he: 'סופרים לבד', en: 'Count it yourself' }, pads: 10, hidden: true },
   ];
 
