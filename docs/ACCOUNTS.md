@@ -17,6 +17,15 @@ Pro is a starter set: one game per learning track. Adding a game: README, "Addin
 
 Prices are not decided, so none appear anywhere. The site says "free during the launch".
 
+## Open decisions (Almon, 2026-10-30)
+
+Nothing below is to be changed or proposed until he says so. Each has a Blocked card on The Brain.
+
+- **The landing page design:** he is not happy with how it looks and does not yet know what he wants. It stays as it is for now.
+- **Prices:** not set. None appear anywhere; do not add any.
+- **Plan names:** Free, Basic and Pro are working names, not final. Change them only in `assets/tiers.js`. The ids `free`, `basic`, `pro` are internal and can stay.
+- **More Pro games:** yes, but not as part of the build that made this. Not started.
+
 ## The pieces
 
 | What | Where |
