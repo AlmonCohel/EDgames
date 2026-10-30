@@ -7,7 +7,10 @@
 
    `sound: true` marks a game that makes its own sounds (the listening games):
    the site's tune stops while it is open. Every other game plays with the tune
-   under it. */
+   under it.
+
+   `tier` is the plan a game belongs to, see assets/tiers.js. No `tier` means it
+   is open to everyone, with no account. */
 
 const SUBJECTS = [
   { id: 'letters', label: { he: 'אותיות ומילים',  en: 'Letters & words'   }, emoji: '🔤' },
@@ -18,6 +21,9 @@ const SUBJECTS = [
   { id: 'music',   label: { he: 'צלילים ומוזיקה', en: 'Sounds & music'    }, emoji: '🎵' },
   { id: 'computer', label: { he: 'מקלדת ועכבר',   en: 'Keyboard & mouse'  }, emoji: '💻' },
   { id: 'fairytale', label: { he: 'נסיכות וקסמים', en: 'Princesses & magic' }, emoji: '👑' },
+  { id: 'english', label: { he: 'אנגלית',  en: 'English' }, emoji: '💬' },
+  { id: 'math',    label: { he: 'חשבון',   en: 'Maths'   }, emoji: '🧮' },
+  { id: 'logic',   label: { he: 'לוגיקה',  en: 'Logic'   }, emoji: '💡' },
 ];
 
 /* Age groups the filter offers. A game matches a group when their ranges overlap,
@@ -441,6 +447,127 @@ const GAMES = [
     blurb: {
       he: 'לזחל חסרה אות באמצע. איזו אות באנגלית באה שם?',
       en: 'The caterpillar is missing a letter. Which English letter goes there?',
+    },
+    status: 'ready',
+  },
+  /* ---- Free account: for anyone who signs up ---- */
+  {
+    id: 'bubble-count',
+    tier: 'free',
+    title: { he: 'בועות לפי הסדר', en: 'Bubbles in Order' },
+    emoji: '🔵',
+    subject: 'numbers',
+    ageMin: 3, ageMax: 6,
+    blurb: {
+      he: 'מפוצצים את הבועות לפי הסדר — מאחת ועד עשר, ואחר כך אחורה.',
+      en: 'Pop the bubbles in order — from one up to ten, and then backwards.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'odd-one-out',
+    tier: 'free',
+    title: { he: 'מי לא שייך?', en: 'Who Does Not Belong?' },
+    emoji: '🔎',
+    subject: 'memory',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'כולם מאותה משפחה, חוץ מאחד. מוצאים את מי שלא שייך.',
+      en: 'They are all from one family, except one. Find the one that does not belong.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'sort-baskets',
+    tier: 'free',
+    title: { he: 'מסדרים לסלים', en: 'Sort into Baskets' },
+    emoji: '🧺',
+    subject: 'memory',
+    ageMin: 3, ageMax: 6,
+    blurb: {
+      he: 'כל דבר הולך לסל שלו: לפי צבע, לפי מקום, ולפי מה הוא בכלל.',
+      en: 'Everything goes in its own basket: by colour, by place, and by what it is.',
+    },
+    status: 'ready',
+  },
+  /* ---- Basic: bigger games with more to them ---- */
+  {
+    id: 'pizza-shop',
+    tier: 'basic',
+    title: { he: 'הפיצרייה', en: 'The Pizza Shop' },
+    emoji: '🍕',
+    subject: 'numbers',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'הלקוחות מזמינים, ואתם מכינים בדיוק מה שביקשו: סופרים תוספות ומגישים.',
+      en: 'The customers order and you make exactly what they asked for: count the toppings and serve.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'robot-code',
+    tier: 'basic',
+    title: { he: 'מתכנתים רובוט', en: 'Code the Robot' },
+    emoji: '🤖',
+    subject: 'computer',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'מתכננים מראש את כל הצעדים, לוחצים על הפעלה, והרובוט יוצא לדרך. התכנות הראשון.',
+      en: 'Plan all the steps ahead, press go, and the robot sets off. A first taste of coding.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'color-lab',
+    tier: 'basic',
+    title: { he: 'מעבדת הצבעים', en: 'The Colour Lab' },
+    emoji: '🧪',
+    subject: 'shapes',
+    ageMin: 4, ageMax: 7,
+    blurb: {
+      he: 'מערבבים שני צבעים במבחנה ומגלים מה יוצא. אפשר להגיע לצבע שביקשו?',
+      en: 'Mix two colours in the flask and find out what comes out. Can you make the colour asked for?',
+    },
+    status: 'ready',
+  },
+  /* ---- Pro: learning, one game per track so far ---- */
+  {
+    id: 'english-words',
+    tier: 'pro',
+    title: { he: 'מילים ראשונות באנגלית', en: 'First English Words' },
+    emoji: '🗣️',
+    subject: 'english',
+    ageMin: 4, ageMax: 8,
+    blurb: {
+      he: 'שומעים מילה באנגלית ובוחרים את התמונה. אחרי כל תשובה רואים את המילה בשתי השפות.',
+      en: 'Hear a word in English and pick the picture. After every answer the word is shown in both languages.',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
+    id: 'make-ten',
+    tier: 'pro',
+    title: { he: 'משלימים לעשר', en: 'Make Ten' },
+    emoji: '🔟',
+    subject: 'math',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'הלוח של העשר מלמד לחשב בראש: כמה יש, כמה חסר, וכמה זה ביחד.',
+      en: 'The ten frame teaches adding in your head: how many there are, how many are missing, and how many altogether.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'what-next',
+    tier: 'pro',
+    title: { he: 'מה בא עכשיו?', en: 'What Comes Next?' },
+    emoji: '💡',
+    subject: 'logic',
+    ageMin: 4, ageMax: 8,
+    blurb: {
+      he: 'מוצאים את החוק: סדרות של צורות, קפיצות של מספרים, ולוח שחסר בו משבצת.',
+      en: 'Find the rule: patterns of shapes, jumps between numbers, and a board with one square missing.',
     },
     status: 'ready',
   },

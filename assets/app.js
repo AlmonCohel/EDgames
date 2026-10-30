@@ -1,9 +1,9 @@
 /* The home screen. Two modes over one catalog.
 
    Nothing filtered → browse: the game last played, a row of everything that is
-   ready, a row per subject with more than one finished game, and a list of what
-   is still being built. Nineteen games across seven subjects is exactly the
-   shape that reads well as rows and badly as a wall.
+   ready, a row for each plan whose games this visitor does not have yet, a row
+   per subject with more than one finished game, and a list of what is still
+   being built. A catalog this size reads well as rows and badly as a wall.
 
    Anything filtered → results: the same tiles laid flat, with the count line
    and the empty state. Picking a subject, an age or a search term is a
@@ -27,6 +27,7 @@ const els = {
   continueBox: document.getElementById('continue'),
   ready: document.getElementById('ready'),
   readyCount: document.getElementById('ready-count'),
+  byTier: document.getElementById('by-tier'),
   bySubject: document.getElementById('by-subject'),
   soon: document.getElementById('soon'),
   soonShelf: document.getElementById('soon-shelf'),
@@ -124,11 +125,13 @@ const COVERS = EDGlyphs.covers(GAMES);
 function tile(game) {
   const soon = game.status !== 'ready';
   const cover = COVERS.get(game.id);
+  const locked = !EDAuth.canPlay(game);
   const li = document.createElement('li');
   li.innerHTML = `
-    <a class="tile" href="${gameHref(game)}" data-subject="${game.subject}" data-status="${game.status}">
+    <a class="tile" href="${gameHref(game)}" data-subject="${game.subject}" data-status="${game.status}"${locked ? ` data-locked="${game.id}"` : ''}>
       <div class="cover${EDCovers.has(game.id) ? ' cover--art' : ''}" data-variant="${cover.variant}" data-tone="${cover.tone}">
         ${EDCovers.has(game.id) ? EDCovers.art(game.id) : `${EDGlyphs.mark(game.subject, 'mark ghost')}${EDScenes.picture(game)}`}
+        ${locked ? `<span class="lock-pill">${EDGlyphs.icon('lock')}${EDLang.pick(tierById(gameTier(game)).name)}</span>` : ''}
       </div>
       <h3>${EDLang.pick(game.title)}</h3>
       <div class="meta">${EDLang.t('card.age')} <span class="num">${game.ageMin}–${game.ageMax}</span>${soon ? ` · ${EDLang.t('card.soon')}` : ''}</div>
@@ -186,13 +189,24 @@ function buildContinue() {
 function buildBrowse() {
   buildContinue();
 
-  const ready = GAMES.filter((g) => g.status === 'ready');
-  els.ready.append(...ready.map(tile));
+  /* What this visitor can open, the games their plan added first, so paying for
+     something does not bury it at the end of a long row. */
+  const finished = GAMES.filter((g) => g.status === 'ready');
+  const ready = finished.filter(EDAuth.canPlay)
+    .sort((a, b) => tierRank(gameTier(b)) - tierRank(gameTier(a)));
+  els.ready.replaceChildren(...ready.map(tile));
   els.readyCount.textContent = gameCount(ready.length);
+
+  /* One row per plan still to come, each one a look at what is behind it. */
+  els.byTier.replaceChildren(...PLAN_IDS
+    .map((id) => ({ tier: tierById(id), games: finished.filter((g) => gameTier(g) === id && !EDAuth.canPlay(g)) }))
+    .filter(({ games }) => games.length)
+    .map(({ tier, games }) => shelf(EDLang.t('browse.tier').replace('{plan}', EDLang.pick(tier.name)), gameCount(games.length), games)));
 
   /* One row per subject that has something finished behind it — a row of one
      tile looks broken, so a subject with a single ready game rides in the row
      above and does not get a row of its own. */
+  els.bySubject.replaceChildren();
   SUBJECTS
     .map((s) => ({ s, games: ready.filter((g) => g.subject === s.id) }))
     .filter(({ games }) => games.length > 1)
@@ -203,8 +217,39 @@ function buildBrowse() {
   /* The shelf follows the list: a "coming soon" heading with nothing under it
      says the section is broken, not that the work is done. */
   const soon = GAMES.filter((g) => g.status !== 'ready');
-  els.soon.append(...soon.map(soonItem));
+  els.soon.replaceChildren(...soon.map(soonItem));
   els.soonShelf.hidden = soon.length === 0;
+}
+
+/* ---- Locked games and the account button ---- */
+
+function nextUrl(view, game) {
+  const q = new URLSearchParams({ view, plan: gameTier(game), next: game.id });
+  EDLang.stamp(q);
+  return `account.html?${q}`;
+}
+
+function openLock(game) {
+  const tier = tierById(gameTier(game));
+  const dialog = document.getElementById('lock-dialog');
+  const signedIn = Boolean(EDAuth.user());
+  document.getElementById('lock-cover').innerHTML = EDCovers.has(game.id) ? EDCovers.art(game.id) : EDScenes.picture(game);
+  document.getElementById('lock-title').textContent = EDLang.t('lock.title').replace('{plan}', EDLang.pick(tier.name));
+  document.getElementById('lock-text').textContent = EDLang.t('lock.text');
+  const go = document.getElementById('lock-go');
+  go.textContent = EDLang.t(signedIn ? 'lock.upgrade' : 'lock.signup');
+  go.href = nextUrl(signedIn ? 'account' : 'signup', game);
+  dialog.showModal();
+}
+
+function drawAccountChip() {
+  const chip = document.getElementById('account-chip');
+  const account = EDAuth.user();
+  const label = account ? EDLang.pick(tierById(EDAuth.plan()).name) : EDLang.t('account.login');
+  chip.innerHTML = `${EDGlyphs.icon('user')}<span>${label}</span>`;
+  chip.setAttribute('aria-label', account ? `${EDLang.t('account.mine')}: ${label}` : label);
+  const q = EDLang.stamp(new URLSearchParams(account ? {} : { view: 'login' })).toString();
+  chip.href = q ? `account.html?${q}` : 'account.html';
 }
 
 /* ---- Chips ---- */
@@ -324,6 +369,16 @@ function clearAll() {
 }
 
 document.addEventListener('click', (e) => {
+  /* A plain press on a locked tile. This listener is added before the game
+     layer's (player.js), which leaves a prevented click alone. A press with a
+     modifier opens a new tab, where the game page itself says it is locked. */
+  const locked = e.target.closest('a[data-locked]');
+  if (locked && !(e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) {
+    e.preventDefault();
+    return openLock(gameById(locked.dataset.locked));
+  }
+  if (e.target.closest('#lock-close')) return document.getElementById('lock-dialog').close();
+
   const c = e.target.closest('.chip[data-group]');
   if (c) return toggle(c.dataset.group, c.dataset.id);
 
@@ -353,6 +408,7 @@ els.q.addEventListener('input', () => {
 
 EDLang.applyStatic();
 EDLang.mountToggle();
+drawAccountChip();
 buildChips();
 buildBrowse();
 readUrl();
@@ -364,3 +420,13 @@ render();
 
 /* The game layer refreshes the carry-on card when a game is put away. */
 window.EDApp = { refreshContinue: buildContinue };
+
+/* The plan on this device may be out of date: changed on another device, or
+   signed out everywhere by a password reset. */
+EDAuth.markEntered();
+EDAuth.refresh().then((changed) => {
+  if (!changed) return;
+  drawAccountChip();
+  buildBrowse();
+  render();
+});

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>תנאי שימוש — הגנון של עלמון</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/pages.css">
+<script src="assets/i18n.js"></script>
+</head>
+<body class="page">
+
+<script src="assets/glyphs.js"></script>
+<script>EDGlyphs.inject();</script>
+
+<header class="appbar">
+  <div class="appbar-in">
+    <a id="logo" href="index.html?home=1"><img class="avatar" src="favicon.svg" alt="" width="44" height="44"></a>
+    <div class="brand" data-i18n="brand.name">הגנון של עלמון</div>
+    <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
+  </div>
+</header>
+
+<main class="legal">
+<section data-doc="he">
+<h1>תנאי שימוש</h1>
+<p class="updated">עודכן לאחרונה: 30 באוקטובר 2026</p>
+<h2>השירות</h2>
+<p>הגנון של עלמון הוא אוסף משחקים לימודיים לילדים. חלק מהמשחקים פתוחים לכולם, וחלק דורשים חשבון ומסלול.</p>
+<h2>החשבון</h2>
+<p>חשבון פותח אדם מעל גיל 18 בלבד, הורה או אפוטרופוס. אתם אחראים לשמור על הסיסמה ולשימוש שנעשה בחשבון.</p>
+<h2>מסלולים ותקופת ההשקה</h2>
+<p>בתקופת ההשקה כל המסלולים ניתנים ללא תשלום. לפני שמסלול בתשלום יתחיל לעלות כסף תקבלו על כך הודעה מראש, ושום חיוב לא ייגבה בלי שתאשרו אותו ותמסרו אמצעי תשלום. מי שלא יאשר יעבור למסלול חינם. המשחקים והחלוקה שלהם למסלולים עשויים להשתנות.</p>
+<h2>שימוש מותר</h2>
+<p>השימוש הוא אישי ולא מסחרי. המשחקים, הציורים וההקלטות שייכים לאתר או לבעלי הזכויות בהם, ואין להעתיק אותם למטרה מסחרית.</p>
+<h2>אחריות</h2>
+<p>האתר ניתן כפי שהוא. אנו משתדלים שיעבוד היטב אך לא מתחייבים שלא יהיו בו תקלות, וייתכנו שינויים או הפסקות. משחקים מיועדים לשימוש בליווי מבוגר.</p>
+<h2>סיום</h2>
+<p>אפשר למחוק את החשבון בכל רגע מעמוד החשבון. נוכל לסגור חשבון שנעשה בו שימוש לרעה.</p>
+<h2>יצירת קשר</h2>
+<p><a href="mailto:almon.cohel@gmail.com">almon.cohel@gmail.com</a>. על התנאים חל הדין הישראלי.</p>
+</section>
+<section data-doc="en" hidden dir="ltr">
+<h1>Terms of use</h1>
+<p class="updated">Last updated: 30 October 2026</p>
+<h2>The service</h2>
+<p>EDgames is a collection of educational games for children. Some games are open to everyone and some need an account and a plan.</p>
+<h2>Your account</h2>
+<p>Only a person over 18, a parent or guardian, may open an account. You are responsible for keeping the password safe and for what is done with the account.</p>
+<h2>Plans and the launch period</h2>
+<p>During the launch all plans are free. Before a paid plan starts to cost money you will be told in advance, and nothing will be charged unless you confirm it and give a means of payment. Anyone who does not confirm moves to the Free plan. The games, and how they are divided between the plans, may change.</p>
+<h2>Permitted use</h2>
+<p>Use is personal and non-commercial. The games, drawings and recordings belong to the site or to their rights holders and may not be copied for commercial purposes.</p>
+<h2>Liability</h2>
+<p>The site is provided as it is. We try to make it work well but do not promise it will be free of faults, and it may change or pause. The games are meant to be used with an adult nearby.</p>
+<h2>Ending</h2>
+<p>You can delete your account at any moment from the account page. We may close an account that is being misused.</p>
+<h2>Contact</h2>
+<p><a href="mailto:almon.cohel@gmail.com">almon.cohel@gmail.com</a>. Israeli law applies to these terms.</p>
+</section>
+</main>
+
+<script>
+  EDLang.applyStatic();
+  EDLang.mountToggle();
+  document.querySelectorAll('[data-doc]').forEach((s) => { s.hidden = s.dataset.doc !== EDLang.current; });
+  document.title = `${document.querySelector('[data-doc]:not([hidden]) h1').textContent} — ${EDLang.t('brand.name')}`;
+  document.getElementById('logo').href = EDLang.current === 'en' ? 'index.html?home=1&lang=en' : 'index.html?home=1';
+</script>
+</body>
+</html>

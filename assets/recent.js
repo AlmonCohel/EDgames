@@ -6,7 +6,7 @@
    a made-up "continue" is worse than no card at all, and that is exactly what
    hiding it when there is nothing to carry on with means.
 
-   Written by game.html, read by index.html, which is why it is its own file. */
+   Written by game.html, read by play.html, which is why it is its own file. */
 
 const RECENT_KEY = 'edgames-last-played';
 
@@ -26,10 +26,11 @@ const EDRecent = {
   },
 
   /* The catalog is the authority: an id from an older visit whose game has
-     since been renamed, or gone back to being built, is not offered. */
+     since been renamed, or gone back to being built, is not offered. Nor is one
+     this visitor can no longer open, after signing out or changing plan. */
   game() {
     const [id, setId] = (this.read() || '').split('|');
     const g = gameById(id);
-    return g && g.status === 'ready' ? { ...g, lastSetId: setId } : null;
+    return g && g.status === 'ready' && EDAuth.canPlay(g) ? { ...g, lastSetId: setId } : null;
   },
 };

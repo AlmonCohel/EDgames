@@ -94,7 +94,43 @@
 
     'bigsmall-ask': 'מִצְאוּ אֶת הָאוֹת הַקְּטַנָּה שֶׁל',
     'cat-ask': 'אֵיזוֹ אוֹת חֲסֵרָה בַּזַּחַל?',
+
+    'bubbles-ask': 'מְפוֹצְצִים אֶת הַבּוּעוֹת לְפִי הַסֵּדֶר',
+    'bubbles-back': 'סוֹפְרִים אָחוֹרָה וּמְפוֹצְצִים',
+    'odd-ask': 'מִי לֹא שַׁיָּךְ?',
+    'sort-ask': 'לְאֵיזֶה סַל זֶה הוֹלֵךְ?',
+
+    'pizza-ask': 'הַזְמָנָה חֲדָשָׁה:',
+    'pizza-more': 'חָסֵר עוֹד מַשֶּׁהוּ בַּפִּיצָה',
+    'pizza-less': 'יֵשׁ יוֹתֵר מִדַּי. לוֹחֲצִים עַל תּוֹסֶפֶת כְּדֵי לְהוֹרִיד אוֹתָהּ',
+    'pizza-yum': 'תּוֹדָה! אֵיזוֹ פִּיצָה טְעִימָה!',
+    'robot-ask': 'בּוֹנִים דֶּרֶךְ לַסּוֹלְלָה בְּחִצִּים, וְאָז מַפְעִילִים',
+    'robot-bump': 'אוֹי! הָרוֹבּוֹט לֹא הִגִּיעַ. מְתַקְּנִים אֶת הַתָּכְנִית וּמְנַסִּים שׁוּב',
+    'robot-win': 'הִצְלַחְתֶּם! הָרוֹבּוֹט מָצָא אֶת הַסּוֹלְלָה!',
+    'lab-ask': 'מְעַרְבְּבִים שְׁנֵי צְבָעִים כְּדֵי לְקַבֵּל',
+    'lab-oops': 'יָצָא צֶבַע אַחֵר. מְנַסִּים שְׁנֵי צְבָעִים אֲחֵרִים',
+    'color-lightblue': 'תְּכֵלֶת', 'color-gray': 'אָפֹר',
+
+    'words-ask': 'מַקְשִׁיבִים וּמוֹצְאִים אֶת הַתְּמוּנָה',
+    'ten-ask-5': 'כַּמָּה עוֹד צָרִיךְ כְּדֵי לְהַגִּיעַ לְחָמֵשׁ?',
+    'ten-ask-10': 'כַּמָּה עוֹד צָרִיךְ כְּדֵי לְהַגִּיעַ לְעֶשֶׂר?',
+    'ten-sum': 'כַּמָּה זֶה בְּיַחַד?',
+    'next-ask': 'מָה בָּא עַכְשָׁו?',
+    'next-num': 'מָה הַמִּסְפָּר הַבָּא?',
+    'next-board': 'מָה חָסֵר בַּמִּשְׁבֶּצֶת?',
   };
+
+  /* A pizza order, spelled out because Hebrew numbers change with what they count. */
+  const HE_ORDER = {
+    mushroom: ['פִּטְרִיָּה אַחַת', 'פִּטְרִיּוֹת'],
+    tomato: ['עַגְבָנִיָּה אַחַת', 'עַגְבָנִיּוֹת'],
+    cheese: ['חֲתִיכַת גְּבִינָה אַחַת', 'חֲתִיכוֹת גְּבִינָה'],
+  };
+  const HE_F = { 2: 'שְׁתֵּי', 3: 'שָׁלוֹשׁ', 4: 'אַרְבַּע', 5: 'חָמֵשׁ' };
+  Object.entries(HE_ORDER).forEach(([k, [one, many]]) => {
+    he[`pizza-${k}-1`] = one;
+    Object.entries(HE_F).forEach(([n, w]) => { he[`pizza-${k}-${n}`] = `${w} ${many}`; });
+  });
 
   const en = {
     'praise-1': 'Well done!', 'praise-2': 'Great job!', 'praise-3': 'Excellent!', 'praise-4': 'Wonderful!',
@@ -146,7 +182,45 @@
 
     'bigsmall-ask': 'Find the small letter for',
     'cat-ask': 'Which letter is missing from the caterpillar?',
+
+    'bubbles-ask': 'Pop the bubbles in order',
+    'bubbles-back': 'Count backwards and pop',
+    'odd-ask': 'Who does not belong?',
+    'sort-ask': 'Which basket does it go in?',
+
+    'pizza-ask': 'A new order:',
+    'pizza-more': 'Something is still missing from the pizza',
+    'pizza-less': 'Too many. Tap a topping to take it off',
+    'pizza-yum': 'Thank you! What a tasty pizza!',
+    'robot-ask': 'Plan a way to the battery with the arrows, then run it',
+    'robot-bump': 'Oh! The robot did not get there. Fix the plan and try again',
+    'robot-win': 'You did it! The robot found the battery!',
+    'lab-ask': 'Mix two colours to make',
+    'lab-oops': 'That made another colour. Try two different ones',
+    'color-lightblue': 'Light blue', 'color-gray': 'Grey',
+
+    'words-ask': 'Listen and find the picture',
+    'ten-ask-5': 'How many more to make five?',
+    'ten-ask-10': 'How many more to make ten?',
+    'ten-sum': 'How many altogether?',
+    'next-ask': 'What comes next?',
+    'next-num': 'What is the next number?',
+    'next-board': 'What is missing from the square?',
   };
+
+  /* English words are said in English, on the Hebrew page too. */
+  ['dog', 'cat', 'fish', 'bird', 'horse', 'cow', 'duck', 'frog',
+    'apple', 'banana', 'bread', 'milk', 'egg', 'cake', 'cheese', 'water',
+    'ball', 'book', 'car', 'house', 'tree', 'sun', 'star', 'key'].forEach((w) => { en[`word-${w}`] = w; });
+
+  const EN_ORDER = {
+    mushroom: ['mushroom', 'mushrooms'],
+    tomato: ['tomato', 'tomatoes'],
+    cheese: ['piece of cheese', 'pieces of cheese'],
+  };
+  Object.entries(EN_ORDER).forEach(([k, [one, many]]) => {
+    for (let n = 1; n <= 5; n += 1) en[`pizza-${k}-${n}`] = `${EN_NUM[n]} ${n === 1 ? one : many}`;
+  });
 
   const COLOURS = { pink: 'pink', purple: 'purple', blue: 'blue', yellow: 'yellow', green: 'green', red: 'red', orange: 'orange' };
   Object.keys(COLOURS).forEach((c) => {

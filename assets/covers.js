@@ -570,6 +570,117 @@ const EDCovers = (() => {
       <path d="M164 118q8 6 16 0" stroke="#1e2a44" stroke-width="2.5" fill="none" stroke-linecap="round"/>
       <path d="M162 88l-6-16M180 88l6-16" stroke="#1e2a44" stroke-width="3" stroke-linecap="round"/>
       <circle cx="156" cy="72" r="4" fill="#1e2a44"/><circle cx="186" cy="72" r="4" fill="#1e2a44"/>`,
+
+    /* Numbered bubbles rising through the water. */
+    'bubble-count': () => `
+      ${bg('cv-water')}
+      ${[[56, 142, 34, '1'], [136, 118, 30, '2'], [70, 66, 26, '3'], [150, 46, 20, '4']].map(([x, y, r, n]) => `
+        <circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".28" stroke="#fff" stroke-width="3"/>
+        ${gloss(x - r * .35, y - r * .4, r * .32, r * .2)}
+        <text x="${x}" y="${y + r * .42}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="${r * 1.2}" fill="#fff">${n}</text>`).join('')}
+      <circle cx="28" cy="52" r="7" fill="#fff" opacity=".35"/><circle cx="108" cy="30" r="5" fill="#fff" opacity=".35"/><circle cx="178" cy="150" r="8" fill="#fff" opacity=".35"/>`,
+
+    /* Three apples and a car, with a question mark over the car. */
+    'odd-one-out': () => `
+      ${bg('cv-sunny')}
+      ${[[56, 58], [144, 58], [56, 146]].map(([x, y]) => `
+        ${shadow(x, y + 30, 30)}
+        <path d="M${x} ${y - 16}c-14-12-34-2-32 18 2 22 18 32 32 25 14 7 30-3 32-25 2-20-18-30-32-18z" fill="#ec3b3b"/>
+        ${gloss(x - 13, y - 6, 8, 12)}
+        <path d="M${x} ${y - 16}q2-12 11-15" stroke="#6b3e13" stroke-width="4" fill="none" stroke-linecap="round"/>`).join('')}
+      <circle cx="144" cy="146" r="42" fill="#fff" stroke="#e8621c" stroke-width="5" stroke-dasharray="9 7"/>
+      <rect x="112" y="142" width="64" height="20" rx="8" fill="#2f6ae8"/>
+      <path d="M122 142l9-15h26l10 15z" fill="#7cb0ff"/>
+      <circle cx="127" cy="164" r="7" fill="#1e2a44"/><circle cx="161" cy="164" r="7" fill="#1e2a44"/>`,
+
+    /* Two baskets, and what goes in each: an apple, a ball. */
+    'sort-baskets': () => `
+      ${bg('cv-mint')}
+      ${[[54, '#d79a52'], [146, '#c4843c']].map(([x, c]) => `
+        ${shadow(x, 180, 42)}
+        <path d="M${x - 40} 112h80l-9 58c-1 6-5 9-11 9h-40c-6 0-10-3-11-9z" fill="${c}"/>
+        <path d="M${x - 37} 130h74M${x - 34} 150h68M${x - 16} 112v66M${x + 16} 112v66" stroke="#9c6426" stroke-width="3"/>
+        <rect x="${x - 44}" y="104" width="88" height="12" rx="6" fill="#a86d38"/>`).join('')}
+      <circle cx="54" cy="76" r="24" fill="#ec3b3b"/>${gloss(46, 68, 7, 10)}
+      <path d="M54 52q2-10 11-13" stroke="#6b3e13" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="146" cy="76" r="24" fill="#2f6ae8"/>
+      <path d="M124 68q22 10 44 0M124 86q22-10 44 0" stroke="#fff" stroke-width="5" fill="none"/>${gloss(138, 66, 6, 8)}`,
+
+    /* A pizza with its toppings on a wooden board. */
+    'pizza-shop': () => `
+      ${bg('cv-wood')}
+      ${shadow(100, 170, 78)}
+      <circle cx="100" cy="100" r="78" fill="#d98b34"/>
+      <circle cx="100" cy="100" r="66" fill="#f9d976"/>
+      <path d="M40 92a60 60 0 0 1 112-22" stroke="#f3b94d" stroke-width="6" fill="none" opacity=".7"/>
+      ${[[72, 72], [130, 84], [90, 132], [140, 134]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="13" fill="#e53935"/><circle cx="${x - 4}" cy="${y - 4}" r="3.5" fill="#fff" opacity=".5"/>`).join('')}
+      ${[[104, 58], [62, 118], [116, 108]].map(([x, y]) => `<path d="M${x - 13} ${y}a13 12 0 0 1 26 0z" fill="#efe4d3" stroke="#c7b39a" stroke-width="2"/><rect x="${x - 5}" y="${y}" width="10" height="10" rx="3" fill="#efe4d3" stroke="#c7b39a" stroke-width="2"/>`).join('')}`,
+
+    /* A robot on a grid, a battery at the end of a dotted path. */
+    'robot-code': () => `
+      ${bg('cv-desk')}
+      <g stroke="#fff" stroke-opacity=".55" stroke-width="3">${[40, 80, 120, 160].map((v) => `<path d="M${v} 0v200M0 ${v}h200"/>`).join('')}</g>
+      <path d="M60 148h80V60" stroke="#ffd23f" stroke-width="7" fill="none" stroke-dasharray="4 14" stroke-linecap="round"/>
+      ${shadow(60, 182, 30)}
+      <rect x="33" y="118" width="54" height="50" rx="12" fill="#e9eef6" stroke="#52607c" stroke-width="4"/>
+      <circle cx="50" cy="140" r="7" fill="#2f6ae8"/><circle cx="70" cy="140" r="7" fill="#2f6ae8"/>
+      <path d="M49 156h22" stroke="#52607c" stroke-width="4" stroke-linecap="round"/>
+      <path d="M60 118v-12" stroke="#52607c" stroke-width="4"/><circle cx="60" cy="102" r="6" fill="#e8621c"/>
+      <rect x="39" y="168" width="14" height="12" rx="3" fill="#52607c"/><rect x="67" y="168" width="14" height="12" rx="3" fill="#52607c"/>
+      <rect x="116" y="26" width="48" height="26" rx="6" fill="#1c9a57" transform="rotate(90 140 39)"/>
+      <rect x="134" y="4" width="12" height="7" rx="2" fill="#13733f"/>
+      <path d="M143 24l-9 15h7l-3 13 10-17h-7z" fill="#fff"/>`,
+
+    /* A flask with two pots pouring into it. */
+    'color-lab': () => `
+      ${bg('cv-lav')}
+      ${shadow(100, 186, 56)}
+      <path d="M80 54v44L44 158c-7 13 2 26 16 26h80c14 0 23-13 16-26l-36-60V54z" fill="#fff" fill-opacity=".85" stroke="#6b7a99" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M68 118h64l22 42c4 9-2 19-13 19H59c-11 0-17-10-13-19z" fill="#43a047"/>
+      <circle cx="82" cy="146" r="6" fill="#fff" opacity=".5"/><circle cx="116" cy="158" r="4" fill="#fff" opacity=".5"/>
+      <rect x="72" y="42" width="56" height="13" rx="6" fill="#6b7a99"/>
+      <circle cx="42" cy="46" r="24" fill="#fdd835" stroke="#fff" stroke-width="4"/>
+      <circle cx="158" cy="46" r="24" fill="#1e88e5" stroke="#fff" stroke-width="4"/>
+      <path d="M64 58q14 6 24 24M136 58q-14 6-24 24" stroke="#1e2a44" stroke-width="4" fill="none" stroke-linecap="round" opacity=".55"/>`,
+
+    /* A speech bubble saying "dog", and the dog. */
+    'english-words': () => `
+      ${bg('cv-pink')}
+      <path d="M26 24h148a14 14 0 0 1 14 14v56a14 14 0 0 1-14 14H86l-30 26v-26H26a14 14 0 0 1-14-14V38a14 14 0 0 1 14-14z" fill="#fff"/>
+      <text x="100" y="86" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="52" fill="#d9416a">dog</text>
+      ${shadow(126, 188, 44)}
+      <path d="M92 158c0-26 14-40 34-40s34 14 34 40c0 18-14 28-34 28s-34-10-34-28z" fill="#c98a4b"/>
+      <path d="M88 122c-14 2-18 24-8 36 10-6 14-20 12-36zM164 122c14 2 18 24 8 36-10-6-14-20-12-36z" fill="#8d5a2b"/>
+      ${eye(112, 148, 4.5)}${eye(140, 148, 4.5)}
+      <ellipse cx="126" cy="164" rx="9" ry="6.5" fill="#1e2a44"/>`,
+
+    /* A ten frame, seven dots in it and three to come. */
+    'make-ten': () => `
+      ${bg('cv-sky')}
+      ${shadow(100, 172, 90, 10)}
+      <rect x="10" y="48" width="180" height="112" rx="16" fill="#1e2a44"/>
+      ${Array.from({ length: 10 }, (_, i) => {
+        const x = 18 + (i % 5) * 33.5;
+        const y = 56 + Math.floor(i / 5) * 49;
+        return `<rect x="${x}" y="${y}" width="30" height="46" rx="6" fill="#fff"/>${i < 7 ? `<circle cx="${x + 15}" cy="${y + 23}" r="12" fill="#2583c9"/>` : `<circle cx="${x + 15}" cy="${y + 23}" r="11" fill="none" stroke="#f5a623" stroke-width="3" stroke-dasharray="4 4"/>`}`;
+      }).join('')}
+      <text x="100" y="36" text-anchor="middle" direction="ltr" unicode-bidi="bidi-override" font-family="Fredoka, sans-serif" font-weight="700" font-size="30" fill="#1e2a44">7 + ? = 10</text>`,
+
+    /* A row of shapes with the last one missing, and a bulb. */
+    'what-next': () => `
+      ${bg('cv-night')}
+      ${sparkle(30, 30, 8)}${sparkle(170, 38, 6)}
+      <g transform="translate(100 70)">
+        <path d="M-30 18c0-10-14-16-14-34a44 44 0 0 1 88 0c0 18-14 24-14 34z" fill="#ffd23f" transform="translate(-14 0) scale(.9)"/>
+        <rect x="-26" y="20" width="26" height="9" rx="4" fill="#c7cede"/><rect x="-23" y="31" width="20" height="7" rx="3.5" fill="#c7cede"/>
+      </g>
+      <g transform="translate(0 112)">
+        <circle cx="30" cy="42" r="19" fill="#e53935"/>
+        <rect x="58" y="24" width="36" height="36" rx="5" fill="#1e88e5"/>
+        <circle cx="124" cy="42" r="19" fill="#e53935"/>
+        <rect x="150" y="22" width="40" height="40" rx="8" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="7 6"/>
+        <text x="170" y="53" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="30" fill="#fff">?</text>
+      </g>`,
   };
 
   const has = (id) => Boolean(ART[id]);

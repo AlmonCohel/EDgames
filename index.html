@@ -3,23 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-i18n="site.title">הגנון של עלמון — משחקים לימודיים לילדים</title>
+<title data-i18n="landing.title">הגנון של עלמון — משחקים לימודיים לילדים בגיל 3 עד 8</title>
 <meta name="description" data-i18n-content="site.description" content="אוסף משחקים לימודיים קטנים לילדים בגיל 3 עד 8. אפשר לסנן לפי גיל ולפי נושא ולבחור משחק.">
-<meta name="theme-color" content="#f4f5f7">
-<!-- The site's own mark, not the machine's: the same drawn shapes glyph the
-     cards use, so the tab matches the page it opens. -->
+<meta name="theme-color" content="#ffffff">
+<script>
+/* The landing page shows until a visitor has chosen once. After that a child
+   opening the site goes straight to the games (the logo there comes back here).
+   Older links into the games, with a filter or an open game, always went to the
+   home screen and still do. */
+(function () {
+  const p = new URLSearchParams(location.search);
+  const deep = p.has('age') || p.has('subject') || p.has('q') || location.hash.startsWith('#play=');
+  let entered = false;
+  try { entered = localStorage.getItem('edgames-entered') === '1'; } catch { /* then it shows */ }
+  if (deep || (entered && !p.has('home'))) location.replace('play.html' + location.search + location.hash);
+})();
+</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
-<!-- Sets lang and dir before the first paint, so an English visit never flashes RTL. -->
+<link rel="stylesheet" href="assets/pages.css">
 <script src="assets/i18n.js"></script>
 </head>
-<body class="app">
+<body class="page landing">
 
-<!-- The drawings go in before any markup that references them, so every <use>
-     below resolves as the page is parsed rather than after it. -->
 <script src="assets/glyphs.js"></script>
 <script src="assets/scenes.js"></script>
 <script src="assets/covers.js"></script>
@@ -28,112 +37,53 @@
 <header class="appbar">
   <div class="appbar-in">
     <img class="avatar" src="favicon.svg" alt="" width="44" height="44">
-    <div class="hello">
-      <h1 class="small" data-i18n="brand.name">הגנון של עלמון</h1>
-      <div class="big" data-i18n="appbar.greeting">מה משחקים היום?</div>
-    </div>
-    <button type="button" class="chip sound-toggle" id="sound-toggle"></button>
+    <div class="brand" data-i18n="brand.name">הגנון של עלמון</div>
     <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
+    <a class="chip" id="top-login" href="account.html?view=login" data-i18n="account.login">כניסה</a>
   </div>
 </header>
 
-<div class="shell">
-
-  <nav class="tabs" data-i18n-label="nav.label" aria-label="ניווט">
-    <button type="button" class="tab" id="tab-home" aria-current="page">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-home"/></svg>
-      <span data-i18n="tabs.home">בית</span>
-    </button>
-    <button type="button" class="tab" id="tab-age" aria-expanded="false" aria-controls="age-sheet">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-age"/></svg>
-      <span data-i18n="tabs.age">לפי גיל</span>
-    </button>
-    <button type="button" class="tab" id="tab-search" aria-expanded="false" aria-controls="search-sheet">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
-      <span data-i18n="tabs.search">חיפוש</span>
-    </button>
-  </nav>
-
-  <main class="content">
-
-    <div class="rail" id="subject-rail" role="group" data-i18n-label="filters.subject" aria-label="נושא"></div>
-
-    <div class="sheet" id="age-sheet" hidden>
-      <span class="sheet-label" id="age-label" data-i18n="filters.age">גיל</span>
-      <div class="sheet-row" id="age-chips" role="group" aria-labelledby="age-label"></div>
-    </div>
-
-    <div class="sheet" id="search-sheet" hidden>
-      <div class="sheet-row">
-        <div class="search">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
-          <label class="visually-hidden" for="q" data-i18n="search.label">חיפוש משחק</label>
-          <input id="q" type="search" data-i18n-placeholder="search.placeholder" placeholder="איזה משחק מחפשים?" autocomplete="off">
-        </div>
+<main>
+  <section class="hero">
+    <div class="hero-text">
+      <p class="kicker" data-i18n="landing.kicker">משחקים לילדים בגיל 3 עד 8</p>
+      <h1 data-i18n="landing.headline">משחקים שילדים אוהבים, ושמלמדים אותם משהו</h1>
+      <p class="lede" data-i18n="landing.lede"></p>
+      <div class="hero-actions">
+        <a class="btn btn--big" id="cta-signup" href="account.html?view=signup" data-i18n="landing.signup">פותחים חשבון</a>
+        <a class="btn btn--big btn--ghost" id="cta-guest" href="play.html" data-i18n="landing.guest">משחקים בלי חשבון</a>
       </div>
+      <p class="hero-note"><span id="guest-note"></span> <a id="cta-login" href="account.html?view=login" data-i18n="landing.login">כבר יש לנו חשבון</a></p>
     </div>
+    <div class="hero-art" id="hero-art" aria-hidden="true"></div>
+  </section>
 
-    <!-- Shown only while something is filtered, which is also the only time
-         there is anything to clear. -->
-    <div class="result-bar" id="result-bar" hidden>
-      <p class="result-line" role="status" aria-live="polite" id="result-line"></p>
-      <button type="button" class="chip chip--clear" id="clear" data-i18n="filters.clear" hidden>נקה סינון ✕</button>
+  <section class="plans-wrap" id="plans">
+    <h2 data-i18n="landing.plansTitle">איזה מסלול מתאים לכם?</h2>
+    <p class="section-lede" data-i18n="landing.plansLede"></p>
+    <div class="plans" id="plan-cards"></div>
+  </section>
+
+  <section class="why-wrap">
+    <h2 data-i18n="landing.parentsTitle">מה חשוב לדעת</h2>
+    <div class="why">
+      <div><h3 data-i18n="landing.why1h"></h3><p data-i18n="landing.why1"></p></div>
+      <div><h3 data-i18n="landing.why2h"></h3><p data-i18n="landing.why2"></p></div>
+      <div><h3 data-i18n="landing.why3h"></h3><p data-i18n="landing.why3"></p></div>
+      <div><h3 data-i18n="landing.why4h"></h3><p data-i18n="landing.why4"></p></div>
     </div>
+  </section>
+</main>
 
-    <!-- Browse: the shelves, shown while nothing is filtered. -->
-    <div class="browse" id="browse">
-      <section class="shelf" id="continue-shelf" hidden>
-        <div class="head"><h2 data-i18n="browse.continue">ממשיכים מאיפה שהפסקנו</h2></div>
-        <div id="continue"></div>
-      </section>
-
-      <section class="shelf">
-        <div class="head">
-          <h2 data-i18n="browse.ready">אפשר לשחק עכשיו</h2>
-          <span class="more" id="ready-count"></span>
-        </div>
-        <ul class="row" id="ready"></ul>
-      </section>
-
-      <div id="by-subject"></div>
-
-      <!-- Shown only while something is still being built. Every game in the
-           catalog is finished at the moment, and a heading over an empty list
-           reads as a section that failed to load. -->
-      <section class="shelf" id="soon-shelf" hidden>
-        <div class="head">
-          <h2 data-i18n="browse.soon">בקרוב</h2>
-          <span class="more" data-i18n="browse.soonMore">עוד נבנים</span>
-        </div>
-        <ul class="list" id="soon"></ul>
-      </section>
-    </div>
-
-    <!-- Results: the same tiles, laid flat, shown the moment anything is filtered. -->
-    <ul class="tiles" id="grid" hidden></ul>
-
-    <div class="empty" id="empty" hidden>
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
-      <h2 data-i18n="empty.title">לא מצאנו משחק כזה</h2>
-      <p data-i18n="empty.text">אפשר לנסות גיל אחר או נושא אחר.</p>
-      <button type="button" class="btn" data-clear data-i18n="empty.action">הצג את כל המשחקים</button>
-    </div>
-
-    <footer class="site-footer" data-i18n="footer">
-      נבנה באהבה לילדים סקרנים 💛
-    </footer>
-
-  </main>
-
-</div>
+<footer class="page-footer">
+  <a id="foot-games" href="play.html" data-i18n="landing.footerGames">למשחקים</a>
+  <a id="foot-privacy" href="privacy.html" data-i18n="legal.privacy">פרטיות</a>
+  <a id="foot-terms" href="terms.html" data-i18n="legal.terms">תנאי שימוש</a>
+</footer>
 
 <script src="assets/catalog.js"></script>
-<script src="assets/recent.js"></script>
-<script src="assets/app.js"></script>
-<!-- The site's tune (home screen only) and tap sounds, with the switch in the app bar. -->
-<script src="assets/music.js"></script>
-<script>EDMusic.init({ music: true });</script>
-<!-- Games open in a layer over this page and stay alive behind it. -->
-<script src="assets/player.js"></script>
+<script src="assets/tiers.js"></script>
+<script src="assets/auth.js"></script>
+<script src="assets/landing.js"></script>
 </body>
 </html>

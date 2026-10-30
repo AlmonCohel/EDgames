@@ -47,7 +47,7 @@ window.EDHost = (() => {
    drop the child into Hebrew. */
 const gridHref = (() => {
   const qs = EDLang.stamp(new URLSearchParams()).toString();
-  return qs ? `index.html?${qs}` : 'index.html';
+  return qs ? `play.html?${qs}` : 'play.html';
 })();
 
 back.href = gridHref;
@@ -68,7 +68,7 @@ back.addEventListener('click', (e) => {
 
 /* The "all games" links on the notes below lead out the same way. */
 document.addEventListener('click', (e) => {
-  if (embedded && !e.defaultPrevented && e.target.closest('a[href^="index.html"]')) {
+  if (embedded && !e.defaultPrevented && e.target.closest('a[href^="play.html"]')) {
     e.preventDefault();
     leave();
   }
@@ -81,6 +81,22 @@ function note(emoji, heading, text, action) {
       <h2>${heading}</h2>
       <p>${text}</p>
       ${action ? `<a class="btn" href="${gridHref}">${action}</a>` : ''}
+    </div>`;
+}
+
+/* A locked game opened by its address, or by a reload after a change of plan.
+   Leaves the home screen's layer, because signing up is not a thing to do in a
+   frame the back button closes. */
+function lockedNote(game) {
+  const tier = tierById(gameTier(game));
+  const q = new URLSearchParams({ view: EDAuth.user() ? 'account' : 'signup', plan: tier.id, next: game.id });
+  EDLang.stamp(q);
+  stage.innerHTML = `
+    <div class="stage-note">
+      <div class="emoji" aria-hidden="true">🔒</div>
+      <h2>${EDLang.t('lock.title').replace('{plan}', EDLang.pick(tier.name))}</h2>
+      <p>${EDLang.t('lock.text')}</p>
+      <a class="btn" target="_top" href="account.html?${q}">${EDLang.t(EDAuth.user() ? 'lock.upgrade' : 'lock.signup')}</a>
     </div>`;
 }
 
@@ -162,6 +178,11 @@ async function start() {
 
   if (game.status !== 'ready') {
     note('🚧', EDLang.t('game.soon.heading'), EDLang.t('game.soon.text'), EDLang.t('game.allGames'));
+    return;
+  }
+
+  if (!EDAuth.canPlay(game)) {
+    lockedNote(game);
     return;
   }
 

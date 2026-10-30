@@ -1,0 +1,21 @@
+# EDgames accounts API — Cloudflare Worker + D1.
+# Deploy: `npx wrangler@4 d1 migrations apply edgames --remote && npx wrangler@4 deploy` (in worker/).
+# Secrets (set once, survive deploys): MAIL_RELAY_URL, MAIL_RELAY_SECRET.
+# Without them password-reset mail is logged as undeliverable and everything else still works.
+name = "edgames-api"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "edgames"
+database_id = "0662ec5a-8f6d-482b-a03b-d1a4648fc223"
+migrations_dir = "migrations"
+
+[vars]
+ALLOWED_ORIGINS = "https://almoncohel.github.io"
+APP_URL = "https://almoncohel.github.io/EDgames/account.html"
+
+[observability]
+enabled = true

@@ -56,6 +56,18 @@ const EDGlyphs = (() => {
     computer: `
       <path d="M8 5.5 23 15.2l-6.6 1.4L13.9 23z"/>
       <path d="M24 22.5l3.2 3.2M20 26.4l1.2 1.2M27.4 18.2l1.4 1.4"/>`,
+    /* A speech bubble with an A in it. */
+    english: `
+      <path d="M6 7h20a2.5 2.5 0 0 1 2.5 2.5v11a2.5 2.5 0 0 1-2.5 2.5H14l-6 5v-5H6a2.5 2.5 0 0 1-2.5-2.5v-11A2.5 2.5 0 0 1 6 7z"/>
+      <path d="M12 19.5 16 10.5l4 9M13.4 16.5h5.2"/>`,
+    /* Plus, minus, times, equals, one in each corner of a calculator's face. */
+    math: `
+      <rect x="4.5" y="4.5" width="23" height="23" rx="4"/>
+      <path d="M10.5 8.5v5M8 11h5M19 11h5M8.5 19l4 4M12.5 19l-4 4M19 19.5h5M19 22.5h5"/>`,
+    /* A bulb. */
+    logic: `
+      <path d="M11.5 22c0-3-4-4.8-4-10a8.5 8.5 0 0 1 17 0c0 5.2-4 7-4 10z"/>
+      <path d="M12.5 26h7M14 29h4M16 22v-6M13.5 14l2.5 2 2.5-2"/>`,
   };
 
   /* The interface icons — the bottom bar, the search box, the language toggle,
@@ -69,6 +81,8 @@ const EDGlyphs = (() => {
     search: `<circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/>`,
     globe:  `<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5c-2.6 2.4-2.6 14.6 0 17M12 3.5c2.6 2.4 2.6 14.6 0 17M3.9 9h16.2M3.9 15h16.2"/>`,
     back:   `<path d="M19 12H5M11 6l-6 6 6 6"/>`,
+    user:   `<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1-4 4-6 7.5-6s6.5 2 7.5 6"/>`,
+    lock:   `<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>`,
   };
 
   /* One hidden sprite per page; every drawing is referenced by <use>, so a page

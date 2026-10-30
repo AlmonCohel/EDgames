@@ -28,6 +28,66 @@ const EDScenes = (() => {
       <path d="M23.5 6.4v3.2M23.5 16.6v3.2M17.4 13h3.2M26.4 13h3.2
                M19.2 8.7l2.3 2.3M27.8 8.7l-2.3 2.3M19.2 17.3l2.3-2.3M27.8 17.3l-2.3-2.3"/>`,
 
+    /* Three bubbles rising, the biggest at the bottom. */
+    'bubble-count': `
+      <circle cx="11" cy="22" r="6.5"/>
+      <circle cx="22" cy="14" r="4.5"/>
+      <circle cx="13" cy="7" r="2.8"/>`,
+
+    /* Three the same, and a triangle that is not. */
+    'odd-one-out': `
+      <circle cx="9" cy="9" r="4.5"/>
+      <circle cx="23" cy="9" r="4.5"/>
+      <circle cx="9" cy="23" r="4.5"/>
+      <path d="M23 18l5 9H18z"/>`,
+
+    /* A basket with a thing dropping into it. */
+    'sort-baskets': `
+      <path d="M6 16h20l-2.5 11h-15z"/>
+      <path d="M11 16v11M16 16v11M21 16v11"/>
+      <circle cx="16" cy="7" r="3.5"/>`,
+
+    /* A pizza with one slice pulled away. */
+    'pizza-shop': `
+      <path d="M16 16 16 4a12 12 0 1 0 12 12z"/>
+      <path d="M20 12V3.500A9 9 0 0 1 28.5 12z"/>
+      <circle cx="10" cy="14" r="1.5" fill="currentColor" stroke="none"/>
+      <circle cx="13" cy="22" r="1.5" fill="currentColor" stroke="none"/>
+      <circle cx="21" cy="21" r="1.5" fill="currentColor" stroke="none"/>`,
+
+    /* A robot's head, an antenna and two eyes. */
+    'robot-code': `
+      <rect x="6" y="11" width="20" height="16" rx="4"/>
+      <path d="M16 11V6"/>
+      <circle cx="16" cy="4.5" r="1.5" fill="currentColor" stroke="none"/>
+      <circle cx="12" cy="18" r="1.8" fill="currentColor" stroke="none"/>
+      <circle cx="20" cy="18" r="1.8" fill="currentColor" stroke="none"/>
+      <path d="M12 23h8"/>`,
+
+    /* A flask, half full. */
+    'color-lab': `
+      <path d="M12.5 4h7M14 4v9L6.5 25c-1 2 .3 3.5 2.3 3.500h14.400c2 0 3.3-1.5 2.3-3.500L18 13V4"/>
+      <path d="M10 19h12"/>`,
+
+    /* A speech bubble with an A. */
+    'english-words': `
+      <path d="M6 6h20a2.5 2.5 0 0 1 2.5 2.500v11a2.5 2.5 0 0 1-2.5 2.500H14l-6 5v-5H6a2.5 2.5 0 0 1-2.5-2.500v-11A2.5 2.5 0 0 1 6 6z"/>
+      <path d="M12 18.5 16 9.500l4 9M13.4 15.500h5.2"/>`,
+
+    /* A ten frame: two rows of five. */
+    'make-ten': `
+      <rect x="3" y="9" width="26" height="14" rx="2"/>
+      <path d="M8.2 9v14M13.4 9v14M18.6 9v14M23.8 9v14M3 16h26"/>
+      <circle cx="5.6" cy="12.5" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="10.8" cy="12.5" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="16" cy="12.5" r="1.3" fill="currentColor" stroke="none"/>`,
+
+    /* A circle, a square, a circle, and a dashed place with nothing in it yet. */
+    'what-next': `
+      <circle cx="6" cy="16" r="3.5"/>
+      <rect x="11.5" y="12.5" width="7" height="7" rx="1"/>
+      <rect x="22" y="12" width="8" height="8" rx="1.5" stroke-dasharray="2 2.5"/>`,
+
     /* An apple, an arrow, and the letter its name begins with. */
     'first-letter': `
       <path d="M9.5 12.5c-3.6-2.2-6.8.6-6 4.4.8 4 3.2 6.2 6 5.2 2.8 1 5.2-1.2 6-5.2.8-3.8-2.4-6.6-6-4.4z"/>

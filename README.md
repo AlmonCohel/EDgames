@@ -1,15 +1,24 @@
 # הגנון של עלמון — EDgames
 
 A small static site of educational games for children aged 3–8. Hebrew (RTL) by
-default with an English (LTR) toggle. No build step, no framework, no backend —
-plain HTML/CSS/JS served as files.
+default with an English (LTR) toggle. No build step and no framework: plain
+HTML/CSS/JS served as files. The games need no backend. Accounts and plans do,
+a small Cloudflare Worker: see [docs/ACCOUNTS.md](docs/ACCOUNTS.md).
 
 ## Layout
 
 ```
-index.html            the home screen: app bar, subject rail, shelves, bottom bar
+index.html            the landing page, for the grown-up (shown until they choose once)
+play.html             the home screen: app bar, subject rail, shelves, bottom bar
 game.html             the host page a game runs inside
+account.html          sign up, log in, forgotten password, my account
+privacy.html terms.html  the legal pages, both languages in each
 assets/styles.css     theme tokens + shared components
+assets/pages.css      the landing, account and legal pages
+assets/tiers.js       the plans: guest, free, basic, pro
+assets/auth.js        who is signed in, and whether they can open a game
+assets/landing.js     the landing page
+assets/account.js     the account page
 assets/i18n.js        the two UI string tables and the language toggle
 assets/catalog.js     subjects, age groups, and the game catalog
 assets/glyphs.js      the seven drawn subject marks and the interface icons
@@ -28,6 +37,8 @@ assets/voice/         the spoken lines as mp3, made by scripts/make-voice.mjs
 assets/game-host.js   loads and mounts a game module by id, picks its set, the reset button
 scripts/make-voice.mjs records assets/voice-lines.js into assets/voice (Mac: say + ffmpeg)
 games/<id>.js         one file per game
+worker/               the accounts API (Cloudflare Worker + D1), with its tests
+docs/ACCOUNTS.md      plans, accounts, and what must happen before charging money
 mockups/              design directions: the first three (3 was built), v3/ = four looks
                       (Chunky is live, Sticker pop / Jelly / Big pictures kept as options),
                       logos/ = five logo ideas
@@ -44,10 +55,11 @@ rows wrap into a grid; nothing is designed twice.
 There are two modes over the one catalog, and which is on screen depends only on
 whether anything is filtered:
 
-- **Browse** — the game last played, a row of everything ready, a row per
+- **Browse** — the game last played, a row of everything this visitor can open,
+  a row per plan they do not have yet (locked tiles, which open a dialog), a row per
   subject with more than one finished game, and a list of what is still being
-  built. Thirty-four games across eight subjects reads well as rows and badly as a
-  wall. All thirty-four are finished, so the *בקרוב* / *Coming soon* list is empty
+  built. A catalog this size reads well as rows and badly as a
+  wall. Every game is finished, so the *בקרוב* / *Coming soon* list is empty
   and its shelf hides itself — a heading with nothing under it reads as a
   section that failed to load, not as work that is done. Add a game with
   `status: 'soon'` and the shelf comes back on its own.
@@ -84,7 +96,9 @@ whole game from its first set.
 ## Running it
 
 Open `index.html` in a browser, or serve the folder (`npx serve .`). Games load
-over `<script src>` so `file://` works too.
+over `<script src>` so `file://` works too; signing in does not. Served from
+localhost, the site expects a local API on port 18791 (`wrangler dev --port 18791`
+in `worker/`, with `ALLOWED_ORIGINS` for your port in `worker/.dev.vars`).
 
 ## Filters
 
@@ -308,6 +322,17 @@ Also in that round: Trace the Letter says the letter's name at the start of
 every round; Pair by Pair sizes its board to the screen (a laptop gets 8×2
 instead of 4×4) and has − / + to change the card size, remembered per browser.
 
+## The October 30 games
+
+Nine games added with the plans, three each, all voiced:
+
+- **Free:** Bubbles in Order, Who Does Not Belong?, Sort into Baskets.
+- **Basic:** The Pizza Shop (build the order, sent back with what is wrong),
+  Code the Robot (plan the steps, then run them; a first taste of programming),
+  The Colour Lab (a wrong mix still shows what those two colours make).
+- **Pro:** First English Words (English, by ear), Make Ten (maths, on a ten frame),
+  What Comes Next? (logic, ending on a board with two rules at once).
+
 ## Adding a game
 
 1. Add an entry to `GAMES` in `assets/catalog.js` with `status: 'soon'`. Give
@@ -321,7 +346,8 @@ instead of 4×4) and has − / + to change the card size, remembered per browser
    mark, so nothing is ever an empty square, but a game the child can tell
    apart at a glance is the whole point of that file.
 4. Flip `status` to `'ready'`. It moves up into the shelves with a field of its
-   own.
+   own. Give it a `tier` (`free`, `basic`, `pro`) if it belongs to a plan; without
+   one it is open to everyone.
 5. If the game makes its own sounds, add `sound: true` so the tune steps aside.
    If it speaks, add its lines to `assets/voice-lines.js` and record them (see
    *The voice*). `assets/kit.js` has the speaker button, dots and end screen.
