@@ -45,7 +45,7 @@
 })();
 </script>
 </head>
-<body>
+<body class="game-deck">
 
 <!-- The drawings go in before any markup that references them, so every <use>
      below resolves as the page is parsed rather than after it. -->
@@ -54,40 +54,52 @@
 <script src="assets/covers.js"></script>
 <script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
 
-<header class="appbar">
-  <div class="appbar-in">
-    <a class="btn btn--ghost" id="back" href="play.html">
-      <svg class="ico icon-back" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-back"/></svg>
-      <span data-i18n="game.back">חזרה למשחקים</span>
-    </a>
-    <button type="button" class="chip sound-toggle" id="sound-toggle"></button>
-    <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
-  </div>
-</header>
+<div class="console-chassis console-chassis--game">
 
-<div class="shell">
-  <main class="content">
-
-    <div class="game-header" id="game-header" data-subject="shapes">
-      <span class="game-mark" id="game-mark" aria-hidden="true"></span>
-      <h1 id="game-title" data-i18n="game.loadingTitle">טוען…</h1>
-      <div class="badges" id="game-badges"></div>
+  <header class="console-top">
+    <div class="brand-cluster">
+      <a class="hw-btn hw-btn--back" id="back" href="play.html">
+        <svg class="ico icon-back" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-back"/></svg>
+        <span data-i18n="game.back">חזרה למשחקים</span>
+      </a>
+      <span class="kid-crust kid-crust--princess" data-i18n="settings.crust.princess">👑 מהדורת נסיכות</span>
+      <span class="kid-crust kid-crust--spiderman" data-i18n="settings.crust.spiderman">🕷️ מהדורת ספיידרמן</span>
     </div>
 
-    <div class="game-sets" id="game-sets">
-      <span class="game-sets-label" id="set-label" data-i18n="game.sets.label" hidden>ערכה</span>
-      <div class="game-sets-chips" id="set-chips" role="group" aria-labelledby="set-label"></div>
-      <!-- Starts the step on screen over — the set the child is in, never the
-           whole game from its first set. -->
-      <button type="button" class="chip game-reset" id="game-reset" hidden>
-        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>
-        <span data-i18n="game.reset">מתחילים מחדש</span>
-      </button>
+    <div class="console-controls">
+      <span class="brand-kicker game-deck-kicker"><span class="led-dot" aria-hidden="true"></span><span data-i18n="console.kicker">ED-DECK · קונסולת משחקים</span></span>
+      <button type="button" class="hw-btn sound-toggle" id="sound-toggle"></button>
+      <button type="button" class="hw-btn lang-toggle" id="lang-toggle"></button>
+    </div>
+  </header>
+
+  <main class="console-screen game-console-screen">
+
+    <div class="game-deck-bar">
+      <div class="game-header" id="game-header" data-subject="shapes">
+        <span class="game-mark" id="game-mark" aria-hidden="true"></span>
+        <div class="game-header-text">
+          <h1 id="game-title" data-i18n="game.loadingTitle">טוען…</h1>
+          <div class="badges" id="game-badges"></div>
+        </div>
+      </div>
+
+      <div class="game-sets" id="game-sets">
+        <span class="game-sets-label" id="set-label" data-i18n="game.sets.label" hidden>ערכה</span>
+        <div class="game-sets-chips" id="set-chips" role="group" aria-labelledby="set-label"></div>
+        <!-- Starts the step on screen over — the set the child is in, never the
+             whole game from its first set. -->
+        <button type="button" class="hw-reset-btn game-reset" id="game-reset" hidden>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>
+          <span data-i18n="game.reset">מתחילים מחדש</span>
+        </button>
+      </div>
     </div>
 
     <section class="stage" id="stage" data-subject="shapes"></section>
 
   </main>
+
 </div>
 
 <script src="assets/catalog.js"></script>

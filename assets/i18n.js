@@ -484,8 +484,8 @@ const EDLang = {
 })();
 
 /* Kid-chosen website theme (Studio Default / Princess & Fairytales / Spider-Man).
-   Changes the website shell (play.html, index.html, account.html) and never
-   touches game.html or the games inside it. */
+   Changes the website shell (play.html, game.html outer console frame, index.html,
+   account.html) while keeping the inner game canvas (#stage) untouched. */
 const KID_THEMES = ['default', 'princess', 'spiderman'];
 const KID_THEME_KEY = 'edgames-kid-theme';
 
@@ -498,16 +498,22 @@ function saveKidTheme(theme) {
 
 const EDTheme = window.EDTheme = {
   current: 'default',
-  isGamePage: /(?:^|\/)game\.html$/i.test(location.pathname),
 
   set(theme, persist = true) {
     if (!KID_THEMES.includes(theme)) theme = 'default';
     this.current = theme;
     if (persist) saveKidTheme(theme);
-    if (!this.isGamePage) {
-      document.documentElement.dataset.kidTheme = theme;
-      if (document.body) document.body.dataset.kidTheme = theme;
-    }
+    document.documentElement.dataset.kidTheme = theme;
+    if (document.body) document.body.dataset.kidTheme = theme;
+    /* Sync any cached game iframes inside EDPlayer so returning to an open game
+       immediately reflects the newly chosen console theme. */
+    document.querySelectorAll('.player iframe').forEach((frame) => {
+      try {
+        if (frame.contentWindow && frame.contentWindow.EDTheme) {
+          frame.contentWindow.EDTheme.set(theme, false);
+        }
+      } catch { /* cross-origin or not loaded yet */ }
+    });
     window.dispatchEvent(new CustomEvent('edthemechange', { detail: { theme } }));
   },
 };
@@ -519,9 +525,14 @@ const EDTheme = window.EDTheme = {
   EDTheme.set(initial, KID_THEMES.includes(fromUrl));
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      if (!EDTheme.isGamePage && document.body) {
+      if (document.body) {
         document.body.dataset.kidTheme = EDTheme.current;
       }
     });
   }
+  window.addEventListener('storage', (e) => {
+    if (e.key === KID_THEME_KEY && e.newValue && KID_THEMES.includes(e.newValue)) {
+      EDTheme.set(e.newValue, false);
+    }
+  });
 })();

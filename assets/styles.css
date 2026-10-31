@@ -942,8 +942,9 @@ body.page[data-kid-theme="spiderman"] {
     var(--bg);
 }
 
-/* Console Home Screen (body.app) */
-body.app {
+/* Console Home Screen (body.app) & Console Game Frame (body.game-deck) */
+body.app,
+body.game-deck {
   margin: 0;
   padding: 0;
   min-height: 100dvh;
@@ -951,6 +952,11 @@ body.app {
   color: var(--console-ink);
   font-family: "Heebo", "Fredoka", system-ui, sans-serif;
   overflow-x: hidden;
+}
+
+.player,
+.player iframe {
+  background: var(--console-shell);
 }
 
 .console-chassis {
@@ -961,6 +967,10 @@ body.app {
   flex-direction: column;
   padding: 14px 16px 16px;
   gap: 12px;
+}
+
+.console-chassis--game {
+  max-width: 1180px;
 }
 
 /* Top Hardware Instrument Bar */
@@ -1828,5 +1838,176 @@ body[data-kid-theme="spiderman"] .cartridge[aria-selected="true"] {
   }
   .spotlight-info h2 {
     font-size: 1.28rem;
+  }
+}
+
+/* ---- Console Game Frame (game.html outer shell around #stage) ---- */
+.hw-btn--back {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
+  font-weight: 800;
+  padding: 0 14px;
+}
+.hw-btn--back:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.game-console-screen {
+  padding: 16px 18px 20px;
+  gap: 14px;
+}
+
+.game-deck-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border: 2px solid rgba(21, 24, 33, 0.1);
+  border-radius: 18px;
+  padding: 10px 16px;
+  box-shadow: 0 4px 14px rgba(21, 24, 33, 0.05);
+}
+body[data-kid-theme="princess"] .game-deck-bar {
+  border: 2px solid #e899c8;
+  box-shadow: 0 4px 14px rgba(201, 42, 129, 0.08);
+}
+body[data-kid-theme="spiderman"] .game-deck-bar {
+  border: 2.5px solid #0b132b;
+  box-shadow: 4px 4px 0 #0b132b;
+}
+
+body.game-deck .game-header {
+  padding: 0;
+  gap: 12px;
+}
+body.game-deck .game-header .game-mark {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  box-shadow: none;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+}
+.game-header-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+body.game-deck .game-header h1 {
+  font-size: 1.32rem;
+  font-weight: 900;
+  color: var(--console-card-ink);
+  margin: 0;
+}
+
+body.game-deck .game-sets {
+  padding: 0;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+body.game-deck .game-sets-chips .chip {
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: 12px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  border: 1.5px solid rgba(21, 24, 33, 0.14);
+  background: #f4f5f8;
+  color: #151821;
+  box-shadow: none;
+}
+body.game-deck .game-sets-chips .chip:hover {
+  background: #e9ecf2;
+}
+body.game-deck .game-sets-chips .chip[aria-pressed="true"] {
+  background: var(--console-accent);
+  border-color: var(--console-accent);
+  color: #ffffff;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.22);
+}
+
+.hw-reset-btn {
+  appearance: none;
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(21, 24, 33, 0.18);
+  background: #ffffff;
+  color: #151821;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.hw-reset-btn:hover {
+  background: #f3f4f7;
+}
+.hw-reset-btn[hidden] {
+  display: none;
+}
+
+/* The inner stage (#stage) stays a clean white canvas with standard game tokens
+   so all 43 games look and behave identically inside the console screen. */
+body.game-deck .stage {
+  margin: 0;
+  flex: 1;
+  background: #ffffff;
+  color: var(--text);
+  border: 2px solid rgba(21, 24, 33, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 10px 26px rgba(21, 24, 33, 0.06);
+  padding: 20px;
+}
+body.game-deck[data-kid-theme="princess"] .stage {
+  border: 2px solid #e899c8;
+}
+body.game-deck[data-kid-theme="spiderman"] .stage {
+  border: 2.5px solid #0b132b;
+  box-shadow: 5px 5px 0 #0b132b;
+}
+
+@media (max-width: 640px) {
+  .game-deck-kicker {
+    display: none;
+  }
+  .game-console-screen {
+    padding: 10px;
+    gap: 10px;
+  }
+  .game-deck-bar {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  body.game-deck .game-header {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+  body.game-deck .game-header .game-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+  }
+  body.game-deck .game-header h1 {
+    font-size: 1.08rem;
+  }
+  body.game-deck .game-sets {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  body.game-deck .game-sets-chips .chip,
+  .hw-reset-btn {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 0.8rem;
+  }
+  body.game-deck .stage {
+    padding: 12px;
+    min-height: 380px;
   }
 }

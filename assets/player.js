@@ -61,7 +61,14 @@ const EDPlayer = window.EDPlayer = (() => {
       /* Clap the Beat asks for the microphone from inside the frame. */
       frame.allow = 'microphone; autoplay';
       frame.src = href;
-      frame.addEventListener('load', () => { try { frame.contentWindow.focus(); } catch { /* fine */ } });
+      frame.addEventListener('load', () => {
+        try {
+          if (window.EDTheme && frame.contentWindow.EDTheme) {
+            frame.contentWindow.EDTheme.set(window.EDTheme.current, false);
+          }
+          frame.contentWindow.focus();
+        } catch { /* fine */ }
+      });
       layer.append(frame);
       entry = { frame, used: 0 };
       frames.set(id, entry);

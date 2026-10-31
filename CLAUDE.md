@@ -20,7 +20,7 @@ Read this before touching `EDgames`. Alongside `README.md` and `docs/ACCOUNTS.md
     - `princess`: **Princess & Fairytales (`נסיכות ואגדות 👑`)**
     - `spiderman`: **Spider-Man (`ספיידרמן 🕷️`)**
   - Stored in `localStorage` under `edgames-kid-theme` (and overridable via `?theme=`).
-  - **Hard rule from Almon:** The theme choice affects the **website shell only** (`play.html`, `index.html`, `account.html`), **never `game.html` or the games themselves**. `EDTheme` checks `isGamePage` and never sets `data-kid-theme` on `game.html`.
+  - **Game frame vs. game canvas (`game.html`):** The outer wrapper of `game.html` (`body.game-deck`, `.console-top`, `.game-console-screen`, `.game-deck-bar`) is part of the Console Deck website shell and wears both the Console Deck structure and the active kid theme (`data-kid-theme`), while the inner game canvas (`#stage` and all 43 game modules in `games/*.js`) remains a clean white canvas (`#ffffff`) with standard `:root` tokens so the games' own internal graphics and colour mechanics are never altered.
 
 ## 2. Standing Constraints
 
