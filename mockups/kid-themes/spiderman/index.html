@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="site.title">הגנון של עלמון — משחקים לימודיים לילדים</title>
+<meta name="description" data-i18n-content="site.description" content="אוסף משחקים לימודיים קטנים לילדים בגיל 3 עד 8. אפשר לסנן לפי גיל ולפי נושא ולבחור משחק.">
+<meta name="theme-color" content="#0d1b3e">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&family=Secular+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../assets/styles.css">
+<link rel="stylesheet" href="skin.css">
+<script src="../../../assets/i18n.js"></script>
+</head>
+<body class="app" data-kid-theme="spiderman">
+
+<script src="../../../assets/glyphs.js"></script>
+<script src="../../../assets/scenes.js"></script>
+<script src="../../../assets/covers.js"></script>
+<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
+
+<!-- Spider-Verse Skyline & Radial Webs Backdrop -->
+<div class="kid-scene" aria-hidden="true">
+  <svg class="kid-scene-svg" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMin slice">
+    <defs>
+      <linearGradient id="sp-sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0b1536"/>
+        <stop offset="55%" stop-color="#162b6f"/>
+        <stop offset="100%" stop-color="#e8f1ff"/>
+      </linearGradient>
+      <pattern id="sp-dots" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+        <circle cx="4" cy="4" r="2" fill="#e62429" fill-opacity="0.16"/>
+      </pattern>
+    </defs>
+    <rect width="1200" height="420" fill="url(#sp-sky)"/>
+    <rect width="1200" height="420" fill="url(#sp-dots)"/>
+
+    <!-- Corner Spider-Web Left -->
+    <g stroke="#ffffff" stroke-opacity="0.32" stroke-width="2" fill="none">
+      <path d="M0,0 L340,60 M0,0 L310,150 M0,0 L240,240 M0,0 L140,300 M0,0 L40,320"/>
+      <path d="M70,12 Q65,40 48,48 Q30,60 8,68"/>
+      <path d="M135,24 Q124,72 95,95 Q62,120 16,130"/>
+      <path d="M205,36 Q188,108 144,144 Q92,182 25,195"/>
+      <path d="M275,48 Q250,145 192,192 Q122,240 34,260"/>
+    </g>
+
+    <!-- Corner Spider-Web Right -->
+    <g transform="translate(1200, 0) scale(-1, 1)" stroke="#ffffff" stroke-opacity="0.32" stroke-width="2" fill="none">
+      <path d="M0,0 L340,60 M0,0 L310,150 M0,0 L240,240 M0,0 L140,300 M0,0 L40,320"/>
+      <path d="M70,12 Q65,40 48,48 Q30,60 8,68"/>
+      <path d="M135,24 Q124,72 95,95 Q62,120 16,130"/>
+      <path d="M205,36 Q188,108 144,144 Q92,182 25,195"/>
+      <path d="M275,48 Q250,145 192,192 Q122,240 34,260"/>
+    </g>
+
+    <!-- Dangling Cute Spider on a Web Thread -->
+    <g class="dangling-spider" transform="translate(210, 0)">
+      <line x1="0" y1="0" x2="0" y2="118" stroke="#ffffff" stroke-width="2" stroke-opacity="0.7"/>
+      <g transform="translate(0, 124)">
+        <g stroke="#0b132b" stroke-width="3" stroke-linecap="round" fill="none">
+          <path d="M-8,-4 Q-22,-14 -28,-4"/>
+          <path d="M-10,2 Q-25,0 -30,10"/>
+          <path d="M-8,8 Q-22,12 -24,22"/>
+          <path d="M8,-4 Q22,-14 28,-4"/>
+          <path d="M10,2 Q25,0 30,10"/>
+          <path d="M8,8 Q22,12 24,22"/>
+        </g>
+        <circle cx="0" cy="4" r="12" fill="#e62429" stroke="#0b132b" stroke-width="3"/>
+        <circle cx="0" cy="-10" r="8" fill="#0b132b"/>
+        <path d="M-6,-11 L-1,-9 L-5,-6 Z M6,-11 L1,-9 L5,-6 Z" fill="#ffffff"/>
+      </g>
+    </g>
+
+    <!-- Comic City Skyline Silhouette -->
+    <g fill="#0c1738" opacity="0.65" transform="translate(0, 155)">
+      <rect x="20" y="60" width="75" height="160"/>
+      <rect x="105" y="25" width="90" height="195"/>
+      <polygon points="150,0 120,25 180,25"/>
+      <rect x="210" y="80" width="70" height="140"/>
+      <rect x="890" y="70" width="85" height="150"/>
+      <rect x="990" y="20" width="95" height="200"/>
+      <rect x="1095" y="55" width="85" height="165"/>
+      <!-- Lit comic windows -->
+      <g fill="#ffd60a" opacity="0.85">
+        <rect x="122" y="45" width="12" height="18" rx="2"/><rect x="144" y="45" width="12" height="18" rx="2"/><rect x="166" y="45" width="12" height="18" rx="2"/>
+        <rect x="122" y="72" width="12" height="18" rx="2"/><rect x="166" y="72" width="12" height="18" rx="2"/>
+        <rect x="1010" y="42" width="14" height="18" rx="2"/><rect x="1034" y="42" width="14" height="18" rx="2"/><rect x="1058" y="42" width="14" height="18" rx="2"/>
+        <rect x="1010" y="70" width="14" height="18" rx="2"/><rect x="1034" y="70" width="14" height="18" rx="2"/>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<header class="appbar">
+  <div class="appbar-in">
+    <a href="../../../index.html?home=1" class="brand-badge" data-i18n-label="nav.about" aria-label="על האתר">
+      <!-- Spider-Mask Badge -->
+      <svg class="avatar-crest" viewBox="0 0 64 64" width="46" height="46" aria-hidden="true">
+        <rect width="58" height="58" x="3" y="3" rx="16" fill="#1d4ed8" stroke="#0b132b" stroke-width="3.5"/>
+        <ellipse cx="32" cy="33" rx="20" ry="23" fill="#e62429" stroke="#0b132b" stroke-width="3"/>
+        <!-- Web lines on mask -->
+        <path d="M32,10 V56 M12,33 H52 M17,17 L47,49 M47,17 L17,49" stroke="#0b132b" stroke-width="1.6" opacity="0.45"/>
+        <!-- Spidey Eyes -->
+        <path d="M16,26 Q22,17 29,31 Q21,34 16,26 Z" fill="#ffffff" stroke="#0b132b" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M48,26 Q42,17 35,31 Q43,34 48,26 Z" fill="#ffffff" stroke="#0b132b" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <div class="hello">
+      <h1 class="small"><span data-i18n="brand.name">הגנון של עלמון</span> · <span class="theme-pill">🕷️ מצב ספיידרמן</span></h1>
+      <div class="big" data-i18n="appbar.greeting">מה משחקים היום?</div>
+    </div>
+    <button type="button" class="chip theme-trigger" id="open-settings" aria-label="הגדרות עיצוב">
+      <span class="theme-trigger-ico" aria-hidden="true">🕷️</span>
+      <span class="theme-trigger-lbl">עיצוב</span>
+    </button>
+    <button type="button" class="chip sound-toggle" id="sound-toggle"></button>
+    <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
+    <a class="chip account-chip" id="account-chip" href="../../../account.html"></a>
+  </div>
+</header>
+
+<div class="shell">
+
+  <nav class="tabs" data-i18n-label="nav.label" aria-label="ניווט">
+    <button type="button" class="tab" id="tab-home" aria-current="page">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-home"/></svg>
+      <span data-i18n="tabs.home">בית</span>
+    </button>
+    <button type="button" class="tab" id="tab-age" aria-expanded="false" aria-controls="age-sheet">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-age"/></svg>
+      <span data-i18n="tabs.age">לפי גיל</span>
+    </button>
+    <button type="button" class="tab" id="tab-search" aria-expanded="false" aria-controls="search-sheet">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
+      <span data-i18n="tabs.search">חיפוש</span>
+    </button>
+    <button type="button" class="tab" id="tab-settings" aria-expanded="false" aria-controls="settings-dialog">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M19.1 4.9l-2.8 2.8M7.7 16.3l-2.8 2.8"/>
+      </svg>
+      <span class="tab-settings-lbl">הגדרות</span>
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <div class="rail" id="subject-rail" role="group" data-i18n-label="filters.subject" aria-label="נושא"></div>
+
+    <div class="sheet" id="age-sheet" hidden>
+      <span class="sheet-label" id="age-label" data-i18n="filters.age">גיל</span>
+      <div class="sheet-row" id="age-chips" role="group" aria-labelledby="age-label"></div>
+    </div>
+
+    <div class="sheet" id="search-sheet" hidden>
+      <div class="sheet-row">
+        <div class="search">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
+          <label class="visually-hidden" for="q" data-i18n="search.label">חיפוש משחק</label>
+          <input id="q" type="search" data-i18n-placeholder="search.placeholder" placeholder="איזה משחק מחפשים?" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <div class="result-bar" id="result-bar" hidden>
+      <p class="result-line" role="status" aria-live="polite" id="result-line"></p>
+      <button type="button" class="chip chip--clear" id="clear" data-i18n="filters.clear" hidden>נקה סינון ✕</button>
+    </div>
+
+    <div class="browse" id="browse">
+      <section class="shelf" id="continue-shelf" hidden>
+        <div class="head"><h2 data-i18n="browse.continue">ממשיכים מאיפה שהפסקנו</h2></div>
+        <div id="continue"></div>
+      </section>
+
+      <section class="shelf">
+        <div class="head">
+          <h2 data-i18n="browse.ready">אפשר לשחק עכשיו</h2>
+          <span class="more" id="ready-count"></span>
+        </div>
+        <ul class="row" id="ready"></ul>
+      </section>
+
+      <div id="by-tier"></div>
+
+      <div id="by-subject"></div>
+
+      <section class="shelf" id="soon-shelf" hidden>
+        <div class="head">
+          <h2 data-i18n="browse.soon">בקרוב</h2>
+          <span class="more" data-i18n="browse.soonMore">עוד נבנים</span>
+        </div>
+        <ul class="list" id="soon"></ul>
+      </section>
+    </div>
+
+    <ul class="tiles" id="grid" hidden></ul>
+
+    <div class="empty" id="empty" hidden>
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
+      <h2 data-i18n="empty.title">לא מצאנו משחק כזה</h2>
+      <p data-i18n="empty.text">אפשר לנסות גיל אחר או נושא אחר.</p>
+      <button type="button" class="btn" data-clear data-i18n="empty.action">הצג את כל המשחקים</button>
+    </div>
+
+    <footer class="site-footer" data-i18n="footer">
+      נבנה באהבה לילדים סקרנים 💛
+    </footer>
+
+  </main>
+
+</div>
+
+<!-- Settings Dialog with Kid's Design Choice -->
+<dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+  <div class="settings-head">
+    <h2 id="settings-title">הגדרות האתר 🕸️</h2>
+    <button type="button" class="chip settings-close" id="settings-close" aria-label="סגירה">✕</button>
+  </div>
+
+  <div class="settings-section">
+    <span class="settings-label">איזה עיצוב בא לכם היום? (משנה את האתר, לא את המשחקים)</span>
+    <div class="theme-cards" role="radiogroup" aria-label="בחירת עיצוב">
+      <a class="theme-card" href="../../../play.html" data-choice="default">
+        <div class="theme-card-art theme-card-art--default">
+          <svg viewBox="0 0 120 76" aria-hidden="true">
+            <rect width="120" height="76" rx="12" fill="#eef5ff"/>
+            <rect x="14" y="18" width="26" height="26" rx="6" fill="#e8621c"/>
+            <rect x="47" y="12" width="26" height="26" rx="6" fill="#ffc531"/>
+            <rect x="80" y="18" width="26" height="26" rx="6" fill="#2f6ae8"/>
+            <rect x="20" y="52" width="80" height="12" rx="6" fill="#fff" stroke="#c3d5ec" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="theme-card-txt">
+          <b>קוביות צבעוניות</b>
+          <small>העיצוב הרגיל של הגנון</small>
+        </div>
+      </a>
+
+      <a class="theme-card" href="../princess/index.html" data-choice="princess">
+        <div class="theme-card-art theme-card-art--princess">
+          <svg viewBox="0 0 120 76" aria-hidden="true">
+            <rect width="120" height="76" rx="12" fill="#ffe3f3"/>
+            <path d="M10,66 A50,42 0 0,1 110,66" fill="none" stroke="#ff7eb6" stroke-width="5" opacity="0.5"/>
+            <path d="M36,52 L40,26 L51,36 L60,18 L69,36 L80,26 L84,52 Z" fill="#ffd23f" stroke="#d63384" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="60" cy="40" r="4" fill="#ff2a85"/>
+          </svg>
+        </div>
+        <div class="theme-card-txt">
+          <b>נסיכות ואגדות 👑</b>
+          <small>טירה קסומה, כתרים ונצנצים</small>
+        </div>
+      </a>
+
+      <button type="button" class="theme-card is-active" data-choice="spiderman" aria-checked="true">
+        <div class="theme-card-art theme-card-art--spiderman">
+          <svg viewBox="0 0 120 76" aria-hidden="true">
+            <rect width="120" height="76" rx="12" fill="#111d3b"/>
+            <path d="M0,0 L120,76 M120,0 L0,76 M60,0 V76 M0,38 H120" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5"/>
+            <ellipse cx="60" cy="38" rx="22" ry="26" fill="#e62429" stroke="#0b132b" stroke-width="2.5"/>
+            <path d="M44,32 Q50,24 57,36 Z M76,32 Q70,24 63,36 Z" fill="#fff" stroke="#0b132b" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="theme-card-txt">
+          <b>ספיידרמן 🕷️</b>
+          <small>קורי עכביש, קומיקס וגיבורי־על</small>
+        </div>
+        <span class="theme-check">נבחר ✓</span>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="lock-dialog" id="lock-dialog" aria-labelledby="lock-title">
+  <div id="lock-cover" class="lock-cover"></div>
+  <h2 id="lock-title"></h2>
+  <p id="lock-text"></p>
+  <div class="lock-actions">
+    <a class="btn" id="lock-go"></a>
+    <button type="button" class="btn btn--ghost" id="lock-close" data-i18n="lock.close">לא עכשיו</button>
+  </div>
+</dialog>
+
+<script src="../../../assets/catalog.js"></script>
+<script src="../../../assets/tiers.js"></script>
+<script src="../../../assets/auth.js"></script>
+<script src="../../../assets/recent.js"></script>
+<script>
+  const __wantSettings = new URLSearchParams(location.search).get('settings') === '1' || location.hash === '#settings';
+  EDRecent.write('click-catch', 'easy');
+</script>
+<script src="../../../assets/app.js"></script>
+<script src="../../../assets/music.js"></script>
+<script>EDMusic.init({ music: true });</script>
+<script>
+  document.querySelectorAll('a[href^="game.html"]').forEach(a => {
+    a.setAttribute('href', '../../../' + a.getAttribute('href'));
+  });
+  const dlg = document.getElementById('settings-dialog');
+  document.getElementById('open-settings')?.addEventListener('click', () => dlg.showModal());
+  document.getElementById('tab-settings')?.addEventListener('click', () => dlg.showModal());
+  document.getElementById('settings-close')?.addEventListener('click', () => dlg.close());
+  dlg?.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  if (__wantSettings) {
+    setTimeout(() => dlg.showModal(), 80);
+  }
+
+  // Interactive web-sling burst on tap
+  document.addEventListener('pointerdown', (e) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const sp = document.createElement('div');
+    sp.className = 'web-burst';
+    sp.style.left = e.clientX + 'px';
+    sp.style.top = e.clientY + 'px';
+    sp.innerHTML = `<svg viewBox="-40 -40 80 80" width="76" height="76">
+      <g stroke="#0b132b" stroke-width="2.5" fill="none">
+        <path d="M-34,0 H34 M0,-34 V34 M-24,-24 L24,24 M-24,24 L24,-24"/>
+        <circle r="12"/><circle r="24"/>
+      </g>
+    </svg>`;
+    document.body.appendChild(sp);
+    setTimeout(() => sp.remove(), 520);
+  });
+</script>
+</body>
+</html>

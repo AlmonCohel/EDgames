@@ -1,5 +1,11 @@
 # Design directions
 
+> **October 2026 — Kid theme options (`kid-themes/`).** Two selectable website
+> designs for the child's choice — **Princess & Fairytales** (`kid-themes/princess/`)
+> and **Spider-Man** (`kid-themes/spiderman/`) — plus the Settings picker, affecting
+> only the website shell and not the games inside. Served at:
+> https://almoncohel.github.io/EDgames/mockups/kid-themes/
+>
 > **October 2026 — round v3 and logos.** `v3/` holds four looks for the same
 > app shell. **Chunky was picked and is the live site**; Sticker pop, Jelly and
 > Big pictures stay in `v3/` as options for a future refresh, each on a frozen

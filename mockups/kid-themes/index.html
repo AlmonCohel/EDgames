@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הגנון של עלמון — הדמיית עיצובים לבחירת הילד</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Heebo:wght@400;500;700;800&display=swap">
+<style>
+  :root {
+    --bg: #f3f1fa;
+    --surface: #ffffff;
+    --ink: #1d1a2e;
+    --soft: #5e5a75;
+    --line: #dedaec;
+    --accent: #5b3fd6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Heebo", system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 1560px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  h1 {
+    font-family: "Fredoka", "Heebo", sans-serif;
+    font-size: clamp(26px, 3.6vw, 42px);
+    margin: 4px 0 8px;
+    line-height: 1.1;
+  }
+  header p {
+    margin: 0;
+    color: var(--soft);
+    max-width: 68ch;
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .seg {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 4px;
+    gap: 4px;
+  }
+  .seg button {
+    border: 0;
+    background: transparent;
+    color: var(--soft);
+    font: 700 14px "Heebo", sans-serif;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  body[data-view="phone"] .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 12px 32px -16px rgba(29, 26, 46, 0.18);
+  }
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .card-head h2 {
+    font-family: "Fredoka", "Heebo", sans-serif;
+    font-size: 22px;
+    margin: 0;
+  }
+  .badge {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #efeafd;
+    color: var(--accent);
+  }
+  .card p {
+    margin: 0;
+    color: var(--soft);
+    font-size: 14.5px;
+  }
+
+  .frame-wrap {
+    position: relative;
+    width: 100%;
+    border-radius: 24px;
+    background: #14121e;
+    padding: 8px;
+    overflow: hidden;
+  }
+  body[data-view="phone"] .frame-wrap {
+    max-width: 406px;
+    margin: 0 auto;
+    aspect-ratio: 390 / 844;
+    border-radius: 36px;
+  }
+  body[data-view="desktop"] .frame-wrap {
+    aspect-ratio: 1280 / 800;
+  }
+  .screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+  }
+  body[data-view="phone"] .screen {
+    border-radius: 28px;
+  }
+  .screen iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    transform-origin: 0 0;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13.5px;
+  }
+  .btn-link.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+
+  @media (max-width: 1100px) {
+    body[data-view="phone"] .grid,
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body data-view="phone">
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">EDgames · Mock-up for Approval · 31 Oct 2026</div>
+      <h1>שני עיצובים חדשים לבחירת הילד + בחירה בהגדרות</h1>
+      <p>המבנה והמשחקים עצמם נשארים בדיוק כפי שהם — רק מעטפת האתר משתנה לפי מה שהילד אוהב: <b>נסיכות ואגדות</b> או <b>ספיידרמן</b>, לצד העיצוב הקיים. אפשר ללחוץ על <b>עיצוב / הגדרות</b> בתוך כל מסך כדי לראות את חלון הבחירה.</p>
+    </div>
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="תצוגה">
+        <button type="button" data-mode="phone" aria-pressed="true">📱 טלפון (390px)</button>
+        <button type="button" data-mode="desktop" aria-pressed="false">💻 מחשב (1280px)</button>
+      </div>
+      <div class="seg" role="group" aria-label="חלון הגדרות">
+        <button type="button" id="toggle-settings" aria-pressed="false">⚙️ פתח חלון הגדרות בכולם</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <article class="card">
+      <div class="card-head">
+        <h2>א. נסיכות ואגדות 👑</h2>
+        <span class="badge">Princess & Fairytales</span>
+      </div>
+      <p>שמיים בגווני ורוד־לבנדר עם טירה קסומה וקשת בענן, כתר מלכותי בראש כל כרטיס משחק, מסגרות זהב, וניצוצות קסם בכל לחיצה על המסך.</p>
+      <div class="frame-wrap">
+        <div class="screen"><iframe data-base="princess/index.html" src="princess/index.html" title="עיצוב נסיכות ואגדות"></iframe></div>
+      </div>
+      <div class="actions">
+        <a class="btn-link" href="princess/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+        <a class="btn-link ghost" href="princess/index.html?settings=1" target="_blank">פתיחה עם ההגדרות ↗</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h2>ב. ספיידרמן 🕷️</h2>
+        <span class="badge">Spider-Man</span>
+      </div>
+      <p>סגנון קומיקס חי באדום־כחול עם קורי עכביש בפינות, קו רקיע לילי של עיר גיבורי־על, עכביש מתנדנד על חוט, כותרות קומיקס צהובות וקורים בכל לחיצה.</p>
+      <div class="frame-wrap">
+        <div class="screen"><iframe data-base="spiderman/index.html" src="spiderman/index.html" title="עיצוב ספיידרמן"></iframe></div>
+      </div>
+      <div class="actions">
+        <a class="btn-link" href="spiderman/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+        <a class="btn-link ghost" href="spiderman/index.html?settings=1" target="_blank">פתיחה עם ההגדרות ↗</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h2>העיצוב הקיים (קוביות) 🧱</h2>
+        <span class="badge">Live Today (Chunky)</span>
+      </div>
+      <p>העיצוב הנוכחי של האתר להשוואה — נשאר כאפשרות ברירת המחדל בחלון ההגדרות כך שאפשר לחזור אליו בכל רגע.</p>
+      <div class="frame-wrap">
+        <div class="screen"><iframe data-base="../../play.html" src="../../play.html" title="העיצוב הקיים"></iframe></div>
+      </div>
+      <div class="actions">
+        <a class="btn-link ghost" href="../../play.html" target="_blank">פתיחה במסך מלא ↗</a>
+      </div>
+    </article>
+  </div>
+</div>
+
+<script>
+(() => {
+  const fit = () => {
+    const isPhone = document.body.dataset.view === 'phone';
+    const targetW = isPhone ? 390 : 1280;
+    const targetH = isPhone ? 844 : 800;
+    document.querySelectorAll('.screen').forEach(s => {
+      const f = s.querySelector('iframe');
+      const scale = s.clientWidth / targetW;
+      f.style.width = targetW + 'px';
+      f.style.height = targetH + 'px';
+      f.style.transform = `scale(${scale})`;
+    });
+  };
+  fit();
+  window.addEventListener('resize', fit);
+
+  document.querySelectorAll('[data-mode]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.body.dataset.view = btn.dataset.mode;
+      document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+      requestAnimationFrame(fit);
+    });
+  });
+
+  const toggleSettings = document.getElementById('toggle-settings');
+  let settingsOpen = false;
+  toggleSettings.addEventListener('click', () => {
+    settingsOpen = !settingsOpen;
+    toggleSettings.setAttribute('aria-pressed', String(settingsOpen));
+    document.querySelectorAll('iframe[data-base]').forEach(f => {
+      const base = f.dataset.base;
+      if (base.includes('play.html')) return;
+      f.src = settingsOpen ? `${base}?settings=1` : base;
+    });
+  });
+})();
+</script>
+</body>
+</html>

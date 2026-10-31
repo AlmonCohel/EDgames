@@ -1,0 +1,394 @@
+/* ==========================================================================
+   Option B: Spider-Man (ספיידרמן)
+   Comic-book Ben-Day halftone, Spider-Verse red & electric blue, radial webs,
+   inked outlines and superhero badges. Affects website shell, not the games.
+   ========================================================================== */
+
+:root {
+  --bg:           #eef4ff;
+  --bg-raise:     #ffffff;
+  --surface:      #ffffff;
+  --border:       #0b132b;
+  --edge:         #0b132b;
+  --text:         #0b132b;
+  --text-muted:   #52607c;
+  --text-soft:    #25335a;
+  --value:        #0b132b;
+
+  --spidey-red:   #e62429;
+  --spidey-dark:  #9e1115;
+  --spidey-blue:  #1d4ed8;
+  --spidey-navy:  #0f256e;
+  --comic-yellow: #ffd60a;
+
+  --accent:        #e62429;
+  --accent-strong: #d0191e;
+  --accent-ink:    #b81217;
+  --on-accent:     #ffffff;
+}
+
+body.app {
+  background:
+    radial-gradient(circle, rgba(29, 78, 216, 0.13) 1.6px, transparent 1.8px) 0 0 / 18px 18px,
+    linear-gradient(180deg, #dbe8ff 0%, #eef4ff 420px, #f5f8ff 100%);
+  position: relative;
+}
+
+/* Spider-Verse Skyline & Corner Webs */
+.kid-scene {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 350px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: linear-gradient(to bottom, #000 68%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 68%, transparent 100%);
+}
+.kid-scene-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.dangling-spider {
+  animation: sp-bob 3.2s ease-in-out infinite alternate;
+}
+@keyframes sp-bob {
+  0%   { transform: translate(210px, -14px); }
+  100% { transform: translate(210px, 12px); }
+}
+
+.shell, .appbar { position: relative; z-index: 2; }
+
+/* App Bar: Spidey Suit Crimson Header with Web Pattern & Comic Ink Border */
+.appbar {
+  background:
+    radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.12) 1px, transparent 1.5px) 0 0 / 12px 12px,
+    linear-gradient(95deg, #e62429 0%, #c9181d 58%, #1d4ed8 100%);
+  border-bottom: 3px solid #0b132b;
+  box-shadow: 0 5px 0 #0b132b;
+  color: #ffffff;
+}
+
+.brand-badge {
+  display: inline-grid;
+  place-items: center;
+  transform: rotate(-6deg);
+  transition: transform 0.18s cubic-bezier(.3,1.6,.5,1);
+}
+.brand-badge:hover { transform: rotate(4deg) scale(1.08); }
+.avatar-crest {
+  filter: drop-shadow(0 4px 0 #0b132b);
+}
+
+.hello .small {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 600;
+}
+.hello .big {
+  color: #ffffff;
+  font-family: "Secular One", "Fredoka", sans-serif;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 0 #0b132b;
+}
+
+.theme-pill {
+  display: inline-block;
+  background: #ffd60a;
+  color: #0b132b;
+  border: 2px solid #0b132b;
+  border-radius: 999px;
+  padding: 0 9px;
+  font-weight: 800;
+  font-size: 0.74rem;
+  box-shadow: 0 2px 0 #0b132b;
+}
+
+/* Chips: Comic-inked capsules */
+.chip {
+  background: #ffffff;
+  border: 2.5px solid #0b132b;
+  box-shadow: 0 4px 0 #0b132b;
+  color: #0b132b;
+  font-weight: 700;
+}
+.chip:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #0b132b;
+}
+.chip[aria-pressed="true"],
+#subject-all[aria-pressed="true"] {
+  background: #e62429;
+  border-color: #0b132b;
+  color: #ffffff;
+  box-shadow: 0 4px 0 #0b132b;
+  transform: rotate(-1.5deg);
+}
+
+/* Subject rail sits on a crisp frosted comic strip so it reads over the dark skyline */
+.rail {
+  margin-top: 8px;
+}
+
+.theme-trigger {
+  background: #ffd60a;
+  color: #0b132b;
+  border: 2.5px solid #0b132b;
+  box-shadow: 0 4px 0 #0b132b;
+  font-weight: 800;
+}
+.theme-trigger-ico { font-size: 1.05rem; }
+
+.sound-toggle[data-state="all"] {
+  background: #ffd60a;
+  border-color: #0b132b;
+  color: #0b132b;
+  box-shadow: 0 4px 0 #0b132b;
+}
+
+/* Section Heads: Tilted Yellow Comic Caption Boxes */
+.head h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffd60a;
+  color: #0b132b;
+  border: 2.5px solid #0b132b;
+  box-shadow: 4px 4px 0 #0b132b;
+  padding: 3px 15px;
+  border-radius: 10px;
+  transform: rotate(-1.2deg);
+  font-family: "Secular One", "Fredoka", sans-serif;
+  font-weight: 400;
+  font-size: 1.24rem;
+}
+.head h2::before {
+  content: "🕷️";
+  font-size: 1rem;
+}
+.head .more {
+  background: #1d4ed8;
+  color: #ffffff;
+  border: 2.5px solid #0b132b;
+  box-shadow: 0 3px 0 #0b132b;
+  font-weight: 700;
+}
+
+/* Continue Card: Comic Action Splash Panel */
+.continue {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255, 214, 10, 0.22) 2px, transparent 2.5px) 0 0 / 14px 14px,
+    linear-gradient(130deg, #e62429 0%, #b81217 48%, #1d4ed8 100%);
+  border: 3px solid #0b132b;
+  border-radius: 24px;
+  box-shadow: 6px 7px 0 #0b132b;
+}
+.continue .kicker {
+  display: inline-block;
+  background: #ffd60a;
+  color: #0b132b;
+  border: 2px solid #0b132b;
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-weight: 800;
+  opacity: 1;
+  margin-bottom: 4px;
+}
+.continue::after {
+  background: #ffd60a;
+  color: #0b132b;
+  border: 3px solid #0b132b;
+  box-shadow: 0 4px 0 #0b132b;
+  font-weight: 900;
+}
+.continue .art-main {
+  border: 3px solid #0b132b;
+  box-shadow: 4px 4px 0 #0b132b;
+}
+
+/* Game Tiles: Comic Issue Panels with Corner Web Stamp */
+.row { padding-top: 10px; padding-bottom: 16px; }
+.tile {
+  position: relative;
+  background: #ffffff;
+  border: 3px solid #0b132b;
+  border-radius: 22px;
+  padding: 8px 8px 11px;
+  box-shadow: 5px 6px 0 #0b132b;
+  transition: transform 0.15s cubic-bezier(.3,1.6,.5,1), box-shadow 0.15s ease;
+}
+.tile::before {
+  content: "🕷️";
+  position: absolute;
+  top: -12px;
+  inset-inline-end: 14px;
+  width: 28px;
+  height: 24px;
+  z-index: 3;
+  background: #ffd60a;
+  border: 2.5px solid #0b132b;
+  border-radius: 999px;
+  box-shadow: 0 2px 0 #0b132b;
+  font-size: 13px;
+  display: grid;
+  place-items: center;
+}
+.tile:hover, .tile:focus-visible {
+  transform: translateY(-4px) rotate(-1deg);
+  background: #fffdf0;
+  box-shadow: 7px 9px 0 #e62429, 7px 9px 0 2px #0b132b;
+}
+.tile:active {
+  transform: translateY(3px);
+  box-shadow: 2px 2px 0 #0b132b;
+}
+.cover {
+  border-radius: 15px;
+  border: 2.5px solid #0b132b;
+  box-shadow: none;
+}
+.tile:hover .cover, .tile:focus-visible .cover {
+  transform: none;
+  box-shadow: none;
+}
+.tile h3 {
+  color: #0b132b;
+  font-weight: 800;
+  margin-top: 9px;
+}
+.tile .meta .num {
+  background: #e8f0fe;
+  border: 2px solid #0b132b;
+  color: #0f256e;
+  font-weight: 800;
+}
+
+.lock-pill {
+  background: #ffd60a;
+  color: #0b132b;
+  border: 2px solid #0b132b;
+  font-weight: 800;
+}
+
+/* Bottom Bar / Side Rail: Spider-Suit Utility Belt */
+.tabs {
+  background: #0f1e47;
+  border: 3px solid #0b132b;
+  box-shadow: 0 6px 0 #0b132b;
+}
+.tab {
+  color: #bfd4ff;
+  font-weight: 700;
+}
+.tab[aria-current="page"] {
+  background: #e62429;
+  color: #ffffff;
+  border: 2px solid #0b132b;
+  box-shadow: 0 3px 0 #0b132b;
+}
+
+/* Settings Dialog */
+.settings-dialog {
+  width: min(94vw, 540px);
+  border: 3.5px solid #0b132b;
+  border-radius: 26px;
+  background: #ffffff;
+  box-shadow: 8px 10px 0 #0b132b;
+  padding: 22px;
+  color: var(--text);
+}
+.settings-dialog::backdrop {
+  background: rgba(11, 19, 43, 0.62);
+  backdrop-filter: blur(3px);
+}
+.settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.settings-head h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  font-family: "Secular One", "Fredoka", sans-serif;
+}
+.settings-close { min-height: 40px; padding: 0 14px; }
+.settings-label {
+  display: block;
+  font-weight: 700;
+  color: var(--text-soft);
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+.theme-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 18px;
+  background: #f8faff;
+  border: 2.5px solid #0b132b;
+  box-shadow: 4px 4px 0 #0b132b;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.12s ease;
+  color: inherit;
+}
+.theme-card:hover { transform: translateY(-2px); }
+.theme-card.is-active {
+  border-color: #0b132b;
+  background: #fff6cc;
+  box-shadow: 4px 5px 0 #e62429, 4px 5px 0 2px #0b132b;
+}
+.theme-card-art {
+  width: 100%;
+  aspect-ratio: 120 / 76;
+  border-radius: 11px;
+  border: 2px solid #0b132b;
+  overflow: hidden;
+}
+.theme-card-art svg { width: 100%; height: 100%; display: block; }
+.theme-card-txt b { display: block; font-size: 0.95rem; }
+.theme-card-txt small { display: block; font-size: 0.76rem; color: var(--text-soft); line-height: 1.25; margin-top: 2px; }
+.theme-check {
+  font-size: 0.74rem;
+  font-weight: 800;
+  background: #e62429;
+  color: #fff;
+  border: 2px solid #0b132b;
+  padding: 1px 10px;
+  border-radius: 999px;
+}
+
+@media (max-width: 520px) {
+  .theme-cards { grid-template-columns: 1fr; }
+  .theme-card { flex-direction: row; text-align: start; }
+  .theme-card-art { width: 92px; flex: none; }
+  .theme-check { margin-inline-start: auto; }
+  .theme-trigger-lbl { display: none; }
+  .theme-trigger { padding: 0; width: 46px; justify-content: center; }
+  .theme-pill { display: none; }
+}
+
+/* Web-sling burst on tap */
+.web-burst {
+  position: fixed;
+  z-index: 999;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: sp-web 0.5s cubic-bezier(.2,1.4,.4,1) forwards;
+}
+@keyframes sp-web {
+  0%   { transform: translate(-50%, -50%) scale(0.2) rotate(-20deg); opacity: 0.95; }
+  70%  { transform: translate(-50%, -50%) scale(1.1) rotate(8deg); opacity: 0.85; }
+  100% { transform: translate(-50%, -50%) scale(1.25) rotate(12deg); opacity: 0; }
+}
