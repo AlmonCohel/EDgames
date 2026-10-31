@@ -57,9 +57,9 @@
       background: #2f6ae8; background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px); background-size: 20px 20px; }
     .cb-site.built { background: linear-gradient(180deg, #8fd3ff, #e4f6ff 75%, #8fdc7a 75%); transition: background .8s; }
     .cb-site svg { display: block; width: 100%; height: auto; }
-    .cb-slot { fill: rgba(255,255,255,.06); stroke: #fff; stroke-width: 2.5; stroke-dasharray: 7 6; }
-    .cb-slot.now { fill: rgba(255,246,170,.35); stroke: #fff6aa; stroke-width: 4; animation: cb-glow .8s ease-in-out infinite alternate; }
-    @keyframes cb-glow { to { fill: rgba(255,246,170,.7); } }
+    .cb-slot { fill: rgba(255,255,255,.12); stroke: #fff; stroke-width: 2.5; stroke-dasharray: 7 6; filter: drop-shadow(0 1px 2px rgba(0,0,0,.25)); }
+    .cb-slot.now { fill: rgba(255,246,170,.5); stroke: #fff6aa; stroke-width: 4; animation: cb-glow .8s ease-in-out infinite alternate; }
+    @keyframes cb-glow { to { fill: rgba(255,246,170,.85); } }
     .cb-piece { stroke: rgba(0,0,0,.18); stroke-width: 2; animation: cb-drop .45s cubic-bezier(.3,1.6,.5,1); transform-box: fill-box; transform-origin: 50% 100%; }
     @keyframes cb-drop { from { transform: translateY(-60px) scale(.8); opacity: 0; } }
     .cb-flag { transform-box: fill-box; transform-origin: 0 50%; animation: cb-wave .6s ease-in-out infinite alternate; }
@@ -103,8 +103,8 @@
       ${EDKit.head(text.ask, lang)}
       <div class="cb-site">
         <svg viewBox="0 0 300 260" aria-hidden="true">
-          <g class="cb-slots">${plan.map((p, i) => shape(p, `cb-slot${i === 0 ? ' now' : ''}`)).join('')}</g>
           <g class="cb-built"></g>
+          <g class="cb-slots">${plan.map((p, i) => shape(p, `cb-slot${i === 0 ? ' now' : ''}`)).join('')}</g>
         </svg>
       </div>
       <div class="cb-tray">${EDKit.shuffle(set.tray).map((k) => `<button type="button" class="kit-opt" data-k="${k}" aria-label="${NAMES[lang][k]}"><svg viewBox="0 0 56 56">${shape(ICON[k], '', COLOUR[k])}</svg></button>`).join('')}</div>`;
