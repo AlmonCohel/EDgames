@@ -27,10 +27,17 @@ const SUBJECTS = [
 ];
 
 /* Age groups the filter offers. A game matches a group when their ranges overlap,
-   so a 3–5 game shows up under both "3–4" and "5–6". */
+   so a 3–5 game shows up under both "3–4" and "5–6".
+
+   "gan" sits in the middle of the catalog's whole 3–8 span, so every game's range
+   passes through age 5 or 6 somewhere — the plain overlap test that correctly
+   narrows the two edge groups matches 100% of games here, making the chip a no-op.
+   matchMin/matchMax (optional, fall back to min/max) let a group ask for more than
+   a one-year graze at its own edge: "gan" requires the game to actually reach the
+   middle of the bracket (age 5.5), not merely touch age 5 or age 6 in passing. */
 const AGE_GROUPS = [
   { id: 'tots',    label: { he: 'גיל 3–4', en: 'Ages 3–4' }, emoji: '🍼', min: 3, max: 4 },
-  { id: 'gan',     label: { he: 'גיל 5–6', en: 'Ages 5–6' }, emoji: '🧸', min: 5, max: 6 },
+  { id: 'gan',     label: { he: 'גיל 5–6', en: 'Ages 5–6' }, emoji: '🧸', min: 5, max: 6, matchMin: 5.5, matchMax: 5.5 },
   { id: 'school',  label: { he: 'גיל 7–8', en: 'Ages 7–8' }, emoji: '🎒', min: 7, max: 8 },
 ];
 

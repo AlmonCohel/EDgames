@@ -84,7 +84,10 @@ function matches(game) {
   if (state.ages.size) {
     const overlaps = [...state.ages].some((id) => {
       const group = AGE_GROUPS.find((a) => a.id === id);
-      return group && game.ageMin <= group.max && game.ageMax >= group.min;
+      if (!group) return false;
+      const lo = group.matchMin ?? group.min;
+      const hi = group.matchMax ?? group.max;
+      return game.ageMin <= hi && game.ageMax >= lo;
     });
     if (!overlaps) return false;
   }
