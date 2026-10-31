@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כיוון 4: בימת הארקייד והדוק (Arcade Stage & Dock) — הגנון של עלמון</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared-themes.css">
+<script src="../../../assets/i18n.js"></script>
+<style>
+:root {
+  --v4-bg: #111622;
+  --v4-bg-soft: #1a2133;
+  --v4-surface: #ffffff;
+  --v4-ink: #141926;
+  --v4-muted: #5b6478;
+  --v4-line: rgba(255, 255, 255, 0.14);
+  --v4-border: #0b0f18;
+  --v4-accent: #f97316;
+  --stage-accent: #2563eb;
+  --stage-glow: rgba(37, 99, 235, 0.25);
+  --stage-tint: #eff6ff;
+}
+
+body[data-kid-theme="princess"] {
+  --stage-accent: #c92a81 !important;
+  --stage-tint: #fff0f8 !important;
+}
+body[data-kid-theme="spiderman"] {
+  --stage-accent: #e62429 !important;
+  --stage-tint: #edf4ff !important;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  background: #f3f5fa;
+  color: var(--v4-ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body[data-kid-theme="princess"] {
+  background: linear-gradient(180deg, #ffeaf5 0%, #fdf5ff 100%) !important;
+}
+body[data-kid-theme="spiderman"] {
+  background: linear-gradient(180deg, #dbe8ff 0%, #eef4ff 100%) !important;
+}
+
+.theater-shell {
+  max-width: 1380px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: 14px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Studio Top Bar */
+.theater-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #ffffff;
+  border: 2px solid rgba(20, 25, 38, 0.1);
+  border-radius: 22px;
+  padding: 10px 16px;
+  box-shadow: 0 8px 24px rgba(20, 25, 38, 0.05);
+  flex-wrap: wrap;
+}
+body[data-kid-theme="spiderman"] .theater-top {
+  border: 2.5px solid #0b132b;
+  box-shadow: 4px 4px 0 #0b132b;
+}
+.theater-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.theater-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--stage-accent);
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.22);
+  flex: none;
+}
+.theater-logo img { width: 26px; height: 26px; display: block; }
+.theater-brand h1 {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.theater-brand small {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--v4-muted);
+  font-weight: 700;
+}
+
+.theater-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.t-ages {
+  display: inline-flex;
+  background: #eef1f7;
+  padding: 3px;
+  border-radius: 12px;
+}
+.t-age-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--v4-muted);
+  font: inherit;
+  font-size: 0.79rem;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.t-age-btn[aria-pressed="true"] {
+  background: #ffffff;
+  color: var(--v4-ink);
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.t-settings-btn {
+  appearance: none;
+  border: 2px solid rgba(20, 25, 38, 0.14);
+  background: #141926;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Main Layout: Vertical World Sidebar + Center Stage & Bottom Cartridge Dock */
+.theater-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 245px minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* Right Sidebar (RTL): 5 World Dial Cards */
+.world-rail {
+  background: #ffffff;
+  border: 2px solid rgba(20, 25, 38, 0.1);
+  border-radius: 26px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 10px 26px rgba(20, 25, 38, 0.05);
+}
+body[data-kid-theme="spiderman"] .world-rail {
+  border: 2.5px solid #0b132b;
+  box-shadow: 5px 5px 0 #0b132b;
+}
+.rail-heading {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--v4-muted);
+  padding: 2px 8px 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.world-tab {
+  appearance: none;
+  font: inherit;
+  color: var(--v4-ink);
+  background: #f7f9fc;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: start;
+  transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+}
+.world-tab:hover {
+  background: #eef2f9;
+}
+.world-tab[aria-selected="true"] {
+  background: var(--w-tint, #eff6ff);
+  border-color: var(--w-color, #2563eb);
+  box-shadow: 0 6px 16px rgba(20, 25, 38, 0.08);
+  transform: translateX(-3px);
+}
+.w-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: var(--w-color, #2563eb);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  flex: none;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+.w-icon svg { width: 22px; height: 22px; }
+.w-meta {
+  min-width: 0;
+  flex: 1;
+}
+.w-meta b {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+.w-meta small {
+  display: block;
+  font-size: 0.73rem;
+  color: var(--v4-muted);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* Center Column: Widescreen Panorama Billboard Stage + Pop-Up Cartridge Dock */
+.stage-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Widescreen Panorama Stage */
+.panorama-billboard {
+  flex: 1;
+  background: #ffffff;
+  border: 2.5px solid var(--stage-accent);
+  border-radius: 30px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 24px;
+  align-items: center;
+  box-shadow: 0 18px 40px rgba(20, 25, 38, 0.08);
+  position: relative;
+  overflow: hidden;
+  background-image: radial-gradient(circle at 10% 15%, var(--stage-tint) 0%, transparent 60%);
+}
+body[data-kid-theme="spiderman"] .panorama-billboard {
+  border: 3px solid #0b132b;
+  box-shadow: 7px 7px 0 #0b132b;
+}
+
+.billboard-art-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #eef2f8;
+  border: 2px solid rgba(20, 25, 38, 0.1);
+  box-shadow: 0 12px 28px rgba(20, 25, 38, 0.12);
+}
+.billboard-art-frame svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.billboard-counter {
+  position: absolute;
+  top: 12px;
+  inset-inline-start: 12px;
+  background: rgba(20, 25, 38, 0.85);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-family: "Space Grotesk", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+
+.billboard-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.billboard-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.b-pill {
+  background: var(--stage-tint);
+  color: var(--stage-accent);
+  border: 1.5px solid var(--stage-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+.b-age-pill {
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+.billboard-info h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2.15rem);
+  font-weight: 900;
+  line-height: 1.1;
+}
+.billboard-info p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--v4-muted);
+  line-height: 1.5;
+}
+
+.billboard-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.stage-play-btn {
+  flex: 1;
+  min-height: 56px;
+  border-radius: 18px;
+  background: var(--stage-accent);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.15rem;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s ease;
+}
+.stage-play-btn:active {
+  transform: translateY(3px);
+}
+.paddle-btn {
+  width: 52px;
+  height: 56px;
+  border-radius: 16px;
+  border: 2px solid rgba(20, 25, 38, 0.15);
+  background: #f8fafc;
+  color: var(--v4-ink);
+  font-size: 1.15rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.paddle-btn:hover {
+  background: #e2e8f0;
+}
+
+/* Bottom Pop-Up Cartridge Dock (Nintendo Switch / Apple TV Carousel Dock) */
+.dock-shelf {
+  background: #141926;
+  color: #ffffff;
+  border-radius: 26px;
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 14px 30px rgba(20, 25, 38, 0.18);
+}
+body[data-kid-theme="princess"] .dock-shelf {
+  background: linear-gradient(135deg, #4a154b, #701a5c);
+  border: 2px solid #ffd166;
+}
+body[data-kid-theme="spiderman"] .dock-shelf {
+  background: #0b132b;
+  border: 3px solid #e62429;
+}
+
+.dock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 4px;
+}
+.dock-title {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.86);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dock-random-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.dock-strip {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 4px 4px;
+  scrollbar-width: none;
+}
+.dock-strip::-webkit-scrollbar { display: none; }
+
+.dock-cart {
+  appearance: none;
+  font: inherit;
+  width: 142px;
+  flex: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  padding: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  gap: 6px;
+  transition: transform 0.16s cubic-bezier(.3,1.5,.5,1), background 0.16s ease, border-color 0.16s ease;
+}
+.dock-cart:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.14);
+}
+.dock-cart[aria-selected="true"] {
+  background: #ffffff;
+  color: #141926;
+  border-color: #fbbf24;
+  transform: translateY(-7px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+}
+.dock-cart-art {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #22293a;
+  position: relative;
+}
+.dock-cart-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.dock-cart-num {
+  position: absolute;
+  top: 5px;
+  inset-inline-start: 5px;
+  background: rgba(15, 18, 28, 0.82);
+  color: #ffffff;
+  font-family: "Space Grotesk", monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+.dock-cart-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 960px) {
+  .theater-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .world-rail {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 8px;
+    border-radius: 20px;
+    scrollbar-width: none;
+  }
+  .world-rail::-webkit-scrollbar { display: none; }
+  .rail-heading { display: none; }
+  .world-tab {
+    min-width: 165px;
+    flex: none;
+  }
+  .world-tab[aria-selected="true"] {
+    transform: translateY(-2px);
+  }
+  .panorama-billboard {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 440px) {
+  .theater-shell {
+    padding: 10px 10px 18px;
+    gap: 10px;
+  }
+  .theater-top {
+    padding: 8px 12px;
+  }
+  .theater-brand small {
+    display: none;
+  }
+  .billboard-info h2 {
+    font-size: 1.35rem;
+  }
+  .billboard-info p {
+    font-size: 0.88rem;
+  }
+  .dock-cart {
+    width: 124px;
+  }
+}
+</style>
+</head>
+<body>
+
+<script src="../../../assets/glyphs.js"></script>
+<script src="../../../assets/scenes.js"></script>
+<script src="../../../assets/covers.js"></script>
+<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
+
+<div class="theater-shell">
+  <header class="theater-top">
+    <div class="theater-brand">
+      <a class="theater-logo" href="../../../index.html?home=1" aria-label="על האתר">
+        <img src="../../../favicon.svg" alt="">
+      </a>
+      <div>
+        <h1>הגנון של עלמון</h1>
+        <small>בימת ארקייד ודוק קלטות · בהשראת Apple TV Kids & Switch Dock</small>
+      </div>
+      <span class="v4-kid-crust v4-kid-crust--princess">👑 בימת הנסיכות</span>
+      <span class="v4-kid-crust v4-kid-crust--spiderman">🕷️ בימת ספיידרמן</span>
+    </div>
+
+    <div class="theater-actions">
+      <div class="t-ages" role="group" aria-label="סינון לפי גיל">
+        <button type="button" class="t-age-btn" data-age="all" aria-pressed="true">כל הגילאים</button>
+        <button type="button" class="t-age-btn" data-age="tots" aria-pressed="false">3–4</button>
+        <button type="button" class="t-age-btn" data-age="gan" aria-pressed="false">5–6</button>
+        <button type="button" class="t-age-btn" data-age="school" aria-pressed="false">7–8</button>
+      </div>
+      <button type="button" class="t-settings-btn" data-open-settings>
+        <span>⚙️</span>
+        <span>עיצוב והגדרות</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="theater-body">
+    <!-- World Selector Rail -->
+    <aside class="world-rail" id="world-rail" role="tablist" aria-label="עולמות המשחק"></aside>
+
+    <!-- Main Center Stage + Bottom Dock -->
+    <main class="stage-column">
+      <section class="panorama-billboard" aria-live="polite">
+        <div class="billboard-art-frame" id="stage-art"></div>
+
+        <div class="billboard-info">
+          <div class="billboard-pills">
+            <span class="b-pill" id="stage-room-pill">מעבדת המספרים</span>
+            <span class="b-age-pill" id="stage-age-pill">גיל 4–6</span>
+          </div>
+          <h2 id="stage-title">סופרים חיות</h2>
+          <p id="stage-blurb">סופרים כמה חיות מופיעות על המסך ולוחצים על המספר הנכון.</p>
+
+          <div class="billboard-cta-row">
+            <button type="button" class="paddle-btn" id="stage-prev" aria-label="משחק קודם">❯</button>
+            <a class="stage-play-btn" id="stage-play" href="../../../game.html?id=count-animals">
+              <span>▶</span>
+              <span>שחקו עכשיו</span>
+            </a>
+            <button type="button" class="paddle-btn" id="stage-next" aria-label="משחק הבא">❮</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Cartridge Carousel Dock -->
+      <section class="dock-shelf" aria-label="דוק קלטות החדר">
+        <div class="dock-header">
+          <span class="dock-title" id="dock-title">🎮 קלטות בחדר (לחצו לתצוגה או להפעלה)</span>
+          <button type="button" class="dock-random-btn" id="dock-random">🎲 בחירה אקראית</button>
+        </div>
+        <div class="dock-strip" id="dock-strip" role="listbox" aria-label="קלטות המשחק"></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script src="../../../assets/catalog.js"></script>
+<script src="../../../assets/tiers.js"></script>
+<script src="../../../assets/auth.js"></script>
+<script src="../../../assets/recent.js"></script>
+<script src="../../../assets/music.js"></script>
+<script src="../shared-settings.js"></script>
+<script>
+  EDV4.init();
+
+  const WORLDS = [
+    {
+      id: 'numbers',
+      name: 'מעבדת המספרים',
+      sub: 'חשבון, מספרים וחידות',
+      mark: 'numbers',
+      color: '#2563eb',
+      tint: '#eff6ff',
+      subjects: ['numbers', 'math', 'logic'],
+    },
+    {
+      id: 'stories',
+      name: 'חדר המילים והאגדות',
+      sub: 'אותיות, אנגלית וסיפורים',
+      mark: 'letters',
+      color: '#9333ea',
+      tint: '#faf5ff',
+      subjects: ['letters', 'english', 'fairytale'],
+    },
+    {
+      id: 'studio',
+      name: 'סטודיו היצירה והמוזיקה',
+      sub: 'צבעים, צורות ונגינה',
+      mark: 'shapes',
+      color: '#ea580c',
+      tint: '#fff7ed',
+      subjects: ['shapes', 'music'],
+    },
+    {
+      id: 'nature',
+      name: 'חממת החיות והזיכרון',
+      sub: 'טבע, חיות וזוגות קלפים',
+      mark: 'nature',
+      color: '#16a34a',
+      tint: '#f0fdf4',
+      subjects: ['nature', 'memory'],
+    },
+    {
+      id: 'computer',
+      name: 'מועדון המחשב',
+      sub: 'עכבר, מקלדת ורובוטים',
+      mark: 'computer',
+      color: '#0284c7',
+      tint: '#f0f9ff',
+      subjects: ['computer'],
+    },
+  ];
+
+  const state = {
+    worldId: 'numbers',
+    age: 'all',
+    selectedId: '',
+  };
+
+  function matchesAge(g) {
+    if (state.age === 'all') return true;
+    const grp = AGE_GROUPS.find((a) => a.id === state.age);
+    return grp ? (g.ageMin <= grp.max && g.ageMax >= grp.min) : true;
+  }
+
+  function worldGames(w) {
+    return EDV4.readyGames().filter((g) => w.subjects.includes(g.subject) && matchesAge(g));
+  }
+
+  function renderRail() {
+    const rail = document.getElementById('world-rail');
+    rail.innerHTML = `<div class="rail-heading">5 עולמות משחק</div>` + WORLDS.map((w) => {
+      const count = worldGames(w).length;
+      return `
+        <button type="button" class="world-tab" role="tab" data-world="${w.id}"
+          aria-selected="${state.worldId === w.id}"
+          style="--w-color:${w.color}; --w-tint:${w.tint}">
+          <span class="w-icon">${EDV4.markHtml(w.mark)}</span>
+          <span class="w-meta">
+            <b>${w.name}</b>
+            <small>${count} משחקים</small>
+          </span>
+        </button>
+      `;
+    }).join('');
+
+    rail.querySelectorAll('.world-tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.worldId = btn.dataset.world;
+        renderAll();
+      });
+    });
+  }
+
+  function renderStageAndDock() {
+    const world = WORLDS.find((w) => w.id === state.worldId) || WORLDS[0];
+    const list = worldGames(world);
+    if (!list.some((g) => g.id === state.selectedId) && list.length) {
+      state.selectedId = list[0].id;
+    }
+    const active = list.find((g) => g.id === state.selectedId) || list[0];
+    const idx = list.indexOf(active);
+
+    document.documentElement.style.setProperty('--stage-accent', world.color);
+    document.documentElement.style.setProperty('--stage-tint', world.tint);
+
+    if (active) {
+      const sub = EDV4.subjectById(active.subject);
+      document.getElementById('stage-art').innerHTML = `
+        ${EDV4.coverHtml(active)}
+        <span class="billboard-counter">STAGE ${String(idx + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')}</span>
+      `;
+      document.getElementById('stage-room-pill').textContent = `${world.name} · ${EDV4.pick(sub.label)}`;
+      document.getElementById('stage-age-pill').textContent = `גיל ${active.ageMin}–${active.ageMax}`;
+      document.getElementById('stage-title').textContent = EDV4.pick(active.title);
+      document.getElementById('stage-blurb').textContent = EDV4.pick(active.blurb);
+      document.getElementById('stage-play').href = EDV4.gameUrl(active.id);
+    }
+
+    document.getElementById('dock-title').textContent = `🎮 ${world.name} — ${list.length} קלטות בדוק`;
+    const strip = document.getElementById('dock-strip');
+    strip.innerHTML = list.map((g, i) => `
+      <button type="button" class="dock-cart" role="option" data-id="${g.id}" aria-selected="${g.id === state.selectedId}">
+        <div class="dock-cart-art">
+          ${EDV4.coverHtml(g)}
+          <span class="dock-cart-num">#${String(i + 1).padStart(2, '0')}</span>
+        </div>
+        <span class="dock-cart-name">${EDV4.pick(g.title)}</span>
+      </button>
+    `).join('');
+
+    strip.querySelectorAll('.dock-cart').forEach((card) => {
+      card.addEventListener('click', () => {
+        if (state.selectedId === card.dataset.id) {
+          location.href = EDV4.gameUrl(card.dataset.id);
+        } else {
+          state.selectedId = card.dataset.id;
+          renderStageAndDock();
+        }
+      });
+    });
+  }
+
+  function renderAll() {
+    renderRail();
+    renderStageAndDock();
+  }
+
+  document.querySelectorAll('.t-age-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.age = btn.dataset.age;
+      document.querySelectorAll('.t-age-btn').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      renderAll();
+    });
+  });
+
+  document.getElementById('stage-prev').addEventListener('click', () => {
+    const world = WORLDS.find((w) => w.id === state.worldId) || WORLDS[0];
+    const list = worldGames(world);
+    if (!list.length) return;
+    const idx = list.findIndex((g) => g.id === state.selectedId);
+    state.selectedId = list[(idx - 1 + list.length) % list.length].id;
+    renderStageAndDock();
+  });
+
+  document.getElementById('stage-next').addEventListener('click', () => {
+    const world = WORLDS.find((w) => w.id === state.worldId) || WORLDS[0];
+    const list = worldGames(world);
+    if (!list.length) return;
+    const idx = list.findIndex((g) => g.id === state.selectedId);
+    state.selectedId = list[(idx + 1) % list.length].id;
+    renderStageAndDock();
+  });
+
+  document.getElementById('dock-random').addEventListener('click', () => {
+    const world = WORLDS.find((w) => w.id === state.worldId) || WORLDS[0];
+    const list = worldGames(world);
+    if (!list.length) return;
+    state.selectedId = list[Math.floor(Math.random() * list.length)].id;
+    renderStageAndDock();
+  });
+
+  renderAll();
+</script>
+</body>
+</html>

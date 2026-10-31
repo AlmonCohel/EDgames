@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EDgames — 4 כיווני מבנה ועיצוב חדשים (Round V4)</title>
+<title>EDgames — 5 כיווני מבנה ועיצוב (2 קיימים + 3 חדשים)</title>
 <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +28,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 .hub-wrap {
-  max-width: 1760px;
+  max-width: 1780px;
   margin: 0 auto;
   padding: 26px 20px 72px;
 }
@@ -53,15 +53,15 @@ body {
 }
 .hub-header h1 {
   margin: 0 0 8px;
-  font-size: clamp(1.7rem, 3.2vw, 2.55rem);
+  font-size: clamp(1.65rem, 3vw, 2.45rem);
   font-weight: 900;
   line-height: 1.1;
 }
 .hub-header p {
   margin: 0;
   color: var(--muted);
-  max-width: 74ch;
-  font-size: 0.98rem;
+  max-width: 78ch;
+  font-size: 0.96rem;
 }
 
 .hub-toolbar {
@@ -112,10 +112,10 @@ body {
   background: #2d364a;
 }
 
-/* 4-Column Grid on Wide Screens, 2-Column on Laptop, 1-Column on Phone */
+/* 3-Column Grid for 5 Directions on Desktop, 2-Column on Laptop, 1-Column on Phone */
 .directions-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 body[data-view="desktop"] .directions-grid {
@@ -124,12 +124,16 @@ body[data-view="desktop"] .directions-grid {
 
 .dir-card {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1.5px solid var(--line);
   border-radius: 24px;
   padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+}
+.dir-card--new {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.15);
 }
 .dir-top {
   display: flex;
@@ -142,16 +146,20 @@ body[data-view="desktop"] .directions-grid {
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   padding: 3px 9px;
   border-radius: 999px;
-  background: rgba(96, 165, 250, 0.15);
-  color: #93c5fd;
+  background: rgba(148, 163, 184, 0.18);
+  color: #cbd5e1;
   margin-bottom: 4px;
+}
+.dir-badge--new {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
 }
 .dir-top h2 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.22rem;
   font-weight: 900;
   line-height: 1.15;
 }
@@ -195,6 +203,7 @@ body[data-view="desktop"] .directions-grid {
   border: 2px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 20px 44px rgba(0, 0, 0, 0.45);
   overflow: hidden;
+  margin-top: auto;
 }
 .device-screen {
   position: relative;
@@ -221,7 +230,7 @@ body[data-view="desktop"] .device-screen iframe {
   height: 820px;
 }
 
-@media (max-width: 1480px) {
+@media (max-width: 1320px) {
   .directions-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -238,9 +247,9 @@ body[data-view="desktop"] .device-screen iframe {
 <div class="hub-wrap">
   <header class="hub-header">
     <div>
-      <div class="hub-eyebrow">EDGAMES · ARCHITECTURAL REDESIGN · ROUND V4</div>
-      <h1>4 מבנים חדשים לאפליקציה — מקצועיים להורים, קסומים לילדים</h1>
-      <p>במקום תבנית ה־Web הגנרית (שורות גלילה אינסופיות וכפתורי פסטל שכולם מייצרים היום ב־AI), כל אחת מ־4 ההצעות משנה את <b>מבנה האפליקציה עצמו</b> בהשראת מוצרי הילדים והמשחקים הטובים בעולם. בכולן משולב גם בורר העיצוב בהגדרות (סטודיו / נסיכות ואגדות 👑 / ספיידרמן 🕷️).</p>
+      <div class="hub-eyebrow">EDGAMES · 5 ARCHITECTURAL DIRECTIONS · 2 KEPT + 3 NEW HYBRIDS</div>
+      <h1>5 כיווני מבנה לאפליקציה — הקונסולה, חדרי המשחקייה, ו־3 שילובים חדשים</h1>
+      <p>שמרנו את <b>1. הקונסולה</b> ואת <b>2. חדרי המשחקייה</b>, והוספנו <b>3 כיוונים חדשים (#3–#5)</b> שמשלבים בין הפוקוס והמקצועיות של הקונסולה לבין החלוקה ל־5 עולמות ידידותיים לילדים. בכולם פועל בורר העיצוב בהגדרות (סטודיו / נסיכות ואגדות 👑 / ספיידרמן 🕷️).</p>
     </div>
 
     <div class="hub-toolbar">
@@ -260,67 +269,83 @@ body[data-view="desktop"] .device-screen iframe {
   </header>
 
   <main class="directions-grid">
-    <!-- Direction 1 -->
+    <!-- Design 1 (Kept) -->
     <article class="dir-card">
       <div class="dir-top">
         <div>
-          <span class="dir-badge">כיוון 1 · Console Deck</span>
-          <h2>הקונסולה (ED-Deck)</h2>
+          <span class="dir-badge">כיוון 1 · נשמר מהסבב הקודם</span>
+          <h2>הקונסולה (Console Deck)</h2>
         </div>
         <a class="dir-open-link" href="1-console/index.html" target="_blank">פתיחה במסך מלא ↗</a>
       </div>
-      <p class="dir-desc">מבטל את גלילת הדף לגמרי: במה מרכזית למשחק הפעיל עם כפתור הפעלה ענק, מחסנית קלטות ממוספרות (<code>#01–#34</code>), ודוק ערוצי נושאים בתחתית.</p>
+      <p class="dir-desc">מעטפת קונסולה כהה עם במה מרכזית למשחק הפעיל, כפתורי דפדוף, מחסנית 34 קלטות ממוספרות (<code>#01–#34</code>), ודוק של 11 ערוצי נושאים בתחתית.</p>
       <div class="dir-ref"><b>השראה:</b> Nintendo Switch Home UI + Teenage Engineering Play</div>
       <div class="device-stage">
-        <div class="device-screen"><iframe src="1-console/index.html" title="Direction 1 Console Deck"></iframe></div>
+        <div class="device-screen"><iframe src="1-console/index.html" title="Design 1 Console Deck"></iframe></div>
       </div>
     </article>
 
-    <!-- Direction 2 -->
+    <!-- Design 2 (Kept) -->
     <article class="dir-card">
       <div class="dir-top">
         <div>
-          <span class="dir-badge">כיוון 2 · Montessori Atelier</span>
-          <h2>הסטודיו השקט (מגש מונטסורי)</h2>
-        </div>
-        <a class="dir-open-link" href="2-atelier/index.html" target="_blank">פתיחה במסך מלא ↗</a>
-      </div>
-      <p class="dir-desc">אפס רעש ויזואלי: לוח עץ של מגירות נושאים בצד, ומגש שקעים א־סימטרי (Bento) שבו כל משחק יושב בתוך תא שקט וברור בלי עומס של שורות כפולות.</p>
-      <div class="dir-ref"><b>השראה:</b> Pok Pok (זוכה Apple Design Award) + מגשי עץ סקנדינביים</div>
-      <div class="device-stage">
-        <div class="device-screen"><iframe src="2-atelier/index.html" title="Direction 2 Montessori Atelier"></iframe></div>
-      </div>
-    </article>
-
-    <!-- Direction 3 -->
-    <article class="dir-card">
-      <div class="dir-top">
-        <div>
-          <span class="dir-badge">כיוון 3 · Editorial Book</span>
-          <h2>ספר המשחקים המאויר</h2>
-        </div>
-        <a class="dir-open-link" href="3-editorial/index.html" target="_blank">פתיחה במסך מלא ↗</a>
-      </div>
-      <p class="dir-desc">במקום קרוסלות אופקיות שחותכות כרטיסים: עיצוב מערכתי מוקפד כמו מגזין ילדים מודפס — תוכן עניינים לפי פרקים, כפולת שער מרכזית, ולוחות ממוספרים בקווים חדים.</p>
-      <div class="dir-ref"><b>השראה:</b> Chronicle Books + NYT Games + Apple Arcade Editorial</div>
-      <div class="device-stage">
-        <div class="device-screen"><iframe src="3-editorial/index.html" title="Direction 3 Editorial Book"></iframe></div>
-      </div>
-    </article>
-
-    <!-- Direction 4 -->
-    <article class="dir-card">
-      <div class="dir-top">
-        <div>
-          <span class="dir-badge">כיוון 4 · Play-Rooms</span>
-          <h2>5 חדרי המשחקייה</h2>
+          <span class="dir-badge">כיוון 2 · נשמר מהסבב הקודם</span>
+          <h2>5 חדרי המשחקייה (Play-Rooms)</h2>
         </div>
         <a class="dir-open-link" href="4-playrooms/index.html" target="_blank">פתיחה במסך מלא ↗</a>
       </div>
-      <p class="dir-desc">ילד בן 4 לא צריך לראות 34 משחקים ו־11 תגיות טקסט בבת אחת: האתר בנוי מ־5 דלתות מאוירות (חדר הסיפורים, מעבדת המספרים, סטודיו המוזיקה, חממת הטבע, מועדון המחשב).</p>
-      <div class="dir-ref"><b>השראה:</b> Sago Mini World + Toca Life + מוזיאוני ילדים</div>
+      <p class="dir-desc">חלוקת האתר ל־5 שערים מאוירים (חדר המילים, מעבדת המספרים, סטודיו היצירה, חממת החיות, מועדון המחשב) כך שהילד נכנס לחדר אחד מואר בכל פעם.</p>
+      <div class="dir-ref"><b>השראה:</b> Sago Mini World + מוזיאוני ילדים</div>
       <div class="device-stage">
-        <div class="device-screen"><iframe src="4-playrooms/index.html" title="Direction 4 Play-Rooms"></iframe></div>
+        <div class="device-screen"><iframe src="4-playrooms/index.html" title="Design 2 Play-Rooms"></iframe></div>
+      </div>
+    </article>
+
+    <!-- Design 3 (NEW: Direct Hybrid of Console + Play-Rooms) -->
+    <article class="dir-card dir-card--new">
+      <div class="dir-top">
+        <div>
+          <span class="dir-badge dir-badge--new">כיוון 3 · חדש (שילוב קונסולה + חדרים)</span>
+          <h2>קונסולת החדרים (Room-Deck Hybrid)</h2>
+        </div>
+        <a class="dir-open-link" href="5-room-console/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+      </div>
+      <p class="dir-desc"><b>החיבור הישיר בין שני הכיוונים שאהבת:</b> גוף קונסולה בהיר ויוקרתי שבו 5 כפתורי שערים בראש המסך מחליפים בין 5 חדרי המשחקייה, ובכל חדר מופיעים <b>רק 5–9 קלטות גדולות</b> לצד מסך תצוגה ושיגור של הקונסולה.</p>
+      <div class="dir-ref"><b>השראה:</b> Switch OLED White + Playdate + Sago Mini</div>
+      <div class="device-stage">
+        <div class="device-screen"><iframe src="5-room-console/index.html" title="Design 3 Room-Deck Hybrid"></iframe></div>
+      </div>
+    </article>
+
+    <!-- Design 4 (NEW: Widescreen Arcade Stage + Pop-Up Cartridge Dock) -->
+    <article class="dir-card dir-card--new">
+      <div class="dir-top">
+        <div>
+          <span class="dir-badge dir-badge--new">כיוון 4 · חדש (במת ענק + דוק קלטות)</span>
+          <h2>בימת הארקייד והדוק (Arcade Stage & Dock)</h2>
+        </div>
+        <a class="dir-open-link" href="6-arcade-theater/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+      </div>
+      <p class="dir-desc">במקום לפצל את המסך לגריד צפוף: סרגל צד של 5 עולמות משחק, <b>במת פנורמה ענקית במרכז</b> למשחק הנבחר עם כפתורי דפדוף (כמו View-Master), ודוק קלטות תחתון שבו הקלטת הפעילה קופצת למעלה.</p>
+      <div class="dir-ref"><b>השראה:</b> Apple TV Kids + Sony Astro Bot + Switch Home Dock</div>
+      <div class="device-stage">
+        <div class="device-screen"><iframe src="6-arcade-theater/index.html" title="Design 4 Arcade Stage & Dock"></iframe></div>
+      </div>
+    </article>
+
+    <!-- Design 5 (NEW: Stepping-Stone Adventure Board + Docked Console Controller) -->
+    <article class="dir-card dir-card--new">
+      <div class="dir-top">
+        <div>
+          <span class="dir-badge dir-badge--new">כיוון 5 · חדש (מסלול תחנות + סרגל קונסולה)</span>
+          <h2>לוח התחנות והקונסולה (Stepping-Stone Pass)</h2>
+        </div>
+        <a class="dir-open-link" href="7-discovery-pass/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+      </div>
+      <p class="dir-desc">בכל אחד מ־5 העולמות המשחקים מסודרים כ<b>מסלול תחנות מדורג לפי גיל</b> (<code>תחנה #01</code> עד <code>#09</code>, כשלראשונה משבצת פתיחה כפולה), ובתחתית המסך צף <b>סרגל שליטה של קונסולה</b> עם כפתור הגרלת תחנה ושיגור מיידי.</p>
+      <div class="dir-ref"><b>השראה:</b> Khan Academy Kids + Super Mario Wonder World Map</div>
+      <div class="device-stage">
+        <div class="device-screen"><iframe src="7-discovery-pass/index.html" title="Design 5 Stepping-Stone Pass"></iframe></div>
       </div>
     </article>
   </main>

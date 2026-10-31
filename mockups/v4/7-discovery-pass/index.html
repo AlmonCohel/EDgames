@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כיוון 5: לוח התחנות והקונסולה (Stepping-Stone Board & Console Bar) — הגנון של עלמון</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared-themes.css">
+<script src="../../../assets/i18n.js"></script>
+<style>
+:root {
+  --v4-bg: #f6f3ec;
+  --v4-bg-soft: #eae5d9;
+  --v4-surface: #ffffff;
+  --v4-ink: #191d26;
+  --v4-muted: #5e6678;
+  --v4-line: rgba(25, 29, 38, 0.12);
+  --v4-border: #191d26;
+  --v4-accent: #16a34a;
+  --world-color: #16a34a;
+  --world-tint: #f0fdf4;
+  --world-rim: #bbf7d0;
+}
+
+body[data-kid-theme="princess"] {
+  --world-color: #c92a81 !important;
+  --world-tint: #fff0f8 !important;
+  --world-rim: #f3b2d8 !important;
+}
+body[data-kid-theme="spiderman"] {
+  --world-color: #e62429 !important;
+  --world-tint: #edf4ff !important;
+  --world-rim: #1d4ed8 !important;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  background: var(--v4-bg);
+  color: var(--v4-ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.pass-shell {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 14px 16px 118px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Header */
+.pass-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #ffffff;
+  border: 2px solid rgba(25, 29, 38, 0.1);
+  border-radius: 22px;
+  padding: 10px 16px;
+  box-shadow: 0 6px 20px rgba(25, 29, 38, 0.04);
+  flex-wrap: wrap;
+}
+body[data-kid-theme="spiderman"] .pass-header {
+  border: 2.5px solid #0b132b;
+  box-shadow: 4px 4px 0 #0b132b;
+}
+.pass-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.pass-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--world-color);
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+  flex: none;
+}
+.pass-logo img { width: 26px; height: 26px; display: block; }
+.pass-brand h1 {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.pass-brand small {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--v4-muted);
+  font-weight: 700;
+}
+
+.pass-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.p-ages {
+  display: inline-flex;
+  background: #eff1f5;
+  padding: 3px;
+  border-radius: 12px;
+}
+.p-age-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--v4-muted);
+  font: inherit;
+  font-size: 0.79rem;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.p-age-btn[aria-pressed="true"] {
+  background: #ffffff;
+  color: var(--v4-ink);
+  font-weight: 800;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+.p-settings-btn {
+  appearance: none;
+  border: 2px solid rgba(25, 29, 38, 0.14);
+  background: #ffffff;
+  color: var(--v4-ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 5 World Islands Passport Bar */
+.islands-bar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.island-card {
+  appearance: none;
+  font: inherit;
+  color: var(--v4-ink);
+  background: #ffffff;
+  border: 2px solid rgba(25, 29, 38, 0.12);
+  border-radius: 20px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: start;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  min-width: 0;
+}
+.island-card:hover {
+  transform: translateY(-2px);
+}
+.island-card[aria-selected="true"] {
+  background: var(--i-tint, #f0fdf4);
+  border-color: var(--i-color, #16a34a);
+  box-shadow: 0 8px 20px rgba(25, 29, 38, 0.08);
+  transform: translateY(-3px);
+}
+.island-orb {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--i-color, #16a34a);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  flex: none;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+.island-orb svg { width: 22px; height: 22px; }
+.island-txt {
+  min-width: 0;
+  flex: 1;
+}
+.island-txt b {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 900;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.island-txt small {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--v4-muted);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* Stepping-Stone Trail Board */
+.trail-board {
+  background: var(--world-tint);
+  border: 3px solid var(--world-rim);
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background-image:
+    radial-gradient(rgba(25, 29, 38, 0.07) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+body[data-kid-theme="spiderman"] .trail-board {
+  border: 3px solid #0b132b;
+  box-shadow: 7px 7px 0 #0b132b;
+}
+
+/* Trail Header Banner */
+.trail-banner {
+  background: #ffffff;
+  border: 2px solid rgba(25, 29, 38, 0.1);
+  border-radius: 22px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.trail-banner-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.trail-crest {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--world-color);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.trail-crest svg { width: 28px; height: 28px; }
+.trail-banner-main h2 {
+  margin: 0 0 3px;
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+.trail-banner-main p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--v4-muted);
+  font-weight: 500;
+}
+.trail-progress-pill {
+  background: var(--world-tint);
+  color: var(--world-color);
+  border: 1.5px solid var(--world-color);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+/* Bento Stepping-Stone Grid (Station #01 is 2-column Hero on Desktop) */
+.stations-bento {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stone-card {
+  appearance: none;
+  font: inherit;
+  color: var(--v4-ink);
+  background: #ffffff;
+  border: 2.5px solid rgba(25, 29, 38, 0.12);
+  border-bottom-width: 6px;
+  border-radius: 24px;
+  padding: 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  gap: 10px;
+  position: relative;
+  transition: transform 0.16s cubic-bezier(.3,1.5,.5,1), border-color 0.16s ease, box-shadow 0.16s ease;
+  min-width: 0;
+}
+.stone-card:hover {
+  transform: translateY(-4px);
+}
+.stone-card[aria-selected="true"] {
+  border-color: var(--world-color);
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.16), 0 14px 28px rgba(25, 29, 38, 0.1);
+  transform: translateY(-4px);
+}
+body[data-kid-theme="spiderman"] .stone-card {
+  border-color: #0b132b;
+}
+
+/* First Station is a Double-Wide Featured Stepping Stone on Desktop */
+.stone-card--featured {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.stone-art {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #eef2f6;
+  position: relative;
+}
+.stone-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.station-step-badge {
+  position: absolute;
+  top: 10px;
+  inset-inline-start: 10px;
+  background: #191d26;
+  color: #ffffff;
+  font-family: "Space Grotesk", "Heebo", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.station-age-tag {
+  position: absolute;
+  bottom: 10px;
+  inset-inline-end: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #191d26;
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.stone-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.stone-kicker {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--world-color);
+}
+.stone-title {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+.stone-card--featured .stone-title {
+  font-size: 1.4rem;
+}
+.stone-blurb {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--v4-muted);
+  line-height: 1.42;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.stone-action-hint {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--world-color);
+}
+
+/* Floating Docked Console Player Bar at Bottom */
+.console-dock-bar {
+  position: fixed;
+  bottom: 14px;
+  inset-inline: 16px;
+  max-width: 1080px;
+  margin: 0 auto;
+  background: #191d26;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  border-radius: 24px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 18px 42px rgba(15, 18, 28, 0.38);
+  z-index: 30;
+}
+body[data-kid-theme="princess"] .console-dock-bar {
+  background: linear-gradient(135deg, #4a154b, #7b1fa2);
+  border-color: #ffd166;
+}
+body[data-kid-theme="spiderman"] .console-dock-bar {
+  background: #0b132b;
+  border: 3px solid #ffd60a;
+}
+
+.dock-bar-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.dock-bar-thumb {
+  width: 56px;
+  height: 44px;
+  border-radius: 11px;
+  overflow: hidden;
+  background: #2d3548;
+  flex: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+}
+.dock-bar-thumb svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.dock-bar-text {
+  min-width: 0;
+}
+.dock-bar-step {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fbbf24;
+}
+.dock-bar-name {
+  display: block;
+  font-size: 1rem;
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dock-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+.bar-nav-btn {
+  width: 40px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.bar-dice-btn {
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.bar-play-btn {
+  height: 46px;
+  padding: 0 20px;
+  border-radius: 14px;
+  background: var(--world-color);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.96rem;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 920px) {
+  .islands-bar {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .islands-bar::-webkit-scrollbar { display: none; }
+  .island-card {
+    min-width: 170px;
+    flex: none;
+  }
+  .stations-bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .stone-card--featured {
+    grid-column: span 2;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .pass-shell {
+    padding: 10px 10px 110px;
+    gap: 10px;
+  }
+  .pass-header {
+    padding: 8px 12px;
+  }
+  .pass-brand small {
+    display: none;
+  }
+  .trail-board {
+    padding: 12px;
+    border-radius: 22px;
+  }
+  .trail-banner {
+    padding: 12px;
+  }
+  .trail-banner-main p {
+    display: none;
+  }
+  .stations-bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .stone-card {
+    padding: 10px;
+    border-radius: 18px;
+  }
+  .stone-card--featured {
+    grid-column: span 2;
+  }
+  .stone-title {
+    font-size: 0.96rem;
+  }
+  .stone-blurb {
+    display: none;
+  }
+  .stone-card--featured .stone-blurb {
+    display: -webkit-box;
+  }
+  .bar-dice-btn {
+    display: none;
+  }
+  .console-dock-bar {
+    inset-inline: 10px;
+    bottom: 10px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .dock-bar-thumb {
+    width: 44px;
+    height: 36px;
+  }
+  .dock-bar-step {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar-nav-btn {
+    width: 34px;
+    height: 40px;
+  }
+  .bar-play-btn {
+    height: 40px;
+    padding: 0 12px;
+    font-size: 0.84rem;
+    white-space: nowrap;
+  }
+}
+</style>
+</head>
+<body>
+
+<script src="../../../assets/glyphs.js"></script>
+<script src="../../../assets/scenes.js"></script>
+<script src="../../../assets/covers.js"></script>
+<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
+
+<div class="pass-shell">
+  <header class="pass-header">
+    <div class="pass-brand">
+      <a class="pass-logo" href="../../../index.html?home=1" aria-label="על האתר">
+        <img src="../../../favicon.svg" alt="">
+      </a>
+      <div>
+        <h1>הגנון של עלמון</h1>
+        <small>לוח תחנות מדורג + סרגל קונסולה · בהשראת Khan Academy Kids & Mario Wonder</small>
+      </div>
+      <span class="v4-kid-crust v4-kid-crust--princess">👑 ממלכת האגדות</span>
+      <span class="v4-kid-crust v4-kid-crust--spiderman">🕷️ מסלול ספיידרמן</span>
+    </div>
+
+    <div class="pass-controls">
+      <div class="p-ages" role="group" aria-label="סינון לפי גיל">
+        <button type="button" class="p-age-btn" data-age="all" aria-pressed="true">כל הגילאים</button>
+        <button type="button" class="p-age-btn" data-age="tots" aria-pressed="false">3–4</button>
+        <button type="button" class="p-age-btn" data-age="gan" aria-pressed="false">5–6</button>
+        <button type="button" class="p-age-btn" data-age="school" aria-pressed="false">7–8</button>
+      </div>
+      <button type="button" class="p-settings-btn" data-open-settings>
+        <span>⚙️</span>
+        <span>עיצוב והגדרות</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 5 World Islands -->
+  <nav class="islands-bar" id="islands-bar" role="tablist" aria-label="5 איי המשחק"></nav>
+
+  <!-- Stepping-Stone Board -->
+  <main class="trail-board">
+    <div class="trail-banner">
+      <div class="trail-banner-main">
+        <div class="trail-crest" id="trail-crest"></div>
+        <div>
+          <h2 id="trail-title">אי הטבע והזיכרון</h2>
+          <p id="trail-desc">מסלול תחנות מדורג מהקל אל המאתגר — בחרו תחנה או שחקו מהסרגל התחתון.</p>
+        </div>
+      </div>
+      <span class="trail-progress-pill" id="trail-count">6 תחנות במסלול</span>
+    </div>
+
+    <div class="stations-bento" id="stations-bento" role="listbox" aria-label="תחנות המשחק"></div>
+  </main>
+</div>
+
+<!-- Docked Bottom Console Player Bar -->
+<aside class="console-dock-bar" aria-label="סרגל קונסולה מהיר">
+  <div class="dock-bar-preview">
+    <div class="dock-bar-thumb" id="bar-thumb"></div>
+    <div class="dock-bar-text">
+      <span class="dock-bar-step" id="bar-step">תחנה #01 נבחרה</span>
+      <strong class="dock-bar-name" id="bar-name">קולות של חיות</strong>
+    </div>
+  </div>
+
+  <div class="dock-bar-actions">
+    <button type="button" class="bar-nav-btn" id="bar-prev" aria-label="תחנה קודמת">❯</button>
+    <button type="button" class="bar-dice-btn" id="bar-dice">🎲 הגרל תחנה</button>
+    <a class="bar-play-btn" id="bar-play" href="../../../game.html?id=animal-sounds">
+      <span>▶</span>
+      <span>שחקו בתחנה</span>
+    </a>
+    <button type="button" class="bar-nav-btn" id="bar-next" aria-label="תחנה הבאה">❮</button>
+  </div>
+</aside>
+
+<script src="../../../assets/catalog.js"></script>
+<script src="../../../assets/tiers.js"></script>
+<script src="../../../assets/auth.js"></script>
+<script src="../../../assets/recent.js"></script>
+<script src="../../../assets/music.js"></script>
+<script src="../shared-settings.js"></script>
+<script>
+  EDV4.init();
+
+  const ISLANDS = [
+    {
+      id: 'nature',
+      name: 'אי החיות והזיכרון',
+      desc: 'קולות של חיות, מזג אוויר, פאזלים וזוגות קלפים בסדר קושי עולה.',
+      mark: 'nature',
+      color: '#16a34a',
+      tint: '#f0fdf4',
+      rim: '#bbf7d0',
+      subjects: ['nature', 'memory'],
+    },
+    {
+      id: 'stories',
+      name: 'אי המילים והאגדות',
+      desc: 'אותיות בעברית ובאנגלית, בניית מילים והרפתקאות בארץ האגדות.',
+      mark: 'letters',
+      color: '#9333ea',
+      tint: '#faf5ff',
+      rim: '#e9d5ff',
+      subjects: ['letters', 'english', 'fairytale'],
+    },
+    {
+      id: 'numbers',
+      name: 'אי המספרים והחידות',
+      desc: 'ספירה, חיבור וחיסור, דפוסים וחידות חשיבה לחוקרים צעירים.',
+      mark: 'numbers',
+      color: '#2563eb',
+      tint: '#eff6ff',
+      rim: '#bfdbfe',
+      subjects: ['numbers', 'math', 'logic'],
+    },
+    {
+      id: 'studio',
+      name: 'אי הצבעים והמוזיקה',
+      desc: 'בלונים, צורות הנדסיות, פסנתר חיות ומקצבים מוזיקליים.',
+      mark: 'shapes',
+      color: '#ea580c',
+      tint: '#fff7ed',
+      rim: '#fed7aa',
+      subjects: ['shapes', 'music'],
+    },
+    {
+      id: 'computer',
+      name: 'אי המחשב והרובוטים',
+      desc: 'לומדים להזיז עכבר, ללחוץ, לגרור ולהכיר את מקשי המקלדת.',
+      mark: 'computer',
+      color: '#0284c7',
+      tint: '#f0f9ff',
+      rim: '#bae6fd',
+      subjects: ['computer'],
+    },
+  ];
+
+  const state = {
+    islandId: 'nature',
+    age: 'all',
+    selectedId: '',
+  };
+
+  function matchesAge(g) {
+    if (state.age === 'all') return true;
+    const grp = AGE_GROUPS.find((a) => a.id === state.age);
+    return grp ? (g.ageMin <= grp.max && g.ageMax >= grp.min) : true;
+  }
+
+  function islandGames(island) {
+    return EDV4.readyGames()
+      .filter((g) => island.subjects.includes(g.subject) && matchesAge(g))
+      .sort((a, b) => a.ageMin - b.ageMin || a.ageMax - b.ageMax);
+  }
+
+  function renderIslands() {
+    const bar = document.getElementById('islands-bar');
+    bar.innerHTML = ISLANDS.map((isl) => {
+      const count = islandGames(isl).length;
+      return `
+        <button type="button" class="island-card" role="tab" data-island="${isl.id}"
+          aria-selected="${state.islandId === isl.id}"
+          style="--i-color:${isl.color}; --i-tint:${isl.tint}">
+          <span class="island-orb">${EDV4.markHtml(isl.mark)}</span>
+          <span class="island-txt">
+            <b>${isl.name}</b>
+            <small>${count} תחנות</small>
+          </span>
+        </button>
+      `;
+    }).join('');
+
+    bar.querySelectorAll('.island-card').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.islandId = btn.dataset.island;
+        renderAll();
+      });
+    });
+  }
+
+  function renderBoard() {
+    const island = ISLANDS.find((i) => i.id === state.islandId) || ISLANDS[0];
+    const list = islandGames(island);
+    if (!list.some((g) => g.id === state.selectedId) && list.length) {
+      state.selectedId = list[0].id;
+    }
+    const active = list.find((g) => g.id === state.selectedId) || list[0];
+    const activeIdx = list.indexOf(active);
+
+    document.documentElement.style.setProperty('--world-color', island.color);
+    document.documentElement.style.setProperty('--world-tint', island.tint);
+    document.documentElement.style.setProperty('--world-rim', island.rim);
+
+    document.getElementById('trail-crest').innerHTML = EDV4.markHtml(island.mark);
+    document.getElementById('trail-title').textContent = island.name;
+    document.getElementById('trail-desc').textContent = island.desc;
+    document.getElementById('trail-count').textContent = `${list.length} תחנות במסלול`;
+
+    const bento = document.getElementById('stations-bento');
+    bento.innerHTML = list.map((g, i) => {
+      const sub = EDV4.subjectById(g.subject);
+      const isFeat = i === 0;
+      const stepLabel = `תחנה #${String(i + 1).padStart(2, '0')}`;
+      return `
+        <button type="button" class="stone-card ${isFeat ? 'stone-card--featured' : ''}"
+          role="option" data-id="${g.id}" aria-selected="${g.id === state.selectedId}">
+          <div class="stone-art">
+            ${EDV4.coverHtml(g)}
+            <span class="station-step-badge">🚩 ${stepLabel}</span>
+            <span class="station-age-tag">גיל ${g.ageMin}–${g.ageMax}</span>
+          </div>
+          <div class="stone-body">
+            <span class="stone-kicker">${EDV4.pick(sub.label)} · ${isFeat ? 'תחנת פתיחה מומלצת' : `שלב ${i + 1} במסלול`}</span>
+            <h3 class="stone-title">${EDV4.pick(g.title)}</h3>
+            <p class="stone-blurb">${EDV4.pick(g.blurb)}</p>
+            <span class="stone-action-hint">▶ לחצו לבחירה או הפעלה</span>
+          </div>
+        </button>
+      `;
+    }).join('');
+
+    bento.querySelectorAll('.stone-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        if (state.selectedId === card.dataset.id) {
+          location.href = EDV4.gameUrl(card.dataset.id);
+        } else {
+          state.selectedId = card.dataset.id;
+          renderBoard();
+        }
+      });
+    });
+
+    if (active) {
+      document.getElementById('bar-thumb').innerHTML = EDV4.coverHtml(active);
+      document.getElementById('bar-step').textContent = `תחנה #${String(activeIdx + 1).padStart(2, '0')} מתוך ${list.length} · גיל ${active.ageMin}–${active.ageMax}`;
+      document.getElementById('bar-name').textContent = EDV4.pick(active.title);
+      document.getElementById('bar-play').href = EDV4.gameUrl(active.id);
+    }
+  }
+
+  function renderAll() {
+    renderIslands();
+    renderBoard();
+  }
+
+  document.querySelectorAll('.p-age-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.age = btn.dataset.age;
+      document.querySelectorAll('.p-age-btn').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      renderAll();
+    });
+  });
+
+  document.getElementById('bar-prev').addEventListener('click', () => {
+    const island = ISLANDS.find((i) => i.id === state.islandId) || ISLANDS[0];
+    const list = islandGames(island);
+    if (!list.length) return;
+    const idx = list.findIndex((g) => g.id === state.selectedId);
+    state.selectedId = list[(idx - 1 + list.length) % list.length].id;
+    renderBoard();
+  });
+
+  document.getElementById('bar-next').addEventListener('click', () => {
+    const island = ISLANDS.find((i) => i.id === state.islandId) || ISLANDS[0];
+    const list = islandGames(island);
+    if (!list.length) return;
+    const idx = list.findIndex((g) => g.id === state.selectedId);
+    state.selectedId = list[(idx + 1) % list.length].id;
+    renderBoard();
+  });
+
+  document.getElementById('bar-dice').addEventListener('click', () => {
+    const island = ISLANDS.find((i) => i.id === state.islandId) || ISLANDS[0];
+    const list = islandGames(island);
+    if (!list.length) return;
+    state.selectedId = list[Math.floor(Math.random() * list.length)].id;
+    renderBoard();
+  });
+
+  renderAll();
+</script>
+</body>
+</html>

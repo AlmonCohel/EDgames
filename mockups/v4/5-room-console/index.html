@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כיוון 3: קונסולת החדרים (Room-Console Hybrid) — הגנון של עלמון</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared-themes.css">
+<script src="../../../assets/i18n.js"></script>
+<style>
+:root {
+  --v4-bg: #ebe6dc;
+  --v4-bg-soft: #dfd9cd;
+  --v4-surface: #ffffff;
+  --v4-ink: #181c26;
+  --v4-muted: #5a6275;
+  --v4-line: rgba(24, 28, 38, 0.12);
+  --v4-border: #181c26;
+  --v4-accent: #7c3aed;
+  --room-accent: #9333ea;
+  --room-tint: #faf5ff;
+  --room-border: #d8b4fe;
+  --chassis-bg: #e6e0d4;
+  --chassis-rim: #cfc7b8;
+}
+
+body[data-kid-theme="princess"] {
+  --chassis-bg: #f9d8ec;
+  --chassis-rim: #ec9fcf;
+  --room-accent: #c92a81 !important;
+  --room-tint: #fff2f9 !important;
+  --room-border: #f2a6d4 !important;
+}
+body[data-kid-theme="spiderman"] {
+  --chassis-bg: #101f4c;
+  --chassis-rim: #0b132b;
+  --room-accent: #e62429 !important;
+  --room-tint: #eef4ff !important;
+  --room-border: #1d4ed8 !important;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  background: var(--chassis-bg);
+  color: var(--v4-ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Tactile Daylight Hardware Frame */
+.hybrid-chassis {
+  max-width: 1360px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: 14px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Top Hardware Bar */
+.hybrid-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #181c26;
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 9px 16px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.14);
+  flex-wrap: wrap;
+}
+body[data-kid-theme="princess"] .hybrid-topbar {
+  background: linear-gradient(135deg, #561649, #801f66);
+  border: 2px solid #ffd166;
+}
+body[data-kid-theme="spiderman"] .hybrid-topbar {
+  background: #0b132b;
+  border: 2.5px solid #ffd60a;
+}
+
+.hybrid-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.hybrid-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--room-accent);
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+  transition: background 0.2s ease;
+  flex: none;
+}
+.hybrid-logo img { width: 25px; height: 25px; display: block; }
+.hybrid-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.hybrid-kicker {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.led-pill {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+.hybrid-title-wrap h1 {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 900;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.hybrid-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.age-dial {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.age-key {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.age-key[aria-pressed="true"] {
+  background: #ffffff;
+  color: #181c26;
+  font-weight: 800;
+}
+.settings-key {
+  appearance: none;
+  border: 0;
+  background: #fbbf24;
+  color: #181c26;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 900;
+  height: 36px;
+  padding: 0 13px;
+  border-radius: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 3px 0 #b45309;
+}
+
+/* 5 Play-Room Physical Portal Keys (Top Deck Row) */
+.room-portals {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.portal-key {
+  appearance: none;
+  font: inherit;
+  color: var(--v4-ink);
+  background: #ffffff;
+  border: 2px solid rgba(24, 28, 38, 0.14);
+  border-bottom-width: 5px;
+  border-radius: 20px 20px 14px 14px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: start;
+  transition: transform 0.15s cubic-bezier(.3,1.5,.5,1), border-color 0.15s ease, background 0.15s ease;
+  min-width: 0;
+}
+.portal-key:hover {
+  transform: translateY(-2px);
+}
+.portal-key[aria-selected="true"] {
+  background: var(--p-tint, #faf5ff);
+  border-color: var(--p-color, #9333ea);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(24, 28, 38, 0.1);
+}
+body[data-kid-theme="spiderman"] .portal-key {
+  border-color: #0b132b;
+}
+
+.portal-arch {
+  width: 44px;
+  height: 46px;
+  border-radius: 22px 22px 10px 10px;
+  background: var(--p-color, #9333ea);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  flex: none;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+.portal-arch svg {
+  width: 24px;
+  height: 24px;
+}
+.portal-txt {
+  min-width: 0;
+  flex: 1;
+}
+.portal-name {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 900;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.portal-count {
+  display: block;
+  font-size: 0.73rem;
+  color: var(--v4-muted);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* Main Console Bezel (Houses Room Header + Spotlight Monitor + Room Cartridge Tray) */
+.console-bezel {
+  flex: 1;
+  background: var(--room-tint);
+  border: 3px solid var(--room-border);
+  border-radius: 28px;
+  padding: 18px;
+  box-shadow:
+    inset 0 2px 0 #ffffff,
+    0 14px 34px rgba(24, 28, 38, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+body[data-kid-theme="spiderman"] .console-bezel {
+  border: 3px solid #0b132b;
+  box-shadow: 7px 7px 0 #0b132b;
+}
+
+/* Room Atmosphere Strip inside Console */
+.room-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #ffffff;
+  border: 1.5px solid rgba(24, 28, 38, 0.1);
+  border-radius: 18px;
+  padding: 10px 16px;
+  flex-wrap: wrap;
+}
+.room-strip-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.room-badge-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--room-accent);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.room-badge-icon svg {
+  width: 24px;
+  height: 24px;
+}
+.room-strip-info h2 {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+.room-strip-info p {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  color: var(--v4-muted);
+  font-weight: 500;
+}
+
+.room-strip-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.surprise-btn {
+  appearance: none;
+  border: 1.5px solid var(--room-accent);
+  background: #ffffff;
+  color: var(--v4-ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.surprise-btn:hover {
+  background: var(--room-tint);
+}
+
+/* 2-Column Hybrid Workspace: Left Spotlight TV Monitor + Right Room Cartridge Rack */
+.hybrid-deck {
+  display: grid;
+  grid-template-columns: 410px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+/* Spotlight TV Monitor */
+.monitor-stage {
+  background: #181c26;
+  color: #ffffff;
+  border-radius: 24px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 14px 28px rgba(24, 28, 38, 0.18);
+}
+body[data-kid-theme="princess"] .monitor-stage {
+  background: linear-gradient(165deg, #4a154b, #2e1035);
+  border: 2.5px solid #ffd166;
+}
+body[data-kid-theme="spiderman"] .monitor-stage {
+  background: #0b132b;
+  border: 3px solid #e62429;
+}
+
+.monitor-screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #283044;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+}
+.monitor-screen svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.monitor-hud {
+  position: absolute;
+  top: 10px;
+  inset-inline: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+.hud-tag {
+  background: rgba(15, 18, 28, 0.84);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.hud-slot {
+  font-family: "Space Grotesk", monospace;
+  background: #fbbf24;
+  color: #181c26;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.monitor-copy h3 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.15;
+  color: #ffffff;
+}
+.monitor-copy p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.45;
+}
+
+.monitor-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.arcade-launch {
+  flex: 1;
+  min-height: 52px;
+  border-radius: 16px;
+  background: var(--room-accent);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.08rem;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35);
+  transition: transform 0.12s ease, background 0.2s ease;
+}
+.arcade-launch:active {
+  transform: translateY(3px);
+}
+.dpad-btn {
+  width: 48px;
+  height: 52px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.dpad-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Room Cartridge Tray (Only 5-9 oversize cartridges per room!) */
+.room-rack {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+  gap: 12px;
+  align-content: start;
+  max-height: 455px;
+  overflow-y: auto;
+  padding: 4px 2px 8px;
+  min-width: 0;
+}
+.room-cart {
+  appearance: none;
+  font: inherit;
+  color: var(--v4-ink);
+  background: #ffffff;
+  border: 2.5px solid rgba(24, 28, 38, 0.12);
+  border-bottom-width: 5px;
+  border-radius: 22px;
+  padding: 10px 10px 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  gap: 8px;
+  transition: transform 0.15s cubic-bezier(.3,1.5,.5,1), border-color 0.15s ease, box-shadow 0.15s ease;
+  min-width: 0;
+}
+.room-cart::before {
+  content: "";
+  width: 42px;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(24, 28, 38, 0.12);
+  margin: 0 auto 2px;
+}
+.room-cart:hover {
+  transform: translateY(-3px);
+}
+.room-cart[aria-selected="true"] {
+  border-color: var(--room-accent);
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.18), 0 10px 22px rgba(24, 28, 38, 0.1);
+  transform: translateY(-4px);
+}
+.room-cart-art {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #eef2f7;
+  position: relative;
+}
+.room-cart-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.room-cart-num {
+  position: absolute;
+  top: 7px;
+  inset-inline-start: 7px;
+  background: rgba(24, 28, 38, 0.82);
+  color: #ffffff;
+  font-family: "Space Grotesk", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 7px;
+}
+.room-cart-title {
+  font-size: 0.95rem;
+  font-weight: 900;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.room-cart-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--v4-muted);
+  font-weight: 700;
+}
+
+@media (max-width: 960px) {
+  .room-portals {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .room-portals::-webkit-scrollbar { display: none; }
+  .portal-key {
+    min-width: 175px;
+    flex: none;
+  }
+  .hybrid-deck {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .room-rack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: none;
+  }
+}
+
+@media (max-width: 440px) {
+  .hybrid-chassis {
+    padding: 10px 10px 18px;
+    gap: 10px;
+  }
+  .hybrid-topbar {
+    padding: 8px 12px;
+  }
+  .console-bezel {
+    padding: 12px;
+    border-radius: 22px;
+  }
+  .room-strip {
+    padding: 10px 12px;
+  }
+  .room-strip-info p {
+    display: none;
+  }
+  .monitor-copy h3 {
+    font-size: 1.25rem;
+  }
+  .room-rack {
+    gap: 10px;
+  }
+}
+</style>
+</head>
+<body>
+
+<script src="../../../assets/glyphs.js"></script>
+<script src="../../../assets/scenes.js"></script>
+<script src="../../../assets/covers.js"></script>
+<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
+
+<div class="hybrid-chassis">
+  <header class="hybrid-topbar">
+    <div class="hybrid-brand">
+      <a class="hybrid-logo" href="../../../index.html?home=1" aria-label="על האתר">
+        <img src="../../../favicon.svg" alt="">
+      </a>
+      <div class="hybrid-title-wrap">
+        <span class="hybrid-kicker"><span class="led-pill"></span> ROOM-DECK HYBRID · 5 WORLDS</span>
+        <h1>הגנון של עלמון</h1>
+      </div>
+      <span class="v4-kid-crust v4-kid-crust--princess">👑 מהדורת נסיכות</span>
+      <span class="v4-kid-crust v4-kid-crust--spiderman">🕷️ מהדורת ספיידרמן</span>
+    </div>
+
+    <div class="hybrid-controls">
+      <div class="age-dial" role="group" aria-label="סינון לפי גיל">
+        <button type="button" class="age-key" data-age="all" aria-pressed="true">כל הגילאים</button>
+        <button type="button" class="age-key" data-age="tots" aria-pressed="false">3–4</button>
+        <button type="button" class="age-key" data-age="gan" aria-pressed="false">5–6</button>
+        <button type="button" class="age-key" data-age="school" aria-pressed="false">7–8</button>
+      </div>
+      <button type="button" class="settings-key" data-open-settings>
+        <span>⚙️</span>
+        <span>עיצוב והגדרות</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 5 Play-Room Physical Portal Keys -->
+  <nav class="room-portals" id="room-portals" role="tablist" aria-label="5 חדרי הקונסולה"></nav>
+
+  <!-- Console Bezel -->
+  <main class="console-bezel" id="console-bezel">
+    <div class="room-strip">
+      <div class="room-strip-info">
+        <div class="room-badge-icon" id="room-badge-icon"></div>
+        <div>
+          <h2 id="room-title">חדר המילים והסיפורים</h2>
+          <p id="room-desc">אותיות בעברית ובאנגלית, בניית מילים ואגדות קסומות.</p>
+        </div>
+      </div>
+      <div class="room-strip-tools">
+        <button type="button" class="surprise-btn" id="surprise-btn">🎲 הפתעה בחדר</button>
+      </div>
+    </div>
+
+    <div class="hybrid-deck">
+      <!-- Left/Top Spotlight Monitor -->
+      <section class="monitor-stage" aria-live="polite">
+        <div>
+          <div class="monitor-screen" id="monitor-screen"></div>
+          <div class="monitor-copy" style="margin-top:12px">
+            <h3 id="spot-title">בונים מילים</h3>
+            <p id="spot-blurb">גוררים אותיות למקום הנכון ומרכיבים מילה שלמה.</p>
+          </div>
+        </div>
+        <div class="monitor-controls">
+          <button type="button" class="dpad-btn" id="prev-btn" aria-label="משחק קודם">❯</button>
+          <a class="arcade-launch" id="spot-launch" href="../../../game.html?id=word-builder">
+            <span>▶</span>
+            <span>שחקו עכשיו</span>
+          </a>
+          <button type="button" class="dpad-btn" id="next-btn" aria-label="משחק הבא">❮</button>
+        </div>
+      </section>
+
+      <!-- Right/Bottom Room Cartridge Tray -->
+      <section class="room-rack" id="room-rack" role="listbox" aria-label="קלטות המשחק בחדר"></section>
+    </div>
+  </main>
+</div>
+
+<script src="../../../assets/catalog.js"></script>
+<script src="../../../assets/tiers.js"></script>
+<script src="../../../assets/auth.js"></script>
+<script src="../../../assets/recent.js"></script>
+<script src="../../../assets/music.js"></script>
+<script src="../shared-settings.js"></script>
+<script>
+  EDV4.init();
+
+  const ROOMS = [
+    {
+      id: 'stories',
+      name: 'חדר המילים והסיפורים',
+      desc: 'אותיות בעברית ובאנגלית, בניית מילים והרפתקאות בארץ האגדות.',
+      mark: 'letters',
+      color: '#9333ea',
+      tint: '#faf5ff',
+      border: '#d8b4fe',
+      subjects: ['letters', 'english', 'fairytale'],
+    },
+    {
+      id: 'numbers',
+      name: 'מעבדת המספרים והחידות',
+      desc: 'ספירה, חיבור וחיסור, דפוסים וחידות חשיבה לחוקרים צעירים.',
+      mark: 'numbers',
+      color: '#2563eb',
+      tint: '#eff6ff',
+      border: '#bfdbfe',
+      subjects: ['numbers', 'math', 'logic'],
+    },
+    {
+      id: 'studio',
+      name: 'סטודיו הצבעים והמוזיקה',
+      desc: 'בלונים, צורות הנדסיות, פסנתר חיות ומקצבים מוזיקליים.',
+      mark: 'shapes',
+      color: '#ea580c',
+      tint: '#fff7ed',
+      border: '#fed7aa',
+      subjects: ['shapes', 'music'],
+    },
+    {
+      id: 'nature',
+      name: 'חממת החיות והזיכרון',
+      desc: 'קולות של חיות, מזג אוויר, פאזלים וזוגות קלפים.',
+      mark: 'nature',
+      color: '#16a34a',
+      tint: '#f0fdf4',
+      border: '#bbf7d0',
+      subjects: ['nature', 'memory'],
+    },
+    {
+      id: 'computer',
+      name: 'מועדון המחשב והרובוטים',
+      desc: 'לומדים להזיז עכבר, ללחוץ, לגרור ולהכיר את מקשי המקלדת.',
+      mark: 'computer',
+      color: '#0284c7',
+      tint: '#f0f9ff',
+      border: '#bae6fd',
+      subjects: ['computer'],
+    },
+  ];
+
+  const state = {
+    roomId: 'stories',
+    age: 'all',
+    selectedId: '',
+  };
+
+  function matchesAge(g) {
+    if (state.age === 'all') return true;
+    const grp = AGE_GROUPS.find((a) => a.id === state.age);
+    return grp ? (g.ageMin <= grp.max && g.ageMax >= grp.min) : true;
+  }
+
+  function roomGames(room) {
+    return EDV4.readyGames().filter((g) => room.subjects.includes(g.subject) && matchesAge(g));
+  }
+
+  function renderPortals() {
+    const nav = document.getElementById('room-portals');
+    nav.innerHTML = ROOMS.map((r) => {
+      const count = roomGames(r).length;
+      return `
+        <button type="button" class="portal-key" role="tab" data-room="${r.id}"
+          aria-selected="${state.roomId === r.id}"
+          style="--p-color:${r.color}; --p-tint:${r.tint}">
+          <span class="portal-arch">${EDV4.markHtml(r.mark)}</span>
+          <span class="portal-txt">
+            <span class="portal-name">${r.name}</span>
+            <span class="portal-count">${count} קלטות בחדר</span>
+          </span>
+        </button>
+      `;
+    }).join('');
+
+    nav.querySelectorAll('.portal-key').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.roomId = btn.dataset.room;
+        renderAll();
+      });
+    });
+  }
+
+  function renderConsole() {
+    const room = ROOMS.find((r) => r.id === state.roomId) || ROOMS[0];
+    const list = roomGames(room);
+    if (!list.some((g) => g.id === state.selectedId) && list.length) {
+      state.selectedId = list[0].id;
+    }
+    const active = list.find((g) => g.id === state.selectedId) || list[0];
+    const activeIdx = list.indexOf(active);
+
+    document.documentElement.style.setProperty('--room-accent', room.color);
+    document.documentElement.style.setProperty('--room-tint', room.tint);
+    document.documentElement.style.setProperty('--room-border', room.border);
+
+    document.getElementById('room-badge-icon').innerHTML = EDV4.markHtml(room.mark);
+    document.getElementById('room-title').textContent = room.name;
+    document.getElementById('room-desc').textContent = room.desc;
+
+    if (active) {
+      const sub = EDV4.subjectById(active.subject);
+      document.getElementById('monitor-screen').innerHTML = `
+        ${EDV4.coverHtml(active)}
+        <div class="monitor-hud">
+          <span class="hud-tag">${EDV4.pick(sub.label)} · גיל ${active.ageMin}–${active.ageMax}</span>
+          <span class="hud-slot">קלטת ${String(activeIdx + 1).padStart(2, '0')}/${String(list.length).padStart(2, '0')}</span>
+        </div>
+      `;
+      document.getElementById('spot-title').textContent = EDV4.pick(active.title);
+      document.getElementById('spot-blurb').textContent = EDV4.pick(active.blurb);
+      document.getElementById('spot-launch').href = EDV4.gameUrl(active.id);
+    }
+
+    const rack = document.getElementById('room-rack');
+    rack.innerHTML = list.map((g, idx) => {
+      const sub = EDV4.subjectById(g.subject);
+      return `
+        <button type="button" class="room-cart" role="option" data-id="${g.id}" aria-selected="${g.id === state.selectedId}">
+          <div class="room-cart-art">
+            ${EDV4.coverHtml(g)}
+            <span class="room-cart-num">#${String(idx + 1).padStart(2, '0')}</span>
+          </div>
+          <span class="room-cart-title">${EDV4.pick(g.title)}</span>
+          <div class="room-cart-meta">
+            <span>${EDV4.pick(sub.label)}</span>
+            <span>גיל ${g.ageMin}–${g.ageMax}</span>
+          </div>
+        </button>
+      `;
+    }).join('');
+
+    rack.querySelectorAll('.room-cart').forEach((card) => {
+      card.addEventListener('click', () => {
+        if (state.selectedId === card.dataset.id) {
+          location.href = EDV4.gameUrl(card.dataset.id);
+        } else {
+          state.selectedId = card.dataset.id;
+          renderConsole();
+        }
+      });
+    });
+  }
+
+  function renderAll() {
+    renderPortals();
+    renderConsole();
+  }
+
+  document.querySelectorAll('.age-key').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.age = btn.dataset.age;
+      document.querySelectorAll('.age-key').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      renderAll();
+    });
+  });
+
+  document.getElementById('prev-btn').addEventListener('click', () => {
+    const room = ROOMS.find((r) => r.id === state.roomId) || ROOMS[0];
+    const list = roomGames(room);
+    if (!list.length) return;
+    const idx = list.findIndex((g) => g.id === state.selectedId);
+    state.selectedId = list[(idx - 1 + list.length) % list.length].id;
+    renderConsole();
+  });
+
+  document.getElementById('next-btn').addEventListener('click', () => {
+    const room = ROOMS.find((r) => r.id === state.roomId) || ROOMS[0];
+    const list = roomGames(room);
+    if (!list.length) return;
+    const idx = list.findIndex((g) => g.id === state.selectedId);
+    state.selectedId = list[(idx + 1) % list.length].id;
+    renderConsole();
+  });
+
+  document.getElementById('surprise-btn').addEventListener('click', () => {
+    const room = ROOMS.find((r) => r.id === state.roomId) || ROOMS[0];
+    const list = roomGames(room);
+    if (!list.length) return;
+    const pick = list[Math.floor(Math.random() * list.length)];
+    state.selectedId = pick.id;
+    renderConsole();
+  });
+
+  renderAll();
+</script>
+</body>
+</html>
