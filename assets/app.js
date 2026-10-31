@@ -1,53 +1,48 @@
-/* The home screen. Two modes over one catalog.
+/* The home screen — Console Deck (ED-Deck, Direction 1 from mockups/v4).
 
-   Nothing filtered → browse: the game last played, a row of everything that is
-   ready, a row for each plan whose games this visitor does not have yet, a row
-   per subject with more than one finished game, and a list of what is still
-   being built. A catalog this size reads well as rows and badly as a wall.
-
-   Anything filtered → results: the same tiles laid flat, with the count line
-   and the empty state. Picking a subject, an age or a search term is a
-   question, and a question deserves an answer rather than a rearranged shelf.
-
-   Filter state lives in the URL so going into a game and coming back keeps it. */
+   Structured as a handheld play console:
+   - Top hardware bar: logo, age switcher, sound toggle, language toggle,
+     account button, and Settings & Design button (Studio / Princess / Spider-Man).
+   - Inner screen bezel:
+     1. Spotlight Active Game Stage: shows the selected game's cover, title,
+        blurb, prev/next bumpers, and big launch button (defaults to the last
+        game played from EDRecent, or the first matching cartridge).
+     2. Cartridge Bay: numbered game cartridges (#01–#43) with instant search
+        and filter state kept in the URL (and sessionStorage on file://).
+   - Bottom channel dock: all subject channels with their drawn marks. */
 
 const els = {
   rail: document.getElementById('subject-rail'),
   ageChips: document.getElementById('age-chips'),
-  ageSheet: document.getElementById('age-sheet'),
-  searchSheet: document.getElementById('search-sheet'),
   clear: document.getElementById('clear'),
-  resultBar: document.getElementById('result-bar'),
-  browse: document.getElementById('browse'),
-  grid: document.getElementById('grid'),
+  grid: document.getElementById('cartridge-grid'),
   empty: document.getElementById('empty'),
-  resultLine: document.getElementById('result-line'),
   q: document.getElementById('q'),
-  continueShelf: document.getElementById('continue-shelf'),
-  continueBox: document.getElementById('continue'),
-  ready: document.getElementById('ready'),
-  readyCount: document.getElementById('ready-count'),
-  byTier: document.getElementById('by-tier'),
-  bySubject: document.getElementById('by-subject'),
-  soon: document.getElementById('soon'),
-  soonShelf: document.getElementById('soon-shelf'),
-  tabs: {
-    home: document.getElementById('tab-home'),
-    age: document.getElementById('tab-age'),
-    search: document.getElementById('tab-search'),
-  },
+  baySubjectName: document.getElementById('bay-subject-name'),
+  bayCount: document.getElementById('bay-count'),
+  spotStage: document.getElementById('spotlight-stage'),
+  spotArt: document.getElementById('spot-art'),
+  spotTitle: document.getElementById('spot-title'),
+  spotBlurb: document.getElementById('spot-blurb'),
+  spotPlay: document.getElementById('spot-play'),
+  spotPlayLabel: document.getElementById('spot-play-label'),
+  prevBtn: document.getElementById('prev-game'),
+  nextBtn: document.getElementById('next-game'),
+  settingsDialog: document.getElementById('settings-dialog'),
+  settingsClose: document.getElementById('settings-close'),
 };
 
-const state = { ages: new Set(), subjects: new Set(), query: '' };
+const state = {
+  ages: new Set(),
+  subjects: new Set(),
+  query: '',
+  selectedId: '',
+};
 
 const FILTER_KEY = 'edgames-filters';
 
 /* ---- URL <-> state ---- */
 
-/* Rewriting the URL is refused when the site is opened as a file, and the site
-   is meant to work from a file. There the filters fall back to the tab's own
-   storage, which lasts for the tab and the session — exactly as long as the
-   URL would have carried them. */
 function readStoredFilters() {
   try { return sessionStorage.getItem(FILTER_KEY) || ''; } catch { return ''; }
 }
@@ -57,7 +52,6 @@ function saveFilters(qs) {
 }
 
 function readUrl() {
-  /* The URL wins; the stored copy only stands in when nothing was written to it. */
   const search = new URLSearchParams(location.search);
   const carried = search.has('age') || search.has('subject') || search.has('q');
   const p = carried ? search : new URLSearchParams(readStoredFilters());
@@ -65,7 +59,10 @@ function readUrl() {
   state.ages = new Set(valid((p.get('age') || '').split(',').filter(Boolean), AGE_GROUPS.map((a) => a.id)));
   state.subjects = new Set(valid((p.get('subject') || '').split(',').filter(Boolean), SUBJECTS.map((s) => s.id)));
   state.query = p.get('q') || '';
-  els.q.value = state.query;
+  if (els.q) els.q.value = state.query;
+
+  const recent = EDRecent.game();
+  if (recent) state.selectedId = recent.id;
 }
 
 function writeUrl() {
@@ -77,25 +74,22 @@ function writeUrl() {
   saveFilters(filters);
   EDLang.stamp(p);
   const qs = p.toString();
-  /* The state and the #play mark belong to the game layer (player.js). */
   try { history.replaceState(history.state, '', (qs ? `?${qs}` : location.pathname) + location.hash); }
   catch { /* file:// */ }
 }
 
-/* ---- Filtering ---- */
+/* ---- Filtering & sorting ---- */
 
 function matches(game) {
   if (state.ages.size) {
     const overlaps = [...state.ages].some((id) => {
       const group = AGE_GROUPS.find((a) => a.id === id);
-      return game.ageMin <= group.max && game.ageMax >= group.min;
+      return group && game.ageMin <= group.max && game.ageMax >= group.min;
     });
     if (!overlaps) return false;
   }
   if (state.subjects.size && !state.subjects.has(game.subject)) return false;
 
-  /* Searches the language on screen. Folded to lower case for English; Hebrew
-     has no case, so this costs it nothing. */
   const q = state.query.trim().toLowerCase();
   if (q) {
     const subject = subjectById(game.subject);
@@ -105,10 +99,26 @@ function matches(game) {
   return true;
 }
 
-/* ---- The pieces the catalog is drawn as ---- */
+function orderedGames() {
+  const found = GAMES.filter(matches);
+  return found.slice().sort((a, b) => {
+    const aReady = a.status === 'ready' ? 1 : 0;
+    const bReady = b.status === 'ready' ? 1 : 0;
+    if (aReady !== bReady) return bReady - aReady;
 
-/* The language rides along on the link so a card shared from an English page
-   opens in English. */
+    const aPlay = EDAuth.canPlay(a) ? 1 : 0;
+    const bPlay = EDAuth.canPlay(b) ? 1 : 0;
+    if (aPlay !== bPlay) return bPlay - aPlay;
+
+    if (aPlay && bPlay) {
+      return tierRank(gameTier(b)) - tierRank(gameTier(a));
+    }
+    return tierRank(gameTier(a)) - tierRank(gameTier(b));
+  });
+}
+
+/* ---- Artwork & Links ---- */
+
 function gameHref(game, setId) {
   const params = new URLSearchParams({ id: game.id });
   if (setId) params.set('set', setId);
@@ -116,112 +126,14 @@ function gameHref(game, setId) {
   return `game.html?${params}`;
 }
 
-/* Which drawn field each game wears, decided once for the whole catalog. The
-   picture on top of it is the game's own now, so the field is no longer what
-   tells two tiles apart — it is the colour and texture the row is made of, and
-   spreading it still keeps a shelf from reading as one flat block. */
-const COVERS = EDGlyphs.covers(GAMES);
-
-function tile(game) {
-  const soon = game.status !== 'ready';
-  const cover = COVERS.get(game.id);
-  const locked = !EDAuth.canPlay(game);
-  const li = document.createElement('li');
-  li.innerHTML = `
-    <a class="tile" href="${gameHref(game)}" data-subject="${game.subject}" data-status="${game.status}"${locked ? ` data-locked="${game.id}"` : ''}>
-      <div class="cover${EDCovers.has(game.id) ? ' cover--art' : ''}" data-variant="${cover.variant}" data-tone="${cover.tone}">
-        ${EDCovers.has(game.id) ? EDCovers.art(game.id) : `${EDGlyphs.mark(game.subject, 'mark ghost')}${EDScenes.picture(game)}`}
-        ${locked ? `<span class="lock-pill">${EDGlyphs.icon('lock')}${EDLang.pick(tierById(gameTier(game)).name)}</span>` : ''}
-      </div>
-      <h3>${EDLang.pick(game.title)}</h3>
-      <div class="meta">${EDLang.t('card.age')} <span class="num">${game.ageMin}–${game.ageMax}</span>${soon ? ` · ${EDLang.t('card.soon')}` : ''}</div>
-    </a>`;
-  return li;
-}
-
-function soonItem(game) {
-  const li = document.createElement('li');
-  li.innerHTML = `
-    <a class="item" href="${gameHref(game)}" data-subject="${game.subject}">
-      <span class="chip-cover" aria-hidden="true">${EDScenes.picture(game)}</span>
-      <div class="txt">
-        <h3>${EDLang.pick(game.title)}</h3>
-        <p>${EDLang.pick(game.blurb)}</p>
-      </div>
-      <span class="soon-tag">${EDLang.t('card.soon')}</span>
-    </a>`;
-  return li;
-}
-
-function shelf(title, count, games) {
-  const section = document.createElement('section');
-  section.className = 'shelf';
-  section.innerHTML = `
-    <div class="head"><h2>${title}</h2><span class="more">${count}</span></div>
-    <ul class="row"></ul>`;
-  section.querySelector('.row').append(...games.map(tile));
-  return section;
-}
-
-const gameCount = (n) => EDLang.t('browse.count').replace('{count}', n);
-
-/* ---- Browse ----
-   Built once: it is the catalog, which does not change while the page is open,
-   and the language toggle reloads. Filtering only hides it. */
-
-function buildContinue() {
-  const last = EDRecent.game();
-  if (last) {
-    els.continueBox.innerHTML = `
-      <a class="continue" href="${gameHref(last, last.lastSetId)}" data-subject="${last.subject}">
-        ${EDGlyphs.mark(last.subject, 'mark ghost')}
-        ${EDCovers.has(last.id) ? EDCovers.art(last.id, 'art art-main') : EDScenes.picture(last, 'scene scene-main')}
-        <div class="txt">
-          <div class="kicker">${EDLang.t('continue.kicker')}</div>
-          <h3>${EDLang.pick(last.title)}</h3>
-          <p>${EDLang.pick(last.blurb)}</p>
-        </div>
-      </a>`;
-    els.continueShelf.hidden = false;
+function coverGraphic(game) {
+  if (EDCovers.has(game.id)) {
+    return EDCovers.art(game.id).replace('<svg ', '<svg preserveAspectRatio="xMidYMid slice" ');
   }
+  return `${EDGlyphs.mark(game.subject, 'mark ghost')}${EDScenes.picture(game)}`;
 }
 
-function buildBrowse() {
-  buildContinue();
-
-  /* What this visitor can open, the games their plan added first, so paying for
-     something does not bury it at the end of a long row. */
-  const finished = GAMES.filter((g) => g.status === 'ready');
-  const ready = finished.filter(EDAuth.canPlay)
-    .sort((a, b) => tierRank(gameTier(b)) - tierRank(gameTier(a)));
-  els.ready.replaceChildren(...ready.map(tile));
-  els.readyCount.textContent = gameCount(ready.length);
-
-  /* One row per plan still to come, each one a look at what is behind it. */
-  els.byTier.replaceChildren(...PLAN_IDS
-    .map((id) => ({ tier: tierById(id), games: finished.filter((g) => gameTier(g) === id && !EDAuth.canPlay(g)) }))
-    .filter(({ games }) => games.length)
-    .map(({ tier, games }) => shelf(EDLang.t('browse.tier').replace('{plan}', EDLang.pick(tier.name)), gameCount(games.length), games)));
-
-  /* One row per subject that has something finished behind it — a row of one
-     tile looks broken, so a subject with a single ready game rides in the row
-     above and does not get a row of its own. */
-  els.bySubject.replaceChildren();
-  SUBJECTS
-    .map((s) => ({ s, games: ready.filter((g) => g.subject === s.id) }))
-    .filter(({ games }) => games.length > 1)
-    .forEach(({ s, games }) => {
-      els.bySubject.append(shelf(EDLang.pick(s.label), gameCount(games.length), games));
-    });
-
-  /* The shelf follows the list: a "coming soon" heading with nothing under it
-     says the section is broken, not that the work is done. */
-  const soon = GAMES.filter((g) => g.status !== 'ready');
-  els.soon.replaceChildren(...soon.map(soonItem));
-  els.soonShelf.hidden = soon.length === 0;
-}
-
-/* ---- Locked games and the account button ---- */
+/* ---- Locked games & Account chip ---- */
 
 function nextUrl(view, game) {
   const q = new URLSearchParams({ view, plan: gameTier(game), next: game.id });
@@ -244,189 +156,342 @@ function openLock(game) {
 
 function drawAccountChip() {
   const chip = document.getElementById('account-chip');
+  if (!chip) return;
   const account = EDAuth.user();
   const label = account ? EDLang.pick(tierById(EDAuth.plan()).name) : EDLang.t('account.login');
   chip.innerHTML = `${EDGlyphs.icon('user')}<span>${label}</span>`;
   chip.setAttribute('aria-label', account ? `${EDLang.t('account.mine')}: ${label}` : label);
   const q = EDLang.stamp(new URLSearchParams(account ? {} : { view: 'login' })).toString();
   chip.href = q ? `account.html?${q}` : 'account.html';
+
+  const settingsAcc = document.getElementById('settings-account-link');
+  if (settingsAcc) settingsAcc.href = chip.href;
+  const settingsAbout = document.getElementById('settings-about-link');
+  if (settingsAbout) {
+    const aq = EDLang.stamp(new URLSearchParams({ home: '1' })).toString();
+    settingsAbout.href = `index.html?${aq}`;
+  }
+  const logoLink = document.querySelector('.console-logo');
+  if (logoLink) {
+    const lq = EDLang.stamp(new URLSearchParams({ home: '1' })).toString();
+    logoLink.href = `index.html?${lq}`;
+  }
 }
 
-/* ---- Chips ---- */
+/* ---- Controls: Age Switcher & Subject Channel Dock ---- */
 
-function chip(id, label, group) {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'chip';
-  b.dataset.group = group;
-  b.dataset.id = id;
-  b.setAttribute('aria-pressed', 'false');
-  b.textContent = label;
-  return b;
-}
+function buildControls() {
+  /* Age Segmented Switcher */
+  els.ageChips.replaceChildren();
+  const allAgesBtn = document.createElement('button');
+  allAgesBtn.type = 'button';
+  allAgesBtn.className = 'age-btn';
+  allAgesBtn.id = 'age-all';
+  allAgesBtn.textContent = EDLang.t('console.allAges');
+  allAgesBtn.setAttribute('aria-pressed', 'true');
+  els.ageChips.append(allAgesBtn);
 
-function buildChips() {
-  /* "All" belongs to no subject, so it takes the ink rather than borrowing a
-     subject's colour and implying one. It is the way back out of a subject on
-     the rail itself, where the thumb already is. */
-  const all = document.createElement('button');
-  all.type = 'button';
-  all.id = 'subject-all';
-  all.className = 'chip';
-  all.textContent = EDLang.t('rail.all');
-  all.setAttribute('aria-pressed', 'true');
-  els.rail.append(all);
-
-  /* A subject whose games are all still being built is marked the way an
-     unfinished tile is, so a chip that leads nowhere playable does not look
-     like one that does. It stays selectable — the games behind it are meant to
-     be visible — and the word rides on the label for anyone not seeing colour. */
-  SUBJECTS.forEach((s) => {
-    const label = EDLang.pick(s.label);
-    const c = chip(s.id, label, 'subjects');
-    c.dataset.subject = s.id;
-    c.insertAdjacentHTML('afterbegin', EDGlyphs.mark(s.id));
-    if (!subjectHasReady(s.id)) {
-      c.dataset.status = 'soon';
-      c.setAttribute('aria-label', `${label} — ${EDLang.t('card.soon')}`);
-    }
-    els.rail.append(c);
+  AGE_GROUPS.forEach((a) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'age-btn';
+    b.dataset.group = 'ages';
+    b.dataset.id = a.id;
+    b.setAttribute('aria-pressed', 'false');
+    b.textContent = `${a.min}–${a.max}`;
+    b.setAttribute('aria-label', EDLang.pick(a.label));
+    els.ageChips.append(b);
   });
 
-  AGE_GROUPS.forEach((a) => els.ageChips.append(chip(a.id, EDLang.pick(a.label), 'ages')));
-}
+  /* Bottom Subject Channel Dock */
+  els.rail.replaceChildren();
+  const allSubBtn = document.createElement('button');
+  allSubBtn.type = 'button';
+  allSubBtn.id = 'subject-all';
+  allSubBtn.className = 'channel-key';
+  allSubBtn.setAttribute('aria-pressed', 'true');
+  allSubBtn.innerHTML = `${EDGlyphs.icon('home')}<span>${EDLang.t('console.allChannels')}</span>`;
+  els.rail.append(allSubBtn);
 
-/* ---- Sheets ----
-   One at a time: on a phone they both sit in the same place, just above the bar
-   the button that opened them is on. */
-
-let openSheet = null;
-
-function showSheet(name, focus) {
-  openSheet = name;
-  els.ageSheet.hidden = name !== 'age';
-  els.searchSheet.hidden = name !== 'search';
-  els.tabs.age.setAttribute('aria-expanded', String(name === 'age'));
-  els.tabs.search.setAttribute('aria-expanded', String(name === 'search'));
-  if (name === 'search' && focus) els.q.focus();
+  SUBJECTS.forEach((s) => {
+    const label = EDLang.pick(s.label);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'channel-key';
+    b.dataset.group = 'subjects';
+    b.dataset.id = s.id;
+    b.dataset.subject = s.id;
+    b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = `${EDGlyphs.mark(s.id)}<span>${label}</span>`;
+    if (!subjectHasReady(s.id)) {
+      b.dataset.status = 'soon';
+      b.setAttribute('aria-label', `${label} — ${EDLang.t('card.soon')}`);
+    }
+    els.rail.append(b);
+  });
 }
 
 /* ---- Rendering ---- */
 
 function render() {
-  document.querySelectorAll('.chip[data-group]').forEach((c) => {
-    c.setAttribute('aria-pressed', String(state[c.dataset.group].has(c.dataset.id)));
+  /* Sync age buttons */
+  document.querySelectorAll('.age-btn[data-group="ages"]').forEach((b) => {
+    b.setAttribute('aria-pressed', String(state.ages.has(b.dataset.id)));
   });
-  document.getElementById('subject-all').setAttribute('aria-pressed', String(state.subjects.size === 0));
+  const ageAll = document.getElementById('age-all');
+  if (ageAll) ageAll.setAttribute('aria-pressed', String(state.ages.size === 0));
 
-  const filtering = state.ages.size || state.subjects.size || state.query.trim();
-  els.clear.hidden = !filtering;
-  els.resultBar.hidden = !filtering;
-  els.browse.hidden = Boolean(filtering);
-  els.grid.hidden = !filtering;
+  /* Sync subject channel keys */
+  document.querySelectorAll('.channel-key[data-group="subjects"]').forEach((b) => {
+    b.setAttribute('aria-pressed', String(state.subjects.has(b.dataset.id)));
+  });
+  const subAll = document.getElementById('subject-all');
+  if (subAll) subAll.setAttribute('aria-pressed', String(state.subjects.size === 0));
 
-  if (filtering) els.tabs.home.removeAttribute('aria-current');
-  else els.tabs.home.setAttribute('aria-current', 'page');
-  els.tabs.age.dataset.on = String(state.ages.size > 0);
-  els.tabs.search.dataset.on = String(state.query.trim() !== '');
+  const filtering = state.ages.size > 0 || state.subjects.size > 0 || state.query.trim() !== '';
+  if (els.clear) els.clear.hidden = !filtering;
 
-  if (filtering) {
-    const found = GAMES.filter(matches);
-    els.grid.replaceChildren(...found.map(tile));
-    els.empty.hidden = found.length > 0;
-
-    const ready = found.filter((g) => g.status === 'ready').length;
-    const one = found.length === 1;
-    els.resultLine.innerHTML = found.length
-      ? EDLang.t(one ? 'results.lineOne' : 'results.line')
-          .replace('{count}', `<span class="result-count">${found.length}</span>`)
-          .replace('{fit}', EDLang.t(one ? 'results.fitOne' : 'results.fit'))
-          .replace('{ready}', ready)
-      : '';
+  /* Update Bay Header Title & Count */
+  const list = orderedGames();
+  if (state.subjects.size === 1) {
+    const subId = [...state.subjects][0];
+    els.baySubjectName.textContent = EDLang.pick(subjectById(subId).label);
   } else {
-    els.grid.replaceChildren();
-    els.empty.hidden = true;
-    els.resultLine.textContent = '';
+    els.baySubjectName.textContent = EDLang.t('console.allGames');
   }
+  els.bayCount.textContent = EDLang.t('console.cartridges').replace('{count}', list.length);
+
+  /* Ensure selectedId is valid inside current list */
+  if (!list.some((g) => g.id === state.selectedId) && list.length) {
+    const recent = EDRecent.game();
+    const recentMatch = recent && list.find((g) => g.id === recent.id);
+    state.selectedId = (recentMatch || list[0]).id;
+  }
+
+  const active = list.find((g) => g.id === state.selectedId) || list[0] || GAMES[0];
+  const activeIdx = Math.max(0, list.indexOf(active));
+  const recent = EDRecent.game();
+
+  /* Render Spotlight Stage */
+  if (active) {
+    const sub = subjectById(active.subject);
+    const locked = !EDAuth.canPlay(active);
+    const isLastPlayed = Boolean(recent && recent.id === active.id);
+    const setId = isLastPlayed ? recent.lastSetId : null;
+
+    els.spotArt.dataset.subject = active.subject;
+    els.spotArt.innerHTML = `
+      ${coverGraphic(active)}
+      <div class="spotlight-tag-row">
+        <span class="spot-pill">${EDLang.pick(sub.label)} · ${EDLang.t('card.age')} <span class="num">${active.ageMin}–${active.ageMax}</span></span>
+        <span class="spot-num">#${String(activeIdx + 1).padStart(2, '0')}</span>
+      </div>
+      ${locked ? `<span class="lock-pill" style="top:auto;bottom:10px;inset-inline-start:10px">${EDGlyphs.icon('lock')}${EDLang.pick(tierById(gameTier(active)).name)}</span>` : (isLastPlayed ? `<span class="spot-recent-badge">★ ${EDLang.t('console.lastPlayed')}</span>` : '')}
+    `;
+    els.spotTitle.textContent = EDLang.pick(active.title);
+    els.spotBlurb.textContent = EDLang.pick(active.blurb);
+    els.spotPlay.href = gameHref(active, setId);
+    if (locked) {
+      els.spotPlay.dataset.locked = active.id;
+    } else {
+      delete els.spotPlay.dataset.locked;
+    }
+  }
+
+  /* Render Cartridge Grid or Empty State */
+  els.empty.hidden = list.length > 0;
+  els.grid.hidden = list.length === 0;
+
+  els.grid.innerHTML = list.map((g, i) => {
+    const locked = !EDAuth.canPlay(g);
+    const selected = g.id === state.selectedId;
+    return `
+      <button type="button" class="cartridge" role="option"
+        data-id="${g.id}" data-subject="${g.subject}" data-status="${g.status}"
+        ${locked ? `data-locked="${g.id}"` : ''}
+        aria-selected="${selected}">
+        <div class="cart-art">
+          ${coverGraphic(g)}
+          <span class="cart-num">#${String(i + 1).padStart(2, '0')}</span>
+          ${locked ? `<span class="lock-pill">${EDGlyphs.icon('lock')}${EDLang.pick(tierById(gameTier(g)).name)}</span>` : ''}
+        </div>
+        <span class="cart-title">${EDLang.pick(g.title)}</span>
+        <span class="cart-meta">
+          <span>${EDLang.t('card.age')} <span class="num">${g.ageMin}–${g.ageMax}</span></span>
+          <span aria-hidden="true">▶</span>
+        </span>
+      </button>
+    `;
+  }).join('');
 
   writeUrl();
 }
 
-/* ---- Events ---- */
+/* ---- Settings & Kid Theme Picker ---- */
 
-function toggle(group, id) {
-  const set = state[group];
-  if (set.has(id)) set.delete(id); else set.add(id);
-  render();
+function syncThemeOptions() {
+  const activeTheme = window.EDTheme ? EDTheme.current : 'default';
+  document.querySelectorAll('.theme-option[data-theme-choice]').forEach((btn) => {
+    const isChecked = btn.dataset.themeChoice === activeTheme;
+    btn.setAttribute('aria-checked', String(isChecked));
+    const badge = btn.querySelector('[data-theme-badge]');
+    if (badge) {
+      badge.textContent = EDLang.t(isChecked ? 'settings.selected' : 'settings.pick');
+    }
+  });
 }
+
+function initSettings() {
+  syncThemeOptions();
+  document.querySelectorAll('[data-open-settings]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      syncThemeOptions();
+      els.settingsDialog?.showModal();
+    });
+  });
+  els.settingsClose?.addEventListener('click', () => els.settingsDialog?.close());
+  els.settingsDialog?.addEventListener('click', (e) => {
+    if (e.target === els.settingsDialog) els.settingsDialog.close();
+  });
+  document.querySelectorAll('.theme-option[data-theme-choice]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (window.EDTheme) EDTheme.set(btn.dataset.themeChoice, true);
+      syncThemeOptions();
+    });
+  });
+
+  const params = new URLSearchParams(location.search);
+  if (params.get('settings') === '1' || location.hash === '#settings') {
+    setTimeout(() => els.settingsDialog?.showModal(), 60);
+  }
+}
+
+/* ---- Events ---- */
 
 function clearAll() {
   state.ages.clear();
   state.subjects.clear();
   state.query = '';
-  els.q.value = '';
+  if (els.q) els.q.value = '';
   render();
 }
 
+function launchGame(game) {
+  if (!game) return;
+  if (!EDAuth.canPlay(game)) {
+    openLock(game);
+    return;
+  }
+  const recent = EDRecent.game();
+  const setId = recent && recent.id === game.id ? recent.lastSetId : null;
+  const href = gameHref(game, setId);
+  if (window.EDPlayer) EDPlayer.open(href);
+  else location.href = href;
+}
+
 document.addEventListener('click', (e) => {
-  /* A plain press on a locked tile. This listener is added before the game
-     layer's (player.js), which leaves a prevented click alone. A press with a
-     modifier opens a new tab, where the game page itself says it is locked. */
-  const locked = e.target.closest('a[data-locked]');
-  if (locked && !(e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) {
+  /* Locked Spotlight Play button */
+  const lockedLink = e.target.closest('a[data-locked]');
+  if (lockedLink && !(e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) {
     e.preventDefault();
-    return openLock(gameById(locked.dataset.locked));
+    return openLock(gameById(lockedLink.dataset.locked));
   }
   if (e.target.closest('#lock-close')) return document.getElementById('lock-dialog').close();
 
-  const c = e.target.closest('.chip[data-group]');
-  if (c) return toggle(c.dataset.group, c.dataset.id);
+  /* Cartridge click: first click selects into Spotlight Stage; clicking the
+     already-selected cartridge launches the game immediately. */
+  const cart = e.target.closest('.cartridge[data-id]');
+  if (cart) {
+    const id = cart.dataset.id;
+    const game = gameById(id);
+    if (state.selectedId === id) {
+      launchGame(game);
+    } else {
+      state.selectedId = id;
+      render();
+    }
+    return;
+  }
 
+  /* Age filter buttons */
+  const ageBtn = e.target.closest('.age-btn[data-group="ages"]');
+  if (ageBtn) {
+    const id = ageBtn.dataset.id;
+    if (state.ages.size === 1 && state.ages.has(id)) {
+      state.ages.clear();
+    } else {
+      state.ages.clear();
+      state.ages.add(id);
+    }
+    return render();
+  }
+  if (e.target.closest('#age-all')) {
+    state.ages.clear();
+    return render();
+  }
+
+  /* Subject channel dock buttons */
+  const subBtn = e.target.closest('.channel-key[data-group="subjects"]');
+  if (subBtn) {
+    const id = subBtn.dataset.id;
+    if (state.subjects.size === 1 && state.subjects.has(id)) {
+      state.subjects.clear();
+    } else {
+      state.subjects.clear();
+      state.subjects.add(id);
+    }
+    return render();
+  }
   if (e.target.closest('#subject-all')) {
     state.subjects.clear();
     return render();
   }
+
   if (e.target.closest('#clear, [data-clear]')) return clearAll();
-
-  if (e.target.closest('#tab-age')) return showSheet(openSheet === 'age' ? null : 'age', true);
-  if (e.target.closest('#tab-search')) return showSheet(openSheet === 'search' ? null : 'search', true);
-  if (e.target.closest('#tab-home')) {
-    showSheet(null);
-    clearAll();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 });
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && openSheet) showSheet(null);
+els.prevBtn?.addEventListener('click', () => {
+  const list = orderedGames();
+  if (!list.length) return;
+  const idx = Math.max(0, list.findIndex((g) => g.id === state.selectedId));
+  state.selectedId = list[(idx - 1 + list.length) % list.length].id;
+  render();
 });
 
-els.q.addEventListener('input', () => {
+els.nextBtn?.addEventListener('click', () => {
+  const list = orderedGames();
+  if (!list.length) return;
+  const idx = Math.max(0, list.findIndex((g) => g.id === state.selectedId));
+  state.selectedId = list[(idx + 1) % list.length].id;
+  render();
+});
+
+els.q?.addEventListener('input', () => {
   state.query = els.q.value;
   render();
 });
 
+/* Boot */
 EDLang.applyStatic();
 EDLang.mountToggle();
 drawAccountChip();
-buildChips();
-buildBrowse();
+buildControls();
 readUrl();
-/* A page opened on a link that already carries a filter opens the drawer that
-   filter came from, so the narrowed list is never unexplained. */
-if (state.query.trim()) showSheet('search');
-else if (state.ages.size) showSheet('age');
+initSettings();
 render();
 
-/* The game layer refreshes the carry-on card when a game is put away. */
-window.EDApp = { refreshContinue: buildContinue };
+/* The game layer refreshes the spotlight when a game is put away. */
+window.EDApp = {
+  refreshContinue() {
+    const last = EDRecent.game();
+    if (last) state.selectedId = last.id;
+    render();
+  },
+};
 
-/* The plan on this device may be out of date: changed on another device, or
-   signed out everywhere by a password reset. */
 EDAuth.markEntered();
 EDAuth.refresh().then((changed) => {
   if (!changed) return;
   drawAccountChip();
-  buildBrowse();
   render();
 });

@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-i18n="site.title">הגנון של עלמון — משחקים לימודיים לילדים</title>
 <meta name="description" data-i18n-content="site.description" content="אוסף משחקים לימודיים קטנים לילדים בגיל 3 עד 8. אפשר לסנן לפי גיל ולפי נושא ולבחור משחק.">
-<meta name="theme-color" content="#f4f5f7">
+<meta name="theme-color" content="#20242e">
 <!-- The site's own mark, not the machine's: the same drawn shapes glyph the
      cards use, so the tab matches the page it opens. -->
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
-<!-- Sets lang and dir before the first paint, so an English visit never flashes RTL. -->
+<!-- Sets lang, dir and kid-theme before the first paint. -->
 <script src="assets/i18n.js"></script>
 </head>
 <body class="app">
@@ -25,112 +25,175 @@
 <script src="assets/covers.js"></script>
 <script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
 
-<header class="appbar">
-  <div class="appbar-in">
-    <!-- The way back to the landing page, which otherwise steps aside after the first visit. -->
-    <a href="index.html?home=1" data-i18n-label="nav.about" aria-label="על האתר"><img class="avatar" src="favicon.svg" alt="" width="44" height="44"></a>
-    <div class="hello">
-      <h1 class="small" data-i18n="brand.name">הגנון של עלמון</h1>
-      <div class="big" data-i18n="appbar.greeting">מה משחקים היום?</div>
-    </div>
-    <button type="button" class="chip sound-toggle" id="sound-toggle"></button>
-    <button type="button" class="chip lang-toggle" id="lang-toggle"></button>
-    <a class="chip account-chip" id="account-chip" href="account.html"></a>
-  </div>
-</header>
-
-<div class="shell">
-
-  <nav class="tabs" data-i18n-label="nav.label" aria-label="ניווט">
-    <button type="button" class="tab" id="tab-home" aria-current="page">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-home"/></svg>
-      <span data-i18n="tabs.home">בית</span>
-    </button>
-    <button type="button" class="tab" id="tab-age" aria-expanded="false" aria-controls="age-sheet">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-age"/></svg>
-      <span data-i18n="tabs.age">לפי גיל</span>
-    </button>
-    <button type="button" class="tab" id="tab-search" aria-expanded="false" aria-controls="search-sheet">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
-      <span data-i18n="tabs.search">חיפוש</span>
-    </button>
-  </nav>
-
-  <main class="content">
-
-    <div class="rail" id="subject-rail" role="group" data-i18n-label="filters.subject" aria-label="נושא"></div>
-
-    <div class="sheet" id="age-sheet" hidden>
-      <span class="sheet-label" id="age-label" data-i18n="filters.age">גיל</span>
-      <div class="sheet-row" id="age-chips" role="group" aria-labelledby="age-label"></div>
-    </div>
-
-    <div class="sheet" id="search-sheet" hidden>
-      <div class="sheet-row">
-        <div class="search">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
-          <label class="visually-hidden" for="q" data-i18n="search.label">חיפוש משחק</label>
-          <input id="q" type="search" data-i18n-placeholder="search.placeholder" placeholder="איזה משחק מחפשים?" autocomplete="off">
-        </div>
+<div class="console-chassis">
+  <!-- Top Console Hardware Bar -->
+  <header class="console-top">
+    <div class="brand-cluster">
+      <!-- The way back to the landing page, which otherwise steps aside after the first visit. -->
+      <a class="console-logo" href="index.html?home=1" data-i18n-label="nav.about" aria-label="על האתר">
+        <img src="favicon.svg" alt="" width="26" height="26">
+      </a>
+      <div class="brand-titles">
+        <span class="brand-kicker"><span class="led-dot"></span> <span data-i18n="console.kicker">ED-DECK · קונסולת משחקים</span></span>
+        <h1 class="brand-name" data-i18n="brand.name">הגנון של עלמון</h1>
       </div>
+      <span class="kid-crust kid-crust--princess" data-i18n="settings.crust.princess">👑 מהדורת נסיכות</span>
+      <span class="kid-crust kid-crust--spiderman" data-i18n="settings.crust.spiderman">🕷️ מהדורת ספיידרמן</span>
     </div>
 
-    <!-- Shown only while something is filtered, which is also the only time
-         there is anything to clear. -->
-    <div class="result-bar" id="result-bar" hidden>
-      <p class="result-line" role="status" aria-live="polite" id="result-line"></p>
-      <button type="button" class="chip chip--clear" id="clear" data-i18n="filters.clear" hidden>נקה סינון ✕</button>
+    <div class="console-controls">
+      <div class="age-segmented" id="age-chips" role="group" data-i18n-label="filters.age" aria-label="גיל"></div>
+      <button type="button" class="hw-btn sound-toggle" id="sound-toggle"></button>
+      <button type="button" class="hw-btn lang-toggle" id="lang-toggle"></button>
+      <a class="hw-btn account-chip" id="account-chip" href="account.html"></a>
+      <button type="button" class="hw-btn hw-btn--settings" id="settings-toggle" data-open-settings>
+        <span aria-hidden="true">⚙️</span>
+        <span data-i18n="settings.button">עיצוב והגדרות</span>
+      </button>
     </div>
+  </header>
 
-    <!-- Browse: the shelves, shown while nothing is filtered. -->
-    <div class="browse" id="browse">
-      <section class="shelf" id="continue-shelf" hidden>
-        <div class="head"><h2 data-i18n="browse.continue">ממשיכים מאיפה שהפסקנו</h2></div>
-        <div id="continue"></div>
-      </section>
-
-      <section class="shelf">
-        <div class="head">
-          <h2 data-i18n="browse.ready">אפשר לשחק עכשיו</h2>
-          <span class="more" id="ready-count"></span>
+  <!-- Main Console Screen -->
+  <main class="console-screen">
+    <div class="deck-layout">
+      <!-- Spotlight Active Game Stage -->
+      <section class="spotlight-stage" id="spotlight-stage" aria-live="polite">
+        <div>
+          <div class="spotlight-art-wrap" id="spot-art"></div>
+          <div class="spotlight-info" style="margin-top:12px">
+            <h2 id="spot-title"></h2>
+            <p id="spot-blurb"></p>
+          </div>
         </div>
-        <ul class="row" id="ready"></ul>
-      </section>
-
-      <!-- The plans' games a visitor does not have yet. Hidden tier by tier as they are unlocked. -->
-      <div id="by-tier"></div>
-
-      <div id="by-subject"></div>
-
-      <!-- Shown only while something is still being built. Every game in the
-           catalog is finished at the moment, and a heading over an empty list
-           reads as a section that failed to load. -->
-      <section class="shelf" id="soon-shelf" hidden>
-        <div class="head">
-          <h2 data-i18n="browse.soon">בקרוב</h2>
-          <span class="more" data-i18n="browse.soonMore">עוד נבנים</span>
+        <div class="spotlight-actions">
+          <button type="button" class="bumper-btn" id="prev-game" data-i18n-label="console.prevGame" aria-label="משחק קודם">
+            <span class="bumper-glyph" aria-hidden="true">❯</span>
+          </button>
+          <a class="play-launch-btn" id="spot-play" href="game.html?id=color-pop">
+            <span aria-hidden="true">▶</span>
+            <span id="spot-play-label" data-i18n="console.playNow">שחקו עכשיו</span>
+          </a>
+          <button type="button" class="bumper-btn" id="next-game" data-i18n-label="console.nextGame" aria-label="משחק הבא">
+            <span class="bumper-glyph" aria-hidden="true">❮</span>
+          </button>
         </div>
-        <ul class="list" id="soon"></ul>
+      </section>
+
+      <!-- Cartridge Deck -->
+      <section class="cartridge-bay" data-i18n-label="console.allGames" aria-label="כל המשחקים">
+        <div class="bay-header">
+          <h2 class="bay-title">
+            <span id="bay-subject-name" data-i18n="console.allGames">כל המשחקים</span>
+            <span class="bay-count" id="bay-count"></span>
+          </h2>
+          <div class="bay-tools">
+            <button type="button" class="hw-clear-btn" id="clear" data-i18n="filters.clear" hidden>נקה סינון ✕</button>
+            <label class="bay-search">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
+              <span class="visually-hidden" data-i18n="search.label">חיפוש משחק</span>
+              <input id="q" type="search" data-i18n-placeholder="search.placeholder" placeholder="איזה משחק מחפשים?" autocomplete="off">
+            </label>
+          </div>
+        </div>
+
+        <div class="cartridge-grid" id="cartridge-grid" role="listbox" data-i18n-label="console.allGames" aria-label="כל המשחקים"></div>
+
+        <div class="empty" id="empty" hidden>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
+          <h2 data-i18n="empty.title">לא מצאנו משחק כזה</h2>
+          <p data-i18n="empty.text">אפשר לנסות גיל אחר או נושא אחר.</p>
+          <button type="button" class="btn" data-clear data-i18n="empty.action">הצג את כל המשחקים</button>
+        </div>
       </section>
     </div>
-
-    <!-- Results: the same tiles, laid flat, shown the moment anything is filtered. -->
-    <ul class="tiles" id="grid" hidden></ul>
-
-    <div class="empty" id="empty" hidden>
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search"/></svg>
-      <h2 data-i18n="empty.title">לא מצאנו משחק כזה</h2>
-      <p data-i18n="empty.text">אפשר לנסות גיל אחר או נושא אחר.</p>
-      <button type="button" class="btn" data-clear data-i18n="empty.action">הצג את כל המשחקים</button>
-    </div>
-
-    <footer class="site-footer" data-i18n="footer">
-      נבנה באהבה לילדים סקרנים 💛
-    </footer>
-
   </main>
 
+  <!-- Bottom Subject Channel Dock -->
+  <nav class="channel-dock" id="subject-rail" role="group" data-i18n-label="filters.subject" aria-label="נושא"></nav>
 </div>
+
+<!-- Settings & Kid Theme Picker Dialog (affects website shell only, never the games) -->
+<dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+  <div class="settings-head">
+    <h2 id="settings-title">
+      <span aria-hidden="true">⚙️</span>
+      <span data-i18n="settings.title">הגדרות ועיצוב האתר</span>
+    </h2>
+    <button type="button" class="settings-close" id="settings-close" data-i18n-label="settings.close" aria-label="סגירה">✕</button>
+  </div>
+
+  <span class="settings-label" data-i18n="settings.themeLabel">בחירת עיצוב לילד/ה (משפיע על מעטפת האתר, לא על המשחקים עצמם):</span>
+  <div class="theme-grid" role="radiogroup" data-i18n-label="settings.title" aria-label="הגדרות ועיצוב האתר">
+    <button type="button" class="theme-option" data-theme-choice="default" role="radio" aria-checked="true">
+      <div class="theme-art">
+        <svg viewBox="0 0 120 74" aria-hidden="true">
+          <rect width="120" height="74" fill="#20242e"/>
+          <rect x="8" y="8" width="104" height="58" rx="9" fill="#f4f2ec"/>
+          <rect x="14" y="14" width="42" height="46" rx="6" fill="#ffffff" stroke="#d4d8e2"/>
+          <rect x="18" y="18" width="34" height="22" rx="4" fill="#2f6ae8"/>
+          <rect x="18" y="48" width="34" height="8" rx="4" fill="#ff5722"/>
+          <rect x="62" y="14" width="21" height="21" rx="5" fill="#ffffff" stroke="#d4d8e2"/>
+          <rect x="87" y="14" width="21" height="21" rx="5" fill="#ffffff" stroke="#d4d8e2"/>
+          <rect x="62" y="39" width="21" height="21" rx="5" fill="#ffffff" stroke="#d4d8e2"/>
+          <rect x="87" y="39" width="21" height="21" rx="5" fill="#ffffff" stroke="#d4d8e2"/>
+        </svg>
+      </div>
+      <div class="theme-txt">
+        <b data-i18n="settings.theme.default.title">עיצוב סטודיו</b>
+        <small data-i18n="settings.theme.default.sub">כהה, מקצועי ונקי</small>
+      </div>
+      <span class="theme-badge" data-theme-badge>נבחר ✓</span>
+    </button>
+
+    <button type="button" class="theme-option" data-theme-choice="princess" role="radio" aria-checked="false">
+      <div class="theme-art">
+        <svg viewBox="0 0 120 74" aria-hidden="true">
+          <rect width="120" height="74" fill="#4a1c40"/>
+          <rect x="8" y="8" width="104" height="58" rx="9" fill="#fff6fb" stroke="#ffd166" stroke-width="2"/>
+          <path d="M16,60 A44,36 0 0,1 104,60" fill="none" stroke="#ff7eb6" stroke-width="4" opacity="0.45"/>
+          <path d="M36,50 L40,24 L51,34 L60,16 L69,34 L80,24 L84,50 Z" fill="#ffd166" stroke="#c92a81" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="60" cy="38" r="4" fill="#c92a81"/>
+        </svg>
+      </div>
+      <div class="theme-txt">
+        <b data-i18n="settings.theme.princess.title">נסיכות ואגדות 👑</b>
+        <small data-i18n="settings.theme.princess.sub">כתרים, ארמון וקסם</small>
+      </div>
+      <span class="theme-badge" data-theme-badge>בחירה</span>
+    </button>
+
+    <button type="button" class="theme-option" data-theme-choice="spiderman" role="radio" aria-checked="false">
+      <div class="theme-art">
+        <svg viewBox="0 0 120 74" aria-hidden="true">
+          <rect width="120" height="74" fill="#0b1536"/>
+          <rect x="8" y="8" width="104" height="58" rx="9" fill="#eef4ff" stroke="#e62429" stroke-width="2"/>
+          <path d="M8,8 L112,66 M112,8 L8,66 M60,8 V66 M8,37 H112" stroke="#1d4ed8" stroke-opacity="0.18" stroke-width="1.5"/>
+          <ellipse cx="60" cy="37" rx="18" ry="22" fill="#e62429" stroke="#0b132b" stroke-width="2.5"/>
+          <path d="M46,31 Q52,24 57,35 Z M74,31 Q68,24 63,35 Z" fill="#ffffff" stroke="#0b132b" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="theme-txt">
+        <b data-i18n="settings.theme.spiderman.title">ספיידרמן 🕷️</b>
+        <small data-i18n="settings.theme.spiderman.sub">קורי עכביש וגיבורי־על</small>
+      </div>
+      <span class="theme-badge" data-theme-badge>בחירה</span>
+    </button>
+  </div>
+
+  <div class="settings-row">
+    <span class="settings-label" style="margin:0" data-i18n="settings.parentsLabel">אפשרויות נוספות להורים:</span>
+    <div class="settings-actions">
+      <a class="settings-link-btn" id="settings-account-link" href="account.html">
+        <span aria-hidden="true">👤</span>
+        <span data-i18n="settings.accountBtn">חשבון ומסלולים</span>
+      </a>
+      <a class="settings-link-btn" id="settings-about-link" href="index.html?home=1">
+        <span aria-hidden="true">ℹ️</span>
+        <span data-i18n="nav.about">על האתר</span>
+      </a>
+    </div>
+  </div>
+</dialog>
 
 <!-- A locked game asks for a grown-up, not for a decision from a four-year-old. -->
 <dialog class="lock-dialog" id="lock-dialog" aria-labelledby="lock-title">

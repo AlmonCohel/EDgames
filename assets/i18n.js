@@ -74,6 +74,33 @@ const UI = {
     'account.login': 'כניסה',
     'account.mine':  'החשבון שלי',
 
+    'console.kicker':      'ED-DECK · קונסולת משחקים',
+    'console.allAges':     'כל הגילאים',
+    'console.allChannels': 'כל הערוצים',
+    'console.allGames':    'כל המשחקים',
+    'console.cartridges':  '{count} קלטות',
+    'console.playNow':     'שחקו עכשיו',
+    'console.prevGame':    'משחק קודם',
+    'console.nextGame':    'משחק הבא',
+    'console.lastPlayed':  'שיחקתם לאחרונה',
+
+    'settings.button':               'עיצוב והגדרות',
+    'settings.title':                'הגדרות ועיצוב האתר',
+    'settings.close':                'סגירה',
+    'settings.themeLabel':           'בחירת עיצוב לילד/ה (משפיע על מעטפת האתר, לא על המשחקים עצמם):',
+    'settings.theme.default.title':  'עיצוב סטודיו',
+    'settings.theme.default.sub':    'כהה, מקצועי ונקי',
+    'settings.theme.princess.title': 'נסיכות ואגדות 👑',
+    'settings.theme.princess.sub':   'כתרים, ארמון וקסם',
+    'settings.theme.spiderman.title':'ספיידרמן 🕷️',
+    'settings.theme.spiderman.sub':  'קורי עכביש וגיבורי־על',
+    'settings.selected':             'נבחר ✓',
+    'settings.pick':                 'בחירה',
+    'settings.parentsLabel':         'אפשרויות נוספות להורים:',
+    'settings.accountBtn':           'חשבון ומסלולים',
+    'settings.crust.princess':       '👑 מהדורת נסיכות',
+    'settings.crust.spiderman':      '🕷️ מהדורת ספיידרמן',
+
     'landing.title':     'הגנון של עלמון — משחקים לימודיים לילדים בגיל 3 עד 8',
     'landing.kicker':    'משחקים לילדים בגיל 3 עד 8',
     'landing.headline':  'משחקים שילדים אוהבים, ושמלמדים אותם משהו',
@@ -233,6 +260,33 @@ const UI = {
     'lock.close':   'Not now',
     'account.login': 'Log in',
     'account.mine':  'My account',
+
+    'console.kicker':      'ED-DECK · PLAY CONSOLE',
+    'console.allAges':     'All ages',
+    'console.allChannels': 'All channels',
+    'console.allGames':    'All games',
+    'console.cartridges':  '{count} cartridges',
+    'console.playNow':     'Play now',
+    'console.prevGame':    'Previous game',
+    'console.nextGame':    'Next game',
+    'console.lastPlayed':  'Last played',
+
+    'settings.button':               'Design & Settings',
+    'settings.title':                'Site Design & Settings',
+    'settings.close':                'Close',
+    'settings.themeLabel':           'Choose a look for your child (changes the site shell, not the games):',
+    'settings.theme.default.title':  'Studio Console',
+    'settings.theme.default.sub':    'Sleek, dark & focused',
+    'settings.theme.princess.title': 'Princess & Fairytales 👑',
+    'settings.theme.princess.sub':   'Crowns, castle & magic',
+    'settings.theme.spiderman.title':'Spider-Man 🕷️',
+    'settings.theme.spiderman.sub':  'Webs & comic action',
+    'settings.selected':             'Selected ✓',
+    'settings.pick':                 'Choose',
+    'settings.parentsLabel':         'More for parents:',
+    'settings.accountBtn':           'Account & Plans',
+    'settings.crust.princess':       '👑 Princess Edition',
+    'settings.crust.spiderman':      '🕷️ Spider-Man Edition',
 
     'landing.title':     'EDgames — educational games for children aged 3 to 8',
     'landing.kicker':    'Games for children aged 3 to 8',
@@ -427,4 +481,47 @@ const EDLang = {
 
   document.documentElement.lang = EDLang.current;
   document.documentElement.dir = EDLang.current === 'he' ? 'rtl' : 'ltr';
+})();
+
+/* Kid-chosen website theme (Studio Default / Princess & Fairytales / Spider-Man).
+   Changes the website shell (play.html, index.html, account.html) and never
+   touches game.html or the games inside it. */
+const KID_THEMES = ['default', 'princess', 'spiderman'];
+const KID_THEME_KEY = 'edgames-kid-theme';
+
+function readKidTheme() {
+  try { return localStorage.getItem(KID_THEME_KEY); } catch { return null; }
+}
+function saveKidTheme(theme) {
+  try { localStorage.setItem(KID_THEME_KEY, theme); } catch { /* session only */ }
+}
+
+const EDTheme = window.EDTheme = {
+  current: 'default',
+  isGamePage: /(?:^|\/)game\.html$/i.test(location.pathname),
+
+  set(theme, persist = true) {
+    if (!KID_THEMES.includes(theme)) theme = 'default';
+    this.current = theme;
+    if (persist) saveKidTheme(theme);
+    if (!this.isGamePage) {
+      document.documentElement.dataset.kidTheme = theme;
+      if (document.body) document.body.dataset.kidTheme = theme;
+    }
+    window.dispatchEvent(new CustomEvent('edthemechange', { detail: { theme } }));
+  },
+};
+
+(function () {
+  const fromUrl = new URLSearchParams(location.search).get('theme');
+  const stored = readKidTheme();
+  const initial = KID_THEMES.includes(fromUrl) ? fromUrl : (KID_THEMES.includes(stored) ? stored : 'default');
+  EDTheme.set(initial, KID_THEMES.includes(fromUrl));
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!EDTheme.isGamePage && document.body) {
+        document.body.dataset.kidTheme = EDTheme.current;
+      }
+    });
+  }
 })();

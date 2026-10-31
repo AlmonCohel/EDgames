@@ -9,24 +9,24 @@ a small Cloudflare Worker: see [docs/ACCOUNTS.md](docs/ACCOUNTS.md).
 
 ```
 index.html            the landing page, for the grown-up (shown until they choose once)
-play.html             the home screen: app bar, subject rail, shelves, bottom bar
+play.html             the home screen (Console Deck): top hardware bar, spotlight stage, cartridge bay, bottom channel dock, settings dialog
 game.html             the host page a game runs inside
 account.html          sign up, log in, forgotten password, my account
 privacy.html terms.html  the legal pages, both languages in each
-assets/styles.css     theme tokens + shared components
+assets/styles.css     theme tokens + shared components + Console Deck & kid website themes
 assets/pages.css      the landing, account and legal pages
 assets/tiers.js       the plans: guest, free, basic, pro
 assets/auth.js        who is signed in, and whether they can open a game
 assets/landing.js     the landing page
 assets/account.js     the account page
-assets/i18n.js        the two UI string tables and the language toggle
+assets/i18n.js        the two UI string tables, the language toggle, and EDTheme (kid website theme)
 assets/catalog.js     subjects, age groups, and the game catalog
 assets/glyphs.js      the seven drawn subject marks and the interface icons
 assets/scenes.js      one line drawing per game, the fallback picture
 assets/covers.js      one full-colour illustrated cover per game, the picture on its tile
 assets/music.js       the site's tune (home screen), tap sounds, and the sound switch
-assets/app.js         the home screen: filtering, shelves and results
-assets/recent.js      the last game opened, for the card at the top of the home screen
+assets/app.js         the home screen: Console Deck spotlight, cartridge bay, filters, and settings modal
+assets/recent.js      the last game opened, highlighted in the Console Deck spotlight stage
 assets/player.js      the game layer: games open over the home screen and stay alive behind it
 assets/sound.js       tones, real recordings, and the microphone (Clap the Beat)
 assets/voice-lines.js every line the site says out loud, in both languages
@@ -39,37 +39,22 @@ scripts/make-voice.mjs records assets/voice-lines.js into assets/voice (Mac: say
 games/<id>.js         one file per game
 worker/               the accounts API (Cloudflare Worker + D1), with its tests
 docs/ACCOUNTS.md      plans, accounts, and what must happen before charging money
-mockups/              design directions: the first three (3 was built), v3/ = four looks
-                      (Chunky is live, Sticker pop / Jelly / Big pictures kept as options),
-                      logos/ = five logo ideas
+mockups/              design directions: v4/ = five structural directions (Direction 1 Console Deck
+                      was picked and is live), kid-themes/ = initial theme mockups, v3/ = earlier
+                      card looks, logos/ = five logo ideas
 netlify.toml          publish config
 ```
 
-## The shape of the home screen
+## The shape of the home screen (Console Deck)
 
-It is an app shell, phone first: an app bar, one horizontal rail of subjects,
-and a fixed bottom bar holding the two things a grown-up does — filter by age,
-search. On a screen 900px or wider the bottom bar becomes a side rail and the
-rows wrap into a grid; nothing is designed twice.
+Since 31 October 2026 `play.html` uses the **Console Deck (`הקונסולה`)** structure (Direction 1 from `mockups/v4/`):
 
-There are two modes over the one catalog, and which is on screen depends only on
-whether anything is filtered:
-
-- **Browse** — the game last played, a row of everything this visitor can open,
-  a row per plan they do not have yet (locked tiles, which open a dialog), a row per
-  subject with more than one finished game, and a list of what is still being
-  built. A catalog this size reads well as rows and badly as a
-  wall. Every game is finished, so the *בקרוב* / *Coming soon* list is empty
-  and its shelf hides itself — a heading with nothing under it reads as a
-  section that failed to load, not as work that is done. Add a game with
-  `status: 'soon'` and the shelf comes back on its own.
-- **Results** — the same tiles laid flat, with the count line and the empty
-  state. Picking a subject, an age or a search term is a question, and a
-  question deserves an answer rather than a rearranged shelf.
-
-The two filter drawers open from the bottom bar, so on a phone they appear just
-above it, where the thumb already is; Escape closes them, as does pressing the
-same tab again.
+- **Top hardware bar (`.console-top`)** — logo (links to `index.html?home=1`), age segmented switcher (`All ages / 3–4 / 5–6 / 7–8`), sound toggle, language toggle, account chip, and the **Design & Settings (`⚙️ עיצוב והגדרות`)** button.
+- **Inner console screen (`.console-screen`)** — a two-column deck on desktop that stacks cleanly on phone:
+  1. **Spotlight Active Game Stage (`.spotlight-stage`)** — shows the active game's cover art, subject and age pill, cartridge number (`#01`), title, blurb, previous/next bumper buttons, and a large launch button (`▶ שחקו עכשיו / Play now`). Defaults to the last game played (`EDRecent.game()`) when it matches the active filter.
+  2. **Cartridge Bay (`.cartridge-bay`)** — numbered cartridges (`#01–#43`) with instant search and a clear-filters button. Clicking an unselected cartridge loads it into the Spotlight Stage; clicking the selected cartridge (or pressing the Spotlight launch button) opens the game in the persistent game layer (`assets/player.js`), or opens `#lock-dialog` if the game belongs to a locked plan.
+- **Bottom channel dock (`.channel-dock`)** — horizontal Switch-style dock of all subject channels with their drawn marks.
+- **Kid website themes (`EDTheme` in `assets/i18n.js`)** — inside the Settings dialog (`#settings-dialog`), the child or parent can switch between **Studio Console (`default`)**, **Princess & Fairytales (`princess` 👑)**, and **Spider-Man (`spiderman` 🕷️)**. The choice is saved in `localStorage` under `edgames-kid-theme` and sets `data-kid-theme` on the website shell (`play.html`, `index.html`, `account.html`) while leaving `game.html` and the games untouched.
 
 ## Games keep their place (the game layer)
 

@@ -153,8 +153,8 @@ const EDMusic = window.EDMusic = (() => {
     document.addEventListener('pointerdown', (e) => {
       startMusic();
       if (e.target.closest('#sound-toggle')) return;
-      if (e.target.closest('.tile, .continue')) tap('open');
-      else if (e.target.closest('button, .chip, .tab, .btn, a')) tap();
+      if (e.target.closest('.tile, .continue, .cartridge, .play-launch-btn')) tap('open');
+      else if (e.target.closest('button, .chip, .tab, .btn, .hw-btn, .age-btn, .channel-key, .bumper-btn, a')) tap();
     }, { capture: true });
     document.addEventListener('keydown', startMusic, { once: true });
     /* The switch on a game page and the one on the home screen are the same

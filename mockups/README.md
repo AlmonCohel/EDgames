@@ -1,10 +1,10 @@
 # Design directions
 
 > **October 2026 — Architectural Redesign (`v4/`).** Five structural directions
-> for the whole app (2 kept: **Console Deck** and **5 Play-Rooms**; plus 3 new
-> hybrids: **Room-Deck Console Hybrid**, **Arcade Stage & Dock**, and
-> **Stepping-Stone Pass & Console Bar**), each with the kid's theme picker
-> (Studio / Princess / Spider-Man) built into Settings. Served at:
+> for the whole app. **Direction 1 — Console Deck (`1-console/`) was picked by
+> Almon and is now the live home screen (`play.html`)**, complete with the
+> kid's theme picker (**Studio Console / Princess & Fairytales / Spider-Man**)
+> in Settings. The other four directions stay in `v4/` as a record of the round:
 > https://almoncohel.github.io/EDgames/mockups/v4/
 >
 > **October 2026 — Kid theme options (`kid-themes/`).** Two selectable website
