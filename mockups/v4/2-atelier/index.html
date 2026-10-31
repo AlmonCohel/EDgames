@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כיוון 2: הסטודיו השקט (Montessori Atelier) — הגנון של עלמון</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Frank+Ruhl+Libre:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared-themes.css">
+<script src="../../../assets/i18n.js"></script>
+<style>
+:root {
+  --v4-bg: #f6f2ea;
+  --v4-bg-soft: #eae2d3;
+  --v4-surface: #fdfbf7;
+  --v4-ink: #22201c;
+  --v4-muted: #70695d;
+  --v4-line: #dcd3c2;
+  --v4-border: #c5b9a3;
+  --v4-accent: #c95b3c;
+  --v4-accent-2: #2d5a43;
+  --tray-well: #efe8da;
+  --tray-rim: #dfd5c3;
+}
+
+body[data-kid-theme="princess"] {
+  --tray-well: #fbeaf4;
+  --tray-rim: #ecc4dc;
+}
+body[data-kid-theme="spiderman"] {
+  --tray-well: #dde8ff;
+  --tray-rim: #0b132b;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  background: var(--v4-bg);
+  color: var(--v4-ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.atelier-shell {
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: 20px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Quiet Top Atelier Bar */
+.atelier-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid var(--v4-line);
+  flex-wrap: wrap;
+}
+.atelier-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.wood-stamp {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--v4-bg-soft);
+  border: 1.5px solid var(--v4-border);
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), 0 2px 4px rgba(34,32,28,0.06);
+}
+.wood-stamp img {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+.atelier-title-wrap h1 {
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 1.45rem;
+  font-weight: 900;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.atelier-title-wrap span {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--v4-muted);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.atelier-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Carved Wooden Age Tokens */
+.wood-ages {
+  display: inline-flex;
+  background: var(--tray-well);
+  border: 1.5px solid var(--tray-rim);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.wood-age-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--v4-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+.wood-age-btn[aria-pressed="true"] {
+  background: var(--v4-surface);
+  color: var(--v4-ink);
+  box-shadow: 0 2px 6px rgba(34, 32, 28, 0.1);
+}
+
+.atelier-settings-btn {
+  appearance: none;
+  border: 1.5px solid var(--v4-border);
+  background: var(--v4-surface);
+  color: var(--v4-ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-height: 40px;
+  padding: 0 15px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 2px 5px rgba(34, 32, 28, 0.05);
+}
+
+/* Two-Pane Montessori Cabinet Layout */
+.atelier-workspace {
+  display: grid;
+  grid-template-columns: 265px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+/* Wooden Pegboard Subject Rail */
+.pegboard {
+  background: var(--tray-well);
+  border: 1.5px solid var(--tray-rim);
+  border-radius: 26px;
+  padding: 12px;
+  box-shadow: inset 0 2px 6px rgba(34, 32, 28, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pegboard-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--v4-muted);
+  padding: 4px 10px 6px;
+  letter-spacing: 0.04em;
+}
+.peg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.peg-tile {
+  appearance: none;
+  border: 1.5px solid transparent;
+  background: transparent;
+  color: var(--v4-ink);
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: start;
+  transition: all 0.15s ease;
+}
+.peg-tile:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+.peg-tile[aria-pressed="true"] {
+  background: var(--v4-surface);
+  border-color: var(--v4-border);
+  box-shadow: 0 4px 12px rgba(34, 32, 28, 0.07);
+  font-weight: 800;
+}
+.peg-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--v4-bg);
+  border: 1px solid var(--v4-line);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.peg-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.peg-name {
+  flex: 1;
+  font-size: 0.9rem;
+}
+.peg-count {
+  font-size: 0.76rem;
+  color: var(--v4-muted);
+  background: var(--v4-bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* Carved Bento Toy Tray */
+.bento-tray {
+  background: var(--tray-well);
+  border: 2px solid var(--tray-rim);
+  border-radius: 30px;
+  padding: 20px;
+  box-shadow: inset 0 3px 10px rgba(34, 32, 28, 0.06);
+}
+body[data-kid-theme="spiderman"] .bento-tray {
+  border-width: 3px;
+  box-shadow: 6px 6px 0 #0b132b;
+}
+
+.tray-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 0 4px;
+  flex-wrap: wrap;
+}
+.tray-top h2 {
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 1.4rem;
+  margin: 0;
+}
+.tray-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--v4-surface);
+  border: 1.5px solid var(--v4-border);
+  border-radius: 999px;
+  padding: 0 14px;
+  height: 38px;
+}
+.tray-search input {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.86rem;
+  color: var(--v4-ink);
+  outline: none;
+  width: 160px;
+}
+
+/* Bento Compartments Grid */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* Hero First Compartment spans 2 columns */
+.bento-slot {
+  min-width: 0;
+  background: var(--v4-surface);
+  border: 1.5px solid var(--v4-border);
+  border-radius: 24px;
+  padding: 12px;
+  text-decoration: none;
+  color: var(--v4-ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0 6px 16px rgba(34, 32, 28, 0.05);
+  transition: transform 0.18s cubic-bezier(.2,.9,.3,1), box-shadow 0.18s ease;
+  position: relative;
+}
+.bento-slot:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(34, 32, 28, 0.1);
+}
+body[data-kid-theme="spiderman"] .bento-slot {
+  border: 2.5px solid #0b132b;
+  box-shadow: 4px 4px 0 #0b132b;
+}
+
+.bento-slot--hero {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(135deg, #fffdf9 0%, #f7efe2 100%);
+  padding: 16px;
+}
+body[data-kid-theme="princess"] .bento-slot--hero {
+  background: linear-gradient(135deg, #fff5fb 0%, #f5e6ff 100%);
+}
+body[data-kid-theme="spiderman"] .bento-slot--hero {
+  background: linear-gradient(135deg, #fff8d6 0%, #e6f0ff 100%);
+}
+
+.slot-art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--v4-bg);
+  border: 1px solid rgba(34, 32, 28, 0.08);
+  flex: none;
+}
+.slot-art svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.slot-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.slot-kicker {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--v4-accent);
+  letter-spacing: 0.02em;
+}
+.slot-title {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.bento-slot--hero .slot-title {
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 1.45rem;
+}
+.slot-blurb {
+  margin: 4px 0 10px;
+  font-size: 0.88rem;
+  color: var(--v4-muted);
+  line-height: 1.4;
+}
+.slot-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.slot-age {
+  font-size: 0.75rem;
+  color: var(--v4-muted);
+  font-weight: 600;
+}
+.wood-play-disc {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--v4-accent);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 7px 14px;
+  border-radius: 999px;
+}
+
+@media (max-width: 980px) {
+  .atelier-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pegboard, .bento-tray {
+    min-width: 0;
+  }
+  .pegboard {
+    padding: 10px;
+    border-radius: 20px;
+  }
+  .pegboard-label { display: none; }
+  .peg-list {
+    flex-direction: row;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .peg-list::-webkit-scrollbar { display: none; }
+  .peg-tile {
+    flex: none;
+    padding: 8px 12px;
+  }
+  .bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .atelier-shell {
+    padding: 14px 12px 36px;
+    gap: 14px;
+  }
+  .bento-tray {
+    padding: 12px;
+    border-radius: 22px;
+  }
+  .bento-grid {
+    gap: 12px;
+  }
+  .bento-slot--hero {
+    grid-template-columns: 108px 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+  .bento-slot--hero .slot-title {
+    font-size: 1.15rem;
+  }
+  .slot-blurb {
+    display: none;
+  }
+  .tray-search input {
+    width: 115px;
+  }
+}
+</style>
+</head>
+<body>
+
+<script src="../../../assets/glyphs.js"></script>
+<script src="../../../assets/scenes.js"></script>
+<script src="../../../assets/covers.js"></script>
+<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
+
+<div class="atelier-shell">
+  <header class="atelier-bar">
+    <div class="atelier-brand">
+      <a class="wood-stamp" href="../../../index.html?home=1" aria-label="על האתר">
+        <img src="../../../favicon.svg" alt="">
+      </a>
+      <div class="atelier-title-wrap">
+        <h1>הגנון של עלמון</h1>
+        <span>מגש משחקים שקט · בהשראת מונטסורי ו־Pok Pok</span>
+      </div>
+      <span class="v4-kid-crust v4-kid-crust--princess">👑 ערכת נסיכות</span>
+      <span class="v4-kid-crust v4-kid-crust--spiderman">🕷️ ערכת ספיידרמן</span>
+    </div>
+
+    <div class="atelier-tools">
+      <div class="wood-ages" role="group" aria-label="בחירת גיל">
+        <button type="button" class="wood-age-btn" data-age="all" aria-pressed="true">כל הגילאים</button>
+        <button type="button" class="wood-age-btn" data-age="tots" aria-pressed="false">3–4</button>
+        <button type="button" class="wood-age-btn" data-age="gan" aria-pressed="false">5–6</button>
+        <button type="button" class="wood-age-btn" data-age="school" aria-pressed="false">7–8</button>
+      </div>
+      <button type="button" class="atelier-settings-btn" data-open-settings>
+        <span>⚙️</span>
+        <span>עיצוב והגדרות</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="atelier-workspace">
+    <!-- Wooden Pegboard of Subjects -->
+    <aside class="pegboard" aria-label="מגירות נושאים">
+      <div class="pegboard-label">מגירות משחק</div>
+      <div class="peg-list" id="peg-list"></div>
+    </aside>
+
+    <!-- Main Recessed Bento Tray -->
+    <main class="bento-tray">
+      <div class="tray-top">
+        <h2 id="tray-heading">כל מגשי המשחק</h2>
+        <label class="tray-search">
+          <span>🔍</span>
+          <input type="search" id="atelier-q" placeholder="חיפוש במגש..." autocomplete="off">
+        </label>
+      </div>
+      <div class="bento-grid" id="bento-grid"></div>
+    </main>
+  </div>
+</div>
+
+<script src="../../../assets/catalog.js"></script>
+<script src="../../../assets/tiers.js"></script>
+<script src="../../../assets/auth.js"></script>
+<script src="../../../assets/recent.js"></script>
+<script src="../../../assets/music.js"></script>
+<script src="../shared-settings.js"></script>
+<script>
+  EDV4.init();
+
+  const state = { subject: 'all', age: 'all', q: '' };
+
+  function getFiltered() {
+    return EDV4.readyGames().filter((g) => {
+      if (state.subject !== 'all' && g.subject !== state.subject) return false;
+      if (state.age !== 'all') {
+        const grp = AGE_GROUPS.find((a) => a.id === state.age);
+        if (grp && !(g.ageMin <= grp.max && g.ageMax >= grp.min)) return false;
+      }
+      if (state.q.trim()) {
+        const q = state.q.trim().toLowerCase();
+        const t = EDV4.pick(g.title).toLowerCase();
+        const b = EDV4.pick(g.blurb).toLowerCase();
+        if (!t.includes(q) && !b.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderPegboard() {
+    const ready = EDV4.readyGames();
+    const listEl = document.getElementById('peg-list');
+    const items = [
+      { id: 'all', label: 'כל המגשים', count: ready.length },
+      ...SUBJECTS.map((s) => ({
+        id: s.id,
+        label: EDV4.pick(s.label),
+        count: ready.filter((g) => g.subject === s.id).length,
+      })).filter((s) => s.count > 0),
+    ];
+
+    listEl.innerHTML = items.map((item) => `
+      <button type="button" class="peg-tile" data-sub="${item.id}" aria-pressed="${state.subject === item.id}">
+        <span class="peg-icon">${EDV4.markHtml(item.id)}</span>
+        <span class="peg-name">${item.label}</span>
+        <span class="peg-count">${item.count}</span>
+      </button>
+    `).join('');
+
+    listEl.querySelectorAll('.peg-tile').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.subject = btn.dataset.sub;
+        renderAll();
+      });
+    });
+  }
+
+  function renderBento() {
+    const games = getFiltered();
+    const subObj = state.subject === 'all' ? null : EDV4.subjectById(state.subject);
+    document.getElementById('tray-heading').textContent = subObj ? EDV4.pick(subObj.label) : 'כל מגשי המשחק';
+
+    const grid = document.getElementById('bento-grid');
+    grid.innerHTML = games.map((g, idx) => {
+      const sub = EDV4.subjectById(g.subject);
+      if (idx === 0) {
+        return `
+          <a class="bento-slot bento-slot--hero" href="${EDV4.gameUrl(g.id)}">
+            <div class="slot-art">
+              ${EDV4.coverHtml(g)}
+            </div>
+            <div class="slot-meta">
+              <span class="slot-kicker">מומלץ במגש · ${EDV4.pick(sub.label)}</span>
+              <h3 class="slot-title">${EDV4.pick(g.title)}</h3>
+              <p class="slot-blurb">${EDV4.pick(g.blurb)}</p>
+              <div class="slot-foot">
+                <span class="wood-play-disc">▶ פתחו משחק</span>
+                <span class="slot-age">גיל ${g.ageMin}–${g.ageMax}</span>
+              </div>
+            </div>
+          </a>
+        `;
+      }
+      return `
+        <a class="bento-slot" href="${EDV4.gameUrl(g.id)}">
+          <div class="slot-art">
+            ${EDV4.coverHtml(g)}
+          </div>
+          <div class="slot-meta">
+            <h3 class="slot-title">${EDV4.pick(g.title)}</h3>
+            <div class="slot-foot">
+              <span class="slot-age">${EDV4.pick(sub.label)}</span>
+              <span class="slot-age">גיל ${g.ageMin}–${g.ageMax}</span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  function renderAll() {
+    renderPegboard();
+    renderBento();
+  }
+
+  document.querySelectorAll('.wood-age-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.age = btn.dataset.age;
+      document.querySelectorAll('.wood-age-btn').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      renderBento();
+    });
+  });
+
+  document.getElementById('atelier-q').addEventListener('input', (e) => {
+    state.q = e.target.value;
+    renderBento();
+  });
+
+  renderAll();
+</script>
+</body>
+</html>

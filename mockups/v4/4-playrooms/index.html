@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כיוון 4: חדרי המשחקייה (Interactive Play-Rooms) — הגנון של עלמון</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared-themes.css">
+<script src="../../../assets/i18n.js"></script>
+<style>
+:root {
+  --v4-bg: #f2f4f8;
+  --v4-bg-soft: #e5e9f2;
+  --v4-surface: #ffffff;
+  --v4-ink: #192132;
+  --v4-muted: #5b667d;
+  --v4-line: #d6deeb;
+  --v4-border: #b8c4d9;
+  --v4-accent: #2563eb;
+  --room-bg: #fff6ea;
+  --room-accent: #d95d39;
+  --room-floor: #f4e6d2;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  background: var(--v4-bg);
+  color: var(--v4-ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.museum-shell {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 16px 18px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Top Children's Museum Header */
+.museum-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--v4-surface);
+  border: 1.5px solid var(--v4-line);
+  border-radius: 22px;
+  padding: 10px 16px;
+  box-shadow: 0 6px 20px rgba(25, 33, 50, 0.05);
+  flex-wrap: wrap;
+}
+.museum-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.museum-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: #192132;
+  display: grid;
+  place-items: center;
+}
+.museum-logo img { width: 26px; height: 26px; display: block; }
+.museum-brand h1 {
+  margin: 0;
+  font-size: 1.22rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.museum-brand small {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--v4-muted);
+  font-weight: 600;
+}
+
+.museum-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.museum-ages {
+  display: inline-flex;
+  background: var(--v4-bg);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid var(--v4-line);
+}
+.m-age-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--v4-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.m-age-btn[aria-pressed="true"] {
+  background: var(--v4-surface);
+  color: var(--v4-ink);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+.museum-settings-btn {
+  appearance: none;
+  border: 1.5px solid var(--v4-line);
+  background: var(--v4-surface);
+  color: var(--v4-ink);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 5 Architectural Room Archways (Doorway Switcher) */
+.rooms-nav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+.room-door {
+  appearance: none;
+  font: inherit;
+  color: var(--v4-ink);
+  background: var(--v4-surface);
+  border: 2px solid var(--v4-line);
+  border-radius: 24px 24px 14px 14px;
+  padding: 12px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  position: relative;
+  transition: transform 0.16s cubic-bezier(.3,1.5,.5,1), border-color 0.16s ease, box-shadow 0.16s ease;
+}
+.room-door:hover {
+  transform: translateY(-3px);
+}
+.room-door[aria-selected="true"] {
+  border-color: var(--door-color, #d95d39);
+  background: var(--door-tint, #fff6ea);
+  box-shadow: 0 10px 24px rgba(25, 33, 50, 0.1);
+  transform: translateY(-4px);
+}
+.door-arch {
+  width: 52px;
+  height: 54px;
+  border-radius: 26px 26px 10px 10px;
+  background: var(--door-color, #d95d39);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.18);
+}
+.door-arch svg {
+  width: 28px;
+  height: 28px;
+}
+.room-emblem svg {
+  width: 34px;
+  height: 34px;
+}
+.door-name {
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+.door-sub {
+  font-size: 0.74rem;
+  color: var(--v4-muted);
+  font-weight: 600;
+}
+
+/* Active Play-Room Stage */
+.room-stage {
+  background: var(--room-bg);
+  border: 2px solid var(--v4-line);
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(25, 33, 50, 0.08);
+  transition: background 0.25s ease;
+}
+body[data-kid-theme="princess"] .room-stage {
+  background: linear-gradient(180deg, #ffeaf6 0%, #fff7fc 100%) !important;
+  border-color: #ecadd4;
+}
+body[data-kid-theme="spiderman"] .room-stage {
+  background: linear-gradient(180deg, #dbe8ff 0%, #f2f6ff 100%) !important;
+  border: 3px solid #0b132b;
+  box-shadow: 7px 7px 0 #0b132b;
+}
+
+/* Scenic Room Header Panorama */
+.room-panorama {
+  position: relative;
+  padding: 22px 26px;
+  border-bottom: 2px solid rgba(25, 33, 50, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  flex-wrap: wrap;
+}
+.room-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.room-emblem {
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
+  background: var(--room-accent);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+  flex: none;
+}
+.room-copy h2 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.room-copy p {
+  margin: 0;
+  font-size: 0.94rem;
+  color: var(--v4-muted);
+  font-weight: 500;
+}
+.room-count-pill {
+  background: var(--v4-surface);
+  border: 1.5px solid rgba(25, 33, 50, 0.12);
+  padding: 7px 15px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+/* Play Stations Floor (Only 6-9 large stations per room so kids are never overwhelmed) */
+.stations-floor {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.station-card {
+  background: var(--v4-surface);
+  border: 2px solid rgba(25, 33, 50, 0.1);
+  border-radius: 26px;
+  padding: 14px;
+  text-decoration: none;
+  color: var(--v4-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 10px 24px rgba(25, 33, 50, 0.06);
+  transition: transform 0.18s cubic-bezier(.3,1.5,.5,1), box-shadow 0.18s ease;
+  position: relative;
+}
+.station-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 32px rgba(25, 33, 50, 0.12);
+}
+body[data-kid-theme="spiderman"] .station-card {
+  border: 2.5px solid #0b132b;
+  box-shadow: 5px 5px 0 #0b132b;
+}
+
+.station-art {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--v4-bg);
+  position: relative;
+}
+.station-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.station-play-badge {
+  position: absolute;
+  bottom: 10px;
+  inset-inline-start: 10px;
+  background: rgba(25, 33, 50, 0.86);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.station-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px 2px;
+}
+.station-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+.station-blurb {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--v4-muted);
+  line-height: 1.38;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.station-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--v4-muted);
+}
+
+@media (max-width: 860px) {
+  .rooms-nav {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .rooms-nav::-webkit-scrollbar { display: none; }
+  .room-door {
+    min-width: 132px;
+    flex: none;
+  }
+  .stations-floor {
+    padding: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .museum-shell {
+    padding: 12px 12px 40px;
+    gap: 12px;
+  }
+  .room-panorama {
+    padding: 16px;
+  }
+  .room-emblem {
+    width: 50px;
+    height: 50px;
+    font-size: 1.55rem;
+  }
+  .room-copy h2 {
+    font-size: 1.25rem;
+  }
+  .stations-floor {
+    padding: 12px;
+    gap: 10px;
+  }
+  .station-card {
+    padding: 10px;
+    border-radius: 20px;
+  }
+  .station-title {
+    font-size: 0.96rem;
+  }
+  .station-blurb {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<script src="../../../assets/glyphs.js"></script>
+<script src="../../../assets/scenes.js"></script>
+<script src="../../../assets/covers.js"></script>
+<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
+
+<div class="museum-shell">
+  <header class="museum-top">
+    <div class="museum-brand">
+      <a class="museum-logo" href="../../../index.html?home=1" aria-label="על האתר">
+        <img src="../../../favicon.svg" alt="">
+      </a>
+      <div>
+        <h1>הגנון של עלמון</h1>
+        <small>5 חדרי משחקייה · בהשראת Sago Mini ומוזיאוני ילדים</small>
+      </div>
+      <span class="v4-kid-crust v4-kid-crust--princess">👑 ארמון האגדות</span>
+      <span class="v4-kid-crust v4-kid-crust--spiderman">🕷️ מפקדת ספיידרמן</span>
+    </div>
+
+    <div class="museum-actions">
+      <div class="museum-ages" role="group" aria-label="סינון לפי גיל">
+        <button type="button" class="m-age-btn" data-age="all" aria-pressed="true">כל הגילאים</button>
+        <button type="button" class="m-age-btn" data-age="tots" aria-pressed="false">3–4</button>
+        <button type="button" class="m-age-btn" data-age="gan" aria-pressed="false">5–6</button>
+        <button type="button" class="m-age-btn" data-age="school" aria-pressed="false">7–8</button>
+      </div>
+      <button type="button" class="museum-settings-btn" data-open-settings>
+        <span>⚙️</span>
+        <span>עיצוב והגדרות</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 5 Play-Room Archways -->
+  <nav class="rooms-nav" id="rooms-nav" role="tablist" aria-label="חדרי המשחקייה"></nav>
+
+  <!-- Active Room Stage -->
+  <main class="room-stage" id="room-stage">
+    <div class="room-panorama">
+      <div class="room-info">
+        <div class="room-emblem" id="room-emblem">📚</div>
+        <div class="room-copy">
+          <h2 id="room-title">חדר המילים והסיפורים</h2>
+          <p id="room-desc">אותיות בעברית ובאנגלית, בניית מילים ואגדות קסומות.</p>
+        </div>
+      </div>
+      <span class="room-count-pill" id="room-count">12 פינות משחק</span>
+    </div>
+
+    <div class="stations-floor" id="stations-floor"></div>
+  </main>
+</div>
+
+<script src="../../../assets/catalog.js"></script>
+<script src="../../../assets/tiers.js"></script>
+<script src="../../../assets/auth.js"></script>
+<script src="../../../assets/recent.js"></script>
+<script src="../../../assets/music.js"></script>
+<script src="../shared-settings.js"></script>
+<script>
+  EDV4.init();
+
+  const PLAY_ROOMS = [
+    {
+      id: 'stories',
+      name: 'חדר המילים והסיפורים',
+      short: 'אותיות, אנגלית ואגדות',
+      desc: 'אותיות בעברית ובאנגלית, בניית מילים והרפתקאות בארץ האגדות.',
+      mark: 'letters',
+      color: '#c026d3',
+      tint: '#fdf4ff',
+      subjects: ['letters', 'english', 'fairytale'],
+    },
+    {
+      id: 'numbers',
+      name: 'מעבדת המספרים והחידות',
+      short: 'מספרים, חשבון ולוגיקה',
+      desc: 'ספירה, חיבור וחיסור, דפוסים וחידות חשיבה לחוקרים צעירים.',
+      mark: 'numbers',
+      color: '#2563eb',
+      tint: '#eff6ff',
+      subjects: ['numbers', 'math', 'logic'],
+    },
+    {
+      id: 'studio',
+      name: 'סטודיו הצבעים והמוזיקה',
+      short: 'צורות, צבעים ונגינה',
+      desc: 'בלונים, צורות הנדסיות, פסנתר חיות ומקצבים מוזיקליים.',
+      mark: 'shapes',
+      color: '#ea580c',
+      tint: '#fff7ed',
+      subjects: ['shapes', 'music'],
+    },
+    {
+      id: 'nature',
+      name: 'חממת החיות והזיכרון',
+      short: 'טבע, חיות ומשחקי זיכרון',
+      desc: 'קולות של חיות, מזג אוויר, פאזלים וזוגות קלפים.',
+      mark: 'nature',
+      color: '#16a34a',
+      tint: '#f0fdf4',
+      subjects: ['nature', 'memory'],
+    },
+    {
+      id: 'computer',
+      name: 'מועדון המחשב והרובוטים',
+      short: 'שליטה בעכבר ובמקלדת',
+      desc: 'לומדים להזיז עכבר, ללחוץ, לגרור ולהכיר את מקשי המקלדת.',
+      mark: 'computer',
+      color: '#0284c7',
+      tint: '#f0f9ff',
+      subjects: ['computer'],
+    },
+  ];
+
+  const state = { roomId: 'stories', age: 'all' };
+
+  function matchesAge(g) {
+    if (state.age === 'all') return true;
+    const grp = AGE_GROUPS.find((a) => a.id === state.age);
+    return grp ? (g.ageMin <= grp.max && g.ageMax >= grp.min) : true;
+  }
+
+  function renderRooms() {
+    const ready = EDV4.readyGames().filter(matchesAge);
+    const nav = document.getElementById('rooms-nav');
+    nav.innerHTML = PLAY_ROOMS.map((r) => {
+      const count = ready.filter((g) => r.subjects.includes(g.subject)).length;
+      return `
+        <button type="button" class="room-door" role="tab" data-room="${r.id}"
+          aria-selected="${state.roomId === r.id}"
+          style="--door-color:${r.color}; --door-tint:${r.tint}">
+          <span class="door-arch">${EDV4.markHtml(r.mark)}</span>
+          <span class="door-name">${r.name}</span>
+          <span class="door-sub">${count} משחקים</span>
+        </button>
+      `;
+    }).join('');
+
+    nav.querySelectorAll('.room-door').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.roomId = btn.dataset.room;
+        renderAll();
+      });
+    });
+  }
+
+  function renderFloor() {
+    const room = PLAY_ROOMS.find((r) => r.id === state.roomId) || PLAY_ROOMS[0];
+    const games = EDV4.readyGames().filter((g) => room.subjects.includes(g.subject) && matchesAge(g));
+
+    const stage = document.getElementById('room-stage');
+    stage.style.setProperty('--room-bg', room.tint);
+    stage.style.setProperty('--room-accent', room.color);
+
+    document.getElementById('room-emblem').innerHTML = EDV4.markHtml(room.mark);
+    document.getElementById('room-title').textContent = room.name;
+    document.getElementById('room-desc').textContent = room.desc;
+    document.getElementById('room-count').textContent = `${games.length} פינות משחק פתוחות`;
+
+    const floor = document.getElementById('stations-floor');
+    floor.innerHTML = games.map((g) => {
+      const sub = EDV4.subjectById(g.subject);
+      return `
+        <a class="station-card" href="${EDV4.gameUrl(g.id)}">
+          <div class="station-art">
+            ${EDV4.coverHtml(g)}
+            <span class="station-play-badge">▶ כניסה למשחק</span>
+          </div>
+          <div class="station-body">
+            <h3 class="station-title">${EDV4.pick(g.title)}</h3>
+            <p class="station-blurb">${EDV4.pick(g.blurb)}</p>
+            <div class="station-meta">
+              <span>${EDV4.pick(sub.label)}</span>
+              <span>גיל ${g.ageMin}–${g.ageMax}</span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  function renderAll() {
+    renderRooms();
+    renderFloor();
+  }
+
+  document.querySelectorAll('.m-age-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.age = btn.dataset.age;
+      document.querySelectorAll('.m-age-btn').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      renderAll();
+    });
+  });
+
+  renderAll();
+</script>
+</body>
+</html>

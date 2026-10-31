@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כיוון 3: ספר המשחקים (Editorial Picture-Book) — הגנון של עלמון</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared-themes.css">
+<script src="../../../assets/i18n.js"></script>
+<style>
+:root {
+  --v4-bg: #fcf9f2;
+  --v4-bg-soft: #f3ede0;
+  --v4-surface: #ffffff;
+  --v4-ink: #161618;
+  --v4-muted: #5e5b52;
+  --v4-line: #d9d1c1;
+  --v4-border: #161618;
+  --v4-accent: #d94826;
+  --v4-accent-2: #1d5c42;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  background: var(--v4-bg);
+  color: var(--v4-ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.book-page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 20px 22px 64px;
+}
+
+/* Editorial Masthead (NYT Games / Chronicle Books style) */
+.masthead {
+  border-top: 3px solid var(--v4-border);
+  border-bottom: 1.5px solid var(--v4-border);
+  padding: 14px 0;
+  margin-bottom: 18px;
+}
+.masthead-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--v4-line);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--v4-muted);
+  flex-wrap: wrap;
+}
+.masthead-edition {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.masthead-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 14px;
+  flex-wrap: wrap;
+}
+.masthead-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.masthead-mark {
+  width: 46px;
+  height: 46px;
+  border: 1.5px solid var(--v4-border);
+  border-radius: 10px;
+  background: var(--v4-surface);
+  display: grid;
+  place-items: center;
+  box-shadow: 3px 3px 0 var(--v4-border);
+}
+.masthead-mark img { width: 30px; height: 30px; display: block; }
+.masthead-brand h1 {
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(1.65rem, 3.2vw, 2.35rem);
+  font-weight: 900;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.masthead-brand p {
+  margin: 3px 0 0;
+  font-size: 0.85rem;
+  color: var(--v4-muted);
+}
+
+.masthead-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ed-age-tabs {
+  display: inline-flex;
+  border: 1.5px solid var(--v4-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--v4-surface);
+}
+.ed-age-btn {
+  appearance: none;
+  border: 0;
+  border-inline-end: 1px solid var(--v4-line);
+  background: transparent;
+  color: var(--v4-ink);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+.ed-age-btn:last-child { border-inline-end: 0; }
+.ed-age-btn[aria-pressed="true"] {
+  background: var(--v4-border);
+  color: var(--v4-surface);
+}
+
+.ed-settings-btn {
+  appearance: none;
+  border: 1.5px solid var(--v4-border);
+  background: var(--v4-surface);
+  color: var(--v4-ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  height: 36px;
+  padding: 0 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--v4-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Table of Contents Chapter Ribbon */
+.toc-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 16px;
+  border-bottom: 1.5px solid var(--v4-border);
+  margin-bottom: 24px;
+  scrollbar-width: none;
+}
+.toc-ribbon::-webkit-scrollbar { display: none; }
+
+.toc-tab {
+  appearance: none;
+  border: 1.5px solid var(--v4-border);
+  background: var(--v4-surface);
+  color: var(--v4-ink);
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 700;
+  padding: 6px 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.toc-tab:hover {
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 0 var(--v4-border);
+}
+.toc-tab[aria-pressed="true"] {
+  background: var(--v4-accent);
+  color: #ffffff;
+  box-shadow: 2px 2px 0 var(--v4-border);
+}
+.toc-tab svg { width: 17px; height: 17px; }
+
+/* Featured Picture-Book Spread */
+.story-spread {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  background: var(--v4-surface);
+  border: 2px solid var(--v4-border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 6px 6px 0 var(--v4-border);
+  margin-bottom: 34px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+body[data-kid-theme="princess"] .story-spread {
+  background: linear-gradient(135deg, #fff8fc 0%, #f8ecff 100%);
+}
+body[data-kid-theme="spiderman"] .story-spread {
+  background: linear-gradient(135deg, #fff9db 0%, #eef4ff 100%);
+}
+
+.spread-art {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1.5px solid var(--v4-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--v4-bg-soft);
+}
+.spread-art svg { width: 100%; height: 100%; display: block; }
+
+.spread-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.spread-kicker {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--v4-bg-soft);
+  border: 1px solid var(--v4-border);
+  padding: 2px 9px;
+  border-radius: 4px;
+}
+.spread-copy h2 {
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 900;
+  margin: 0;
+  line-height: 1.1;
+}
+.spread-copy p {
+  margin: 0 0 8px;
+  font-size: 0.98rem;
+  color: var(--v4-muted);
+  max-width: 54ch;
+  line-height: 1.5;
+}
+.spread-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--v4-accent);
+  color: #ffffff;
+  border: 1.5px solid var(--v4-border);
+  box-shadow: 3px 3px 0 var(--v4-border);
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+
+/* Chapter Sections (No Clipped Horizontal Scrollbars!) */
+.chapter-block {
+  margin-bottom: 36px;
+}
+.chapter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1.5px solid var(--v4-border);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+.chapter-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+}
+.chapter-num {
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: var(--v4-accent);
+}
+.chapter-title h3 {
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 1.45rem;
+  font-weight: 900;
+  margin: 0;
+}
+.chapter-count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--v4-muted);
+}
+
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 16px;
+}
+
+.plate-card {
+  background: var(--v4-surface);
+  border: 1.5px solid var(--v4-border);
+  border-radius: 10px;
+  padding: 10px 10px 12px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  box-shadow: 3px 3px 0 var(--v4-border);
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+.plate-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--v4-border);
+}
+.plate-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--v4-muted);
+  border-bottom: 1px solid var(--v4-line);
+  padding-bottom: 5px;
+}
+.plate-idx {
+  font-family: "Frank Ruhl Libre", serif;
+  color: var(--v4-ink);
+  font-size: 0.82rem;
+}
+.plate-art {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--v4-border);
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--v4-bg-soft);
+}
+.plate-art svg { width: 100%; height: 100%; display: block; }
+.plate-title {
+  margin: 0;
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 1.08rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+@media (max-width: 760px) {
+  .book-page {
+    padding: 14px 14px 48px;
+  }
+  .story-spread {
+    grid-template-columns: 120px 1fr;
+    gap: 14px;
+    padding: 14px;
+  }
+  .spread-art {
+    aspect-ratio: 1;
+  }
+  .spread-copy p {
+    display: none;
+  }
+  .chapter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+</style>
+</head>
+<body>
+
+<script src="../../../assets/glyphs.js"></script>
+<script src="../../../assets/scenes.js"></script>
+<script src="../../../assets/covers.js"></script>
+<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
+
+<div class="book-page">
+  <header class="masthead">
+    <div class="masthead-meta">
+      <div class="masthead-edition">
+        <span>אנתולוגיית משחקים מאוירת לילדים · גילאי 3–8</span>
+        <span class="v4-kid-crust v4-kid-crust--princess">👑 מהדורת אגדות</span>
+        <span class="v4-kid-crust v4-kid-crust--spiderman">🕷️ מהדורת קומיקס</span>
+      </div>
+      <span>34 משחקים פתוחים · ללא פרסומות</span>
+    </div>
+
+    <div class="masthead-main">
+      <div class="masthead-brand">
+        <a class="masthead-mark" href="../../../index.html?home=1" aria-label="על האתר">
+          <img src="../../../favicon.svg" alt="">
+        </a>
+        <div>
+          <h1>הגנון של עלמון</h1>
+          <p>ספר המשחקים והחידות · בהשראת Chronicle Books ו־NYT Games</p>
+        </div>
+      </div>
+
+      <div class="masthead-controls">
+        <div class="ed-age-tabs" role="group" aria-label="סינון לפי גיל">
+          <button type="button" class="ed-age-btn" data-age="all" aria-pressed="true">כל הגילאים</button>
+          <button type="button" class="ed-age-btn" data-age="tots" aria-pressed="false">3–4</button>
+          <button type="button" class="ed-age-btn" data-age="gan" aria-pressed="false">5–6</button>
+          <button type="button" class="ed-age-btn" data-age="school" aria-pressed="false">7–8</button>
+        </div>
+        <button type="button" class="ed-settings-btn" data-open-settings>
+          <span>⚙️</span>
+          <span>עיצוב והגדרות</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Chapter Table of Contents -->
+  <nav class="toc-ribbon" id="toc-ribbon" aria-label="פרקי הספר"></nav>
+
+  <!-- Hero Featured Story Spread -->
+  <a class="story-spread" id="hero-spread" href="../../../game.html?id=story-order">
+    <div class="spread-art" id="spread-art"></div>
+    <div class="spread-copy">
+      <span class="spread-kicker" id="spread-kicker">בחירת המערכת · סיפור ומשחק</span>
+      <h2 id="spread-title">מה קרה קודם?</h2>
+      <p id="spread-blurb">מסדרים את תמונות האגדה — מה קרה קודם ומה אחר כך.</p>
+      <span class="spread-cta">פתחו את המשחק ⟵</span>
+    </div>
+  </a>
+
+  <!-- Multi-Chapter Editorial Catalog -->
+  <main id="chapters-container"></main>
+</div>
+
+<script src="../../../assets/catalog.js"></script>
+<script src="../../../assets/tiers.js"></script>
+<script src="../../../assets/auth.js"></script>
+<script src="../../../assets/recent.js"></script>
+<script src="../../../assets/music.js"></script>
+<script src="../shared-settings.js"></script>
+<script>
+  EDV4.init();
+
+  const state = { subject: 'all', age: 'all' };
+  const HEB_CHAPTERS = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ז׳', 'ח׳', 'ט׳', 'י׳', 'י״א'];
+
+  function matchesAge(g) {
+    if (state.age === 'all') return true;
+    const grp = AGE_GROUPS.find((a) => a.id === state.age);
+    return grp ? (g.ageMin <= grp.max && g.ageMax >= grp.min) : true;
+  }
+
+  function renderToc() {
+    const ribbon = document.getElementById('toc-ribbon');
+    const ready = EDV4.readyGames().filter(matchesAge);
+    const tabs = [
+      { id: 'all', label: `כל הפרקים (${ready.length})` },
+      ...SUBJECTS.map((s, idx) => ({
+        id: s.id,
+        label: `פרק ${HEB_CHAPTERS[idx] || (idx + 1)} · ${EDV4.pick(s.label)}`,
+        count: ready.filter((g) => g.subject === s.id).length,
+      })).filter((t) => t.count > 0),
+    ];
+
+    ribbon.innerHTML = tabs.map((t) => `
+      <button type="button" class="toc-tab" data-sub="${t.id}" aria-pressed="${state.subject === t.id}">
+        ${EDV4.markHtml(t.id)}
+        <span>${t.label}</span>
+      </button>
+    `).join('');
+
+    ribbon.querySelectorAll('.toc-tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.subject = btn.dataset.sub;
+        renderAll();
+      });
+    });
+  }
+
+  function renderChapters() {
+    const ready = EDV4.readyGames().filter(matchesAge);
+    const featured = ready.find((g) => g.id === 'story-order') || ready[0];
+    if (featured) {
+      const fSub = EDV4.subjectById(featured.subject);
+      document.getElementById('hero-spread').href = EDV4.gameUrl(featured.id);
+      document.getElementById('spread-art').innerHTML = EDV4.coverHtml(featured);
+      document.getElementById('spread-kicker').textContent = `שער הגיליון · ${EDV4.pick(fSub.label)} · גיל ${featured.ageMin}–${featured.ageMax}`;
+      document.getElementById('spread-title').textContent = EDV4.pick(featured.title);
+      document.getElementById('spread-blurb').textContent = EDV4.pick(featured.blurb);
+    }
+
+    const subjectsToShow = state.subject === 'all'
+      ? SUBJECTS
+      : SUBJECTS.filter((s) => s.id === state.subject);
+
+    let globalIdx = 1;
+    const container = document.getElementById('chapters-container');
+    container.innerHTML = subjectsToShow.map((sub, sIdx) => {
+      const games = ready.filter((g) => g.subject === sub.id);
+      if (!games.length) return '';
+      const chapNum = HEB_CHAPTERS[SUBJECTS.indexOf(sub)] || (sIdx + 1);
+      const cardsHtml = games.map((g) => {
+        const numStr = String(globalIdx++).padStart(2, '0');
+        return `
+          <a class="plate-card" href="${EDV4.gameUrl(g.id)}">
+            <div class="plate-top">
+              <span class="plate-idx">מס׳ ${numStr}</span>
+              <span>גיל ${g.ageMin}–${g.ageMax}</span>
+            </div>
+            <div class="plate-art">
+              ${EDV4.coverHtml(g)}
+            </div>
+            <h4 class="plate-title">${EDV4.pick(g.title)}</h4>
+          </a>
+        `;
+      }).join('');
+
+      return `
+        <section class="chapter-block">
+          <div class="chapter-head">
+            <div class="chapter-title">
+              <span class="chapter-num">פרק ${chapNum}</span>
+              <h3>${EDV4.pick(sub.label)}</h3>
+            </div>
+            <span class="chapter-count">${games.length} משחקים</span>
+          </div>
+          <div class="chapter-grid">${cardsHtml}</div>
+        </section>
+      `;
+    }).join('');
+  }
+
+  function renderAll() {
+    renderToc();
+    renderChapters();
+  }
+
+  document.querySelectorAll('.ed-age-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.age = btn.dataset.age;
+      document.querySelectorAll('.ed-age-btn').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      renderAll();
+    });
+  });
+
+  renderAll();
+</script>
+</body>
+</html>

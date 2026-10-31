@@ -1,5 +1,11 @@
 # Design directions
 
+> **October 2026 — Architectural Redesign (`v4/`).** Four new structural directions
+> for the whole app (Console Deck, Montessori Atelier, Editorial Picture-Book,
+> and 5 Play-Rooms), each with the kid's theme picker (Studio / Princess / Spider-Man)
+> built into Settings. Served at:
+> https://almoncohel.github.io/EDgames/mockups/v4/
+>
 > **October 2026 — Kid theme options (`kid-themes/`).** Two selectable website
 > designs for the child's choice — **Princess & Fairytales** (`kid-themes/princess/`)
 > and **Spider-Man** (`kid-themes/spiderman/`) — plus the Settings picker, affecting

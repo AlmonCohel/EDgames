@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כיוון 1: הקונסולה (Console Deck) — הגנון של עלמון</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared-themes.css">
+<script src="../../../assets/i18n.js"></script>
+<style>
+:root {
+  --v4-bg: #181a20;
+  --v4-bg-soft: #222630;
+  --v4-surface: #282d3a;
+  --v4-card: #ffffff;
+  --v4-ink: #f4f6fb;
+  --v4-card-ink: #151821;
+  --v4-muted: #9aa3b8;
+  --v4-line: rgba(255, 255, 255, 0.12);
+  --v4-border: #0e1015;
+  --v4-accent: #ff5722;
+  --v4-accent-2: #00d2ff;
+  --v4-highlight: #ffc400;
+  --console-shell: #20242e;
+  --console-screen: #f4f2ec;
+}
+
+body[data-kid-theme="princess"] {
+  --console-shell: #4a1c40;
+  --console-screen: #fff6fb;
+  --v4-card-ink: #43183d;
+}
+body[data-kid-theme="spiderman"] {
+  --console-shell: #0b1536;
+  --console-screen: #eef4ff;
+  --v4-card-ink: #0b132b;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  background: var(--console-shell);
+  color: var(--v4-ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Console Hardware Frame */
+.console-chassis {
+  max-width: 1360px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 16px;
+  gap: 12px;
+}
+
+/* Top Instrument Bar */
+.console-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 8px 14px;
+  flex-wrap: wrap;
+}
+.brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.console-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: #ff5722;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.25);
+  flex: none;
+}
+body[data-kid-theme="princess"] .console-logo { background: linear-gradient(135deg, #ff69b4, #9d4edd); }
+body[data-kid-theme="spiderman"] .console-logo { background: #e62429; }
+.console-logo img { width: 26px; height: 26px; display: block; }
+
+.brand-titles {
+  display: flex;
+  flex-direction: column;
+}
+.brand-kicker {
+  font-family: "Space Grotesk", "Heebo", sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffb74d;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.led-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+.brand-name {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.15;
+}
+
+/* Hardware Controls (Age Dial + Settings + Sound) */
+.console-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.age-segmented {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.age-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.age-btn[aria-pressed="true"] {
+  background: #ffffff;
+  color: #151821;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.hw-btn {
+  appearance: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.hw-btn--settings {
+  background: #ffc400;
+  color: #151821;
+  border-color: #ffc400;
+  font-weight: 800;
+}
+
+/* Inner Screen Bezel */
+.console-screen {
+  flex: 1;
+  background: var(--console-screen);
+  color: var(--v4-card-ink);
+  border-radius: 26px;
+  padding: 18px;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.08),
+    0 16px 40px rgba(0, 0, 0, 0.35);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+body[data-kid-theme="princess"] .console-screen {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(255, 182, 225, 0.45), transparent 40%),
+    linear-gradient(180deg, #fff3fa 0%, #fdf6ff 100%);
+  border: 3px solid #ffd166;
+}
+body[data-kid-theme="spiderman"] .console-screen {
+  background:
+    radial-gradient(circle, rgba(29, 78, 216, 0.11) 1.5px, transparent 2px) 0 0 / 16px 16px,
+    linear-gradient(180deg, #e6f0ff 0%, #f5f8ff 100%);
+  border: 3px solid #e62429;
+}
+
+/* Main Desktop 2-Column / Mobile Stacked Deck */
+.deck-layout {
+  display: grid;
+  grid-template-columns: 400px minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* Spotlight Active Game Stage */
+.spotlight-stage {
+  background: #ffffff;
+  border-radius: 22px;
+  border: 2px solid rgba(21, 24, 33, 0.1);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 12px 28px rgba(21, 24, 33, 0.07);
+  position: relative;
+}
+body[data-kid-theme="princess"] .spotlight-stage {
+  border: 2.5px solid #e899c8;
+  box-shadow: 0 10px 24px rgba(201, 42, 129, 0.12);
+}
+body[data-kid-theme="spiderman"] .spotlight-stage {
+  border: 3px solid #0b132b;
+  box-shadow: 6px 6px 0 #0b132b;
+}
+
+.spotlight-art-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #eef2f8;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+}
+.spotlight-art-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.spotlight-tag-row {
+  position: absolute;
+  top: 10px;
+  inset-inline: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+.spot-pill {
+  background: rgba(21, 24, 33, 0.82);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.spot-num {
+  font-family: "Space Grotesk", monospace;
+  background: rgba(255, 255, 255, 0.92);
+  color: #151821;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.spotlight-info h2 {
+  margin: 0 0 6px;
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+.spotlight-info p {
+  margin: 0;
+  font-size: 0.94rem;
+  color: #525866;
+  line-height: 1.45;
+}
+
+.spotlight-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.play-launch-btn {
+  flex: 1;
+  min-height: 52px;
+  border-radius: 16px;
+  border: 0;
+  background: var(--v4-accent, #ff5722);
+  color: #ffffff;
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s ease;
+}
+.play-launch-btn:active {
+  transform: translateY(3px);
+}
+.bumper-btn {
+  width: 48px;
+  height: 52px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(21, 24, 33, 0.15);
+  background: #f3f4f7;
+  color: #151821;
+  font-size: 1.1rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+/* Right Side: Cartridge Matrix & Quick Search */
+.cartridge-bay {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.bay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.bay-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+.bay-count {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(21, 24, 33, 0.08);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.bay-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1.5px solid rgba(21, 24, 33, 0.14);
+  border-radius: 12px;
+  padding: 0 10px;
+  height: 38px;
+}
+.bay-search input {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.86rem;
+  color: inherit;
+  outline: none;
+  width: 150px;
+}
+
+/* Cartridge Grid (Switch-style crisp square cartridges) */
+.cartridge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 12px;
+  max-height: 430px;
+  overflow-y: auto;
+  padding: 4px 2px 8px;
+}
+.cartridge {
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  background: #ffffff;
+  border: 2px solid rgba(21, 24, 33, 0.12);
+  border-radius: 18px;
+  padding: 8px 8px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  gap: 7px;
+  position: relative;
+  transition: transform 0.14s cubic-bezier(.3,1.5,.5,1), border-color 0.14s ease, box-shadow 0.14s ease;
+}
+/* Top hardware cartridge notch */
+.cartridge::before {
+  content: "";
+  width: 36px;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(21, 24, 33, 0.14);
+  margin: 0 auto 2px;
+}
+.cartridge:hover {
+  transform: translateY(-3px);
+}
+.cartridge[aria-selected="true"] {
+  border-color: var(--v4-accent, #ff5722);
+  box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.22), 0 8px 18px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+body[data-kid-theme="spiderman"] .cartridge {
+  border: 2.5px solid #0b132b;
+  box-shadow: 3px 3px 0 #0b132b;
+}
+body[data-kid-theme="princess"] .cartridge {
+  border: 2px solid #f0b8da;
+}
+
+.cart-art {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #eef2f8;
+  position: relative;
+}
+.cart-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.cart-num {
+  position: absolute;
+  top: 6px;
+  inset-inline-start: 6px;
+  background: rgba(21, 24, 33, 0.78);
+  color: #ffffff;
+  font-family: "Space Grotesk", monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+.cart-title {
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cart-age {
+  font-size: 0.72rem;
+  color: #636978;
+  font-weight: 700;
+}
+
+/* Bottom Channel Switcher Dock (Switch-style subject channels) */
+.channel-dock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 6px 4px 2px;
+  scrollbar-width: none;
+}
+.channel-dock::-webkit-scrollbar { display: none; }
+
+.channel-key {
+  appearance: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.88);
+  font: inherit;
+  padding: 7px 13px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+}
+.channel-key:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.channel-key[aria-pressed="true"] {
+  background: #ffffff;
+  color: #151821;
+  border-color: #ffffff;
+  font-weight: 800;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+.channel-key svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+.channel-key span {
+  font-size: 0.84rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 920px) {
+  .console-chassis {
+    padding: 10px;
+    gap: 10px;
+  }
+  .console-screen {
+    padding: 14px;
+  }
+  .deck-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .spotlight-art-wrap {
+    aspect-ratio: 16 / 9;
+  }
+  .cartridge-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: none;
+  }
+}
+
+@media (max-width: 440px) {
+  .console-top {
+    padding: 8px 10px;
+  }
+  .brand-name {
+    font-size: 0.95rem;
+  }
+  .bay-search input {
+    width: 105px;
+  }
+  .cartridge-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .spotlight-info h2 {
+    font-size: 1.28rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<script src="../../../assets/glyphs.js"></script>
+<script src="../../../assets/scenes.js"></script>
+<script src="../../../assets/covers.js"></script>
+<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
+
+<div class="console-chassis">
+  <!-- Top Console Hardware Bar -->
+  <header class="console-top">
+    <div class="brand-cluster">
+      <a class="console-logo" href="../../../index.html?home=1" aria-label="על האתר">
+        <img src="../../../favicon.svg" alt="">
+      </a>
+      <div class="brand-titles">
+        <span class="brand-kicker"><span class="led-dot"></span> ED-DECK · PLAY CONSOLE</span>
+        <h1 class="brand-name">הגנון של עלמון</h1>
+      </div>
+      <span class="v4-kid-crust v4-kid-crust--princess">👑 מהדורת נסיכות</span>
+      <span class="v4-kid-crust v4-kid-crust--spiderman">🕷️ מהדורת ספיידרמן</span>
+    </div>
+
+    <div class="console-controls">
+      <div class="age-segmented" role="group" aria-label="סינון לפי גיל">
+        <button type="button" class="age-btn" data-age="all" aria-pressed="true">כל הגילאים</button>
+        <button type="button" class="age-btn" data-age="tots" aria-pressed="false">3–4</button>
+        <button type="button" class="age-btn" data-age="gan" aria-pressed="false">5–6</button>
+        <button type="button" class="age-btn" data-age="school" aria-pressed="false">7–8</button>
+      </div>
+      <button type="button" class="hw-btn hw-btn--settings" data-open-settings>
+        <span>⚙️</span>
+        <span>עיצוב והגדרות</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Console Screen -->
+  <main class="console-screen">
+    <div class="deck-layout">
+      <!-- Spotlight Active Game Stage -->
+      <section class="spotlight-stage" aria-live="polite">
+        <div>
+          <div class="spotlight-art-wrap" id="spot-art"></div>
+          <div class="spotlight-info" style="margin-top:12px">
+            <h2 id="spot-title">פיצוץ צבעים</h2>
+            <p id="spot-blurb">מוצאים את הבלון בצבע הנכון ומפוצצים אותו בלחיצה.</p>
+          </div>
+        </div>
+        <div class="spotlight-actions">
+          <button type="button" class="bumper-btn" id="prev-game" aria-label="משחק קודם">❯</button>
+          <a class="play-launch-btn" id="spot-play" href="../../../game.html?id=color-pop">
+            <span>▶</span>
+            <span>שחקו עכשיו</span>
+          </a>
+          <button type="button" class="bumper-btn" id="next-game" aria-label="משחק הבא">❮</button>
+        </div>
+      </section>
+
+      <!-- Cartridge Deck -->
+      <section class="cartridge-bay" aria-label="מחסנית משחקים">
+        <div class="bay-header">
+          <h2 class="bay-title">
+            <span id="bay-subject-name">כל המשחקים</span>
+            <span class="bay-count" id="bay-count">34</span>
+          </h2>
+          <label class="bay-search">
+            <span>🔍</span>
+            <input type="search" id="deck-q" placeholder="חיפוש משחק..." autocomplete="off">
+          </label>
+        </div>
+        <div class="cartridge-grid" id="cartridge-grid" role="listbox" aria-label="בחירת קלטת משחק"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Bottom Subject Channel Dock -->
+  <nav class="channel-dock" id="channel-dock" aria-label="ערוצי נושאים"></nav>
+</div>
+
+<script src="../../../assets/catalog.js"></script>
+<script src="../../../assets/tiers.js"></script>
+<script src="../../../assets/auth.js"></script>
+<script src="../../../assets/recent.js"></script>
+<script src="../../../assets/music.js"></script>
+<script src="../shared-settings.js"></script>
+<script>
+  EDV4.init();
+
+  const state = {
+    subject: 'all',
+    age: 'all',
+    q: '',
+    selectedId: 'color-pop',
+  };
+
+  function filteredGames() {
+    const all = EDV4.readyGames();
+    return all.filter((g) => {
+      if (state.subject !== 'all' && g.subject !== state.subject) return false;
+      if (state.age !== 'all') {
+        const grp = AGE_GROUPS.find((a) => a.id === state.age);
+        if (grp && !(g.ageMin <= grp.max && g.ageMax >= grp.min)) return false;
+      }
+      if (state.q.trim()) {
+        const q = state.q.trim().toLowerCase();
+        const t = EDV4.pick(g.title).toLowerCase();
+        const b = EDV4.pick(g.blurb).toLowerCase();
+        if (!t.includes(q) && !b.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderChannels() {
+    const dock = document.getElementById('channel-dock');
+    const items = [
+      { id: 'all', label: 'כל הערוצים' },
+      ...SUBJECTS.map((s) => ({
+        id: s.id,
+        label: EDV4.pick(s.label),
+      })),
+    ];
+    dock.innerHTML = items.map((c) => `
+      <button type="button" class="channel-key" data-sub="${c.id}" aria-pressed="${state.subject === c.id}">
+        ${EDV4.markHtml(c.id)}
+        <span>${c.label}</span>
+      </button>
+    `).join('');
+    dock.querySelectorAll('.channel-key').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.subject = btn.dataset.sub;
+        renderAll();
+      });
+    });
+  }
+
+  function renderDeck() {
+    const list = filteredGames();
+    if (!list.some((g) => g.id === state.selectedId) && list.length) {
+      state.selectedId = list[0].id;
+    }
+    const active = list.find((g) => g.id === state.selectedId) || list[0];
+    const activeIdx = list.indexOf(active);
+
+    // Update header
+    const subObj = state.subject === 'all' ? null : EDV4.subjectById(state.subject);
+    document.getElementById('bay-subject-name').textContent = subObj ? EDV4.pick(subObj.label) : 'כל המשחקים';
+    document.getElementById('bay-count').textContent = `${list.length} קלטות`;
+
+    // Update Spotlight
+    if (active) {
+      const sub = EDV4.subjectById(active.subject);
+      document.getElementById('spot-art').innerHTML = `
+        ${EDV4.coverHtml(active)}
+        <div class="spotlight-tag-row">
+          <span class="spot-pill">${EDV4.pick(sub.label)} · גיל ${active.ageMin}–${active.ageMax}</span>
+          <span class="spot-num">#${String(activeIdx + 1).padStart(2, '0')}</span>
+        </div>
+      `;
+      document.getElementById('spot-title').textContent = EDV4.pick(active.title);
+      document.getElementById('spot-blurb').textContent = EDV4.pick(active.blurb);
+      document.getElementById('spot-play').href = EDV4.gameUrl(active.id);
+    }
+
+    // Update Cartridges
+    const grid = document.getElementById('cartridge-grid');
+    grid.innerHTML = list.map((g, i) => `
+      <button type="button" class="cartridge" role="option" data-id="${g.id}" aria-selected="${g.id === state.selectedId}">
+        <div class="cart-art">
+          ${EDV4.coverHtml(g)}
+          <span class="cart-num">#${String(i + 1).padStart(2, '0')}</span>
+        </div>
+        <span class="cart-title">${EDV4.pick(g.title)}</span>
+        <span class="cart-age">גיל ${g.ageMin}–${g.ageMax}</span>
+      </button>
+    `).join('');
+
+    grid.querySelectorAll('.cartridge').forEach((card) => {
+      card.addEventListener('click', () => {
+        if (state.selectedId === card.dataset.id) {
+          location.href = EDV4.gameUrl(card.dataset.id);
+        } else {
+          state.selectedId = card.dataset.id;
+          renderDeck();
+        }
+      });
+    });
+  }
+
+  function renderAll() {
+    renderChannels();
+    renderDeck();
+  }
+
+  document.querySelectorAll('.age-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.age = btn.dataset.age;
+      document.querySelectorAll('.age-btn').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      renderDeck();
+    });
+  });
+
+  document.getElementById('deck-q').addEventListener('input', (e) => {
+    state.q = e.target.value;
+    renderDeck();
+  });
+
+  document.getElementById('prev-game').addEventListener('click', () => {
+    const list = filteredGames();
+    if (!list.length) return;
+    const idx = list.findIndex((g) => g.id === state.selectedId);
+    state.selectedId = list[(idx - 1 + list.length) % list.length].id;
+    renderDeck();
+  });
+
+  document.getElementById('next-game').addEventListener('click', () => {
+    const list = filteredGames();
+    if (!list.length) return;
+    const idx = list.findIndex((g) => g.id === state.selectedId);
+    state.selectedId = list[(idx + 1) % list.length].id;
+    renderDeck();
+  });
+
+  renderAll();
+</script>
+</body>
+</html>

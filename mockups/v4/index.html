@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDgames — 4 כיווני מבנה ועיצוב חדשים (Round V4)</title>
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1219;
+  --surface: #181d27;
+  --surface-2: #222938;
+  --ink: #f4f6fb;
+  --muted: #9aa5b8;
+  --line: rgba(255, 255, 255, 0.11);
+  --accent: #3b82f6;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Heebo", system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.hub-wrap {
+  max-width: 1760px;
+  margin: 0 auto;
+  padding: 26px 20px 72px;
+}
+
+.hub-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.hub-eyebrow {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #60a5fa;
+  margin-bottom: 6px;
+}
+.hub-header h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.7rem, 3.2vw, 2.55rem);
+  font-weight: 900;
+  line-height: 1.1;
+}
+.hub-header p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 74ch;
+  font-size: 0.98rem;
+}
+
+.hub-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.seg-group {
+  display: inline-flex;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 4px;
+  gap: 4px;
+}
+.seg-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 7px 13px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+.seg-btn[aria-pressed="true"] {
+  background: #ffffff;
+  color: #0f1219;
+  font-weight: 800;
+}
+.action-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 9px 15px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.action-btn:hover {
+  background: #2d364a;
+}
+
+/* 4-Column Grid on Wide Screens, 2-Column on Laptop, 1-Column on Phone */
+.directions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+body[data-view="desktop"] .directions-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dir-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.dir-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.dir-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(96, 165, 250, 0.15);
+  color: #93c5fd;
+  margin-bottom: 4px;
+}
+.dir-top h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+.dir-open-link {
+  flex: none;
+  text-decoration: none;
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.dir-open-link:hover {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+.dir-desc {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.dir-ref {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Device Viewport Frame */
+.device-stage {
+  width: 100%;
+  background: #090b10;
+  border-radius: 28px;
+  padding: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+.device-screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 390 / 820;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+}
+body[data-view="desktop"] .device-screen {
+  aspect-ratio: 1280 / 820;
+}
+.device-screen iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 390px;
+  height: 820px;
+  border: 0;
+  transform-origin: 0 0;
+}
+body[data-view="desktop"] .device-screen iframe {
+  width: 1280px;
+  height: 820px;
+}
+
+@media (max-width: 1480px) {
+  .directions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 780px) {
+  .directions-grid,
+  body[data-view="desktop"] .directions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body data-view="phone">
+<div class="hub-wrap">
+  <header class="hub-header">
+    <div>
+      <div class="hub-eyebrow">EDGAMES · ARCHITECTURAL REDESIGN · ROUND V4</div>
+      <h1>4 מבנים חדשים לאפליקציה — מקצועיים להורים, קסומים לילדים</h1>
+      <p>במקום תבנית ה־Web הגנרית (שורות גלילה אינסופיות וכפתורי פסטל שכולם מייצרים היום ב־AI), כל אחת מ־4 ההצעות משנה את <b>מבנה האפליקציה עצמו</b> בהשראת מוצרי הילדים והמשחקים הטובים בעולם. בכולן משולב גם בורר העיצוב בהגדרות (סטודיו / נסיכות ואגדות 👑 / ספיידרמן 🕷️).</p>
+    </div>
+
+    <div class="hub-toolbar">
+      <div class="seg-group" role="group" aria-label="תצוגת מכשיר">
+        <button type="button" class="seg-btn" data-viewport="phone" aria-pressed="true">📱 טלפון (390px)</button>
+        <button type="button" class="seg-btn" data-viewport="desktop" aria-pressed="false">💻 מחשב (1280px)</button>
+      </div>
+
+      <div class="seg-group" role="group" aria-label="בדיקת עיצוב הילד בכולם">
+        <button type="button" class="seg-btn" data-theme="default" aria-pressed="true">🎨 רגיל</button>
+        <button type="button" class="seg-btn" data-theme="princess" aria-pressed="false">👑 נסיכות</button>
+        <button type="button" class="seg-btn" data-theme="spiderman" aria-pressed="false">🕷️ ספיידרמן</button>
+      </div>
+
+      <button type="button" class="action-btn" id="toggle-all-settings">⚙️ פתח הגדרות בכולם</button>
+    </div>
+  </header>
+
+  <main class="directions-grid">
+    <!-- Direction 1 -->
+    <article class="dir-card">
+      <div class="dir-top">
+        <div>
+          <span class="dir-badge">כיוון 1 · Console Deck</span>
+          <h2>הקונסולה (ED-Deck)</h2>
+        </div>
+        <a class="dir-open-link" href="1-console/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+      </div>
+      <p class="dir-desc">מבטל את גלילת הדף לגמרי: במה מרכזית למשחק הפעיל עם כפתור הפעלה ענק, מחסנית קלטות ממוספרות (<code>#01–#34</code>), ודוק ערוצי נושאים בתחתית.</p>
+      <div class="dir-ref"><b>השראה:</b> Nintendo Switch Home UI + Teenage Engineering Play</div>
+      <div class="device-stage">
+        <div class="device-screen"><iframe src="1-console/index.html" title="Direction 1 Console Deck"></iframe></div>
+      </div>
+    </article>
+
+    <!-- Direction 2 -->
+    <article class="dir-card">
+      <div class="dir-top">
+        <div>
+          <span class="dir-badge">כיוון 2 · Montessori Atelier</span>
+          <h2>הסטודיו השקט (מגש מונטסורי)</h2>
+        </div>
+        <a class="dir-open-link" href="2-atelier/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+      </div>
+      <p class="dir-desc">אפס רעש ויזואלי: לוח עץ של מגירות נושאים בצד, ומגש שקעים א־סימטרי (Bento) שבו כל משחק יושב בתוך תא שקט וברור בלי עומס של שורות כפולות.</p>
+      <div class="dir-ref"><b>השראה:</b> Pok Pok (זוכה Apple Design Award) + מגשי עץ סקנדינביים</div>
+      <div class="device-stage">
+        <div class="device-screen"><iframe src="2-atelier/index.html" title="Direction 2 Montessori Atelier"></iframe></div>
+      </div>
+    </article>
+
+    <!-- Direction 3 -->
+    <article class="dir-card">
+      <div class="dir-top">
+        <div>
+          <span class="dir-badge">כיוון 3 · Editorial Book</span>
+          <h2>ספר המשחקים המאויר</h2>
+        </div>
+        <a class="dir-open-link" href="3-editorial/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+      </div>
+      <p class="dir-desc">במקום קרוסלות אופקיות שחותכות כרטיסים: עיצוב מערכתי מוקפד כמו מגזין ילדים מודפס — תוכן עניינים לפי פרקים, כפולת שער מרכזית, ולוחות ממוספרים בקווים חדים.</p>
+      <div class="dir-ref"><b>השראה:</b> Chronicle Books + NYT Games + Apple Arcade Editorial</div>
+      <div class="device-stage">
+        <div class="device-screen"><iframe src="3-editorial/index.html" title="Direction 3 Editorial Book"></iframe></div>
+      </div>
+    </article>
+
+    <!-- Direction 4 -->
+    <article class="dir-card">
+      <div class="dir-top">
+        <div>
+          <span class="dir-badge">כיוון 4 · Play-Rooms</span>
+          <h2>5 חדרי המשחקייה</h2>
+        </div>
+        <a class="dir-open-link" href="4-playrooms/index.html" target="_blank">פתיחה במסך מלא ↗</a>
+      </div>
+      <p class="dir-desc">ילד בן 4 לא צריך לראות 34 משחקים ו־11 תגיות טקסט בבת אחת: האתר בנוי מ־5 דלתות מאוירות (חדר הסיפורים, מעבדת המספרים, סטודיו המוזיקה, חממת הטבע, מועדון המחשב).</p>
+      <div class="dir-ref"><b>השראה:</b> Sago Mini World + Toca Life + מוזיאוני ילדים</div>
+      <div class="device-stage">
+        <div class="device-screen"><iframe src="4-playrooms/index.html" title="Direction 4 Play-Rooms"></iframe></div>
+      </div>
+    </article>
+  </main>
+</div>
+
+<script>
+  function fitIframes() {
+    const isDesktop = document.body.dataset.view === 'desktop';
+    const targetW = isDesktop ? 1280 : 390;
+    document.querySelectorAll('.device-screen').forEach((box) => {
+      const w = box.clientWidth;
+      const scale = w / targetW;
+      const iframe = box.querySelector('iframe');
+      if (iframe) {
+        iframe.style.transform = `scale(${scale})`;
+      }
+    });
+  }
+
+  window.addEventListener('resize', fitIframes);
+  window.addEventListener('load', fitIframes);
+  setTimeout(fitIframes, 120);
+
+  document.querySelectorAll('[data-viewport]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.body.dataset.view = btn.dataset.viewport;
+      document.querySelectorAll('[data-viewport]').forEach((b) =>
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false')
+      );
+      setTimeout(fitIframes, 40);
+    });
+  });
+
+  document.querySelectorAll('[data-theme]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const theme = btn.dataset.theme;
+      document.querySelectorAll('[data-theme]').forEach((b) =>
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false')
+      );
+      document.querySelectorAll('iframe').forEach((ifr) => {
+        ifr.contentWindow?.postMessage({ type: 'setKidTheme', theme }, '*');
+      });
+    });
+  });
+
+  document.getElementById('toggle-all-settings').addEventListener('click', () => {
+    document.querySelectorAll('iframe').forEach((ifr) => {
+      ifr.contentWindow?.postMessage({ type: 'toggleSettings' }, '*');
+    });
+  });
+</script>
+</body>
+</html>
