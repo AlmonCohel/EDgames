@@ -318,6 +318,29 @@ Nine games added with the plans, three each, all voiced:
 - **Pro:** First English Words (English, by ear), Make Ten (maths, on a ten frame),
   What Comes Next? (logic, ending on a board with two rules at once).
 
+Five more Pro games, 2026-11-07, so Pro now has eight (3 English, 3 maths... see
+table in `docs/ACCOUNTS.md`). All voiced, bilingual, three or four sets each,
+drag *or* tap (`EDKit.drag` in `assets/kit.js`), each with a cover and a scene:
+
+- **Spell It** (`spell-it`, English): hear the word, drag letter tiles onto the
+  blanks in order; every tile says its letter name; a second miss on a blank
+  makes the right tile glow. Three, four and five letters (with spare tiles).
+- **Sentence Train** (`sentence-train`, English): word cards onto train cars,
+  each card is said when touched; the finished sentence is read, the train rides
+  off, the Hebrew stays on the platform. Short, middle and long sentences.
+- **Number Line Jumps** (`number-line`, maths): a frog on a number line with a
+  following camera; hop forward to add, back to take away, big hops to skip
+  count, and a predict-then-watch set (how many hops from here to the flag).
+- **The Balance** (`balance-scale`, maths): the beam tilts live as a number is
+  tried, level when both sides are equal. No buzzer: the scale is the teacher.
+- **Picture Sudoku** (`mini-sudoku`, logic): 3x3 and 4x4 puzzles made fresh in
+  the browser and guaranteed solvable by "only one choice" steps (the generator
+  removes a picture only if singles-solving still finishes the board), so the
+  hint is always honest.
+
+Their spoken lines are in `assets/voice-lines.js` (word and sentence lists are
+repeated there; add a new word in both places, then `node scripts/make-voice.mjs`).
+
 ## Adding a game
 
 1. Add an entry to `GAMES` in `assets/catalog.js` with `status: 'soon'`. Give

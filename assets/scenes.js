@@ -331,6 +331,32 @@ const EDScenes = (() => {
     'abc-caterpillar': `
       <circle cx="5" cy="20" r="3.5"/><circle cx="12" cy="18" r="3.5"/><circle cx="19" cy="20" r="3.5" stroke-dasharray="1.8 2"/>
       <circle cx="26" cy="16" r="4"/><path d="M24.5 12l-1-3M27.5 12l1-3"/>`,
+
+    /* Three letter tiles in a row. */
+    'spell-it': `
+      <rect x="2.5" y="11" width="7.500" height="10" rx="1.500"/><rect x="12.250" y="11" width="7.500" height="10" rx="1.500"/><rect x="22" y="11" width="7.500" height="10" rx="1.500" stroke-dasharray="2 2"/>
+      <path d="M4.400 18.500 6.250 13.500 8.100 18.500M5 17h2.500"/>
+      <path d="M14.500 13.500h3.500a1.500 1.500 0 0 1 0 3h-3.500M14.500 16.500h3.800a1.500 1.500 0 0 1 0 3h-3.800z"/>`,
+
+    /* A locomotive pulling a car. */
+    'sentence-train': `
+      <path d="M3 21V12h8v9M11 14h5"/><rect x="18" y="14" width="11" height="7" rx="1.500"/>
+      <circle cx="6" cy="23.500" r="1.800"/><circle cx="11" cy="23.500" r="1.800"/><circle cx="21" cy="23.500" r="1.800"/><circle cx="26.500" cy="23.500" r="1.800"/>
+      <path d="M5 9c0-1.500 1.500-2 1.500-3.500"/>`,
+
+    /* A line with a hop drawn over it. */
+    'number-line': `
+      <path d="M2 22h28M5 20v4M12 20v4M19 20v4M26 20v4"/>
+      <path d="M5 17C8 6 16 6 19 17M16.500 14.500 19 17l-3.300.5"/>`,
+
+    /* A level scale. */
+    'balance-scale': `
+      <path d="M16 6v19M10 26h12M4 9h24"/><path d="M6 9 3 17h6zM26 9l-3 8h6z"/><path d="M3 17a3 2 0 0 0 6 0M23 17a3 2 0 0 0 6 0"/>`,
+
+    /* A three by three grid with a few marks. */
+    'mini-sudoku': `
+      <rect x="4" y="4" width="24" height="24" rx="3"/><path d="M12 4v24M20 4v24M4 12h24M4 20h24"/>
+      <circle cx="8" cy="8" r="1.600" fill="currentColor" stroke="none"/><path d="M14.500 14.500l3 3M17.500 14.500l-3 3"/><rect x="21.500" y="21.500" width="5" height="5" rx="1"/>`,
   };
 
   /* Two of the nineteen say something with their direction rather than only

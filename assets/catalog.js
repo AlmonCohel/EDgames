@@ -537,7 +537,7 @@ const GAMES = [
     },
     status: 'ready',
   },
-  /* ---- Pro: learning, one game per track so far ---- */
+  /* ---- Pro: learning — English, maths, logic ---- */
   {
     id: 'english-words',
     tier: 'pro',
@@ -575,6 +575,74 @@ const GAMES = [
     blurb: {
       he: 'מוצאים את החוק: סדרות של צורות, קפיצות של מספרים, ולוח שחסר בו משבצת.',
       en: 'Find the rule: patterns of shapes, jumps between numbers, and a board with one square missing.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'spell-it',
+    tier: 'pro',
+    title: { he: 'אות אחרי אות', en: 'Spell It' },
+    emoji: '🔤',
+    subject: 'english',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'שומעים מילה באנגלית ומאיתים אותה: גוררים אותיות למקום, אות אחרי אות, ושומעים את שמה של כל אות.',
+      en: 'Hear an English word and spell it: drag the letters into place one by one, and hear every letter\'s name.',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
+    id: 'sentence-train',
+    tier: 'pro',
+    title: { he: 'רכבת המשפטים', en: 'Sentence Train' },
+    emoji: '🚂',
+    subject: 'english',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'מחברים מילים לקרונות ובונים משפט באנגלית. כשהוא נכון, הרכבת יוצאת לדרך וקוראת אותו בקול.',
+      en: 'Hook words onto the cars and build an English sentence. When it is right the train pulls out and reads it aloud.',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
+    id: 'number-line',
+    tier: 'pro',
+    title: { he: 'קפיצות על ציר המספרים', en: 'Number Line Jumps' },
+    emoji: '🐸',
+    subject: 'math',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'צפרדע קופצת על ציר המספרים: קדימה לחיבור, אחורה לחיסור, וקפיצות גדולות לספירה בקפיצות.',
+      en: 'A frog hops along the number line: forward to add, back to take away, and big hops to count in steps.',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
+    id: 'balance-scale',
+    tier: 'pro',
+    title: { he: 'המאזניים', en: 'The Balance' },
+    emoji: '⚖️',
+    subject: 'math',
+    ageMin: 6, ageMax: 8,
+    blurb: {
+      he: 'שמים מספר על המאזניים ורואים מה קורה: כבד, קל, או שווה. מגלים מה באמת אומר סימן השוויון.',
+      en: 'Put a number on the scale and watch: heavier, lighter, or equal. Discover what the equals sign really means.',
+    },
+    status: 'ready',
+  },
+  {
+    id: 'mini-sudoku',
+    tier: 'pro',
+    title: { he: 'גן הסודוקו', en: 'Picture Sudoku' },
+    emoji: '🧩',
+    subject: 'logic',
+    ageMin: 5, ageMax: 8,
+    blurb: {
+      he: 'תמונה אחת בכל שורה, עמודה ותיבה. חידה חדשה בכל פעם, תמיד אפשר לפתור אותה בהיגיון, בלי לנחש.',
+      en: 'One of each picture in every row, column and box. A new puzzle every time, always solvable by thinking, never by guessing.',
     },
     status: 'ready',
   },

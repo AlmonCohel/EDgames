@@ -11,9 +11,9 @@ Each plan includes everything below it. A game's plan is the `tier` word on its 
 | guest | nothing | the 34 games that existed before accounts (no `tier`) |
 | free | an account | + Bubbles in Order, Who Does Not Belong?, Sort into Baskets |
 | basic | an account; paid later | + The Pizza Shop, Code the Robot, The Colour Lab |
-| pro | an account; paid later | + First English Words (English), Make Ten (maths), What Comes Next? (logic) |
+| pro | an account; paid later | + First English Words, Spell It, Sentence Train (English); Make Ten, Number Line Jumps, The Balance (maths); What Comes Next?, Picture Sudoku (logic) |
 
-Pro is a starter set: one game per learning track. Adding a game: README, "Adding a game", with `tier` on the entry. Plan ids must match `PLANS` in `worker/src/index.js`.
+Pro has eight games (three English, three maths, two logic; five added 2026-11-07). Adding a game: README, "Adding a game", with `tier` on the entry. Plan ids must match `PLANS` in `worker/src/index.js`.
 
 Prices are not decided, so none appear anywhere. The site says "free during the launch".
 
@@ -24,7 +24,7 @@ Nothing below is to be changed or proposed until he says so. Each has a Blocked 
 - **The landing page design:** he is not happy with how it looks and does not yet know what he wants. It stays as it is for now.
 - **Prices:** not set. None appear anywhere; do not add any.
 - **Plan names:** Free, Basic and Pro are working names, not final. Change them only in `assets/tiers.js`. The ids `free`, `basic`, `pro` are internal and can stay.
-- **More Pro games:** yes, but not as part of the build that made this. Not started.
+- **More Pro games:** five added 2026-11-07 (Almon asked for them). More are welcome when he asks.
 
 ## The pieces
 

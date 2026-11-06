@@ -222,6 +222,72 @@
     for (let n = 1; n <= 5; n += 1) en[`pizza-${k}-${n}`] = `${EN_NUM[n]} ${n === 1 ? one : many}`;
   });
 
+  /* ---- the five games added 2026-11-07: Spell It, Sentence Train, Number Line
+     Jumps, The Balance, Picture Sudoku ---- */
+  Object.assign(he, {
+    'spell-ask': 'שׁוֹמְעִים אֶת הַמִּלָּה וּמְאַיְּתִים אוֹתָהּ',
+    'train-ask': 'מְסַדְּרִים אֶת הַמִּלִּים בָּרַכֶּבֶת',
+    'bal-ask': 'אֵיזֶה מִסְפָּר יְאַזֵּן אֶת הַמֹּאזְנַיִם?',
+    'bal-again': 'מָצְאוּ אֶת הַמִּסְפָּר שֶׁיְּאַזֵּן אֶת הַמֹּאזְנַיִם',
+    'sudoku-ask': 'בְּכָל שׁוּרָה, עַמּוּדָה וְתֵּיבָה, כָּל תְּמוּנָה פַּעַם אַחַת',
+    'sudoku-again': 'תְּמוּנָה אַחַת בְּכָל שׁוּרָה, עַמּוּדָה וְתֵּיבָה',
+    'sudoku-clash': 'הַתְּמוּנָה הַזֹּאת כְּבָר נִמְצֵאת כָּאן, בְּאוֹתָהּ שׁוּרָה, עַמּוּדָה אוֹ תֵּיבָה',
+    'sudoku-notyet': 'זֶה מַתְאִים לַחוּקִים, אֲבָל לֹא לַמָּקוֹם הַזֶּה. חִפְשׂוּ מִשְׁבֶּצֶת עִם אֶפְשָׁרוּת אַחַת',
+    'sudoku-hint': 'בַּמִּשְׁבֶּצֶת הַמְסֻמֶּנֶת יֵשׁ רַק אֶפְשָׁרוּת אַחַת',
+    'nl-plus': 'וְעוֹד', 'nl-minus': 'פָּחוֹת',
+    'nl-where': 'אֵיפֹה הַצְּפַרְדֵּעַ נוֹחֶתֶת?',
+    'nl-gap': 'הַצְּפַרְדֵּעַ בְּמִסְפָּר', 'nl-to': 'וְהִיא רוֹצָה לְהַגִּיעַ לְמִסְפָּר', 'nl-howmany': 'כַּמָּה קְפִיצוֹת צָרִיךְ?',
+  });
+  Object.assign(en, {
+    'spell-ask': 'Listen to the word and spell it',
+    'train-ask': 'Put the words on the train',
+    'bal-ask': 'Which number balances the scale?',
+    'bal-again': 'Find the number that balances the scale',
+    'sudoku-ask': 'In every row, column and box, each picture once',
+    'sudoku-again': 'One of each picture in every row, column and box',
+    'sudoku-clash': 'That picture is already here, in the same row, column or box',
+    'sudoku-notyet': 'It follows the rules, but not for this square. Look for a square with only one choice',
+    'sudoku-hint': 'The marked square has only one choice',
+    'nl-plus': 'plus', 'nl-minus': 'minus',
+    'nl-where': 'Where does the frog land?',
+    'nl-gap': 'The frog is on number', 'nl-to': 'and wants to reach number', 'nl-howmany': 'How many hops does it need?',
+    'num-30': 'thirty', 'num-40': 'forty',
+  });
+  he['num-30'] = 'שְׁלוֹשִׁים'; he['num-40'] = 'אַרְבָּעִים';
+  [[2, 3, 4, 5], [3, 3, 4, 5], [4, 3, 4, 5], [5, 3, 4], [10, 3, 4]].forEach(([sz, ...ks]) => ks.forEach((k) => {
+    he[`nl-skip-${sz}-${k}`] = `קוֹפְצִים קְפִיצוֹת שֶׁל ${HE_NUM[sz]}, ${HE_NUM[k]} פְּעָמִים. אֵיפֹה נוֹחֲתִים?`;
+    en[`nl-skip-${sz}-${k}`] = `Hop by ${EN_NUM[sz]}, ${EN_NUM[k]} times. Where do you land?`;
+  }));
+  const PRO_WORDS = ["cat", "dog", "sun", "hat", "bus", "pig", "bee", "fox", "key", "egg", "frog", "fish", "milk", "tree", "bird", "cake", "star", "duck", "ship", "bear", "apple", "horse", "house", "plane", "bread", "snake", "mouse", "tiger", "lemon", "sheep"];
+  const PRO_SENTENCES = [
+    "The cat sleeps",
+    "I like milk",
+    "The dog runs",
+    "I see a bird",
+    "A fish can swim",
+    "The sun is hot",
+    "We eat bread",
+    "The frog can jump high",
+    "I have a red ball",
+    "The bird is in the tree",
+    "My mom has a car",
+    "The cake is very big",
+    "The horse eats an apple",
+    "We go to the park",
+    "The little cat is on the bed",
+    "I can see a big yellow star",
+    "The duck swims in the blue water",
+    "We eat cheese and bread for lunch",
+    "My dog likes to run in the park",
+    "The bear sleeps in a little house"
+  ];
+  PRO_WORDS.forEach((w) => { en[`word-${w}`] = w; });
+  PRO_SENTENCES.forEach((sentence) => {
+    const slug = (x) => x.toLowerCase().replace(/[^a-z]/g, '');
+    en[`sent-${slug(sentence)}`] = `${sentence}.`;
+    sentence.split(' ').forEach((w) => { en[`sw-${slug(w)}`] = w === 'I' ? 'I' : w.toLowerCase(); });
+  });
+
   const COLOURS = { pink: 'pink', purple: 'purple', blue: 'blue', yellow: 'yellow', green: 'green', red: 'red', orange: 'orange' };
   Object.keys(COLOURS).forEach((c) => {
     en[`color-${c}`] = c[0].toUpperCase() + c.slice(1);

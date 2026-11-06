@@ -44,6 +44,8 @@ const EDKit = window.EDKit = (() => {
     .kit-confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
     .kit-confetti i { position: absolute; top: -20px; width: 10px; height: 14px; border-radius: 3px; animation: kit-fall 1.6s ease-in forwards; }
     @keyframes kit-fall { to { transform: translateY(105vh) rotate(540deg); opacity: .9; } }
+    .kit-lifted { opacity: .35; }
+    .kit-ghost { filter: drop-shadow(0 12px 14px rgba(20,30,60,.3)); transition: none !important; }
     @media (prefers-reduced-motion: reduce) {
       .kit-say.nudge, .kit-nope, .kit-yes, .kit-confetti i { animation: none; }
     }
@@ -140,5 +142,53 @@ const EDKit = window.EDKit = (() => {
     };
   }
 
-  return { style, shuffle, pick, dots, head, voice, nope, yes, praise, confetti, end, timers, text: t };
+  /* Makes `el` pressable AND draggable with one pointer code path (mouse, touch,
+     pen). A press that barely moves is a tap -> onTap(). A press that travels
+     lifts a copy under the finger and, on release, hands onDrop the element
+     under it (the game decides what that means). Keyboard Enter/Space arrive as
+     a click with detail 0 and count as a tap. */
+  function drag(el, { onTap, onDrop }) {
+    el.style.touchAction = 'none';
+    let st = null;
+    const drop = () => {
+      if (!st) return;
+      if (st.ghost) st.ghost.remove();
+      el.classList.remove('kit-lifted');
+      st = null;
+    };
+    el.addEventListener('pointerdown', (e) => {
+      if (e.button > 0 || el.disabled) return;
+      st = { x: e.clientX, y: e.clientY, moved: false, ghost: null };
+      try { el.setPointerCapture(e.pointerId); } catch { /* not capturable */ }
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!st) return;
+      if (!st.moved) {
+        if (Math.hypot(e.clientX - st.x, e.clientY - st.y) < 9) return;
+        st.moved = true;
+        const r = el.getBoundingClientRect();
+        const g = el.cloneNode(true);
+        g.classList.add('kit-ghost');
+        g.style.cssText = `position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;margin:0;pointer-events:none;z-index:60;transform:scale(1.1);`;
+        document.body.append(g);
+        st.ghost = g;
+        st.r = r;
+        el.classList.add('kit-lifted');
+      }
+      st.ghost.style.left = `${st.r.left + e.clientX - st.x}px`;
+      st.ghost.style.top = `${st.r.top + e.clientY - st.y}px`;
+    });
+    el.addEventListener('pointerup', (e) => {
+      if (!st) return;
+      const moved = st.moved;
+      drop();
+      if (!moved) { if (onTap) onTap(); return; }
+      const under = document.elementFromPoint(e.clientX, e.clientY);
+      if (onDrop) onDrop(under);
+    });
+    el.addEventListener('pointercancel', drop);
+    el.addEventListener('click', (e) => { if (e.detail === 0 && onTap) onTap(); });
+  }
+
+  return { style, drag, shuffle, pick, dots, head, voice, nope, yes, praise, confetti, end, timers, text: t };
 })();

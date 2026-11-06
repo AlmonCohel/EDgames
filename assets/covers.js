@@ -681,6 +681,59 @@ const EDCovers = (() => {
         <rect x="150" y="22" width="40" height="40" rx="8" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="7 6"/>
         <text x="170" y="53" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="30" fill="#fff">?</text>
       </g>`,
+
+    /* Letter tiles on a workbench, spelling C-A-T under a cat. */
+    'spell-it': () => `
+      ${bg('cv-room')}
+      <rect x="0" y="136" width="200" height="64" fill="url(#cv-wood)"/>
+      <circle cx="100" cy="64" r="40" fill="#fff" opacity=".85"/>
+      <text x="100" y="86" text-anchor="middle" font-size="58">🐱</text>
+      ${[['c', 24], ['a', 78], ['t', 132]].map(([l, x], i) => `<rect x="${x}" y="${112 + (i === 1 ? -4 : 0)}" width="46" height="54" rx="9" fill="#fffdf6" stroke="#c9b88f" stroke-width="3"/><text x="${x + 23}" y="${152 + (i === 1 ? -4 : 0)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="40" fill="${['#d9416a', '#2583c9', '#1c9a57'][i]}">${l}</text>`).join('')}`,
+
+    /* A little train whose cars carry words. */
+    'sentence-train': () => `
+      ${bg('cv-sky')}
+      <rect y="150" width="200" height="50" fill="url(#cv-grass)"/>
+      <rect x="0" y="146" width="200" height="8" fill="#6b7a99"/>
+      ${shadow(100, 150, 90, 6)}
+      <rect x="8" y="100" width="48" height="42" rx="8" fill="#e53935"/><rect x="40" y="82" width="22" height="30" rx="5" fill="#b71c1c"/><rect x="14" y="88" width="14" height="14" rx="3" fill="#fdd835"/>
+      <rect x="62" y="106" width="60" height="38" rx="7" fill="#2583c9"/><text x="92" y="132" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="22" fill="#fff">cat</text>
+      <rect x="128" y="106" width="64" height="38" rx="7" fill="#1c9a57"/><text x="160" y="132" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="22" fill="#fff">is big</text>
+      ${[28, 78, 106, 144, 176].map((x) => `<circle cx="${x}" cy="146" r="8" fill="#44506a" stroke="#fff" stroke-width="2"/>`).join('')}
+      <circle cx="48" cy="66" r="9" fill="#fff" opacity=".9"/><circle cx="62" cy="52" r="12" fill="#fff" opacity=".8"/>`,
+
+    /* A frog on a number line, with the hop drawn above it. */
+    'number-line': () => `
+      ${bg('cv-sky')}
+      <rect y="136" width="200" height="64" fill="url(#cv-grass)"/>
+      <rect x="8" y="128" width="184" height="9" rx="4" fill="#fffdf6"/>
+      ${Array.from({ length: 6 }, (_, i) => `<rect x="${22 + i * 31}" y="136" width="3" height="14" fill="#fffdf6"/><text x="${23.5 + i * 31}" y="170" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="20" fill="#1e2a44">${i * 2}</text>`).join('')}
+      <path d="M53 124 Q85 40 116 124" fill="none" stroke="#2583c9" stroke-width="5" stroke-linecap="round"/>
+      <path d="M108 112 L117 125 L102 124" fill="#2583c9"/>
+      <ellipse cx="53" cy="116" rx="18" ry="12" fill="#4ec24a"/><circle cx="44" cy="105" r="7" fill="#fff"/><circle cx="62" cy="105" r="7" fill="#fff"/>
+      <circle cx="45" cy="106" r="3" fill="#1e2a44"/><circle cx="61" cy="106" r="3" fill="#1e2a44"/>
+      <path d="M44 118q9 6 18 0" stroke="#1e6b2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <text x="136" y="60" font-family="Fredoka, sans-serif" font-weight="700" font-size="30" fill="#1e2a44">+4</text>`,
+
+    /* A scale, level, a 3 and a 3 on its pans. */
+    'balance-scale': () => `
+      ${bg('cv-sky')}
+      <rect y="168" width="200" height="32" fill="#ecd09b"/>
+      <rect x="92" y="62" width="16" height="108" rx="6" fill="#a8773d"/><rect x="62" y="164" width="76" height="14" rx="7" fill="#7a5a30"/>
+      <rect x="20" y="54" width="160" height="12" rx="6" fill="#e2b765" stroke="#b98c3e" stroke-width="2"/>
+      <circle cx="100" cy="60" r="12" fill="#ffd23f" stroke="#c28f10" stroke-width="3"/>
+      <path d="M34 66 L16 120M34 66 L52 120M166 66 L148 120M166 66 L184 120" stroke="#6b7a99" stroke-width="3"/>
+      <path d="M8 120h52a26 12 0 0 1-52 0zM140 120h52a26 12 0 0 1-52 0z" fill="#cfd6e4" stroke="#8e9ab3" stroke-width="3"/>
+      <rect x="20" y="86" width="28" height="30" rx="6" fill="#2f6ae8"/><text x="34" y="109" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="22" fill="#fff">5</text>
+      <rect x="152" y="86" width="28" height="30" rx="6" fill="#e8621c"/><text x="166" y="109" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="22" fill="#fff">5</text>
+      ${sparkle(100, 28, 8)}`,
+
+    /* A little sudoku board of pictures. */
+    'mini-sudoku': () => `
+      ${bg('cv-lav')}
+      ${shadow(100, 176, 70, 8)}
+      <rect x="28" y="28" width="144" height="144" rx="14" fill="#5b4a8f"/>
+      ${['🐶', '🐱', '', '🐸', '', '🐶', '', '🐸', '🐱'].map((e, i) => `<rect x="${36 + (i % 3) * 43}" y="${36 + Math.floor(i / 3) * 43}" width="40" height="40" rx="5" fill="${e ? '#e3dcf7' : '#fffdf6'}"/>${e ? `<text x="${56 + (i % 3) * 43}" y="${66 + Math.floor(i / 3) * 43}" text-anchor="middle" font-size="26">${e}</text>` : `<text x="${56 + (i % 3) * 43}" y="${64 + Math.floor(i / 3) * 43}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="28" fill="#9f80ff">?</text>`}`).join('')}`,
   };
 
   const has = (id) => Boolean(ART[id]);
