@@ -6,25 +6,23 @@ The ground work for selling EDgames. Built 2026-10-30. **No payment provider is 
 
 Each plan includes everything below it. A game's plan is the `tier` word on its entry in `assets/catalog.js`; moving a game between plans is that one word. Names and taglines are in `assets/tiers.js`.
 
-| Plan | Needs | Holds |
-|---|---|---|
-| guest | nothing | the 34 games that existed before accounts (no `tier`) |
-| free | an account | + Bubbles in Order, Who Does Not Belong?, Sort into Baskets |
-| basic | an account; paid later | + The Pizza Shop, Code the Robot, The Colour Lab |
-| pro | an account; paid later | + First English Words, Spell It, Sentence Train (English); Make Ten, Number Line Jumps, The Balance, Fair Share, Block Towers, Ladybug Spots (maths); What Comes Next?, Picture Sudoku (logic) |
+| Plan | Id | Needs | Price | Holds |
+|---|---|---|---|---|
+| בלי חשבון / Guest | `guest` | nothing | ₪0 / $0 | the 34 games that existed before accounts (no `tier`) |
+| ניצנים / Sprouts | `free` | an account | ₪0 / $0 (חינם לתמיד / Free forever) | + Bubbles in Order, Who Does Not Belong?, Sort into Baskets |
+| סקרנים / Explorers | `basic` | an account | ₪19/mo or ₪149/yr ($4.99/mo or $39/yr) | + The Pizza Shop, Code the Robot, The Colour Lab |
+| אלופים / Champions | `pro` | an account | ₪29/mo or ₪229/yr ($7.99/mo or $59/yr) | + First English Words, Spell It, Sentence Train (English); Make Ten, Number Line Jumps, The Balance, Fair Share, Block Towers, Ladybug Spots (maths); What Comes Next?, Picture Sudoku (logic) |
 
 Pro has eleven games (three English, six maths, two logic; five added 2026-11-07, three ages 3–5 maths games added 2026-11-08). Adding a game: README, "Adding a game", with `tier` on the entry. Plan ids must match `PLANS` in `worker/src/index.js`.
 
-Prices are not decided, so none appear anywhere. The site says "free during the launch".
+Prices and plan names were decided by Almon on 2026-11-08 (Option 2: ניצנים / Sprouts, סקרנים / Explorers, אלופים / Champions; Explorers ₪19/mo or ₪149/yr, Champions ₪29/mo or ₪229/yr).
 
-## Open decisions (Almon, 2026-10-30)
+## Decisions & Status (2026-11-08)
 
-Nothing below is to be changed or proposed until he says so. Each has a Blocked card on The Brain.
-
-- **The landing page design:** he is not happy with how it looks and does not yet know what he wants. It stays as it is for now.
-- **Prices:** not set. None appear anywhere; do not add any.
-- **Plan names:** Free, Basic and Pro are working names, not final. Change them only in `assets/tiers.js`. The ids `free`, `basic`, `pro` are internal and can stay.
-- **More Pro games:** five added 2026-11-07 (Almon asked for them). More are welcome when he asks.
+- **The landing page design:** stays as it is until Almon asks for a redesign.
+- **Prices:** decided 2026-11-08. Sprouts ₪0, Explorers ₪19/mo (₪149/yr), Champions ₪29/mo (₪229/yr). No early access launch perk.
+- **Plan names:** decided 2026-11-08. ניצנים / Sprouts, סקרנים / Explorers, אלופים / Champions. The internal ids `free`, `basic`, `pro` stay.
+- **More Pro games:** 11 ready games (3 English, 6 maths, 2 logic). More are welcome when he asks.
 
 ## The pieces
 

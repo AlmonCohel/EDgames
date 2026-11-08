@@ -87,7 +87,7 @@
           <span class="plan-choice-in">
             <b>${EDLang.pick(tier.name)}</b>
             <small>${EDLang.pick(tier.tagline)}</small>
-            <small class="plan-choice-meta">${EDLang.t('landing.addsCount').replace('{count}', adds)} · ${t(id === 'free' ? 'plan.freeForever' : 'plan.early')}</small>
+            <small class="plan-choice-meta">${EDLang.t('landing.addsCount').replace('{count}', adds)} · ${EDLang.pick(tier.price)}</small>
           </span>
         </label>`;
     }).join('');
@@ -194,7 +194,7 @@
                 <div class="plan-row-text">
                   <b>${EDLang.pick(tier.name)}</b>
                   <small>${EDLang.pick(tier.tagline)}</small>
-                  <small class="plan-choice-meta">${t(id === 'free' ? 'plan.freeForever' : 'plan.early')}</small>
+                  <small class="plan-choice-meta">${EDLang.pick(tier.price)}</small>
                 </div>
                 ${mine
                   ? `<span class="plan-mine">${t('plan.current')}</span>`

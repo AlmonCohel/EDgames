@@ -64,7 +64,7 @@
     return `
       <article class="plan" data-plan="${id}">
         <h3>${EDLang.pick(tier.name)}</h3>
-        <p class="plan-price">${EDLang.t(id === 'free' ? 'plan.freeForever' : 'plan.early')}</p>
+        <p class="plan-price">${EDLang.pick(tier.price)}</p>
         <p class="plan-tagline">${EDLang.pick(tier.tagline)}</p>
         <div class="plan-covers" aria-hidden="true">
           ${list.slice(0, 3).map((g) => `<span class="plan-cover">${EDCovers.has(g.id) ? EDCovers.art(g.id) : ''}</span>`).join('')}
