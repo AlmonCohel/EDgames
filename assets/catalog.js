@@ -646,6 +646,48 @@ const GAMES = [
     },
     status: 'ready',
   },
+  {
+    id: 'cookie-share',
+    tier: 'pro',
+    title: { he: 'חולקים שווה בשווה', en: 'Fair Share' },
+    emoji: '🍪',
+    subject: 'math',
+    ageMin: 3, ageMax: 5,
+    blurb: {
+      he: 'מחלקים עוגיות לצלחות של החברים — אחת לך, אחת לי — עד שלכולם יש בדיוק אותו מספר.',
+      en: 'Deal cookies onto the friends\' plates — one for you, one for me — until everyone has the exact same amount.',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
+    id: 'number-rods',
+    tier: 'pro',
+    title: { he: 'מגדל הקוביות', en: 'Block Towers' },
+    emoji: '🧱',
+    subject: 'math',
+    ageMin: 3, ageMax: 5,
+    blurb: {
+      he: 'רואים מספרים בתור גובה: בונים מגדל עד הכוכב, מוצאים את החלק החסר, ומורידים קוביות ממגדל גבוה מדי.',
+      en: 'See numbers as height: stack blocks to reach the star, find the missing piece, and pop blocks off a tall tower.',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
+    id: 'ladybug-spots',
+    tier: 'pro',
+    title: { he: 'נקודות החיפושית', en: 'Ladybug Spots' },
+    emoji: '🐞',
+    subject: 'math',
+    ageMin: 3, ageMax: 5,
+    blurb: {
+      he: 'לחיפושית יש שתי כנפיים: מתאימים נקודות שוות, מחברים את שתי הכנפיים, ומשלימים למספר המבוקש.',
+      en: 'The ladybug has two wings: match equal spots, add both wings together, and add the missing spots.',
+    },
+    sound: true,
+    status: 'ready',
+  },
 ];
 
 const subjectById = (id) => SUBJECTS.find((s) => s.id === id);

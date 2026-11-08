@@ -237,6 +237,15 @@
     'nl-plus': 'וְעוֹד', 'nl-minus': 'פָּחוֹת',
     'nl-where': 'אֵיפֹה הַצְּפַרְדֵּעַ נוֹחֶתֶת?',
     'nl-gap': 'הַצְּפַרְדֵּעַ בְּמִסְפָּר', 'nl-to': 'וְהִיא רוֹצָה לְהַגִּיעַ לְמִסְפָּר', 'nl-howmany': 'כַּמָּה קְפִיצוֹת צָרִיךְ?',
+    'share-ask': 'חַלְּקוּ אֶת הָעוּגִיּוֹת שָׁוֶה בְּשָׁוֶה בֵּין הַחֲבֵרִים',
+    'share-each': 'לְכָל חָבֵר!',
+    'share-howmany': 'כַּמָּה עֻגִיּוֹת קִבֵּל כָּל חָבֵר?',
+    'rods-build': 'בּוֹנִים מִגְדָּל בְּדִיּוּק בְּגֹבַהּ הַכּוֹכָב',
+    'rods-fit': 'אֵיזֶה חֵלֶק יַשְׁלִים אֶת הַמִּגְדָּל עַד הַכּוֹכָב?',
+    'rods-take': 'הַמִּגְדָּל גָּבוֹהַּ מִדַּי! מוֹרִידִים קֻבִּיּוֹת עַד שֶׁיִּהְיוּ שָׁוִים',
+    'spots-wings': 'שִׂימוּ אוֹתוֹ מִסְפַּר נְקֻדּוֹת גַּם עַל הַכָּנָף הַשְּׁנִיָּה',
+    'spots-count': 'כַּמָּה נְקֻדּוֹת יֵשׁ לַחִפּוּשִׁית בְּיַחַד?',
+    'spots-make': 'הוֹסִיפוּ נְקֻדּוֹת כְּדֵי שֶׁיִּהְיוּ לַחִפּוּשִׁית בְּדִיּוּק',
   });
   Object.assign(en, {
     'spell-ask': 'Listen to the word and spell it',
@@ -252,6 +261,15 @@
     'nl-where': 'Where does the frog land?',
     'nl-gap': 'The frog is on number', 'nl-to': 'and wants to reach number', 'nl-howmany': 'How many hops does it need?',
     'num-30': 'thirty', 'num-40': 'forty',
+    'share-ask': 'Share the cookies equally between the friends',
+    'share-each': 'for each friend!',
+    'share-howmany': 'How many cookies did each friend get?',
+    'rods-build': 'Build a tower just as tall as the star',
+    'rods-fit': 'Which piece completes the tower up to the star?',
+    'rods-take': 'The tower is too tall! Take blocks off until they match',
+    'spots-wings': 'Put the same number of spots on the other wing',
+    'spots-count': 'How many spots does the ladybug have altogether?',
+    'spots-make': 'Add spots so the ladybug has exactly',
   });
   he['num-30'] = 'שְׁלוֹשִׁים'; he['num-40'] = 'אַרְבָּעִים';
   [[2, 3, 4, 5], [3, 3, 4, 5], [4, 3, 4, 5], [5, 3, 4], [10, 3, 4]].forEach(([sz, ...ks]) => ks.forEach((k) => {

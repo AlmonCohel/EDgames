@@ -11,7 +11,7 @@ Read this before touching `EDgames`. Alongside `README.md` and `docs/ACCOUNTS.md
     1. **Top Hardware Bar (`.console-top`):** Logo link to `index.html?home=1`, `ED-DECK` LED kicker, brand title, active kid-theme badge, age segmented switcher (`#age-chips`), sound toggle (`#sound-toggle`), language toggle (`#lang-toggle`), account button (`#account-chip`), and the **Design & Settings (`#settings-toggle`)** button.
     2. **Inner Console Screen (`.console-screen` / `.deck-layout`):**
        - **Spotlight Stage (`#spotlight-stage`):** Previews the active game (defaults to `EDRecent.game()` when matching) with cover art, subject + age tag, cartridge index (`#01`), title, blurb, prev/next bumper buttons (`#prev-game`, `#next-game`), and launch button (`#spot-play`).
-       - **Cartridge Bay (`#cartridge-grid`):** Numbered game cartridges (`#01–#48`) with search (`#q`) and clear-filter (`#clear`). Clicking an unselected cartridge loads it into the Spotlight Stage; clicking the selected cartridge (or `#spot-play`) launches the game in `EDPlayer` (`assets/player.js`) or opens `#lock-dialog` if locked by plan tier.
+       - **Cartridge Bay (`#cartridge-grid`):** Numbered game cartridges (`#01–#51`) with search (`#q`) and clear-filter (`#clear`). Clicking an unselected cartridge loads it into the Spotlight Stage; clicking the selected cartridge (or `#spot-play`) launches the game in `EDPlayer` (`assets/player.js`) or opens `#lock-dialog` if locked by plan tier.
     3. **Bottom Channel Dock (`#subject-rail.channel-dock`):** Horizontal Switch-style dock of subject channels with their drawn marks (`EDGlyphs.mark`).
 
 - **Kid Website Themes (`EDTheme` in `assets/i18n.js` + `#settings-dialog`):**
@@ -20,7 +20,7 @@ Read this before touching `EDgames`. Alongside `README.md` and `docs/ACCOUNTS.md
     - `princess`: **Princess & Fairytales (`נסיכות ואגדות 👑`)**
     - `spiderman`: **Spider-Man (`ספיידרמן 🕷️`)**
   - Stored in `localStorage` under `edgames-kid-theme` (and overridable via `?theme=`).
-  - **Game frame vs. game canvas (`game.html`):** The outer wrapper of `game.html` (`body.game-deck`, `.console-top`, `.game-console-screen`, `.game-deck-bar`) is part of the Console Deck website shell and wears both the Console Deck structure and the active kid theme (`data-kid-theme`), while the inner game canvas (`#stage` and all 48 game modules in `games/*.js`) remains a clean white canvas (`#ffffff`) with standard `:root` tokens so the games' own internal graphics and colour mechanics are never altered.
+  - **Game frame vs. game canvas (`game.html`):** The outer wrapper of `game.html` (`body.game-deck`, `.console-top`, `.game-console-screen`, `.game-deck-bar`) is part of the Console Deck website shell and wears both the Console Deck structure and the active kid theme (`data-kid-theme`), while the inner game canvas (`#stage` and all 51 game modules in `games/*.js`) remains a clean white canvas (`#ffffff`) with standard `:root` tokens so the games' own internal graphics and colour mechanics are never altered.
 
 ## 2. Standing Constraints
 

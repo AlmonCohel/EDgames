@@ -11,9 +11,9 @@ Each plan includes everything below it. A game's plan is the `tier` word on its 
 | guest | nothing | the 34 games that existed before accounts (no `tier`) |
 | free | an account | + Bubbles in Order, Who Does Not Belong?, Sort into Baskets |
 | basic | an account; paid later | + The Pizza Shop, Code the Robot, The Colour Lab |
-| pro | an account; paid later | + First English Words, Spell It, Sentence Train (English); Make Ten, Number Line Jumps, The Balance (maths); What Comes Next?, Picture Sudoku (logic) |
+| pro | an account; paid later | + First English Words, Spell It, Sentence Train (English); Make Ten, Number Line Jumps, The Balance, Fair Share, Block Towers, Ladybug Spots (maths); What Comes Next?, Picture Sudoku (logic) |
 
-Pro has eight games (three English, three maths, two logic; five added 2026-11-07). Adding a game: README, "Adding a game", with `tier` on the entry. Plan ids must match `PLANS` in `worker/src/index.js`.
+Pro has eleven games (three English, six maths, two logic; five added 2026-11-07, three ages 3–5 maths games added 2026-11-08). Adding a game: README, "Adding a game", with `tier` on the entry. Plan ids must match `PLANS` in `worker/src/index.js`.
 
 Prices are not decided, so none appear anywhere. The site says "free during the launch".
 

@@ -734,6 +734,44 @@ const EDCovers = (() => {
       ${shadow(100, 176, 70, 8)}
       <rect x="28" y="28" width="144" height="144" rx="14" fill="#5b4a8f"/>
       ${['🐶', '🐱', '', '🐸', '', '🐶', '', '🐸', '🐱'].map((e, i) => `<rect x="${36 + (i % 3) * 43}" y="${36 + Math.floor(i / 3) * 43}" width="40" height="40" rx="5" fill="${e ? '#e3dcf7' : '#fffdf6'}"/>${e ? `<text x="${56 + (i % 3) * 43}" y="${66 + Math.floor(i / 3) * 43}" text-anchor="middle" font-size="26">${e}</text>` : `<text x="${56 + (i % 3) * 43}" y="${64 + Math.floor(i / 3) * 43}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="28" fill="#9f80ff">?</text>`}`).join('')}`,
+
+    /* Bear and Bunny sharing two cookies each on porcelain plates. */
+    'cookie-share': () => `
+      ${bg('cv-sunny')}
+      <rect y="114" width="200" height="86" fill="url(#cv-wood)"/>
+      <circle cx="58" cy="64" r="24" fill="#b87742"/><circle cx="42" cy="46" r="9" fill="#9c6234"/><circle cx="74" cy="46" r="9" fill="#9c6234"/>
+      ${eye(50, 60, 3)}${eye(66, 60, 3)}<ellipse cx="58" cy="68" rx="9" ry="7" fill="#f3d2b3"/><circle cx="58" cy="66" r="3" fill="#4a2b13"/>
+      <ellipse cx="134" cy="36" rx="5" ry="14" fill="#fff" stroke="#d5cce4" stroke-width="1.5"/><ellipse cx="150" cy="36" rx="5" ry="14" fill="#fff" stroke="#d5cce4" stroke-width="1.5"/>
+      <circle cx="142" cy="64" r="23" fill="#fff" stroke="#d5cce4" stroke-width="1.5"/>
+      ${eye(134, 60, 3)}${eye(150, 60, 3)}<circle cx="142" cy="66" r="3" fill="#ff7a9e"/>
+      ${shadow(58, 158, 36, 8)}${shadow(142, 158, 36, 8)}
+      <ellipse cx="58" cy="148" rx="36" ry="20" fill="#fff" stroke="#c9d6e8" stroke-width="3"/>
+      <ellipse cx="142" cy="148" rx="36" ry="20" fill="#fff" stroke="#c9d6e8" stroke-width="3"/>
+      ${[[46, 146], [70, 148], [130, 146], [154, 148]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="11" fill="#e09f54" stroke="#b5742c" stroke-width="2"/><circle cx="${x - 3}" cy="${y - 3}" r="2" fill="#593110"/><circle cx="${x + 4}" cy="${y + 2}" r="2" fill="#593110"/>`).join('')}
+      ${sparkle(100, 30, 8)}`,
+
+    /* Two colourful numbered block towers reaching up to a golden star. */
+    'number-rods': () => `
+      ${bg('cv-sky')}
+      <rect y="164" width="200" height="36" fill="url(#cv-grass)"/>
+      <line x1="20" y1="62" x2="180" y2="62" stroke="#ffb000" stroke-width="3" stroke-dasharray="6 5"/>
+      ${[0, 1, 2].map((i) => `<rect x="40" y="${130 - i * 34}" width="46" height="32" rx="6" fill="#2fc57d" stroke="#fff" stroke-width="2"/><text x="63" y="${152 - i * 34}" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="18" fill="#fff">${i + 1}</text>`).join('')}
+      ${[0, 1].map((i) => `<rect x="114" y="${130 - i * 34}" width="46" height="32" rx="6" fill="#ff9a1f" stroke="#fff" stroke-width="2"/>`).join('')}
+      <rect x="114" y="54" width="46" height="32" rx="6" fill="#ff5d8f" stroke="#fff" stroke-width="2" transform="rotate(-6 137 70)"/>
+      ${star(63, 40, 14)}${sparkle(156, 34, 8)}`,
+
+    /* A red ladybug on a leaf with three spots on each wing. */
+    'ladybug-spots': () => `
+      ${bg('cv-grass')}
+      <ellipse cx="100" cy="112" rx="76" ry="68" fill="#3d9130" opacity=".35"/>
+      <path d="M86 42 Q74 20 62 24M114 42 Q126 20 138 24" stroke="#1e2a44" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="100" cy="54" rx="28" ry="20" fill="#1e2a44"/>
+      ${eye(90, 48, 4)}${eye(110, 48, 4)}
+      ${shadow(100, 168, 56, 10)}
+      <ellipse cx="100" cy="114" rx="56" ry="56" fill="#f03a47" stroke="#1e2a44" stroke-width="4"/>
+      <line x1="100" y1="58" x2="100" y2="170" stroke="#1e2a44" stroke-width="4"/>
+      ${[[76, 88], [68, 116], [80, 144], [124, 88], [132, 116], [120, 144]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9.5" fill="#1e2a44"/>`).join('')}
+      ${gloss(76, 78, 12, 6, -25)}${sparkle(166, 40, 8, '#fff6b0')}`,
   };
 
   const has = (id) => Boolean(ART[id]);

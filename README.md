@@ -338,6 +338,20 @@ drag *or* tap (`EDKit.drag` in `assets/kit.js`), each with a cover and a scene:
   removes a picture only if singles-solving still finishes the board), so the
   hint is always honest.
 
+Three more Pro maths games for ages 3–5, added 2026-11-08 (Pro now has 11 games,
+catalog 51):
+
+- **Fair Share** (`cookie-share`, maths, ages 3–5): animal friends sit around a
+  picnic table with porcelain plates; drag or tap cookies from the baking tray
+  to share equally between 2 or 3 friends, and in the third set answer how many
+  cookies each friend got.
+- **Block Towers** (`number-rods`, maths, ages 3–5): numbers as physical height
+  next to a goal star tower; stack blocks of 1 or 2 to match the height, pick or
+  drag the missing rod piece, or pop blocks off a tower that is too tall.
+- **Ladybug Spots** (`ladybug-spots`, maths, ages 3–5): a two-winged ladybug on
+  a leaf; match equal spots on both wings (doubles), count both wings together,
+  and add the missing spots to reach a target total.
+
 Their spoken lines are in `assets/voice-lines.js` (word and sentence lists are
 repeated there; add a new word in both places, then `node scripts/make-voice.mjs`).
 

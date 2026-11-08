@@ -357,6 +357,27 @@ const EDScenes = (() => {
     'mini-sudoku': `
       <rect x="4" y="4" width="24" height="24" rx="3"/><path d="M12 4v24M20 4v24M4 12h24M4 20h24"/>
       <circle cx="8" cy="8" r="1.600" fill="currentColor" stroke="none"/><path d="M14.500 14.500l3 3M17.500 14.500l-3 3"/><rect x="21.500" y="21.500" width="5" height="5" rx="1"/>`,
+
+    /* Two plates with the same two cookies on each. */
+    'cookie-share': `
+      <ellipse cx="9" cy="21" rx="6.5" ry="4"/><ellipse cx="23" cy="21" rx="6.5" ry="4"/>
+      <circle cx="7.2" cy="20.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="10.8" cy="20.5" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="21.2" cy="20.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="24.8" cy="20.5" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="16" cy="9" r="3"/><path d="M12 12l-2 4M20 12l2 4"/>`,
+
+    /* Two towers of stacked blocks reaching a level line. */
+    'number-rods': `
+      <rect x="5" y="10" width="8" height="18" rx="1.5"/><path d="M5 16h8M5 22h8"/>
+      <rect x="19" y="16" width="8" height="12" rx="1.5"/><path d="M19 22h8"/>
+      <rect x="19" y="10" width="8" height="6" rx="1.2" stroke-dasharray="2 2"/>
+      <path d="M3 7h26" stroke-dasharray="2 2.5"/>`,
+
+    /* A ladybug shell split into two wings with matching spots. */
+    'ladybug-spots': `
+      <circle cx="16" cy="18" r="9.5"/><path d="M16 8.5v19"/>
+      <path d="M12 8.5a4 3 0 0 1 8 0M13 6l-2-2.5M19 6l2-2.5"/>
+      <circle cx="11.5" cy="15" r="1.4" fill="currentColor" stroke="none"/><circle cx="11.5" cy="21" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="20.5" cy="15" r="1.4" fill="currentColor" stroke="none"/><circle cx="20.5" cy="21" r="1.4" fill="currentColor" stroke="none"/>`,
   };
 
   /* Two of the nineteen say something with their direction rather than only
