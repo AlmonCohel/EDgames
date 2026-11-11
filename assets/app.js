@@ -157,6 +157,45 @@ function openLock(game) {
   dialog.showModal();
 }
 
+/* Chatty: English lessons on their own site, with their own look. A paid plan
+   goes straight there, signed in; anyone else gets the grown-up message. */
+const CHATTY_MARK = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 4h28a5 5 0 0 1 5 5v17a5 5 0 0 1-5 5H17l-8 7v-7H6a5 5 0 0 1-5-5V9a5 5 0 0 1 5-5z" fill="#FFC93C"/><text x="20" y="24" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="16" fill="#1E2A4A">Aa</text></svg>';
+
+function openChattyLock() {
+  const dialog = document.getElementById('lock-dialog');
+  const signedIn = Boolean(EDAuth.user());
+  document.getElementById('lock-cover').innerHTML = `<div class="chatty-cover">${CHATTY_MARK}<b>Chatty</b></div>`;
+  document.getElementById('lock-title').textContent = EDLang.t('chatty.title')
+    .replace('{plan}', EDLang.pick(tierById('basic').name)).replace('{plan2}', EDLang.pick(tierById('pro').name));
+  document.getElementById('lock-text').textContent = EDLang.t('chatty.text');
+  const go = document.getElementById('lock-go');
+  go.textContent = EDLang.t(signedIn ? 'lock.upgrade' : 'lock.signup');
+  const q = EDLang.stamp(new URLSearchParams({ view: signedIn ? 'account' : 'signup', plan: 'basic' }));
+  go.href = `account.html?${q}`;
+  dialog.showModal();
+}
+
+async function openChatty(btn) {
+  if (!EDAuth.hasChatty()) return openChattyLock();
+  const label = btn && btn.querySelector('span');
+  const was = label ? label.textContent : '';
+  if (label) label.textContent = EDLang.t('chatty.opening');
+  try {
+    location.href = await EDAuth.chattyLink();
+  } catch (err) {
+    if (label) label.textContent = was;
+    /* The plan on this device was out of date, or the session ended. */
+    if (err.code === 'needs_plan' || err.code === 'signed_out') { await EDAuth.refresh(); drawAccountChip(); return openChattyLock(); }
+    alertChatty();
+  }
+}
+function alertChatty() {
+  const t = document.getElementById('chatty-key');
+  if (!t) return;
+  t.dataset.err = '1'; t.title = EDLang.t('chatty.failed');
+  setTimeout(() => { delete t.dataset.err; }, 4000);
+}
+
 function drawAccountChip() {
   const chip = document.getElementById('account-chip');
   if (!chip) return;
@@ -232,6 +271,13 @@ function buildControls() {
     }
     els.rail.append(b);
   });
+
+  const chatty = document.createElement('button');
+  chatty.type = 'button';
+  chatty.id = 'chatty-key';
+  chatty.className = 'channel-key channel-key--chatty';
+  chatty.innerHTML = `${CHATTY_MARK}<span>${EDLang.t('chatty.channel')}</span>${EDAuth.hasChatty() ? '' : EDGlyphs.icon('lock')}`;
+  els.rail.append(chatty);
 }
 
 /* ---- Rendering ---- */
@@ -400,6 +446,8 @@ document.addEventListener('click', (e) => {
     return openLock(gameById(lockedLink.dataset.locked));
   }
   if (e.target.closest('#lock-close')) return document.getElementById('lock-dialog').close();
+  const chattyKey = e.target.closest('#chatty-key');
+  if (chattyKey) return openChatty(chattyKey);
 
   /* Cartridge click: first click selects into Spotlight Stage; clicking the
      already-selected cartridge launches the game immediately. */
@@ -496,5 +544,6 @@ EDAuth.markEntered();
 EDAuth.refresh().then((changed) => {
   if (!changed) return;
   drawAccountChip();
+  buildControls();
   render();
 });

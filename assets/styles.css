@@ -2011,3 +2011,11 @@ body.game-deck[data-kid-theme="spiderman"] .stage {
     min-height: 380px;
   }
 }
+
+/* Chatty channel (2026-11-11): English lessons on their own site, paid plans. */
+.channel-key--chatty { background: rgba(255, 201, 60, 0.16); border-color: rgba(255, 201, 60, 0.55); }
+.channel-key--chatty:hover { background: rgba(255, 201, 60, 0.28); }
+.channel-key--chatty svg:last-child:not(:first-child) { width: 14px; height: 14px; opacity: .8; }
+.channel-key--chatty[data-err] { border-color: #ff8a7d; }
+.chatty-cover { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: #5EC4FF; color: #1E2A4A; font: 700 1.1rem Fredoka, system-ui, sans-serif; }
+.chatty-cover svg { width: 56px; height: 56px; }

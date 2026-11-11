@@ -11,12 +11,17 @@
      POST   /me/plan       { plan }
      DELETE /me            { password }
      GET    /health
+     POST   /chatty/handoff            -> { url }   a one-time link into Chatty (paid plans)
+     POST   /chatty/redeem  { code }   -> { token, user }   called by Chatty's server
 
    Answers are { ok: true, ... } or { ok: false, error: '<code>' }; the codes are
    translated in assets/i18n.js, under auth.error.<code>. */
 
 /* Must match the ids in assets/tiers.js. 'guest' is not a plan: it is having no account. */
 const PLANS = ['free', 'basic', 'pro'];
+/* Chatty (English lessons, its own site) comes with the paid plans only. */
+const CHATTY_PLANS = ['basic', 'pro'];
+const HANDOFF_SECONDS = 120;
 const TERMS_VERSION = '2026-10-30';
 
 const PASSWORD_MIN = 8;
@@ -124,6 +129,7 @@ function publicUser(user) {
   return {
     email: user.email,
     plan: effectivePlan(user),
+    chatty: CHATTY_PLANS.includes(effectivePlan(user)),
     planStatus: user.plan_status,
     planSince: user.plan_since,
     lang: user.lang,
@@ -329,6 +335,37 @@ async function deleteAccount(env, request, body) {
   return {};
 }
 
+/* ---- Chatty ----
+
+   Chatty lives on its own site, so its localStorage cannot see this site's
+   session. EDgames asks for a one-time code here and opens Chatty with it;
+   Chatty's server trades the code for a session of its own (redeem), kept in a
+   cookie, and checks the plan with /me before it serves a lesson video or sheet. */
+
+async function chattyHandoff(env, request) {
+  const user = await currentUser(env, request);
+  if (!CHATTY_PLANS.includes(effectivePlan(user))) throw new Refused('needs_plan', 403);
+  const code = randomHex(24);
+  await env.DB.batch([
+    env.DB.prepare('DELETE FROM handoffs WHERE expires_at < ?').bind(now()),
+    env.DB.prepare('INSERT INTO handoffs (code_hash, user_id, expires_at) VALUES (?, ?, ?)')
+      .bind(await sha256(code), user.id, later(HANDOFF_SECONDS * 1000)),
+  ]);
+  return { url: `${env.CHATTY_URL || 'https://chatty-b6b.pages.dev'}/?edg=${code}` };
+}
+
+async function chattyRedeem(env, request, body) {
+  await limit(env, `redeem-ip|${clientIp(request)}`, 15 * MINUTE, 30);
+  const hash = await sha256(String(body.code || ''));
+  const entry = await env.DB.prepare('SELECT * FROM handoffs WHERE code_hash = ? AND expires_at > ?').bind(hash, now()).first();
+  if (!entry) throw new Refused('bad_token');
+  await env.DB.prepare('DELETE FROM handoffs WHERE code_hash = ?').bind(hash).run();
+  const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(entry.user_id).first();
+  if (!user) throw new Refused('bad_token');
+  await logEvent(env, user.id, 'chatty_open');
+  return { token: await openSession(env, user.id), user: publicUser(user) };
+}
+
 const ROUTES = {
   'POST /auth/signup': signup,
   'POST /auth/login': login,
@@ -339,6 +376,8 @@ const ROUTES = {
   'POST /me/plan': changePlan,
   'DELETE /me': deleteAccount,
   'GET /health': async () => ({}),
+  'POST /chatty/handoff': chattyHandoff,
+  'POST /chatty/redeem': chattyRedeem,
 };
 
 /* ---- The door ---- */

@@ -92,7 +92,7 @@ test('sign-up refuses bad input, a repeated email, and not accepting the terms',
 
 test('what the site is told about a user has no password hash or billing details in it', async () => {
   const s = await signup('fields@example.com', 'basic');
-  assert.deepEqual(Object.keys(s.user).sort(), ['createdAt', 'email', 'lang', 'plan', 'planSince', 'planStatus']);
+  assert.deepEqual(Object.keys(s.user).sort(), ['chatty', 'createdAt', 'email', 'lang', 'plan', 'planSince', 'planStatus']);
 });
 
 test('log in, log out, and a wrong password says nothing about the email', async () => {
@@ -184,4 +184,26 @@ test('unknown routes and broken JSON answer cleanly', async () => {
   assert.equal((await call('GET', '/nope')).status, 404);
   const res = await fetch(`${API}/auth/login`, { method: 'POST', body: '{not json' });
   assert.equal(res.status, 400);
+});
+
+test('Chatty: only a paid plan gets a hand-off link; the code works once and opens a session', async () => {
+  const free = await signup('chatty-free@example.com', 'free', '10.0.9.1');
+  const no = await call('POST', '/chatty/handoff', {}, free.token);
+  assert.equal(no.status, 403); assert.equal(no.error, 'needs_plan');
+  assert.equal((await call('GET', '/me', undefined, free.token)).user.chatty, false);
+
+  const paid = await signup('chatty-pro@example.com', 'pro', '10.0.9.2');
+  assert.equal(paid.user.chatty, true);
+  const h = await call('POST', '/chatty/handoff', {}, paid.token);
+  assert.equal(h.ok, true);
+  const code = new URL(h.url).searchParams.get('edg');
+  assert.match(code, /^[0-9a-f]{48}$/);
+
+  const r = await call('POST', '/chatty/redeem', { code });
+  assert.equal(r.ok, true); assert.equal(r.user.chatty, true); assert.equal(r.user.email, 'chatty-pro@example.com');
+  assert.equal((await call('GET', '/me', undefined, r.token)).user.plan, 'pro');
+  const again = await call('POST', '/chatty/redeem', { code });
+  assert.equal(again.ok, false); assert.equal(again.error, 'bad_token');
+  assert.equal((await call('POST', '/chatty/redeem', { code: 'nope' })).error, 'bad_token');
+  assert.equal((await call('POST', '/chatty/handoff', {})).status, 401);
 });

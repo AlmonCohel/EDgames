@@ -99,6 +99,14 @@ const EDAuth = window.EDAuth = (() => {
     return out.user;
   }
 
+  /* Chatty (English lessons) is its own site and comes with the paid plans. The
+     server hands back a one-time link that signs the parent in over there. */
+  const hasChatty = () => ['basic', 'pro'].includes(plan());
+  async function chattyLink() {
+    const out = await call('POST', '/chatty/handoff', {});
+    return out.url;
+  }
+
   async function deleteAccount(password) {
     await call('DELETE', '/me', { password });
     forget();
@@ -117,5 +125,5 @@ const EDAuth = window.EDAuth = (() => {
     return plan() !== before;
   }
 
-  return { user, plan, canPlay, markEntered, hasEntered, signup, login, logout, forgot, reset, setPlan, deleteAccount, refresh };
+  return { user, plan, canPlay, markEntered, hasEntered, signup, login, logout, forgot, reset, setPlan, deleteAccount, refresh, hasChatty, chattyLink };
 })();

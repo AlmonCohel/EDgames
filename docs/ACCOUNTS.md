@@ -37,6 +37,10 @@ Prices and plan names were decided by Almon on 2026-11-08 (Option 2: ניצני�
 | Database | D1 `edgames`, schema in `worker/migrations/` |
 | Tests | `cd worker && node --test test/api.test.mjs` (a local Worker and D1, and a fake mail relay) |
 
+## Chatty (2026-11-11)
+
+Chatty (English lessons, `english-kids` repo, https://chatty-b6b.pages.dev) comes with **Explorers and Champions only**. The dock on `play.html` has a Chatty channel (`#chatty-key`, `openChatty` in `assets/app.js`): a paid plan gets a one-time link from `POST /chatty/handoff` and goes there signed in; anyone else sees the lock dialog with both plans. Chatty's server trades the code at `POST /chatty/redeem` (one use, two minutes, table `handoffs`, migration 0002) for its own session and checks `/me` (`user.chatty`) before serving lesson videos and sheets. Chatty keeps its own look; the switch of design is on purpose. `CHATTY_PLANS` in `worker/src/index.js` decides which plans include it.
+
 ## Deploying
 
 `cd worker && npx wrangler@4 d1 migrations apply edgames --remote && npx wrangler@4 deploy`, then push `main` for the site (GitHub Pages). The Brain's deploy target runs all of that.

@@ -71,6 +71,11 @@ const UI = {
     'lock.signup':  'פותחים חשבון',
     'lock.upgrade': 'פותחים את המסלול',
     'lock.close':   'לא עכשיו',
+    'chatty.channel': 'צ׳אטי · אנגלית',
+    'chatty.title':   'צ׳אטי, שיעורי אנגלית, במסלולי {plan} ו{plan2}',
+    'chatty.text':    'סרטונים קצרים, משחקי מגע ודפי עבודה באנגלית לגילאי 4–8. קוראים למבוגר כדי לפתוח.',
+    'chatty.opening': 'פותחים את צ׳אטי…',
+    'chatty.failed':  'לא הצלחנו לפתוח את צ׳אטי. נסו שוב בעוד רגע.',
     'account.login': 'כניסה',
     'account.mine':  'החשבון שלי',
 
@@ -258,6 +263,11 @@ const UI = {
     'lock.signup':  'Open an account',
     'lock.upgrade': 'Unlock this plan',
     'lock.close':   'Not now',
+    'chatty.channel': 'Chatty · English',
+    'chatty.title':   'Chatty English lessons come with {plan} and {plan2}',
+    'chatty.text':    'Short videos, touch games and worksheets in English for ages 4–8. Call a grown-up to unlock.',
+    'chatty.opening': 'Opening Chatty…',
+    'chatty.failed':  'Chatty did not open. Try again in a moment.',
     'account.login': 'Log in',
     'account.mine':  'My account',
 
