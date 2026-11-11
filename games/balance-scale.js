@@ -110,7 +110,7 @@
       const nums = [];
       for (let n = 1; n <= Math.min(top, 12); n += 1) nums.push(n);
       /* The tray always holds the answer, and stays small enough to fit a phone. */
-      const tray = set.top > 12
+      const tray = top > 12
         ? EDKit.shuffle([p.answer, ...EDKit.shuffle(Array.from({ length: 20 }, (_, i) => i + 1).filter((n) => n !== p.answer)).slice(0, 9)]).sort((a, b) => a - b)
         : nums;
 
