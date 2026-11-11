@@ -255,6 +255,7 @@
         EDSound.note(PENTA[(spokenNum - 1) % PENTA.length], { seconds: 0.2, wave: 'triangle', gain: 0.2 });
         EDVoice.say(EDVoiceLines.num(spokenNum), lang);
         if (rightCount === p.targetRight) {
+          busy = true;
           clock.later(completeRound, 420);
         }
       }
