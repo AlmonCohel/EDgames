@@ -43,6 +43,19 @@ const AGE_GROUPS = [
 
 const GAMES = [
   {
+    id: 'potion-lab',
+    title: { he: 'מעבדת השיקויים של מוקו', en: "Moko's Magic Potion Lab" },
+    emoji: '🧪',
+    subject: 'numbers',
+    ageMin: 4, ageMax: 8,
+    blurb: {
+      he: 'מוזגים שיקויים זוהרים לקדרה המבעבעת, חותכים פירות קסומים, ומשקים את מוקו המפלצת כדי לראות למה הוא הופך!',
+      en: 'Pour glowing potions into the bubbling cauldron, slice magical fruits, and feed Moko the monster to see how he transforms!',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
     id: 'star-factory',
     title: { he: 'מפעל הכוכבים', en: 'The Star Factory' },
     emoji: '🌟',

@@ -251,6 +251,12 @@
     'sf-master': 'בּוֹנִים אֶת שְׁנֵי הַגְּשָׁרִים לְלוּמִי הָרוֹבּוֹט! אֶפְשָׁר לַחְתֹּךְ וּלְחַבֵּר קֻבִּיּוֹת',
     'sf-overhang': 'הַקֻּבִּיָּה אֲרֻכָּה מִדַּי! לִחְצוּ עַל הַלֵּייזֶר כְּדֵי לַחְתֹּךְ אֶת הָעֹדֶף',
     'sf-ready': 'הַגֶּשֶׁר מוּכָן! כּוֹכַב הָאוֹר יוֹצֵא לַדֶּרֶךְ!',
+    'pl-pour': 'מִזְגוּ שִׁקּוּי לַקְּדֵרָה עַד קַו הַמִּסְפָּר',
+    'pl-slice': 'חִתְכוּ פֵּרוֹת קְסוּמִים עַל הַקֶּרֶשׁ כְּדֵי לְהוֹסִיף לַקְּדֵרָה',
+    'pl-exact': 'הַגִּיעוּ בְּדִיּוּק לַקַּו! אֶפְשָׁר לִמְזֹג וְגַם לְרוֹקֵן מֵהַבֶּרֶז',
+    'pl-master': 'הָכִינוּ אֶת הַמַּתְכּוֹן הַמָּלֵא לְמוֹקוֹ: גַּם מִדַּת הַשִּׁקּוּי וְגַם פְּרוּסוֹת הַפֵּרוֹת',
+    'pl-high': 'יֵשׁ יוֹתֵר מִדַּי שִׁקּוּי! פִּתְחוּ אֶת הַבֶּרֶז כְּדֵי לְרוֹקֵן קְצָת',
+    'pl-feed': 'הַשִּׁקּוּי מוּכָן! תְּנוּ לְמוֹקוֹ לִשְׁתּוֹת וּתְגַלּוּ לְמָה הוּא הוֹפֵךְ!',
   });
   Object.assign(en, {
     'spell-ask': 'Listen to the word and spell it',
@@ -280,6 +286,12 @@
     'sf-master': 'Build both bridges for Lumi the robot! You can slice and fuse the blocks',
     'sf-overhang': 'The block is too long! Tap the laser line to slice off the extra',
     'sf-ready': 'The bridge is ready! Here comes the star orb!',
+    'pl-pour': 'Pour potion into the cauldron up to number',
+    'pl-slice': 'Slice magic fruit on the board to add to the cauldron',
+    'pl-exact': 'Reach the exact line! Use the flasks and the drain tap',
+    'pl-master': 'Brew the full recipe for Moko: match both the potion level and the fruit slices',
+    'pl-high': 'Too much potion! Open the drain tap to let some out',
+    'pl-feed': 'The potion is ready! Feed it to Moko and see what happens!',
   });
   he['num-30'] = 'שְׁלוֹשִׁים'; he['num-40'] = 'אַרְבָּעִים';
   [[2, 3, 4, 5], [3, 3, 4, 5], [4, 3, 4, 5], [5, 3, 4], [10, 3, 4]].forEach(([sz, ...ks]) => ks.forEach((k) => {

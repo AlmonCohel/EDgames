@@ -797,6 +797,40 @@ const EDCovers = (() => {
       <rect x="26" y="164" width="148" height="26" rx="10" fill="#131c38" stroke="#3b5998" stroke-width="2"/>
       <text x="100" y="183" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="18" fill="#ffd23f">3 + 4 = 7</text>
       ${sparkle(32, 82, 8, '#ffd23f')}${sparkle(122, 68, 9, '#5fd0f5')}${sparkle(144, 34, 6, '#fff')}`,
+
+    /* Moko's Magic Potion Lab: graduated glass cauldron bubbling over fire, tilted ruby flask pouring, and furry horned Moko cheering. */
+    'potion-lab': () => `
+      ${bg('cv-night')}
+      <rect y="148" width="200" height="52" fill="url(#cv-wood)"/>
+      <rect y="146" width="200" height="5" fill="#f3c68f" opacity=".5"/>
+      ${shadow(80, 162, 48, 9)}
+      <path d="M62 156q6-14 18 0 6-16 18 0" fill="#ff7033"/>
+      <path d="M68 156q5-10 12 0 5-12 12 0" fill="#ffd23f"/>
+      <path d="M36 94h88a44 48 0 0 1-88 0z" fill="rgba(210,235,255,.22)" stroke="#b8e0ff" stroke-width="3.5"/>
+      <path d="M40 110q20-6 40 0t40 0a40 36 0 0 1-80 0z" fill="#10b981"/>
+      <ellipse cx="80" cy="110" rx="40" ry="7" fill="#34d399"/>
+      <line x1="62" y1="104" x2="76" y2="104" stroke="#fff" stroke-width="2.2"/><text x="53" y="108" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" fill="#fff">8</text>
+      <line x1="62" y1="120" x2="76" y2="120" stroke="#fff" stroke-width="2.2"/><text x="53" y="124" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" fill="#fff">5</text>
+      <line x1="62" y1="136" x2="76" y2="136" stroke="#fff" stroke-width="2.2"/><text x="53" y="140" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" fill="#fff">2</text>
+      <rect x="30" y="88" width="100" height="9" rx="4.5" fill="#d9f2ff" stroke="#7fd0ff" stroke-width="2"/>
+      <g transform="translate(52 40) rotate(52)">
+        <circle cx="0" cy="0" r="18" fill="#ff3b6b" stroke="#fff" stroke-width="2.5"/>
+        <rect x="-6" y="-26" width="12" height="10" rx="3" fill="#ff3b6b" stroke="#fff" stroke-width="2"/>
+        <text x="0" y="6" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="15" fill="#fff">+3</text>
+      </g>
+      <path d="M70 54 Q78 76 78 106" stroke="#ff5d8f" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <circle cx="72" cy="96" r="4.5" fill="#a7f3d0"/><circle cx="92" cy="88" r="6" fill="#6ee7b7"/><circle cx="84" cy="74" r="3.5" fill="#ffd23f"/>
+      <g transform="translate(154 114)">
+        <path d="M-22-34 Q-28-50 -14-44" fill="#ffd23f" stroke="#d97706" stroke-width="2"/>
+        <path d="M22-34 Q28-50 14-44" fill="#ffd23f" stroke="#d97706" stroke-width="2"/>
+        <ellipse cx="0" cy="4" rx="32" ry="38" fill="#8b5cf6" stroke="#5b21b6" stroke-width="2.5"/>
+        <ellipse cx="0" cy="14" rx="20" ry="22" fill="#ddd6fe"/>
+        <circle cx="-11" cy="-12" r="8.5" fill="#fff"/><circle cx="11" cy="-12" r="8.5" fill="#fff"/>
+        ${eye(-12, -12, 4.2)}${eye(10, -12, 4.2)}
+        <path d="M-12 3 Q0 17 12 3 Z" fill="#4c1d95"/>
+        <ellipse cx="0" cy="10" rx="6" ry="3.5" fill="#fb7185"/>
+      </g>
+      ${sparkle(116, 42, 9, '#ffd23f')}${sparkle(26, 66, 7, '#6ee7b7')}`,
   };
 
   const has = (id) => Boolean(ART[id]);

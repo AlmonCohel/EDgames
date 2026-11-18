@@ -587,5 +587,17 @@
  "en/sf-slice": "The block is too big! Slice it with the laser for a bridge of length",
  "en/sf-master": "Build both bridges for Lumi the robot! You can slice and fuse the blocks",
  "en/sf-overhang": "The block is too long! Tap the laser line to slice off the extra",
- "en/sf-ready": "The bridge is ready! Here comes the star orb!"
+ "en/sf-ready": "The bridge is ready! Here comes the star orb!",
+ "he/pl-pour": "מִזְגוּ שִׁקּוּי לַקְּדֵרָה עַד קַו הַמִּסְפָּר",
+ "he/pl-slice": "חִתְכוּ פֵּרוֹת קְסוּמִים עַל הַקֶּרֶשׁ כְּדֵי לְהוֹסִיף לַקְּדֵרָה",
+ "he/pl-exact": "הַגִּיעוּ בְּדִיּוּק לַקַּו! אֶפְשָׁר לִמְזֹג וְגַם לְרוֹקֵן מֵהַבֶּרֶז",
+ "he/pl-master": "הָכִינוּ אֶת הַמַּתְכּוֹן הַמָּלֵא לְמוֹקוֹ: גַּם מִדַּת הַשִּׁקּוּי וְגַם פְּרוּסוֹת הַפֵּרוֹת",
+ "he/pl-high": "יֵשׁ יוֹתֵר מִדַּי שִׁקּוּי! פִּתְחוּ אֶת הַבֶּרֶז כְּדֵי לְרוֹקֵן קְצָת",
+ "he/pl-feed": "הַשִּׁקּוּי מוּכָן! תְּנוּ לְמוֹקוֹ לִשְׁתּוֹת וּתְגַלּוּ לְמָה הוּא הוֹפֵךְ!",
+ "en/pl-pour": "Pour potion into the cauldron up to number",
+ "en/pl-slice": "Slice magic fruit on the board to add to the cauldron",
+ "en/pl-exact": "Reach the exact line! Use the flasks and the drain tap",
+ "en/pl-master": "Brew the full recipe for Moko: match both the potion level and the fruit slices",
+ "en/pl-high": "Too much potion! Open the drain tap to let some out",
+ "en/pl-feed": "The potion is ready! Feed it to Moko and see what happens!"
 }

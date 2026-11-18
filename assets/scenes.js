@@ -387,6 +387,16 @@ const EDScenes = (() => {
       <circle cx="13" cy="14" r="3.8"/>
       <rect x="23.5" y="12" width="6.5" height="7" rx="2"/>
       <path d="M26.8 12V9.2"/><circle cx="26.8" cy="8.2" r="1" fill="currentColor" stroke="none"/>`,
+
+    /* A bubbling graduated cauldron with a flask pouring into it and a horned monster friend. */
+    'potion-lab': `
+      <path d="M5 15h14a7 8.5 0 0 1-14 0z"/>
+      <path d="M4 15h16M9 19h4M9 22h3"/>
+      <circle cx="10" cy="11" r="1.4"/><circle cx="14" cy="9" r="1.1"/>
+      <path d="M22 14a5.5 6 0 0 1 8 5v6H21v-6a5.5 6 0 0 1 1-5z"/>
+      <path d="M22.5 13 21 10.5M28.5 13 30 10.5"/>
+      <circle cx="24" cy="17.5" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="27.2" cy="17.5" r="1" fill="currentColor" stroke="none"/>`,
   };
 
   /* Two of the nineteen say something with their direction rather than only

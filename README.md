@@ -352,9 +352,17 @@ catalog 51):
   a leaf; match equal spots on both wings (doubles), count both wings together,
   and add the missing spots to reach a target total.
 
-Flagship 60fps physics & maths game added 2026-11-18 (catalog 52, Cartridge `#01`,
-open to everyone):
+Flagship 60fps physics & maths games added 2026-11-18 (catalog 53, Cartridges `#01`
+and `#02`, open to everyone):
 
+- **Moko's Magic Potion Lab** (`potion-lab`, numbers, ages 4–8): a full-scene
+  60fps moonlit alchemist's workshop with a 40-node shallow-water wave cauldron,
+  crystal potion flasks (`+1`, `+2`, `+3`, `+5`) that tilt and pour real droplet
+  streams, a brass drain spigot (`−1`, `−2`) for subtraction and overfill
+  compensation, an oak chopping board where magical fruits split into `×2` or `×3`
+  buoyant slices, and Moko the Alchemy Monster who drinks the finished potion and
+  transforms into five magical forms (Fairy Wings, Star King, Rainbow Shimmer,
+  Levitation Bubble, and Star Dragon).
 - **The Star Factory** (`star-factory`, numbers, ages 4–8): a 60fps interactive
   observatory where children fuse and slice glowing energy blocks (lengths 1–10)
   to engineer star bridges for Lumi the Star-Bot. Blocks magnetically fuse when
