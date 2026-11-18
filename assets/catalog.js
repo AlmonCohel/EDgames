@@ -43,6 +43,19 @@ const AGE_GROUPS = [
 
 const GAMES = [
   {
+    id: 'star-factory',
+    title: { he: 'מפעל הכוכבים', en: 'The Star Factory' },
+    emoji: '🌟',
+    subject: 'numbers',
+    ageMin: 4, ageMax: 8,
+    blurb: {
+      he: 'מחברים וחותכים קוביות אנרגיה זוהרות כדי לבנות גשר כוכבים ללומי הרובוט — ורואים את כדור הכוכב מתגלגל!',
+      en: 'Fuse and slice glowing energy blocks to build a star bridge for Lumi the robot — then watch the star orb roll across!',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
     id: 'color-pop',
     title: { he: 'פיצוץ צבעים', en: 'Color Pop' },
     emoji: '🎈',

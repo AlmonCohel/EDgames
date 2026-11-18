@@ -352,6 +352,18 @@ catalog 51):
   a leaf; match equal spots on both wings (doubles), count both wings together,
   and add the missing spots to reach a target total.
 
+Flagship 60fps physics & maths game added 2026-11-18 (catalog 52, Cartridge `#01`,
+open to everyone):
+
+- **The Star Factory** (`star-factory`, numbers, ages 4–8): a 60fps interactive
+  observatory where children fuse and slice glowing energy blocks (lengths 1–10)
+  to engineer star bridges for Lumi the Star-Bot. Blocks magnetically fuse when
+  dragged together (`3 + 4 = 7`) and split when sliced across their cyan laser
+  seams (`7 → 4 + 3` or overhang slice `7 − 3 = 4`), then a golden Star Orb
+  rolls across the completed bridge playing an ascending pentatonic scale. Four
+  sets: Fuse Blocks, Bridge to Ten, Laser Slice, and Master Inventor (double
+  bridges).
+
 Their spoken lines are in `assets/voice-lines.js` (word and sentence lists are
 repeated there; add a new word in both places, then `node scripts/make-voice.mjs`).
 

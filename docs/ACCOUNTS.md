@@ -8,7 +8,7 @@ Each plan includes everything below it. A game's plan is the `tier` word on its 
 
 | Plan | Id | Needs | Price | Holds |
 |---|---|---|---|---|
-| בלי חשבון / Guest | `guest` | nothing | ₪0 / $0 | the 34 games that existed before accounts (no `tier`) |
+| בלי חשבון / Guest | `guest` | nothing | ₪0 / $0 | the 35 open games (no `tier`, including The Star Factory) |
 | ניצנים / Sprouts | `free` | an account | ₪0 / $0 (חינם לתמיד / Free forever) | + Bubbles in Order, Who Does Not Belong?, Sort into Baskets |
 | סקרנים / Explorers | `basic` | an account | ₪19/mo or ₪149/yr ($4.99/mo or $39/yr) | + The Pizza Shop, Code the Robot, The Colour Lab |
 | אלופים / Champions | `pro` | an account | ₪29/mo or ₪229/yr ($7.99/mo or $59/yr) | + First English Words, Spell It, Sentence Train (English); Make Ten, Number Line Jumps, The Balance, Fair Share, Block Towers, Ladybug Spots (maths); What Comes Next?, Picture Sudoku (logic) |

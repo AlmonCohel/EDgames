@@ -378,6 +378,15 @@ const EDScenes = (() => {
       <path d="M12 8.5a4 3 0 0 1 8 0M13 6l-2-2.5M19 6l2-2.5"/>
       <circle cx="11.5" cy="15" r="1.4" fill="currentColor" stroke="none"/><circle cx="11.5" cy="21" r="1.4" fill="currentColor" stroke="none"/>
       <circle cx="20.5" cy="15" r="1.4" fill="currentColor" stroke="none"/><circle cx="20.5" cy="21" r="1.4" fill="currentColor" stroke="none"/>`,
+
+    /* A segmented star-bridge between two cliffs with a star orb rolling to a robot. */
+    'star-factory': `
+      <path d="M2 22h6v7H2zM24 22h6v7h-6z"/>
+      <rect x="8" y="21" width="16" height="5" rx="1.2"/>
+      <path d="M13.5 21v5M18.5 21v5"/>
+      <circle cx="13" cy="14" r="3.8"/>
+      <rect x="23.5" y="12" width="6.5" height="7" rx="2"/>
+      <path d="M26.8 12V9.2"/><circle cx="26.8" cy="8.2" r="1" fill="currentColor" stroke="none"/>`,
   };
 
   /* Two of the nineteen say something with their direction rather than only

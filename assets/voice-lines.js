@@ -246,6 +246,11 @@
     'spots-wings': 'שִׂימוּ אוֹתוֹ מִסְפַּר נְקֻדּוֹת גַּם עַל הַכָּנָף הַשְּׁנִיָּה',
     'spots-count': 'כַּמָּה נְקֻדּוֹת יֵשׁ לַחִפּוּשִׁית בְּיַחַד?',
     'spots-make': 'הוֹסִיפוּ נְקֻדּוֹת כְּדֵי שֶׁיִּהְיוּ לַחִפּוּשִׁית בְּדִיּוּק',
+    'sf-fuse': 'מְחַבְּרִים קֻבִּיּוֹת אֲנֶרְגְּיָה כְּדֵי לִבְנוֹת גֶּשֶׁר בְּאֹרֶךְ',
+    'sf-slice': 'הַקֻּבִּיָּה גְּדוֹלָה מִדַּי! חוֹתְכִים אוֹתָהּ בְּלֵייזֶר לְגֶשֶׁר בְּאֹרֶךְ',
+    'sf-master': 'בּוֹנִים אֶת שְׁנֵי הַגְּשָׁרִים לְלוּמִי הָרוֹבּוֹט! אֶפְשָׁר לַחְתֹּךְ וּלְחַבֵּר קֻבִּיּוֹת',
+    'sf-overhang': 'הַקֻּבִּיָּה אֲרֻכָּה מִדַּי! לִחְצוּ עַל הַלֵּייזֶר כְּדֵי לַחְתֹּךְ אֶת הָעֹדֶף',
+    'sf-ready': 'הַגֶּשֶׁר מוּכָן! כּוֹכַב הָאוֹר יוֹצֵא לַדֶּרֶךְ!',
   });
   Object.assign(en, {
     'spell-ask': 'Listen to the word and spell it',
@@ -270,6 +275,11 @@
     'spots-wings': 'Put the same number of spots on the other wing',
     'spots-count': 'How many spots does the ladybug have altogether?',
     'spots-make': 'Add spots so the ladybug has exactly',
+    'sf-fuse': 'Fuse energy blocks to build a bridge of length',
+    'sf-slice': 'The block is too big! Slice it with the laser for a bridge of length',
+    'sf-master': 'Build both bridges for Lumi the robot! You can slice and fuse the blocks',
+    'sf-overhang': 'The block is too long! Tap the laser line to slice off the extra',
+    'sf-ready': 'The bridge is ready! Here comes the star orb!',
   });
   he['num-30'] = 'שְׁלוֹשִׁים'; he['num-40'] = 'אַרְבָּעִים';
   [[2, 3, 4, 5], [3, 3, 4, 5], [4, 3, 4, 5], [5, 3, 4], [10, 3, 4]].forEach(([sz, ...ks]) => ks.forEach((k) => {

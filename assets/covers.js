@@ -772,6 +772,31 @@ const EDCovers = (() => {
       <line x1="100" y1="58" x2="100" y2="170" stroke="#1e2a44" stroke-width="4"/>
       ${[[76, 88], [68, 116], [80, 144], [124, 88], [132, 116], [120, 144]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9.5" fill="#1e2a44"/>`).join('')}
       ${gloss(76, 78, 12, 6, -25)}${sparkle(166, 40, 8, '#fff6b0')}`,
+
+    /* Lumi's Star Factory: glowing energy blocks forming a bridge, a golden star orb rolling across, and Lumi cheering. */
+    'star-factory': () => `
+      ${bg('cv-night')}
+      <circle cx="44" cy="48" r="26" fill="none" stroke="#ffd23f" stroke-opacity=".22" stroke-width="7" stroke-dasharray="8 6"/>
+      <circle cx="152" cy="40" r="18" fill="none" stroke="#5fd0f5" stroke-opacity=".25" stroke-width="5" stroke-dasharray="6 5"/>
+      <path d="M0 128h34v72H0zM156 128h44v72h-44z" fill="#1d2b53" stroke="#4b6cb7" stroke-width="2.5"/>
+      <rect x="34" y="124" width="54" height="28" rx="7" fill="#ff5d8f" stroke="#fff" stroke-width="2.5"/>
+      <text x="61" y="145" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="20" fill="#fff">3</text>
+      <rect x="90" y="124" width="66" height="28" rx="7" fill="#2fc57d" stroke="#fff" stroke-width="2.5"/>
+      <text x="123" y="145" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="20" fill="#fff">4</text>
+      <line x1="89" y1="114" x2="89" y2="160" stroke="#5fd0f5" stroke-width="3.5" stroke-dasharray="4 3"/>
+      <circle cx="76" cy="96" r="20" fill="url(#cv-sun)" stroke="#fff" stroke-width="2.5"/>
+      ${star(76, 96, 12, '#fffdf0')}
+      <g transform="translate(174 96)">
+        <line x1="0" y1="-22" x2="0" y2="-34" stroke="#5fd0f5" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="0" cy="-36" r="4.5" fill="#ffd23f"/>
+        <rect x="-18" y="-22" width="36" height="44" rx="14" fill="#f4f8ff" stroke="#5fd0f5" stroke-width="2.5"/>
+        <rect x="-13" y="-14" width="26" height="14" rx="6" fill="#162447"/>
+        <circle cx="-6" cy="-7" r="3" fill="#5fd0f5"/><circle cx="6" cy="-7" r="3" fill="#5fd0f5"/>
+        ${star(0, 10, 6, '#ffd23f')}
+      </g>
+      <rect x="26" y="164" width="148" height="26" rx="10" fill="#131c38" stroke="#3b5998" stroke-width="2"/>
+      <text x="100" y="183" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="18" fill="#ffd23f">3 + 4 = 7</text>
+      ${sparkle(32, 82, 8, '#ffd23f')}${sparkle(122, 68, 9, '#5fd0f5')}${sparkle(144, 34, 6, '#fff')}`,
   };
 
   const has = (id) => Boolean(ART[id]);
