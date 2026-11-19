@@ -17,6 +17,7 @@ migrations_dir = "migrations"
 ALLOWED_ORIGINS = "https://almoncohel.github.io"
 APP_URL = "https://almoncohel.github.io/EDgames/account.html"
 CHATTY_URL = "https://chatty-b6b.pages.dev"
+PULSE_PROJECT_ID = "d4c4f260-4360-4c05-8722-5e3d29e341b9"
 
 [observability]
 enabled = true

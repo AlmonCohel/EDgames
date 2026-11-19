@@ -1,3 +1,5 @@
+import { withPulse } from './pulse.js';
+
 /* EDgames accounts API. The games themselves are static files on GitHub Pages
    and play with this Worker switched off; it only answers who is signed in and
    which plan they are on.
@@ -415,18 +417,18 @@ async function readBody(request) {
   }
 }
 
-export default {
-  async fetch(request, env) {
-    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(env, request) });
-    const route = ROUTES[`${request.method} ${new URL(request.url).pathname}`];
-    if (!route) return json(env, request, 404, { ok: false, error: 'not_found' });
-    try {
-      const out = await route(env, request, await readBody(request));
-      return json(env, request, 200, { ok: true, ...out });
-    } catch (err) {
-      if (err instanceof Refused) return json(env, request, err.status, { ok: false, error: err.code });
-      console.error(err.stack || err.message);
-      return json(env, request, 500, { ok: false, error: 'server' });
-    }
-  },
-};
+async function handleFetch(request, env) {
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(env, request) });
+  const route = ROUTES[`${request.method} ${new URL(request.url).pathname}`];
+  if (!route) return json(env, request, 404, { ok: false, error: 'not_found' });
+  try {
+    const out = await route(env, request, await readBody(request));
+    return json(env, request, 200, { ok: true, ...out });
+  } catch (err) {
+    if (err instanceof Refused) return json(env, request, err.status, { ok: false, error: err.code });
+    console.error(err.stack || err.message);
+    return json(env, request, 500, { ok: false, error: 'server' });
+  }
+}
+
+export default { fetch: withPulse(handleFetch) };
