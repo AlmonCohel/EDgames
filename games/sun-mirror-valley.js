@@ -36,6 +36,11 @@
       lockLabel: '☀️ העמק מואר — המשך!',
       greenhouse: 'חממת הצמחים',
       watermill: 'טחנת המים',
+      mirrorAim: '🪞 כוון מראה ↻',
+      mirrorOff: 'כבוי',
+      mirrorOn: (b) => b > 0 ? `עדשה +${b}` : 'מכוון (+0)',
+      ctrlMirror: '1. מראת האבן (עוצמה)',
+      ctrlPrism: '2. גביש הטורקיז (פיצול)',
       prismModes: {
         up:    '↖ לחממה בלבד',
         down:  '↙ לטחנה בלבד',
@@ -57,6 +62,11 @@
       lockLabel: '☀️ Valley Awakened — Continue!',
       greenhouse: 'Botanical Greenhouse',
       watermill: 'Golden Watermill',
+      mirrorAim: '🪞 Aim Mirror ↻',
+      mirrorOff: 'Off',
+      mirrorOn: (b) => b > 0 ? `Lens +${b}` : 'Aligned (+0)',
+      ctrlMirror: '1. Stone Mirror (Power)',
+      ctrlPrism: '2. Turquoise Prism (Split)',
       prismModes: {
         up:    '↖ Greenhouse Only',
         down:  '↙ Watermill Only',
@@ -214,9 +224,40 @@
     .smv-lock-cta.ready {
       pointer-events: auto; opacity: 1; transform: translateX(-50%) scale(1);
     }
+    .smv-console {
+      width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+      background: linear-gradient(180deg, #0b1c29, #08151f);
+      border: 2px solid #2b4c5e; border-radius: 18px; padding: 10px 12px;
+      box-shadow: 0 8px 20px rgba(5, 12, 20, .28);
+    }
+    .smv-ctrl { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .smv-ctrl-title {
+      font-family: Fredoka, Heebo, sans-serif; font-weight: 700;
+      font-size: .84rem; color: #cbd5e1; display: flex; align-items: center; gap: 6px;
+    }
+    .smv-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .smv-chip {
+      border: 1.5px solid #335c70; background: #0f2736; color: #e2e8f0;
+      border-radius: 99px; padding: 5px 12px; cursor: pointer;
+      font-family: Fredoka, Heebo, sans-serif; font-weight: 700; font-size: .82rem;
+      transition: transform .12s, background .15s, border-color .15s;
+    }
+    .smv-chip:hover { border-color: #fde047; transform: translateY(-1px); }
+    .smv-chip.active {
+      background: linear-gradient(180deg, #f59e0b, #b45309);
+      border-color: #fef08a; color: #fff;
+      box-shadow: 0 0 12px rgba(245, 158, 11, .45);
+    }
+    .smv-chip.prism.active {
+      background: linear-gradient(180deg, #0ea5e9, #0369a1);
+      border-color: #7dd3fc; color: #fff;
+      box-shadow: 0 0 12px rgba(56, 189, 248, .45);
+    }
     @media (max-width: 600px) {
       .smv-stage-box { height: auto; aspect-ratio: 16 / 10; min-height: 235px; max-height: 320px; border-radius: 18px; }
       .smv-node-btn { width: 58px; height: 58px; }
+      .smv-console { grid-template-columns: 1fr; gap: 8px; padding: 9px 10px; }
+      .smv-chip { padding: 4px 10px; font-size: .78rem; }
     }
   `;
 
@@ -272,6 +313,16 @@
             <button type="button" class="smv-lock-cta" id="smv-lock-cta">${t.lockLabel}</button>
           </div>
         </div>
+        <div class="smv-console" id="smv-console">
+          <div class="smv-ctrl">
+            <div class="smv-ctrl-title">${t.ctrlMirror}</div>
+            <div class="smv-chips" id="smv-mirror-chips"></div>
+          </div>
+          <div class="smv-ctrl">
+            <div class="smv-ctrl-title">${t.ctrlPrism}</div>
+            <div class="smv-chips" id="smv-prism-chips"></div>
+          </div>
+        </div>
       </div>
     `;
 
@@ -281,6 +332,8 @@
     const btnMirror = root.querySelector('#btn-mirror');
     const btnPrism = root.querySelector('#btn-prism');
     const lockCta = root.querySelector('#smv-lock-cta');
+    const mirrorChips = root.querySelector('#smv-mirror-chips');
+    const prismChips = root.querySelector('#smv-prism-chips');
     const headH2 = root.querySelector('.kit-head h2');
     const hintEl = root.querySelector('#smv-hint');
 
@@ -393,6 +446,53 @@
       }
 
       lockCta.classList.toggle('ready', st.goalMet && !locked);
+      renderConsole();
+    }
+
+    function renderConsole() {
+      mirrorChips.innerHTML = '';
+      const offBtn = document.createElement('button');
+      offBtn.type = 'button';
+      offBtn.className = 'smv-chip' + (!mirrorAligned ? ' active' : '');
+      offBtn.textContent = t.mirrorOff;
+      offBtn.addEventListener('click', () => {
+        if (locked) return;
+        mirrorAligned = false;
+        sfxCrystal(420);
+        updateTexts();
+      });
+      mirrorChips.appendChild(offBtn);
+
+      round.mirrorBoosts.forEach((b, idx) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'smv-chip' + (mirrorAligned && mirrorBoostIdx === idx ? ' active' : '');
+        const total = round.basePower + b;
+        chip.textContent = `${t.mirrorOn(b)} → ${total}`;
+        chip.addEventListener('click', () => {
+          if (locked) return;
+          mirrorAligned = true;
+          mirrorBoostIdx = idx;
+          sfxCrystal(540 + idx * 110);
+          updateTexts();
+        });
+        mirrorChips.appendChild(chip);
+      });
+
+      prismChips.innerHTML = '';
+      round.prismOptions.forEach((opt, idx) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'smv-chip prism' + (prismIdx === idx ? ' active' : '');
+        chip.textContent = t.prismModes[opt];
+        chip.addEventListener('click', () => {
+          if (locked) return;
+          prismIdx = idx;
+          sfxCrystal(720 + idx * 90);
+          updateTexts();
+        });
+        prismChips.appendChild(chip);
+      });
     }
 
     function loadRound(idx) {
@@ -462,24 +562,54 @@
       if (st.goalMet && !locked) completeRound();
     });
 
-    function drawPill(x, y, text, ok, highlight) {
+    function drawPill(x, y, text, state, highlight) {
       const padX = W < 540 ? 8 : 12;
+      ctx2d.save();
+      ctx2d.direction = 'ltr';
       ctx2d.font = `700 ${W < 540 ? 10.5 : 12.5}px Fredoka, Heebo, sans-serif`;
       const tw = ctx2d.measureText(text).width;
-      const bw = Math.max(W < 540 ? 48 : 62, tw + padX * 2);
+      const bw = Math.max(W < 540 ? 46 : 60, tw + padX * 2);
       const bh = W < 540 ? 22 : 26;
+      const cx = Math.max(bw / 2 + 6, Math.min(W - bw / 2 - 6, x));
+      const cy = Math.max(bh / 2 + 6, Math.min(H - bh / 2 - 6, y));
 
-      ctx2d.fillStyle = ok ? 'rgba(20, 83, 45, 0.94)' : 'rgba(11, 22, 36, 0.92)';
-      ctx2d.strokeStyle = ok ? '#4ade80' : (highlight ? '#fde047' : '#c8a962');
+      const isOk = state === true || state === 'ok';
+      const isOver = state === 'over';
+      ctx2d.fillStyle = isOk
+        ? 'rgba(20, 83, 45, 0.94)'
+        : isOver
+          ? 'rgba(127, 29, 29, 0.94)'
+          : 'rgba(11, 22, 36, 0.92)';
+      ctx2d.strokeStyle = isOk
+        ? '#4ade80'
+        : isOver
+          ? '#f87171'
+          : (highlight ? '#fde047' : '#c8a962');
       ctx2d.lineWidth = highlight ? 2.6 : 1.8;
       ctx2d.beginPath();
-      ctx2d.roundRect(x - bw / 2, y - bh / 2, bw, bh, 99);
+      ctx2d.roundRect(cx - bw / 2, cy - bh / 2, bw, bh, 99);
       ctx2d.fill();
       ctx2d.stroke();
 
-      ctx2d.fillStyle = ok ? '#bbf7d0' : '#fef3c7';
+      ctx2d.fillStyle = isOk ? '#bbf7d0' : isOver ? '#fecaca' : '#fef3c7';
       ctx2d.textAlign = 'center';
-      ctx2d.fillText(text, x, y + (W < 540 ? 3.5 : 4.5));
+      ctx2d.fillText(text, cx, cy + (W < 540 ? 3.5 : 4.5));
+      ctx2d.restore();
+    }
+
+    function drawBuildingGlow(p, intensity, col) {
+      if (intensity <= 0) return;
+      ctx2d.save();
+      ctx2d.globalCompositeOperation = 'screen';
+      const r = (W < 540 ? 36 : 56) * Math.min(1.2, 0.65 + intensity * 0.08);
+      const g = ctx2d.createRadialGradient(p.x, p.y, 4, p.x, p.y, r);
+      g.addColorStop(0, col);
+      g.addColorStop(1, 'rgba(255, 200, 80, 0)');
+      ctx2d.fillStyle = g;
+      ctx2d.beginPath();
+      ctx2d.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.restore();
     }
 
     function drawBeam(a, b, power, col = '#fde047') {
@@ -539,14 +669,20 @@
       const pGreen = map(LANDMARKS.greenhouse.u, LANDMARKS.greenhouse.v);
       const pMill = map(LANDMARKS.watermill.u, LANDMARKS.watermill.v);
 
-      /* 1. Live Ray-Traced Sunbeams */
+      /* 1. Live Ray-Traced Sunbeams (100% live, zero baked-in ghost beams) */
       drawBeam(pTower, pMirror, round.basePower, '#fde047');
       if (mirrorAligned) {
         drawBeam(pMirror, pPrism, st.incoming, '#fde047');
-        if (st.greenPower > 0) drawBeam(pPrism, pGreen, st.greenPower, '#67e8f9');
-        if (st.millPower > 0) drawBeam(pPrism, pMill, st.millPower, '#fde047');
+        if (st.greenPower > 0) {
+          drawBeam(pPrism, pGreen, st.greenPower, '#67e8f9');
+          drawBuildingGlow(pGreen, st.greenPower, 'rgba(103, 232, 249, 0.65)');
+        }
+        if (st.millPower > 0) {
+          drawBeam(pPrism, pMill, st.millPower, '#fde047');
+          drawBuildingGlow(pMill, st.millPower, 'rgba(253, 224, 71, 0.72)');
+        }
       } else {
-        /* Misaligned mirror bounces beam harmlessly into the sky/cliff */
+        /* Misaligned mirror bounces beam harmlessly into the sky */
         drawBeam(pMirror, { x: pMirror.x + 48, y: pMirror.y - 95 }, round.basePower, 'rgba(253, 224, 71, 0.45)');
       }
 
@@ -609,23 +745,33 @@
       });
       ctx2d.restore();
 
-      /* 5. Diegetic Energy & Operation Badges */
-      drawPill(pTower.x, pTower.y - (W < 540 ? 22 : 30), `☀️ ${round.basePower}`, true, false);
+      /* 5. Diegetic Energy & Operation Badges (clamped safely inside viewport) */
+      drawPill(pTower.x + (W < 540 ? 44 : 58), Math.max(22, pTower.y + 8), `☀️ ${round.basePower}`, 'ok', false);
 
       const mirrorText = !mirrorAligned
-        ? '🪞 כוון מראה ↻'
+        ? t.mirrorAim
         : st.boost > 0
-          ? `🪞 +${st.boost} (=${st.incoming})`
+          ? `🪞 +${st.boost} = ${st.incoming}`
           : `🪞 ${st.incoming}`;
       drawPill(pMirror.x, pMirror.y + ringR + 14, mirrorText, mirrorRight, !mirrorRight);
 
       drawPill(pPrism.x, pPrism.y - ringR - 14, t.prismModes[st.pMode], st.goalMet, mirrorRight && !st.goalMet);
 
+      /* Live power numbers floating right on each active outgoing beam */
+      if (mirrorAligned && st.greenPower > 0) {
+        drawPill((pPrism.x + pGreen.x) * 0.52, (pPrism.y + pGreen.y) * 0.52 - 14, `${st.greenPower}`, st.greenOk ? 'ok' : (st.greenPower > round.needGreen && round.needGreen > 0 ? 'over' : false), false);
+      }
+      if (mirrorAligned && st.millPower > 0) {
+        drawPill((pPrism.x + pMill.x) * 0.52, (pPrism.y + pMill.y) * 0.52 + 14, `${st.millPower}`, st.millOk ? 'ok' : (st.millPower > round.needMill && round.needMill > 0 ? 'over' : false), false);
+      }
+
       if (round.needGreen > 0) {
-        drawPill(pGreen.x, pGreen.y - (W < 540 ? 24 : 34), `🌿 ${st.greenPower} / ${round.needGreen}`, st.greenOk, false);
+        const gState = st.greenOk ? 'ok' : (st.greenPower > round.needGreen ? 'over' : false);
+        drawPill(pGreen.x, pGreen.y - (W < 540 ? 24 : 34), `🌿 ${st.greenPower} / ${round.needGreen}${st.greenOk ? ' ✓' : ''}`, gState, false);
       }
       if (round.needMill > 0) {
-        drawPill(pMill.x, pMill.y + (W < 540 ? 24 : 34), `⚙️ ${st.millPower} / ${round.needMill}`, st.millOk, false);
+        const mState = st.millOk ? 'ok' : (st.millPower > round.needMill ? 'over' : false);
+        drawPill(pMill.x, pMill.y + (W < 540 ? 24 : 34), `⚙️ ${st.millPower} / ${round.needMill}${st.millOk ? ' ✓' : ''}`, mState, false);
       }
 
       ctx2d.restore();
