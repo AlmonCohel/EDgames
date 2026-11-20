@@ -114,6 +114,7 @@ function dressPage(game) {
   document.getElementById('game-mark').innerHTML = EDCovers.has(game.id) ? EDCovers.art(game.id) : EDScenes.picture(game);
   document.getElementById('game-header').dataset.subject = game.subject;
   stage.dataset.subject = game.subject;
+  document.body.classList.toggle('game-fullscreen', Boolean(game.fullscreen));
 }
 
 /* ---- Sets ---- */

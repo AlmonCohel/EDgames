@@ -2018,4 +2018,143 @@ body.game-deck[data-kid-theme="spiderman"] .stage {
 .channel-key--chatty svg:last-child:not(:first-child) { width: 14px; height: 14px; opacity: .8; }
 .channel-key--chatty[data-err] { border-color: #ff8a7d; }
 .chatty-cover { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: #5EC4FF; color: #1E2A4A; font: 700 1.1rem Fredoka, system-ui, sans-serif; }
+
+/* Opt-in full-screen game shell (catalog.js `fullscreen: true`, e.g. whispering-woods).
+   Other games keep the standard Console Deck frame unchanged. */
+body.game-deck.game-fullscreen {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  background: #04121b;
+}
+body.game-deck.game-fullscreen .console-chassis--game {
+  max-width: none;
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background: #04121b;
+  display: flex;
+  flex-direction: column;
+}
+body.game-deck.game-fullscreen .console-top {
+  min-height: 40px;
+  padding: 4px 10px;
+  gap: 8px;
+  background: #06131c;
+  border-bottom: 1px solid rgba(255, 215, 120, 0.14);
+  flex: none;
+}
+body.game-deck.game-fullscreen .game-deck-kicker,
+body.game-deck.game-fullscreen .kid-crust {
+  display: none !important;
+}
+body.game-deck.game-fullscreen .hw-btn {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 0.82rem;
+  border-radius: 10px;
+}
+body.game-deck.game-fullscreen .game-console-screen {
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+  gap: 0;
+  border-radius: 0;
+  background: #04121b;
+  display: flex;
+  flex-direction: column;
+}
+body.game-deck.game-fullscreen .game-deck-bar {
+  flex: none;
+  padding: 4px 10px;
+  gap: 6px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid rgba(255, 215, 120, 0.14);
+  background: rgba(8, 22, 32, 0.96);
+  box-shadow: none;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+body.game-deck.game-fullscreen .game-deck-bar::-webkit-scrollbar { display: none; }
+body.game-deck.game-fullscreen .game-header {
+  display: none;
+}
+body.game-deck.game-fullscreen .game-sets {
+  width: 100%;
+  margin-inline-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+body.game-deck.game-fullscreen .game-sets-label {
+  display: none !important;
+}
+body.game-deck.game-fullscreen .game-sets-chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+}
+body.game-deck.game-fullscreen .game-sets-chips .chip {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #e6f2f0;
+  box-shadow: none;
+}
+body.game-deck.game-fullscreen .game-sets-chips .chip[aria-pressed="true"] {
+  background: #f59e0b;
+  border-color: #fde68a;
+  color: #1c1004;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
+}
+body.game-deck.game-fullscreen .hw-reset-btn {
+  min-height: 30px;
+  padding: 0 9px;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #e6f2f0;
+  flex: none;
+}
+body.game-deck.game-fullscreen .stage {
+  flex: 1;
+  min-height: 0 !important;
+  width: 100%;
+  height: 100%;
+  padding: 0 !important;
+  margin: 0;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: #04121b !important;
+  overflow: hidden;
+  display: flex;
+}
+@media (max-width: 640px) {
+  body.game-deck.game-fullscreen .hw-reset-btn span {
+    display: none;
+  }
+  body.game-deck.game-fullscreen .game-sets-chips .chip {
+    padding: 0 8px;
+    font-size: 0.75rem;
+  }
+}
 .chatty-cover svg { width: 56px; height: 56px; }

@@ -49,10 +49,11 @@ const GAMES = [
     subject: 'nature',
     ageMin: 3, ageMax: 4,
     blurb: {
-      he: 'מאירים בפנס הזהב בין העצים, השרכים וגזעי העץ בלילה כדי לגלות ולספור גורי ינשופים, קיפודים, סנאים וחיות יער מוסוות!',
-      en: 'Sweep your warm golden lantern across the nocturnal forest to discover and count hidden baby owls, hedgehogs, squirrels, and camouflaged woodland creatures!',
+      he: 'מאירים בפנס החם ביער בלילה ומוצאים ינשופים, קיפודים, ארנבים, צפרדעים, סנאים ועכברונים שמסתתרים מאחורי עלים, פטריות וגזעים!',
+      en: 'Shine your warm lantern in the night woods to find and count owls, hedgehogs, bunnies, frogs, squirrels, and little mice hiding behind leaves, mushrooms, and logs!',
     },
     sound: true,
+    fullscreen: true,
     status: 'ready',
   },
   {
