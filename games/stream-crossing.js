@@ -405,64 +405,118 @@
       }
     });
 
-    /* Helper: Draw a 3D Sculpted Mossy River Stone with Glowing Carved Golden Dots */
-    function drawSculptedStone(x, y, sizeLevel, shape, dotsCount, isPlaced, highlight) {
-      ctx2d.save();
-      ctx2d.translate(x, y);
-      const baseScale = (W < 540 ? 0.72 : 1) * (0.72 + sizeLevel * 0.14);
-      ctx2d.scale(baseScale, baseScale);
-
-      /* Water contact shadow / ripple rim */
-      if (isPlaced) {
-        ctx2d.strokeStyle = 'rgba(186, 230, 253, 0.65)';
-        ctx2d.lineWidth = 2.4;
-        ctx2d.beginPath();
-        ctx2d.ellipse(0, 4, 36, 20, 0, 0, Math.PI * 2);
-        ctx2d.stroke();
-      }
-
-      /* 3D Sculpted Stone Shape */
-      const grad = ctx2d.createLinearGradient(0, -22, 0, 22);
-      grad.addColorStop(0, isPlaced ? '#64748b' : '#78716c');
-      grad.addColorStop(1, '#292524');
-      ctx2d.fillStyle = grad;
-      ctx2d.strokeStyle = highlight ? '#fde047' : '#cbd5e1';
-      ctx2d.lineWidth = highlight ? 3.2 : 2;
-
+    /* Helper: Trace a smooth sculpted 3D stone silhouette (circle, square, triangle, or diamond) */
+    function traceStonePath(shape, useShape, dy = 0, scale = 1) {
       ctx2d.beginPath();
-      if (shape === 'square' && mode === 'shapes') {
-        ctx2d.roundRect(-28, -17, 56, 34, 8);
-      } else if (shape === 'triangle' && mode === 'shapes') {
-        ctx2d.moveTo(0, -22);
-        ctx2d.lineTo(31, 16);
-        ctx2d.lineTo(-31, 16);
+      if (useShape && shape === 'square') {
+        ctx2d.roundRect(-34 * scale, (-21 + dy) * scale, 68 * scale, 42 * scale, 12 * scale);
+      } else if (useShape && shape === 'triangle') {
+        const s = scale;
+        ctx2d.moveTo(0, (-27 + dy) * s);
+        ctx2d.quadraticCurveTo(10 * s, (-27 + dy) * s, 35 * s, (14 + dy) * s);
+        ctx2d.quadraticCurveTo(38 * s, (21 + dy) * s, 28 * s, (21 + dy) * s);
+        ctx2d.lineTo(-28 * s, (21 + dy) * s);
+        ctx2d.quadraticCurveTo(-38 * s, (21 + dy) * s, -35 * s, (14 + dy) * s);
+        ctx2d.quadraticCurveTo(-10 * s, (-27 + dy) * s, 0, (-27 + dy) * s);
         ctx2d.closePath();
-      } else if (shape === 'diamond' && mode === 'shapes') {
-        ctx2d.moveTo(0, -22);
-        ctx2d.lineTo(34, 0);
-        ctx2d.lineTo(0, 22);
-        ctx2d.lineTo(-34, 0);
+      } else if (useShape && shape === 'diamond') {
+        const s = scale;
+        ctx2d.moveTo(0, (-26 + dy) * s);
+        ctx2d.quadraticCurveTo(8 * s, (-26 + dy) * s, 36 * s, (-4 + dy) * s);
+        ctx2d.quadraticCurveTo(42 * s, (0 + dy) * s, 36 * s, (4 + dy) * s);
+        ctx2d.quadraticCurveTo(8 * s, (26 + dy) * s, 0, (26 + dy) * s);
+        ctx2d.quadraticCurveTo(-8 * s, (26 + dy) * s, -36 * s, (4 + dy) * s);
+        ctx2d.quadraticCurveTo(-42 * s, (0 + dy) * s, -36 * s, (-4 + dy) * s);
+        ctx2d.quadraticCurveTo(-8 * s, (-26 + dy) * s, 0, (-26 + dy) * s);
         ctx2d.closePath();
       } else {
-        ctx2d.ellipse(0, 0, 31, 18, 0, 0, Math.PI * 2);
+        ctx2d.ellipse(0, dy * scale, 36 * scale, 22 * scale, 0, 0, Math.PI * 2);
       }
+    }
+
+    /* Helper: Draw a true 3D Sculpted Clay & Moss River Stone with Carved Glowing Holes */
+    function drawSculptedStone(x, y, sizeLevel, shape, dotsCount, isPlaced, isDragging) {
+      ctx2d.save();
+      ctx2d.translate(x, y);
+      const useShape = mode === 'shapes';
+      const baseScale = (W < 540 ? 0.68 : 1) * (useShape ? 0.96 : (0.70 + sizeLevel * 0.14)) * (isDragging ? 1.08 : 1);
+      ctx2d.scale(baseScale, baseScale);
+
+      /* 1. Soft Water Ripples (in stream) or Ground Contact Shadow (on mossy shore) */
+      if (isPlaced) {
+        const pulse = Math.sin(timeTick * 0.05 + sizeLevel) * 2.2;
+        ctx2d.strokeStyle = 'rgba(175, 228, 245, 0.36)';
+        ctx2d.lineWidth = 2;
+        traceStonePath(shape, useShape, 9, 1.13 + pulse * 0.01);
+        ctx2d.stroke();
+        ctx2d.strokeStyle = 'rgba(175, 228, 245, 0.18)';
+        ctx2d.lineWidth = 1.4;
+        traceStonePath(shape, useShape, 10, 1.24 + pulse * 0.015);
+        ctx2d.stroke();
+      } else {
+        ctx2d.fillStyle = 'rgba(7, 16, 9, 0.52)';
+        traceStonePath(shape, useShape, isDragging ? 18 : 11, 1.04);
+        ctx2d.fill();
+      }
+
+      /* 2. Extruded 3D Stone Side-Wall / Slab Thickness */
+      const sideGrad = ctx2d.createLinearGradient(0, -10, 0, 28);
+      sideGrad.addColorStop(0, '#3e3d37');
+      sideGrad.addColorStop(1, '#1d1f1b');
+      ctx2d.fillStyle = sideGrad;
+      traceStonePath(shape, useShape, 8, 1);
       ctx2d.fill();
+
+      /* 3. Sculpted Top Stone Face (warm sunset key light from upper-left) */
+      const topGrad = ctx2d.createRadialGradient(-12, -10, 4, 4, 4, 46);
+      topGrad.addColorStop(0, '#9a917d');
+      topGrad.addColorStop(0.55, '#686458');
+      topGrad.addColorStop(1, '#3b3c35');
+      ctx2d.fillStyle = topGrad;
+      traceStonePath(shape, useShape, 0, 1);
+      ctx2d.fill();
+
+      /* Subtle velvety moss tuft along upper-back rim of the stone */
+      ctx2d.save();
+      traceStonePath(shape, useShape, 0, 1);
+      ctx2d.clip();
+      const mossGrad = ctx2d.createRadialGradient(-14, -18, 2, -10, -16, 26);
+      mossGrad.addColorStop(0, 'rgba(116, 152, 66, 0.65)');
+      mossGrad.addColorStop(1, 'rgba(72, 104, 42, 0)');
+      ctx2d.fillStyle = mossGrad;
+      ctx2d.fillRect(-44, -32, 88, 36);
+      ctx2d.restore();
+
+      /* Subtle warm rim highlight on top edge (no cartoon white outline) */
+      ctx2d.strokeStyle = isDragging ? 'rgba(254, 240, 138, 0.85)' : 'rgba(255, 232, 180, 0.24)';
+      ctx2d.lineWidth = isDragging ? 2.4 : 1.3;
+      traceStonePath(shape, useShape, 0, 0.99);
       ctx2d.stroke();
 
-      /* Carved Glowing Golden Number Dots on the Top Face */
+      /* 4. Carved Recessed Golden Glowing Holes on the Top Face */
       const dotCoords = {
         1: [[0, 0]],
-        2: [[-10, -2], [10, 2]],
-        3: [[-13, 3], [0, -5], [13, 3]],
-        4: [[-11, -5], [11, -5], [-11, 6], [11, 6]],
+        2: [[-12, -2], [12, 2]],
+        3: [[-14, 5], [0, -7], [14, 5]],
+        4: [[-12, -6], [12, -6], [-12, 6], [12, 6]],
       }[dotsCount] || [[0, 0]];
 
       dotCoords.forEach(([dx, dy]) => {
-        ctx2d.fillStyle = '#fde047';
-        ctx2d.shadowColor = '#f59e0b';
-        ctx2d.shadowBlur = 10;
+        /* Dark carved stone socket */
+        ctx2d.fillStyle = 'rgba(28, 22, 14, 0.72)';
         ctx2d.beginPath();
-        ctx2d.arc(dx, dy, 4.8, 0, Math.PI * 2);
+        ctx2d.ellipse(dx, dy + 0.8, 7.2, 5.2, 0, 0, Math.PI * 2);
+        ctx2d.fill();
+
+        /* Warm incandescent golden glow nestled inside the carved hole */
+        const holeGlow = ctx2d.createRadialGradient(dx, dy, 1, dx, dy, 8.5);
+        holeGlow.addColorStop(0, '#fffbeb');
+        holeGlow.addColorStop(0.42, '#fde047');
+        holeGlow.addColorStop(0.75, 'rgba(245, 158, 11, 0.85)');
+        holeGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+        ctx2d.fillStyle = holeGlow;
+        ctx2d.beginPath();
+        ctx2d.ellipse(dx, dy, 8.5, 6.2, 0, 0, Math.PI * 2);
         ctx2d.fill();
       });
 
@@ -476,45 +530,57 @@
 
       const map = drawArtCover();
 
-      /* 1. Draw the 4 Stream Stepping-Stone Positions (Placed Stones vs Swirling Whirlpools) */
+      /* 1. Draw the 4 Stream Stepping-Stone Positions (Placed 3D Stones vs Soft Shaped Water Ripples) */
       const activeTargetIdx = activeMissingQueue.length ? activeMissingQueue[0] : -1;
+      const useShape = mode === 'shapes';
       STREAM_SLOTS.forEach((slot, idx) => {
         const p = map(slot.u, slot.v);
         if (slotFilled[idx]) {
           drawSculptedStone(p.x, p.y, slot.size, slot.shape, slot.dots, true, false);
         } else {
-          /* Swirling Water Whirlpool indicating required size/shape/dots */
+          /* Soft Shaped Water Whirlpool matching the exact silhouette & size of the needed stone */
           const isCurrent = idx === activeTargetIdx;
-          const swirlR = (18 + slot.size * 5) * (W < 540 ? 0.75 : 1);
+          const slotScale = (W < 540 ? 0.68 : 1) * (useShape ? 0.96 : (0.70 + slot.size * 0.14));
+          const breathe = 1 + Math.sin(timeTick * 0.06 + idx) * 0.04;
           ctx2d.save();
           ctx2d.translate(p.x, p.y);
-          ctx2d.rotate(timeTick * 0.04);
-          ctx2d.strokeStyle = isCurrent ? '#fde047' : 'rgba(125, 211, 252, 0.65)';
-          ctx2d.lineWidth = isCurrent ? 3.2 : 2;
-          ctx2d.setLineDash([7, 5]);
-          ctx2d.beginPath();
-          if (mode === 'shapes' && slot.shape === 'square') {
-            ctx2d.roundRect(-swirlR, -swirlR * 0.65, swirlR * 2, swirlR * 1.3, 6);
-          } else if (mode === 'shapes' && slot.shape === 'triangle') {
-            ctx2d.moveTo(0, -swirlR * 0.8);
-            ctx2d.lineTo(swirlR, swirlR * 0.65);
-            ctx2d.lineTo(-swirlR, swirlR * 0.65);
-            ctx2d.closePath();
-          } else {
-            ctx2d.ellipse(0, 0, swirlR, swirlR * 0.58, 0, 0, Math.PI * 2);
-          }
-          ctx2d.stroke();
-          ctx2d.restore();
+          ctx2d.scale(slotScale * breathe, slotScale * breathe);
 
-          /* Number/dot cue inside the active whirlpool */
-          ctx2d.fillStyle = isCurrent ? '#fef08a' : '#bae6fd';
-          ctx2d.font = `700 ${W < 540 ? 12 : 14}px Fredoka, sans-serif`;
-          ctx2d.textAlign = 'center';
-          ctx2d.fillText(`${slot.dots} •`, p.x, p.y + 5);
+          /* Translucent water socket */
+          ctx2d.fillStyle = isCurrent ? 'rgba(254, 240, 138, 0.14)' : 'rgba(125, 211, 252, 0.10)';
+          traceStonePath(slot.shape, useShape, 0, 1);
+          ctx2d.fill();
+
+          /* Soft glowing water ripple outline in the exact shape */
+          ctx2d.strokeStyle = isCurrent ? 'rgba(254, 240, 138, 0.88)' : 'rgba(186, 230, 253, 0.55)';
+          ctx2d.lineWidth = isCurrent ? 2.6 : 1.8;
+          traceStonePath(slot.shape, useShape, 0, 1);
+          ctx2d.stroke();
+
+          ctx2d.strokeStyle = isCurrent ? 'rgba(254, 240, 138, 0.32)' : 'rgba(186, 230, 253, 0.22)';
+          ctx2d.lineWidth = 1.4;
+          traceStonePath(slot.shape, useShape, 0, 1.18);
+          ctx2d.stroke();
+
+          /* Subtle golden shimmer dots inside the water target */
+          const dotCoords = {
+            1: [[0, 0]],
+            2: [[-11, -2], [11, 2]],
+            3: [[-13, 5], [0, -6], [13, 5]],
+            4: [[-11, -5], [11, -5], [-11, 5], [11, 5]],
+          }[slot.dots] || [[0, 0]];
+          dotCoords.forEach(([dx, dy]) => {
+            ctx2d.fillStyle = isCurrent ? 'rgba(254, 240, 138, 0.72)' : 'rgba(186, 230, 253, 0.45)';
+            ctx2d.beginPath();
+            ctx2d.arc(dx, dy, 3.6, 0, Math.PI * 2);
+            ctx2d.fill();
+          });
+
+          ctx2d.restore();
         }
       });
 
-      /* 2. Draw Foreground Shore Candidate Stones */
+      /* 2. Draw Foreground Shore Candidate 3D Stones */
       shoreChoices.forEach((ch, idx) => {
         if (ch.used) return;
         const p = map(ch.u, ch.v);
@@ -522,8 +588,7 @@
         ch.wobble *= 0.9;
         const drawX = draggingStone === idx ? dragX : p.x + wx;
         const drawY = draggingStone === idx ? dragY : p.y;
-        const isNextTarget = activeTargetIdx !== -1 && ch.dots === STREAM_SLOTS[activeTargetIdx].dots;
-        drawSculptedStone(drawX, drawY, ch.size, ch.shape, ch.dots, false, isNextTarget && timeTick % 60 < 30);
+        drawSculptedStone(drawX, drawY, ch.size, ch.shape, ch.dots, false, draggingStone === idx);
       });
 
       /* 3. Water Splash Ripples */

@@ -38,9 +38,16 @@
       watermill: 'טחנת המים',
       mirrorAim: '🪞 כוון מראה ↻',
       mirrorOff: 'כבוי',
-      mirrorOn: (b) => b > 0 ? `עדשה +${b}` : 'מכוון (+0)',
-      ctrlMirror: '1. מראת האבן (עוצמה)',
-      ctrlPrism: '2. גביש הטורקיז (פיצול)',
+      mirrorOn: (b) => b > 0 ? `+${b}` : '+0',
+      ctrlMirror: '🪞',
+      ctrlPrism: '💎',
+      prismShort: {
+        up:    '↖ חממה',
+        down:  '↙ טחנה',
+        equal: '÷2',
+        asymA: '+1/−1',
+        asymB: '+2/−2',
+      },
       prismModes: {
         up:    '↖ לחממה בלבד',
         down:  '↙ לטחנה בלבד',
@@ -64,9 +71,16 @@
       watermill: 'Golden Watermill',
       mirrorAim: '🪞 Aim Mirror ↻',
       mirrorOff: 'Off',
-      mirrorOn: (b) => b > 0 ? `Lens +${b}` : 'Aligned (+0)',
-      ctrlMirror: '1. Stone Mirror (Power)',
-      ctrlPrism: '2. Turquoise Prism (Split)',
+      mirrorOn: (b) => b > 0 ? `+${b}` : '+0',
+      ctrlMirror: '🪞',
+      ctrlPrism: '💎',
+      prismShort: {
+        up:    '↖ Dome',
+        down:  '↙ Mill',
+        equal: '÷2',
+        asymA: '+1/−1',
+        asymB: '+2/−2',
+      },
       prismModes: {
         up:    '↖ Greenhouse Only',
         down:  '↙ Watermill Only',
@@ -219,45 +233,63 @@
       font-weight: 700; font-size: clamp(.92rem, 2vw, 1.1rem);
       box-shadow: 0 5px 0 #78350f, 0 10px 24px rgba(245, 158, 11, .55);
       cursor: pointer; transition: opacity .18s, transform .2s cubic-bezier(.34,1.56,.64,1);
-      z-index: 8; white-space: nowrap;
+      z-index: 9; white-space: nowrap;
     }
     .smv-lock-cta.ready {
       pointer-events: auto; opacity: 1; transform: translateX(-50%) scale(1);
     }
     .smv-console {
-      width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
-      background: linear-gradient(180deg, #0b1c29, #08151f);
-      border: 2px solid #2b4c5e; border-radius: 18px; padding: 10px 12px;
-      box-shadow: 0 8px 20px rgba(5, 12, 20, .28);
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      max-width: calc(100% - 20px); z-index: 6;
+      pointer-events: auto;
+      display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 10px;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 99px; padding: 5px 12px;
+      box-shadow: 0 6px 20px rgba(6, 20, 30, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: opacity .18s;
     }
-    .smv-ctrl { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .smv-console.hidden { opacity: 0; pointer-events: none; }
+    .smv-ctrl { display: flex; align-items: center; gap: 4px; min-width: 0; }
+    .smv-ctrl + .smv-ctrl { padding-inline-start: 10px; border-inline-start: 1px solid rgba(255, 255, 255, 0.28); }
     .smv-ctrl-title {
-      font-family: Fredoka, Heebo, sans-serif; font-weight: 700;
-      font-size: .84rem; color: #cbd5e1; display: flex; align-items: center; gap: 6px;
+      font-size: .9rem; line-height: 1; white-space: nowrap;
+      filter: drop-shadow(0 1px 2px rgba(5, 15, 25, .6));
     }
-    .smv-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .smv-chips { display: flex; flex-wrap: nowrap; gap: 4px; }
     .smv-chip {
-      border: 1.5px solid #335c70; background: #0f2736; color: #e2e8f0;
-      border-radius: 99px; padding: 5px 12px; cursor: pointer;
-      font-family: Fredoka, Heebo, sans-serif; font-weight: 700; font-size: .82rem;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(5, 15, 25, .55);
+      border-radius: 99px; padding: 3px 10px; cursor: pointer;
+      font-family: Fredoka, Heebo, sans-serif; font-weight: 700; font-size: .76rem;
+      white-space: nowrap;
       transition: transform .12s, background .15s, border-color .15s;
     }
-    .smv-chip:hover { border-color: #fde047; transform: translateY(-1px); }
+    .smv-chip:hover { background: rgba(255, 255, 255, 0.28); border-color: #fef08a; transform: translateY(-1px); }
     .smv-chip.active {
-      background: linear-gradient(180deg, #f59e0b, #b45309);
+      background: linear-gradient(180deg, #f59e0b, #d97706);
       border-color: #fef08a; color: #fff;
-      box-shadow: 0 0 12px rgba(245, 158, 11, .45);
+      box-shadow: 0 2px 10px rgba(245, 158, 11, .45);
     }
     .smv-chip.prism.active {
-      background: linear-gradient(180deg, #0ea5e9, #0369a1);
-      border-color: #7dd3fc; color: #fff;
-      box-shadow: 0 0 12px rgba(56, 189, 248, .45);
+      background: linear-gradient(180deg, #0ea5e9, #0284c7);
+      border-color: #bae6fd; color: #fff;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, .45);
     }
     @media (max-width: 600px) {
-      .smv-stage-box { height: auto; aspect-ratio: 16 / 10; min-height: 235px; max-height: 320px; border-radius: 18px; }
-      .smv-node-btn { width: 58px; height: 58px; }
-      .smv-console { grid-template-columns: 1fr; gap: 8px; padding: 9px 10px; }
-      .smv-chip { padding: 4px 10px; font-size: .78rem; }
+      .smv-stage-box { height: auto; aspect-ratio: 4 / 3; min-height: 295px; max-height: 360px; border-radius: 18px; }
+      .smv-node-btn { width: 52px; height: 52px; }
+      .smv-console {
+        bottom: 6px; left: 6px; right: 6px; transform: none; max-width: none;
+        flex-wrap: wrap; border-radius: 14px; padding: 4px 6px; gap: 4px 6px;
+      }
+      .smv-ctrl + .smv-ctrl { padding-inline-start: 0; border-inline-start: 0; }
+      .smv-ctrl-title { font-size: .75rem; }
+      .smv-chip { padding: 2px 7px; font-size: .68rem; }
     }
   `;
 
@@ -311,16 +343,16 @@
             <button type="button" class="smv-node-btn" id="btn-mirror" aria-label="${t.mirrorAria}"></button>
             <button type="button" class="smv-node-btn" id="btn-prism" aria-label="${t.prismAria}"></button>
             <button type="button" class="smv-lock-cta" id="smv-lock-cta">${t.lockLabel}</button>
-          </div>
-        </div>
-        <div class="smv-console" id="smv-console">
-          <div class="smv-ctrl">
-            <div class="smv-ctrl-title">${t.ctrlMirror}</div>
-            <div class="smv-chips" id="smv-mirror-chips"></div>
-          </div>
-          <div class="smv-ctrl">
-            <div class="smv-ctrl-title">${t.ctrlPrism}</div>
-            <div class="smv-chips" id="smv-prism-chips"></div>
+            <div class="smv-console" id="smv-console">
+              <div class="smv-ctrl">
+                <div class="smv-ctrl-title">${t.ctrlMirror}</div>
+                <div class="smv-chips" id="smv-mirror-chips"></div>
+              </div>
+              <div class="smv-ctrl">
+                <div class="smv-ctrl-title">${t.ctrlPrism}</div>
+                <div class="smv-chips" id="smv-prism-chips"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -332,6 +364,7 @@
     const btnMirror = root.querySelector('#btn-mirror');
     const btnPrism = root.querySelector('#btn-prism');
     const lockCta = root.querySelector('#smv-lock-cta');
+    const consoleDock = root.querySelector('#smv-console');
     const mirrorChips = root.querySelector('#smv-mirror-chips');
     const prismChips = root.querySelector('#smv-prism-chips');
     const headH2 = root.querySelector('.kit-head h2');
@@ -446,6 +479,7 @@
       }
 
       lockCta.classList.toggle('ready', st.goalMet && !locked);
+      consoleDock.classList.toggle('hidden', st.goalMet && !locked);
       renderConsole();
     }
 
@@ -468,7 +502,7 @@
         chip.type = 'button';
         chip.className = 'smv-chip' + (mirrorAligned && mirrorBoostIdx === idx ? ' active' : '');
         const total = round.basePower + b;
-        chip.textContent = `${t.mirrorOn(b)} → ${total}`;
+        chip.textContent = `${t.mirrorOn(b)} (${total})`;
         chip.addEventListener('click', () => {
           if (locked) return;
           mirrorAligned = true;
@@ -484,7 +518,7 @@
         const chip = document.createElement('button');
         chip.type = 'button';
         chip.className = 'smv-chip prism' + (prismIdx === idx ? ' active' : '');
-        chip.textContent = t.prismModes[opt];
+        chip.textContent = (t.prismShort && t.prismShort[opt]) || t.prismModes[opt];
         chip.addEventListener('click', () => {
           if (locked) return;
           prismIdx = idx;
