@@ -352,9 +352,28 @@ catalog 51):
   a leaf; match equal spots on both wings (doubles), count both wings together,
   and add the missing spots to reach a target total.
 
-Flagship 60fps physics, logic & maths games added 2026-11-18 to 2026-11-20 (catalog 54,
-Cartridges `#01`–`#03`, open to everyone):
+Flagship 60fps physics, logic, nature & maths games added 2026-11-18 to 2026-11-20
+(catalog 57, Cartridges `#01`–`#06`, open to everyone):
 
+- **The Lantern in the Whispering Woods** (`whispering-woods`, nature, ages 3–4):
+  a Style 1 (*Arise: A Simple Story* 3D clay-and-wood nocturnal forest diorama
+  with bokeh foreground ferns and warm volumetric lantern rim-lighting) game with
+  4 progressive steps × 4 rounds. Children sweep the explorer's golden lantern
+  across the forest glade to uncover and count hidden baby owls, hedgehogs,
+  bunnies, fawns, moss frogs, bark squirrels, and tiny dormice (`1–6`), with
+  many woodland neighbors per round and animals becoming smaller (`1.0x → 0.48x`)
+  and more deeply camouflaged (`0.60 → 0.06` shadow opacity) on harder steps.
+- **The Woodland Stream Crossing** (`stream-crossing`, shapes, ages 3–4): a
+  Style 1 + 3 sculpted riverbank diorama with 4 steps × 4 rounds teaching size
+  seriation (Small/Medium/Large/Giant), subitizing dot order (`1–4`), and river
+  stone shapes; wrong stones bob gently on the ripples while matching stones land
+  with a splash and let Little Bear hop stone-by-stone to his candle-lit burrow.
+- **The Sun-Mirror Valley** (`sun-mirror-valley`, logic, ages 6–8): a Style 1 + 3
+  twilight mountain valley panorama with 4 steps × 4 rounds where children rotate
+  carved stone mirrors, tune focusing lenses (`+2`, `+4`), and split the golden
+  sunbeam through turquoise crystal prisms (`÷2` equal division and asymmetric
+  ratios) to simultaneously power the Botanical Greenhouse Dome and the Golden
+  Watermill.
 - **The Inventor's Circuit Lab** (`circuit-lab`, logic, ages 4–8): a realistic
   60fps walnut-and-brass engineering workbench built around a continuous
   toy-first play loop (no wrong-answer buzzers). Children clamp 14-node

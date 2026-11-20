@@ -43,6 +43,45 @@ const AGE_GROUPS = [
 
 const GAMES = [
   {
+    id: 'whispering-woods',
+    title: { he: 'פנס היער הלוחץ', en: 'The Lantern in the Whispering Woods' },
+    emoji: '🏮',
+    subject: 'nature',
+    ageMin: 3, ageMax: 4,
+    blurb: {
+      he: 'מאירים בפנס הזהב בין העצים, השרכים וגזעי העץ בלילה כדי לגלות ולספור גורי ינשופים, קיפודים, סנאים וחיות יער מוסוות!',
+      en: 'Sweep your warm golden lantern across the nocturnal forest to discover and count hidden baby owls, hedgehogs, squirrels, and camouflaged woodland creatures!',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
+    id: 'stream-crossing',
+    title: { he: 'גשר הנחל הקטן', en: 'The Woodland Stream Crossing' },
+    emoji: '🐻',
+    subject: 'shapes',
+    ageMin: 3, ageMax: 4,
+    blurb: {
+      he: 'עוזרים לדובון לחצות את הנחל אל המאורה החמה! גוררים אבני נחל בגדלים, נקודות וצורות מתאימות לתוך המערבולות במים.',
+      en: 'Help Little Bear cross the woodland stream to his candle-lit burrow! Drag stepping stones of matching sizes, glowing dots, and shapes into the swirling water.',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
+    id: 'sun-mirror-valley',
+    title: { he: 'עמק מראות השמש', en: 'The Sun-Mirror Valley' },
+    emoji: '☀️',
+    subject: 'logic',
+    ageMin: 6, ageMax: 8,
+    blurb: {
+      he: 'מסובבים מראות אבן עתיקות ומפצלים את קרן השמש דרך גבישי קריסטל זוהרים כדי להפעיל את טחנת המים, החממה ופרחי העמק!',
+      en: 'Rotate ancient stone mirrors and split the golden sunbeam through glowing crystal prisms to power the watermill, botanical greenhouse, and valley meadow!',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
     id: 'circuit-lab',
     title: { he: 'מעבדת החשמל והמכונות', en: "The Inventor's Circuit Lab" },
     emoji: '⚡',

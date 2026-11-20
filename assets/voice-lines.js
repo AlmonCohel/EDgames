@@ -261,6 +261,18 @@
     'cl-motor': 'הַפְעִילוּ אֶת מְנוֹעַ הָרוּחַ וְכַוְּנוּ אֶת הַכִּוּוּן וְהָעָצְמָה כְּדֵי לְהָשִׁיט אֶת הַסִּירָה לַמַּצּוֹף',
     'cl-switches': 'סִגְרוּ אֶת הַמַּפְסְקִים הַנְּכוֹנִים בַּמַּעְגָּל כְּדֵי לְהַזְרִים חַשְׁמַל לַמְּכוֹנָה',
     'cl-machine': 'הַמְּכוֹנָה הַגְּדוֹלָה: חַבְּרוּ אֶת כָּל הַמַּעְגָּל, הַמַּפְסְקִים וְהַמֶּתַח כְּדֵי לְהַפְעִיל אֶת הַמַּעְבָּדָה כֻּלָּהּ',
+    'ww-glade': 'הָאִירוּ בַּפָּנָס הַזָּהֹב בֵּין הָעֵצִים, וְגַעוּ בְּכָל חַיָּה שֶׁמִּסְתַּתֶּרֶת כְּדֵי לִסְפֹּר אוֹתָן!',
+    'ww-thicket': 'הַחַיּוֹת מִסְתַּתְּרוֹת בֵּין הַשְּׂרָכִים וְגִזְעֵי הָעֵץ! הָאִירוּ בַּפָּנָס וּמִצְאוּ אֶת כֻּלָּן',
+    'ww-deep': 'הַסְוָאָה בַּיַּעַר הֶעָמֹק: חַפְּשׂוּ הֵיטֵב אֶת הַחַיּוֹת הַקְּטַנּוֹת שֶׁמִּתְמַזְּגוֹת בַּצְּלָלִים',
+    'ww-ranger': 'אַלּוּפֵי הַיַּעַר הַלֵּילִי: גַּלּוּ וְסִפְרוּ אֶת כָּל חַיּוֹת הַלַּיְלָה הַמֻּסְווֹת בַּיַּעַר!',
+    'sc-sizes': 'עִזְרוּ לַדֻּבּוֹן לַחְצוֹת לַמְּאוּרָה הַחַמָּה! גִּרְרוּ אֶת הָאֶבֶן בַּגֹּדֶל הַמַּתְאִים לַמְּעַרְבֹּלֶת בַּמַּיִם',
+    'sc-dots': 'סִפְרוּ אֶת הַנְּקֻדּוֹת הַזּוֹהֲרוֹת וְשִׂימוּ אֶת הָאֲבָנִים בַּנַּחַל לְפִי הַסֵּדֶר',
+    'sc-shapes': 'הַתְאִימוּ אֶת צוּרַת הָאֶבֶן עַל הַחוֹף לְצוּרַת הַמְּעַרְבֹּלֶת בַּנַּחַל',
+    'sc-bridge': 'בְּנוּ אֶת כָּל גֶּשֶׁר הָאֲבָנִים מֵהַחוֹף עַד הַמְּאוּרָה הַמּוּאֶרֶת!',
+    'smv-aim': 'סוֹבְבוּ אֶת מַרְאוֹת הָאֶבֶן הָעַתִּיקוֹת כְּדֵי לְכַוֵּן אֶת קֶרֶן הַשֶּׁמֶשׁ בְּרַחֲבֵי הָעֵמֶק',
+    'smv-split': 'פַּצְּלוּ אֶת קֶרֶן הַשֶּׁמֶשׁ בְּגָבִישׁ הַטּוּרְקִיז לִשְׁתֵּי אֲלֻמּוֹת שָׁווֹת כְּדֵי לְהַפְעִיל אֶת הַחֲמָמָה וְאֶת טַחֲנַת הַמַּיִם',
+    'smv-ratio': 'כַּוְּנוּ אֶת הַמַּרְאָה וְאֶת גָּבִישׁ הַפִּצּוּל כְּדֵי שֶׁכָּל מִבְנֶה בָּעֵמֶק יְקַבֵּל בְּדִיּוּק אֶת עָצְמַת הָאוֹר שֶׁהוּא צָרִיךְ',
+    'smv-master': 'מַאסְטֶר הָאוֹר: חַבְּרוּ אֶת כָּל הַמַּרְאוֹת, הָעֲדָשׁוֹת וְהַגְּבִישִׁים כְּדֵי לְהָאִיר אֶת הָעֵמֶק כֻּלּוֹ!',
   });
   Object.assign(en, {
     'spell-ask': 'Listen to the word and spell it',
@@ -300,6 +312,18 @@
     'cl-motor': 'Power the brass wind motor and set the direction and voltage to sail the boat to the target buoy',
     'cl-switches': 'Close the right switches in the circuit to send power to the machine',
     'cl-machine': 'The Grand Contraption: wire the circuit, switches, and voltage to power the whole workbench',
+    'ww-glade': 'Shine the golden lantern through the trees, and tap every hiding animal to count them!',
+    'ww-thicket': 'The animals are camouflaged in the ferns and tree bark! Sweep your lantern to find them all',
+    'ww-deep': 'Deep woods camouflage: look closely with your lantern for the tiny animals blending into the shadows',
+    'ww-ranger': 'Master Night Ranger: discover and count every camouflaged night creature in the forest!',
+    'sc-sizes': 'Help Little Bear cross to his warm burrow! Drag the right-sized stepping stone into the swirling water',
+    'sc-dots': 'Count the glowing golden dots and place the stepping stones in the stream in order',
+    'sc-shapes': 'Match the shape of the river stone on the shore to the swirling eddy in the stream',
+    'sc-bridge': 'Build the whole stepping-stone bridge across the stream to the cozy burrow!',
+    'smv-aim': 'Rotate the ancient stone mirrors to steer the golden sunbeam across the valley',
+    'smv-split': 'Split the sunbeam through the turquoise crystal prism into two equal beams to power the greenhouse and the watermill',
+    'smv-ratio': 'Tune the stone mirror and the crystal prism so each landmark receives its exact light power',
+    'smv-master': 'Master of the Valley: align all mirrors, lenses, and crystal prisms to awaken the entire valley!',
   });
   he['num-30'] = 'שְׁלוֹשִׁים'; he['num-40'] = 'אַרְבָּעִים';
   [[2, 3, 4, 5], [3, 3, 4, 5], [4, 3, 4, 5], [5, 3, 4], [10, 3, 4]].forEach(([sz, ...ks]) => ks.forEach((k) => {

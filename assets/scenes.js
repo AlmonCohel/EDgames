@@ -405,6 +405,26 @@ const EDScenes = (() => {
       <path d="M5 27h7l4-4M20 27h7"/>
       <circle cx="12" cy="27" r="1.4" fill="currentColor" stroke="none"/>
       <circle cx="20" cy="27" r="1.4" fill="currentColor" stroke="none"/>`,
+
+    /* A glowing forest lantern and an owl peeking out of a tree hollow. */
+    'whispering-woods': `
+      <rect x="6" y="13" width="10" height="13" rx="3"/>
+      <path d="M8 13a3 3 0 0 1 6 0M11 7v3"/>
+      <circle cx="23" cy="15" r="5"/>
+      <circle cx="21.5" cy="14.5" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="24.5" cy="14.5" r="1" fill="currentColor" stroke="none"/>`,
+
+    /* Stepping stones across a rippling woodland stream. */
+    'stream-crossing': `
+      <path d="M4 10c4 2 8-2 12 0s8 2 12 0M4 22c4 2 8-2 12 0s8 2 12 0"/>
+      <ellipse cx="9" cy="16" rx="3.5" ry="2.5"/>
+      <ellipse cx="16" cy="16" rx="4" ry="2.8"/>
+      <ellipse cx="23.5" cy="16" rx="4.5" ry="3"/>`,
+
+    /* A sunbeam hitting a crystal prism and splitting into two rays. */
+    'sun-mirror-valley': `
+      <polygon points="16,6 22,16 16,26 10,16"/>
+      <path d="M4 10l8 6M20 14l8-6M20 18l8 6"/>`,
   };
 
   /* Two of the nineteen say something with their direction rather than only
