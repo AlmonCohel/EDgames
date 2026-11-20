@@ -89,9 +89,61 @@ of it.
   is actually on screen.** Words like "museum-grade", "ray-traced", "photoreal"
   or "3D" are allowed only if a screenshot shows them.
 - **Don't call a game done because the code exists.** It is done when the
-  screenshots pass this page (section 7).
+  screenshots pass this page (section 9).
 
-## 7. What "done" means
+## 7. The cover matches the game
+
+The cover is the card on the home screen and the small icon in the game
+header. It is the first thing a parent sees, so it must look like the game.
+
+- **Make it from the game's own art.** Compose a square `cover.jpg` (800×800,
+  under 150 KB) from the game's background and its main character or animals,
+  in the same light and style, with no text. Save it in
+  `assets/worlds/<game-id>/`.
+- In `assets/covers.js`, the game's entry returns an SVG that only shows that
+  picture:
+  `<image href="assets/worlds/<id>/cover.jpg" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`.
+  Don't draw a new cover from code shapes.
+- The screenshot check saves `cover.png` so you can see it at the size it is
+  shown.
+
+## 8. Common mistakes — check these before every hand-over
+
+These all happened in the first Whispering Woods rebuild (20–21 Nov 2026), and
+each one cost a full round of fixes. Check every one before you hand over.
+
+1. **The answer shows before the child starts.** At the start of a round,
+   nothing gives the answer away: no lit target, no glow, and no beam or
+   pointer resting on it.
+2. **Fixed positions.** Targets and answers must change place each round
+   (random from a list of good spots or slots), or the child learns them by
+   heart after two rounds.
+3. **Art pieces that don't sit on the painting.** A cover piece or prop must
+   line up with what is painted (a hole, a branch or the ground line). It
+   must not float in front of it.
+4. **Night or shade tints that change what a thing is.** Darken, but keep each
+   thing's own colour. A brown hedgehog must not turn navy blue.
+5. **Sizes that don't make sense.** Give each character and object one fixed
+   size relative to the main character. For example, an owl is smaller than
+   the girl's head.
+6. **A phone held upright.** A wide scene becomes a thin strip. Zoom in to fill
+   the height (or show a "turn sideways" picture), and keep every target inside
+   the visible part, at least 10% away from the edges.
+7. **The same cut-out stamped many times.** Use each prop at most twice per
+   screen, and give each copy its own flip, size (85–115%) and small tilt.
+8. **A character painted into the background.** If a character moves, reacts
+   or is the hero (Little Bear, the girl), it is a cut-out with poses. It is
+   never part of `bg.jpg`, and never an emoji or a code shape when it moves.
+9. **Two ideas in one question.** Ask about shape *or* count *or* size. The
+   other features should be the same on every choice (for example, all stones
+   have the same dots when the question is about shape).
+10. **The page shell, not full screen.** Rebuilt and new games set
+    `fullscreen: true` on their entry in `assets/catalog.js`.
+11. **An old cover.** See section 7.
+12. **The stage-size number lies on phones.** The script measures the game
+    frame, not the painted scene. Always look at the phone pictures.
+
+## 9. What "done" means
 
 1. Run the screenshot check:
    ```
@@ -104,11 +156,14 @@ of it.
    see all the pictures on one page. The folder is not committed.
 2. **Look at every picture yourself** and fix what breaks this page. Repeat
    until it passes.
-3. Hand over with a note of no more than 5 lines: what changed, the folder
-   path, and anything you know is still wrong.
-4. Claude reviews the screenshots against this page and sends back one list
+3. **Go through section 8 one item at a time.** For each item write *pass* and
+   the name of the screenshot that proves it (for example `he-phone-step3.png`),
+   or *fail* and what is wrong. A hand-over without this list is not finished.
+4. Hand over with a note of no more than 5 lines: what changed, the folder
+   path, the section 8 list, and anything you know is still wrong.
+5. Claude reviews the screenshots against this page and sends back one list
    of fixes.
-5. **Almon plays it with his daughter.** Her reaction is the final test.
+6. **Almon plays it with his daughter.** Her reaction is the final test.
 
 ## Checklist (copy into the hand-over note)
 
@@ -120,4 +175,6 @@ of it.
 - [ ] Whole scene visible with no scrolling at 390×844, 1024×768 and 1280×800
 - [ ] Every touch gets a sound and a reaction; right answers are celebrated, wrong ones are gentle
 - [ ] Descriptions match the screenshots
+- [ ] Cover is made from the game's own art (`review-shots/<id>/cover.png`)
+- [ ] Every item in section 8 passes, with a screenshot name for each
 - [ ] `node scripts/shoot-game.mjs <id>` ran clean and every picture was looked at

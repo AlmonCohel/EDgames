@@ -133,6 +133,30 @@ for (const id of ids) {
     }
   }
 
+  /* The cover, at card size, as the home screen draws it. */
+  {
+    const ctx = await browser.newContext({ viewport: { width: 600, height: 600 }, deviceScaleFactor: 2 });
+    await ctx.route(/workers\.dev|edgames-api/, (r) => r.abort());
+    const page = await ctx.newPage();
+    await page.goto(`${base}/game.html?id=${encodeURIComponent(id)}&lang=he`);
+    await page.waitForTimeout(800);
+    const has = await page.evaluate((gid) => {
+      if (typeof EDCovers === 'undefined' || !EDCovers.has(gid)) return false;
+      document.body.innerHTML = `<div id="cv" style="width:360px;height:360px;border-radius:20px;overflow:hidden;margin:20px">${EDCovers.art(gid).replace('<svg ', '<svg width="360" height="360" preserveAspectRatio="xMidYMid slice" ')}</div>`;
+      return true;
+    }, id);
+    if (has) { await page.waitForTimeout(800); await page.locator('#cv').screenshot({ path: path.join(out, 'cover.png') }); }
+    report.push('', has ? 'cover: saved cover.png' : 'cover: none in assets/covers.js');
+    await ctx.close();
+  }
+
+  /* All of the game's art pieces, for an art review on one page. */
+  const artDir = path.join(ROOT, 'assets', 'worlds', id);
+  const art = fs.existsSync(artDir) ? fs.readdirSync(artDir).filter((f) => /\.(png|jpe?g|webp)$/i.test(f)).sort() : [];
+  if (art.length) {
+    report.push(`art: ${art.length} files in assets/worlds/${id}/ — ` + art.map((f) => `${f} ${Math.round(fs.statSync(path.join(artDir, f)).size / 1024)}KB`).join(', '));
+  }
+
   report.push('', 'Standard: whole scene visible with no scrolling, and stage = most of the screen. See docs/GAME-STANDARD.md');
   fs.writeFileSync(path.join(out, 'report.txt'), report.join('\n') + '\n');
   const cards = pics.map((p) => `<figure class="${p.size}"><img src="${p.name}" loading="lazy"><figcaption>${p.lang} · ${p.size} · step ${p.step}</figcaption></figure>`).join('\n');
@@ -140,7 +164,10 @@ for (const id of ids) {
 <style>body{font:14px system-ui;background:#1d2027;color:#eee;margin:16px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap}
 .grid{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}figure{margin:0}img{display:block;border-radius:8px;border:1px solid #444}
 .phone img{width:195px}.tablet img{width:512px}.laptop img{width:640px}figcaption{opacity:.7;margin-top:4px}</style>
-<h1>${id}</h1><pre>${report.join('\n').replace(/</g, '&lt;')}</pre><div class="grid">${cards}</div>`);
+<h1>${id}</h1><pre>${report.join('\n').replace(/</g, '&lt;')}</pre>
+<h2>Cover</h2>${fs.existsSync(path.join(out, 'cover.png')) ? '<img src="cover.png" style="width:240px">' : '<p>none</p>'}
+${art.length ? `<h2>Art pieces (light and dark backgrounds show bad edges)</h2><div class="grid">${art.map((f, i) => `<figure><img src="../../assets/worlds/${id}/${f}" style="max-width:${/^bg\./.test(f) ? 640 : 220}px;max-height:${/^bg\./.test(f) ? 400 : 220}px;background:${i % 2 ? '#d8cfbd' : '#173036'};padding:8px"><figcaption>${f}</figcaption></figure>`).join('')}</div>` : ''}
+<h2>Screens</h2><div class="grid">${cards}</div>`);
   console.log(report.join('\n'));
   console.log(`\n→ ${path.relative(ROOT, out)}/index.html\n`);
 }
