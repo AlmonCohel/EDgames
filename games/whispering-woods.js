@@ -56,249 +56,105 @@
     },
   };
 
-  /* Hiding spots carefully mapped onto bg.jpg landmarks (u: 0.14..0.72 so every
-     spot is cleanly visible on phone, tablet, and laptop; girl stands at u=0.835).
-     `cover`: 'hollow' | 'log' | 'fern' | 'mushrooms' | 'leaves' (small animals only) | 'none' */
+  /* Fixed animal sizes as a fraction of the Lantern Girl's height (her head is ~0.30).
+     An owl is smaller than her head; frogs and dormice are smaller still. */
+  const SPECIES_SCALE = {
+    bunny:    0.29,
+    owl:      0.25,
+    squirrel: 0.24,
+    hedgehog: 0.22,
+    frog:     0.19,
+    dormouse: 0.18,
+  };
+
+  /* 12 landmark-mapped hiding spots on bg.jpg (all u <= 0.665 so nothing overlaps
+     the girl at u=0.835, and none sit on the empty foreground ground). */
+  const HIDING_SPOTS = [
+    { id: 'hollow',           u: 0.499, v: 0.456, cover: 'hollow',    perch: true,  ground: true  },
+    { id: 'branch-left',      u: 0.335, v: 0.265, cover: 'none',      perch: true,  ground: false },
+    { id: 'branch-right',     u: 0.655, v: 0.235, cover: 'none',      perch: true,  ground: false },
+    { id: 'log-mouth',        u: 0.272, v: 0.605, cover: 'log',       perch: false, ground: true  },
+    { id: 'log-top',          u: 0.225, v: 0.465, cover: 'fern',      perch: false, ground: true  },
+    { id: 'far-left-mid',     u: 0.145, v: 0.535, cover: 'fern',      perch: false, ground: true  },
+    { id: 'left-ferns',       u: 0.155, v: 0.665, cover: 'fern',      perch: false, ground: true  },
+    { id: 'left-roots',       u: 0.368, v: 0.648, cover: 'mushrooms', perch: false, ground: true  },
+    { id: 'trunk-left-fern',  u: 0.375, v: 0.485, cover: 'fern',      perch: false, ground: true  },
+    { id: 'center-roots',     u: 0.455, v: 0.590, cover: 'leaves',    perch: false, ground: true  },
+    { id: 'trunk-right-fern', u: 0.612, v: 0.525, cover: 'fern',      perch: false, ground: true  },
+    { id: 'stream-bank',      u: 0.662, v: 0.630, cover: 'mushrooms', perch: false, ground: true  },
+  ];
+
+  const PERCH_SPECIES = new Set(['owl', 'squirrel']);
+
+  /* Empty-ground resting spots for the lantern beam at round start (away from all animals) */
+  const REST_SPOTS = [
+    { u: 0.548, v: 0.762 }, // mossy foreground by the glowing blue flowers
+    { u: 0.735, v: 0.725 }, // mossy bank by the stream near the girl
+    { u: 0.310, v: 0.758 }, // mossy foreground in front of the log
+    { u: 0.725, v: 0.435 }, // open night air above the stream
+  ];
+
   const ROUNDS = {
     tree: [
-      {
-        kind: 'owl', scale: 1.0,
-        targets: [
-          { u: 0.456, v: 0.425, cover: 'hollow' },
-          { u: 0.500, v: 0.368, cover: 'hollow' },
-          { u: 0.544, v: 0.425, cover: 'hollow' },
-        ],
-        neighbors: [
-          { kind: 'hedgehog', u: 0.270, v: 0.612, cover: 'log' },
-          { kind: 'bunny',    u: 0.185, v: 0.665, cover: 'fern' },
-          { kind: 'frog',     u: 0.618, v: 0.648, cover: 'leaves' },
-        ],
-      },
-      {
-        kind: 'hedgehog', scale: 0.98,
-        targets: [
-          { u: 0.258, v: 0.614, cover: 'log' },
-          { u: 0.312, v: 0.618, cover: 'log' },
-          { u: 0.415, v: 0.668, cover: 'leaves' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'squirrel', u: 0.348, v: 0.270, cover: 'none' },
-          { kind: 'frog',     u: 0.625, v: 0.655, cover: 'mushrooms' },
-        ],
-      },
-      {
-        kind: 'bunny', scale: 0.96,
-        targets: [
-          { u: 0.185, v: 0.665, cover: 'fern' },
-          { u: 0.395, v: 0.658, cover: 'mushrooms' },
-          { u: 0.615, v: 0.642, cover: 'fern' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'hedgehog', u: 0.275, v: 0.614, cover: 'log' },
-          { kind: 'dormouse', u: 0.515, v: 0.668, cover: 'leaves' },
-        ],
-      },
-      {
-        kind: 'owl', scale: 0.92,
-        targets: [
-          { u: 0.468, v: 0.425, cover: 'hollow' },
-          { u: 0.526, v: 0.425, cover: 'hollow' },
-          { u: 0.345, v: 0.268, cover: 'none' },
-          { u: 0.642, v: 0.242, cover: 'none' },
-        ],
-        neighbors: [
-          { kind: 'hedgehog', u: 0.275, v: 0.614, cover: 'log' },
-          { kind: 'bunny',    u: 0.410, v: 0.660, cover: 'fern' },
-          { kind: 'frog',     u: 0.615, v: 0.655, cover: 'leaves' },
-        ],
-      },
+      { kind: 'owl',      count: 3, neighborCount: 3 },
+      { kind: 'hedgehog', count: 3, neighborCount: 3 },
+      { kind: 'bunny',    count: 3, neighborCount: 3 },
+      { kind: 'owl',      count: 4, neighborCount: 3 },
     ],
     leaves: [
-      {
-        kind: 'bunny', scale: 0.90,
-        targets: [
-          { u: 0.175, v: 0.665, cover: 'fern' },
-          { u: 0.355, v: 0.662, cover: 'mushrooms' },
-          { u: 0.505, v: 0.655, cover: 'fern' },
-          { u: 0.630, v: 0.638, cover: 'mushrooms' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'hedgehog', u: 0.268, v: 0.614, cover: 'log' },
-          { kind: 'squirrel', u: 0.355, v: 0.270, cover: 'none' },
-        ],
-      },
-      {
-        kind: 'squirrel', scale: 0.90,
-        targets: [
-          { u: 0.345, v: 0.268, cover: 'none' },
-          { u: 0.498, v: 0.405, cover: 'hollow' },
-          { u: 0.642, v: 0.242, cover: 'none' },
-          { u: 0.225, v: 0.465, cover: 'fern' },
-        ],
-        neighbors: [
-          { kind: 'hedgehog', u: 0.278, v: 0.614, cover: 'log' },
-          { kind: 'frog',     u: 0.595, v: 0.658, cover: 'leaves' },
-          { kind: 'bunny',    u: 0.415, v: 0.662, cover: 'mushrooms' },
-        ],
-      },
-      {
-        kind: 'hedgehog', scale: 0.88,
-        targets: [
-          { u: 0.268, v: 0.614, cover: 'log' },
-          { u: 0.165, v: 0.675, cover: 'leaves' },
-          { u: 0.415, v: 0.668, cover: 'mushrooms' },
-          { u: 0.605, v: 0.658, cover: 'leaves' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'squirrel', u: 0.640, v: 0.245, cover: 'none' },
-          { kind: 'bunny',    u: 0.505, v: 0.655, cover: 'fern' },
-        ],
-      },
-      {
-        kind: 'frog', scale: 0.88,
-        targets: [
-          { u: 0.205, v: 0.670, cover: 'leaves' },
-          { u: 0.385, v: 0.675, cover: 'mushrooms' },
-          { u: 0.555, v: 0.665, cover: 'fern' },
-          { u: 0.668, v: 0.648, cover: 'leaves' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'hedgehog', u: 0.275, v: 0.614, cover: 'log' },
-          { kind: 'squirrel', u: 0.350, v: 0.270, cover: 'none' },
-        ],
-      },
+      { kind: 'bunny',    count: 4, neighborCount: 3 },
+      { kind: 'squirrel', count: 4, neighborCount: 3 },
+      { kind: 'hedgehog', count: 4, neighborCount: 3 },
+      { kind: 'frog',     count: 4, neighborCount: 3 },
     ],
     stream: [
-      {
-        kind: 'dormouse', scale: 0.86,
-        targets: [
-          { u: 0.272, v: 0.614, cover: 'log' },
-          { u: 0.498, v: 0.415, cover: 'hollow' },
-          { u: 0.410, v: 0.670, cover: 'leaves' },
-          { u: 0.615, v: 0.655, cover: 'mushrooms' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.345, v: 0.270, cover: 'none' },
-          { kind: 'bunny',    u: 0.175, v: 0.665, cover: 'fern' },
-          { kind: 'frog',     u: 0.530, v: 0.672, cover: 'leaves' },
-        ],
-      },
-      {
-        kind: 'frog', scale: 0.84,
-        targets: [
-          { u: 0.168, v: 0.668, cover: 'fern' },
-          { u: 0.305, v: 0.678, cover: 'leaves' },
-          { u: 0.445, v: 0.665, cover: 'mushrooms' },
-          { u: 0.575, v: 0.668, cover: 'leaves' },
-          { u: 0.682, v: 0.642, cover: 'fern' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'hedgehog', u: 0.268, v: 0.612, cover: 'log' },
-          { kind: 'squirrel', u: 0.640, v: 0.245, cover: 'none' },
-        ],
-      },
-      {
-        kind: 'squirrel', scale: 0.84,
-        targets: [
-          { u: 0.165, v: 0.455, cover: 'fern' },
-          { u: 0.345, v: 0.268, cover: 'none' },
-          { u: 0.498, v: 0.405, cover: 'hollow' },
-          { u: 0.642, v: 0.242, cover: 'none' },
-          { u: 0.395, v: 0.658, cover: 'mushrooms' },
-        ],
-        neighbors: [
-          { kind: 'hedgehog', u: 0.272, v: 0.614, cover: 'log' },
-          { kind: 'frog',     u: 0.605, v: 0.658, cover: 'leaves' },
-          { kind: 'bunny',    u: 0.205, v: 0.672, cover: 'fern' },
-        ],
-      },
-      {
-        kind: 'bunny', scale: 0.84,
-        targets: [
-          { u: 0.165, v: 0.668, cover: 'fern' },
-          { u: 0.282, v: 0.616, cover: 'log' },
-          { u: 0.415, v: 0.662, cover: 'mushrooms' },
-          { u: 0.548, v: 0.658, cover: 'fern' },
-          { u: 0.668, v: 0.642, cover: 'mushrooms' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'dormouse', u: 0.348, v: 0.676, cover: 'leaves' },
-          { kind: 'squirrel', u: 0.345, v: 0.270, cover: 'none' },
-        ],
-      },
+      { kind: 'dormouse', count: 4, neighborCount: 3 },
+      { kind: 'frog',     count: 5, neighborCount: 3 },
+      { kind: 'squirrel', count: 5, neighborCount: 3 },
+      { kind: 'bunny',    count: 5, neighborCount: 3 },
     ],
     woods: [
-      {
-        kind: 'owl', scale: 0.82,
-        targets: [
-          { u: 0.456, v: 0.425, cover: 'hollow' },
-          { u: 0.500, v: 0.368, cover: 'hollow' },
-          { u: 0.544, v: 0.425, cover: 'hollow' },
-          { u: 0.345, v: 0.268, cover: 'none' },
-          { u: 0.642, v: 0.242, cover: 'none' },
-        ],
-        neighbors: [
-          { kind: 'hedgehog', u: 0.272, v: 0.614, cover: 'log' },
-          { kind: 'bunny',    u: 0.185, v: 0.668, cover: 'fern' },
-          { kind: 'frog',     u: 0.610, v: 0.658, cover: 'leaves' },
-          { kind: 'dormouse', u: 0.415, v: 0.668, cover: 'mushrooms' },
-        ],
-      },
-      {
-        kind: 'hedgehog', scale: 0.82,
-        targets: [
-          { u: 0.262, v: 0.614, cover: 'log' },
-          { u: 0.165, v: 0.672, cover: 'leaves' },
-          { u: 0.395, v: 0.668, cover: 'mushrooms' },
-          { u: 0.535, v: 0.668, cover: 'leaves' },
-          { u: 0.662, v: 0.648, cover: 'fern' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'squirrel', u: 0.345, v: 0.268, cover: 'none' },
-          { kind: 'bunny',    u: 0.315, v: 0.652, cover: 'fern' },
-        ],
-      },
-      {
-        kind: 'dormouse', scale: 0.82,
-        targets: [
-          { u: 0.272, v: 0.614, cover: 'log' },
-          { u: 0.498, v: 0.415, cover: 'hollow' },
-          { u: 0.185, v: 0.672, cover: 'leaves' },
-          { u: 0.418, v: 0.668, cover: 'mushrooms' },
-          { u: 0.625, v: 0.655, cover: 'leaves' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.642, v: 0.242, cover: 'none' },
-          { kind: 'bunny',    u: 0.530, v: 0.652, cover: 'fern' },
-          { kind: 'squirrel', u: 0.345, v: 0.268, cover: 'none' },
-        ],
-      },
-      {
-        kind: 'frog', scale: 0.82,
-        targets: [
-          { u: 0.168, v: 0.670, cover: 'fern' },
-          { u: 0.305, v: 0.678, cover: 'leaves' },
-          { u: 0.445, v: 0.665, cover: 'mushrooms' },
-          { u: 0.578, v: 0.668, cover: 'leaves' },
-          { u: 0.682, v: 0.642, cover: 'fern' },
-        ],
-        neighbors: [
-          { kind: 'owl',      u: 0.498, v: 0.398, cover: 'hollow' },
-          { kind: 'hedgehog', u: 0.268, v: 0.614, cover: 'log' },
-          { kind: 'squirrel', u: 0.345, v: 0.268, cover: 'none' },
-          { kind: 'bunny',    u: 0.505, v: 0.645, cover: 'mushrooms' },
-        ],
-      },
+      { kind: 'owl',      count: 5, neighborCount: 4 },
+      { kind: 'hedgehog', count: 5, neighborCount: 3 },
+      { kind: 'dormouse', count: 5, neighborCount: 3 },
+      { kind: 'frog',     count: 5, neighborCount: 4 },
     ],
   };
+
+  function shuffle(arr) {
+    const out = arr.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = out[i];
+      out[i] = out[j];
+      out[j] = tmp;
+    }
+    return out;
+  }
+
+  function buildRound(spec) {
+    const canPerch = PERCH_SPECIES.has(spec.kind);
+    const eligible = HIDING_SPOTS.filter((s) => canPerch || s.ground);
+    const pickedTargets = shuffle(eligible).slice(0, spec.count);
+    const usedIds = new Set(pickedTargets.map((s) => s.id));
+
+    const remaining = shuffle(HIDING_SPOTS.filter((s) => !usedIds.has(s.id)));
+    const otherSpecies = shuffle(SPECIES.filter((sp) => sp !== spec.kind));
+    const neighbors = [];
+    for (let i = 0; i < spec.neighborCount && remaining.length; i++) {
+      const sp = otherSpecies[i % otherSpecies.length];
+      const spotIdx = remaining.findIndex((s) => PERCH_SPECIES.has(sp) || s.ground);
+      if (spotIdx < 0) break;
+      const spot = remaining.splice(spotIdx, 1)[0];
+      neighbors.push({ kind: sp, u: spot.u, v: spot.v, cover: spot.cover, spotId: spot.id });
+    }
+
+    return {
+      kind: spec.kind,
+      targets: pickedTargets.map((s) => ({ u: s.u, v: s.v, cover: s.cover, spotId: s.id })),
+      neighbors,
+    };
+  }
 
   const CSS = `
     .ww-stage-box {
@@ -554,10 +410,10 @@
       const k = strength;
       for (let i = 0; i < d.length; i += 4) {
         if (d[i + 3] === 0) continue;
-        // Darken and cool-shift toward moonlit forest teal
-        d[i]     = Math.round(d[i]     * (1 - 0.68 * k) + 6  * k);
-        d[i + 1] = Math.round(d[i + 1] * (1 - 0.50 * k) + 28 * k);
-        d[i + 2] = Math.round(d[i + 2] * (1 - 0.36 * k) + 42 * k);
+        // Darker and slightly cooler, preserving each animal's own colours (no blue wash)
+        d[i]     = Math.round(d[i]     * (1 - 0.74 * k));
+        d[i + 1] = Math.round(d[i + 1] * (1 - 0.70 * k));
+        d[i + 2] = Math.round(d[i + 2] * (1 - 0.64 * k));
       }
       g.putImageData(id, 0, 0);
       nightCache.set(key, c);
@@ -591,7 +447,7 @@
     const bgImg = loadImg(`${ART}bg.jpg`);
 
     let roundIdx = 0;
-    let round = rounds[0];
+    let round = buildRound(rounds[0]);
     let locked = false;
     let roundWon = false;
     let rafId = 0;
@@ -600,8 +456,9 @@
 
     /* Girl stands on the right mossy stone bank */
     const GIRL_POS = { u: 0.835, v: 0.525 };
-    let lanternU = 0.498, lanternV = 0.42;
-    let targetU = 0.498, targetV = 0.42;
+    let lanternU = 0.548, lanternV = 0.762;
+    let targetU = 0.548, targetV = 0.762;
+    let camU = 0.50, targetCamU = 0.50;
     let foundStates = [];
     let neighborStates = [];
     let sparks = [];
@@ -610,13 +467,6 @@
       u: 0.08 + Math.random() * 0.84,
       v: 0.10 + Math.random() * 0.72,
       r: 1.4 + Math.random() * 2.2,
-      phase: Math.random() * Math.PI * 2,
-    }));
-
-    const skyStars = Array.from({ length: 42 }, () => ({
-      x: Math.random(),
-      y: Math.random() * 0.34,
-      r: 0.8 + Math.random() * 1.6,
       phase: Math.random() * Math.PI * 2,
     }));
 
@@ -672,20 +522,21 @@
 
     /* Scene layout geometry:
        - Landscape (tablet / laptop): fill entire viewport cleanly with bg.jpg (cover).
-       - Portrait (phone 390x844): frame the whole diorama across the full width inside
-         a seamless starry-night-sky + dark-forest canvas so NOTHING is cut off! */
+       - Portrait (upright phone): zoom into the middle of the scene to fill the full height;
+         sweeping the lantern left/right smoothly pans across the whole forest. */
     function sceneGeom() {
       const iw = (bgImg.complete && bgImg.naturalWidth) ? bgImg.naturalWidth : 1376;
       const ih = (bgImg.complete && bgImg.naturalHeight) ? bgImg.naturalHeight : 768;
       const isPortrait = W < H * 1.05;
       let scale, dw, dh, ox, oy;
       if (isPortrait) {
-        // Show 94% of the diorama width (from left log edge to right bank girl)
-        scale = (W / (iw * 0.90));
+        scale = H / ih;
         dw = iw * scale;
-        dh = ih * scale;
-        ox = (W - dw) * 0.52;
-        oy = (H - dh) * 0.50;
+        dh = H;
+        const halfVisU = Math.min(0.5, (W / dw) * 0.5);
+        const clampedCam = Math.max(halfVisU, Math.min(1 - halfVisU, camU));
+        ox = W * 0.5 - clampedCam * dw;
+        oy = 0;
       } else {
         scale = Math.max(W / iw, H / ih);
         dw = iw * scale;
@@ -700,14 +551,43 @@
       };
     }
 
+    function pickRestSpot(roundData) {
+      const g = sceneGeom();
+      const all = [...roundData.targets, ...roundData.neighbors];
+      const beamR = Math.max(76, Math.min(g.dw * 0.125, g.dh * 0.22));
+      let best = REST_SPOTS[0];
+      let bestMin = -1;
+      for (const cand of REST_SPOTS) {
+        const cp = g.map(cand.u, cand.v);
+        let minD = Infinity;
+        for (const a of all) {
+          const ap = g.map(a.u, a.v);
+          const d = Math.hypot(cp.x - ap.x, cp.y - ap.y);
+          if (d < minD) minD = d;
+        }
+        // On portrait phone, prefer the visible center foreground spot if it's clear of all animals
+        if (g.isPortrait && cand === REST_SPOTS[0] && minD > beamR * 1.04) {
+          return cand;
+        }
+        if (minD > bestMin) {
+          bestMin = minD;
+          best = cand;
+        }
+      }
+      return best;
+    }
+
     function syncHitButtons() {
       const g = sceneGeom();
       hitButtons.forEach((btn, idx) => {
         const tg = round.targets[idx];
         if (!tg) return;
         const p = g.map(tg.u, tg.v);
+        const onScreen = p.x >= -16 && p.x <= W + 16 && p.y >= -16 && p.y <= H + 16;
         btn.style.left = `${p.x}px`;
         btn.style.top = `${p.y}px`;
+        btn.style.visibility = onScreen ? 'visible' : 'hidden';
+        btn.style.pointerEvents = onScreen ? 'auto' : 'none';
       });
     }
 
@@ -723,11 +603,20 @@
 
     function loadRound(idx) {
       roundIdx = idx;
-      round = rounds[idx];
+      round = buildRound(rounds[idx]);
       locked = false;
       roundWon = false;
       foundStates = round.targets.map(() => ({ found: false, num: 0, pop: 0, peek: 0 }));
       neighborStates = round.neighbors.map(() => ({ wobble: 0, peek: 0 }));
+
+      /* Start the lantern on empty ground away from every animal */
+      camU = 0.50;
+      targetCamU = 0.50;
+      const rest = pickRestSpot(round);
+      lanternU = rest.u;
+      lanternV = rest.v;
+      targetU = rest.u;
+      targetV = rest.v;
 
       const spInfo = t.species[round.kind] || t.species.owl;
       headH2.textContent = t.ask(round.targets.length, spInfo.name);
@@ -818,39 +707,51 @@
       const r = canvas.getBoundingClientRect();
       const px = e.clientX - r.left;
       const py = e.clientY - r.top;
-      const uv = sceneGeom().unmap(px, py);
-      targetU = Math.max(0.08, Math.min(0.84, uv.u));
-      targetV = Math.max(0.12, Math.min(0.82, uv.v));
+      const g = sceneGeom();
+      if (g.isPortrait) {
+        const fx = Math.max(0, Math.min(1, px / Math.max(1, W)));
+        const fy = Math.max(0, Math.min(1, py / Math.max(1, H)));
+        targetU = 0.12 + fx * 0.74;
+        targetV = Math.max(0.12, Math.min(0.82, fy));
+        targetCamU = targetU;
+      } else {
+        const uv = g.unmap(px, py);
+        targetU = Math.max(0.08, Math.min(0.84, uv.u));
+        targetV = Math.max(0.12, Math.min(0.82, uv.v));
+      }
     }
 
     box.addEventListener('pointermove', updateLanternFromPointer);
     box.addEventListener('pointerdown', (e) => {
       if (e.target.closest('.ww-hud-top, .ww-end-overlay')) return;
-      updateLanternFromPointer(e);
-      if (locked) return;
       const r = canvas.getBoundingClientRect();
       const px = e.clientX - r.left;
       const py = e.clientY - r.top;
       const g = sceneGeom();
-      const hitR = Math.max(36, g.dw * 0.042);
 
-      for (let i = 0; i < round.targets.length; i++) {
-        const p = g.map(round.targets[i].u, round.targets[i].v);
-        if (Math.hypot(px - p.x, py - p.y) < hitR) {
-          onTapTarget(i);
-          return;
+      if (!locked) {
+        const hitR = Math.max(36, g.dw * 0.040);
+        for (let i = 0; i < round.targets.length; i++) {
+          const p = g.map(round.targets[i].u, round.targets[i].v);
+          if (Math.hypot(px - p.x, py - p.y) < hitR) {
+            onTapTarget(i);
+            return;
+          }
+        }
+        for (let i = 0; i < round.neighbors.length; i++) {
+          const nb = round.neighbors[i];
+          const p = g.map(nb.u, nb.v);
+          if (Math.hypot(px - p.x, py - p.y) < hitR * 0.9) {
+            targetU = nb.u;
+            targetV = nb.v;
+            neighborStates[i].wobble = 1;
+            sfxRustle();
+            spawnSparks(p.x, p.y, 6);
+            return;
+          }
         }
       }
-      for (let i = 0; i < round.neighbors.length; i++) {
-        const nb = round.neighbors[i];
-        const p = g.map(nb.u, nb.v);
-        if (Math.hypot(px - p.x, py - p.y) < hitR * 0.9) {
-          neighborStates[i].wobble = 1;
-          sfxRustle();
-          spawnSparks(p.x, p.y, 6);
-          return;
-        }
-      }
+      updateLanternFromPointer(e);
     });
 
     /* ---- Sprite + shadow + night-tint helpers ---- */
@@ -890,19 +791,23 @@
       return { dw, dh };
     }
 
-    function drawCoverProp(coverType, x, y, unit, lit) {
+    function drawCoverProp(coverType, x, y, unit, girlH, lit) {
       if (!coverType || coverType === 'none' || coverType === 'log' || coverType === 'hollow') return;
       const src = `${ART}cover-${coverType}.png`;
-      const sizeMul = coverType === 'fern' ? 1.48 : coverType === 'mushrooms' ? 1.24 : 1.28;
-      const dy = coverType === 'fern' ? unit * 0.24 : coverType === 'leaves' ? unit * 0.34 : unit * 0.26;
-      const dx = coverType === 'fern' ? -unit * 0.12 : coverType === 'mushrooms' ? -unit * 0.10 : unit * 0.05;
-      drawGroundShadow(x + dx, y + dy + unit * 0.28, unit * 0.52, unit * 0.14, 0.36);
-      drawLitSprite(src, x + dx, y + dy, unit * sizeMul, 0.28 + lit * 0.72, 0.65);
+      const propSize = coverType === 'fern'
+        ? girlH * 0.34
+        : coverType === 'mushrooms'
+          ? girlH * 0.28
+          : girlH * 0.24;
+      const dy = coverType === 'fern' ? unit * 0.22 : coverType === 'leaves' ? unit * 0.32 : unit * 0.24;
+      const dx = coverType === 'fern' ? -unit * 0.10 : coverType === 'mushrooms' ? -unit * 0.08 : unit * 0.04;
+      drawGroundShadow(x + dx, y + dy + propSize * 0.26, propSize * 0.42, propSize * 0.11, 0.36);
+      drawLitSprite(src, x + dx, y + dy, propSize, lit * 0.88, 0.72);
     }
 
-    function drawAnimalEntry(entry, kind, x, y, unit, lit, st, isTarget, idx) {
+    function drawAnimalEntry(entry, kind, x, y, unit, girlH, lit, st, isTarget, idx) {
       const isFound = Boolean(isTarget && st && st.found);
-      const peekTarget = isFound ? 1 : (lit > 0.24 ? Math.min(1, (lit - 0.2) * 1.6) : 0);
+      const peekTarget = isFound ? 1 : (lit > 0.20 ? Math.min(1, (lit - 0.16) * 1.55) : 0);
       if (st) st.peek += (peekTarget - st.peek) * 0.18;
       const peek = st ? st.peek : 0;
 
@@ -918,51 +823,53 @@
       let popScale = 1;
       if (isFound) {
         st.pop *= 0.88;
-        bounceY = -Math.abs(Math.sin(timeTick * 0.1 + idx)) * (unit * 0.11) - st.pop * unit * 0.22;
+        bounceY = -Math.abs(Math.sin(timeTick * 0.1 + idx)) * (unit * 0.12) - st.pop * unit * 0.24;
         popScale = 1.08 + st.pop * 0.16;
       } else {
         // Tuck behind cover when hidden, peek upward when lantern hits
-        const tuckOffset = (entry.cover && entry.cover !== 'none') ? (1 - peek) * unit * 0.16 : 0;
-        bounceY = tuckOffset + Math.sin(timeTick * 0.05 + idx * 1.9) * 1.6;
+        const tuckOffset = (entry.cover && entry.cover !== 'none') ? (1 - peek) * unit * 0.18 : 0;
+        bounceY = tuckOffset + Math.sin(timeTick * 0.05 + idx * 1.9) * 1.4;
       }
 
       const pose = isFound ? 'happy' : (peek > 0.45 ? 'found' : 'hidden');
       const src = `${ART}${kind}-${pose}.png`;
-      const warmBlend = isFound ? 1 : Math.min(1, lit * 1.25);
+      const warmBlend = isFound ? 1 : (lit <= 0.04 ? 0 : Math.min(1, lit * 1.25));
 
       // Soft warm golden halo behind lit / found animal
       if (warmBlend > 0.18) {
         ctx2d.save();
-        const halo = ctx2d.createRadialGradient(x, y + bounceY, unit * 0.1, x, y + bounceY, unit * 0.82);
+        const halo = ctx2d.createRadialGradient(x, y + bounceY, unit * 0.1, x, y + bounceY, unit * 0.85);
         halo.addColorStop(0, `rgba(255, 218, 110, ${0.46 * warmBlend})`);
         halo.addColorStop(1, 'rgba(255, 165, 40, 0)');
         ctx2d.fillStyle = halo;
         ctx2d.beginPath();
-        ctx2d.arc(x, y + bounceY, unit * 0.82, 0, Math.PI * 2);
+        ctx2d.arc(x, y + bounceY, unit * 0.85, 0, Math.PI * 2);
         ctx2d.fill();
         ctx2d.restore();
       }
 
       // Soft ground contact shadow directly under the animal
-      drawGroundShadow(x, y + unit * 0.42, unit * 0.42 * popScale, unit * 0.13, 0.48);
+      if (entry.cover !== 'hollow') {
+        drawGroundShadow(x, y + unit * 0.42, unit * 0.42 * popScale, unit * 0.13, 0.48);
+      }
 
       // Enforce rule: leaf pile only for small animals
-      const cover = (entry.cover === 'leaves' && !SMALL_SPECIES.has(kind)) ? 'fern' : entry.cover;
+      const cover = (entry.cover === 'leaves' && !SMALL_SPECIES.has(kind)) ? 'mushrooms' : entry.cover;
 
       if (isFound) {
         // Once found, cover stays behind the happy jumping animal
-        drawCoverProp(cover, x, y, unit, lit);
-        drawLitSprite(src, x, y + bounceY, unit * popScale, warmBlend, 0.88, wobbleAngle);
+        drawCoverProp(cover, x, y, unit, girlH, lit);
+        drawLitSprite(src, x, y + bounceY, unit * popScale, warmBlend, 0.90, wobbleAngle);
       } else {
         // Hidden/peeking: animal is tucked behind its foreground cover piece
-        drawLitSprite(src, x, y + bounceY, unit * popScale, warmBlend, 0.88, wobbleAngle);
-        drawCoverProp(cover, x, y, unit, lit);
+        drawLitSprite(src, x, y + bounceY, unit * popScale, warmBlend, 0.90, wobbleAngle);
+        drawCoverProp(cover, x, y, unit, girlH, lit);
       }
 
       // Golden firefly number orb above found target animals
       if (isFound) {
-        const orbY = y + bounceY - unit * 0.56;
-        const orbR = Math.max(12, Math.min(18, unit * 0.18));
+        const orbY = y + bounceY - unit * 0.58;
+        const orbR = Math.max(12, Math.min(18, unit * 0.22));
         ctx2d.save();
         ctx2d.fillStyle = '#f59e0b';
         ctx2d.strokeStyle = '#fef08a';
@@ -981,42 +888,10 @@
     }
 
     function drawBackground(g) {
-      // Seamless deep-teal starry night backdrop (visible above/below diorama on portrait phone)
-      const sky = ctx2d.createLinearGradient(0, 0, 0, H);
-      sky.addColorStop(0, '#04141e');
-      sky.addColorStop(0.45, '#07222e');
-      sky.addColorStop(0.75, '#061519');
-      sky.addColorStop(1, '#040c10');
-      ctx2d.fillStyle = sky;
+      ctx2d.fillStyle = '#04121b';
       ctx2d.fillRect(0, 0, W, H);
-
-      if (g.isPortrait) {
-        skyStars.forEach((st) => {
-          const a = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(timeTick * 0.04 + st.phase));
-          ctx2d.fillStyle = `rgba(225, 245, 255, ${a})`;
-          ctx2d.beginPath();
-          ctx2d.arc(st.x * W, st.y * H, st.r, 0, Math.PI * 2);
-          ctx2d.fill();
-        });
-      }
-
       if (bgImg.complete && bgImg.naturalWidth) {
         ctx2d.drawImage(bgImg, g.ox, g.oy, g.dw, g.dh);
-        if (g.isPortrait) {
-          // Soft top & bottom gradient edge blend into the night sky and forest floor
-          const fadeH = Math.max(24, g.dh * 0.1);
-          const topG = ctx2d.createLinearGradient(0, g.oy, 0, g.oy + fadeH);
-          topG.addColorStop(0, '#061c27');
-          topG.addColorStop(1, 'rgba(6, 28, 39, 0)');
-          ctx2d.fillStyle = topG;
-          ctx2d.fillRect(0, g.oy - 2, W, fadeH + 2);
-
-          const botG = ctx2d.createLinearGradient(0, g.oy + g.dh - fadeH, 0, g.oy + g.dh + 2);
-          botG.addColorStop(0, 'rgba(5, 16, 20, 0)');
-          botG.addColorStop(1, '#051014');
-          ctx2d.fillStyle = botG;
-          ctx2d.fillRect(0, g.oy + g.dh - fadeH, W, fadeH + 4);
-        }
       }
     }
 
@@ -1024,6 +899,9 @@
       timeTick += 1;
       lanternU += (targetU - lanternU) * 0.16;
       lanternV += (targetV - lanternV) * 0.16;
+      const prevCam = camU;
+      camU += (targetCamU - camU) * 0.14;
+      if (Math.abs(camU - prevCam) > 0.0004) syncHitButtons();
 
       ctx2d.save();
       ctx2d.scale(dpr, dpr);
@@ -1032,48 +910,78 @@
       drawBackground(g);
 
       const focus = g.map(lanternU, lanternV);
-      const beamRadius = Math.max(85, Math.min(g.dw * 0.19, g.dh * 0.34));
-      const baseUnit = Math.max(36, g.dw * 0.088 * round.scale);
+      const beamRadius = Math.max(76, Math.min(g.dw * 0.125, g.dh * 0.22));
+      const girlH = Math.max(115, g.dh * 0.34);
+      const unitFor = (sp) => Math.max(28, girlH * (SPECIES_SCALE[sp] || 0.24));
 
       /* Compute whether any unfound target animal is near the lantern beam -> girl points! */
       let nearUnfound = false;
       round.targets.forEach((tg, i) => {
         if (foundStates[i] && foundStates[i].found) return;
         const p = g.map(tg.u, tg.v);
-        if (Math.hypot(p.x - focus.x, p.y - focus.y) < beamRadius * 0.82) nearUnfound = true;
+        if (Math.hypot(p.x - focus.x, p.y - focus.y) < beamRadius * 0.85) nearUnfound = true;
       });
 
-      /* 1. Draw animals inside the oak tree hollow first, then the hollow bark lip on top! */
-      let hasHollowOccupant = false;
+      /* 1. Draw animals inside the real oak tree hollow opening in bg.jpg,
+            clipped strictly to the inner dark hole so they peek out over the
+            tree's real sculpted bark lip with no floating cutout. */
       const hollowTargets = [];
       const hollowNeighbors = [];
       const otherNeighbors = [];
       const otherTargets = [];
 
       round.neighbors.forEach((nb, i) => {
-        if (nb.cover === 'hollow') { hasHollowOccupant = true; hollowNeighbors.push({ item: nb, i }); }
+        if (nb.cover === 'hollow') hollowNeighbors.push({ item: nb, i });
         else otherNeighbors.push({ item: nb, i });
       });
       round.targets.forEach((tg, i) => {
-        if (tg.cover === 'hollow') { hasHollowOccupant = true; hollowTargets.push({ item: tg, i }); }
+        if (tg.cover === 'hollow') hollowTargets.push({ item: tg, i });
         else otherTargets.push({ item: tg, i });
       });
+
+      const hCx = g.ox + 0.499 * g.dw;
+      const hCy = g.oy + 0.394 * g.dh;
+      const hRx = 0.041 * g.dw;
+      const hRy = 0.086 * g.dh;
+
+      const drawInsideHollow = (fn) => {
+        ctx2d.save();
+        ctx2d.beginPath();
+        ctx2d.ellipse(hCx, hCy, hRx, hRy, 0, 0, Math.PI * 2);
+        ctx2d.clip();
+        fn();
+        /* Soft inner-lip shadow at the bottom of the hole so the animal sits deep inside */
+        const lipGrad = ctx2d.createLinearGradient(0, hCy + hRy * 0.42, 0, hCy + hRy);
+        lipGrad.addColorStop(0, 'rgba(6, 4, 2, 0)');
+        lipGrad.addColorStop(1, 'rgba(6, 4, 2, 0.72)');
+        ctx2d.fillStyle = lipGrad;
+        ctx2d.fillRect(hCx - hRx, hCy + hRy * 0.42, hRx * 2, hRy * 0.6);
+        ctx2d.restore();
+      };
 
       hollowNeighbors.forEach(({ item, i }) => {
         const p = g.map(item.u, item.v);
         const lit = Math.max(0, 1 - Math.hypot(p.x - focus.x, p.y - focus.y) / beamRadius);
-        drawAnimalEntry(item, item.kind, p.x, p.y, baseUnit * 0.88, lit, neighborStates[i], false, i + 20);
+        drawInsideHollow(() => {
+          drawAnimalEntry(item, item.kind, p.x, p.y, unitFor(item.kind), girlH, lit, neighborStates[i], false, i + 20);
+        });
       });
       hollowTargets.forEach(({ item, i }) => {
         const p = g.map(item.u, item.v);
         const lit = Math.max(0, 1 - Math.hypot(p.x - focus.x, p.y - focus.y) / beamRadius);
-        drawAnimalEntry(item, round.kind, p.x, p.y, baseUnit * 0.92, lit, foundStates[i], true, i);
+        const isFound = Boolean(foundStates[i] && foundStates[i].found);
+        if (!isFound) {
+          drawInsideHollow(() => {
+            drawAnimalEntry(item, round.kind, p.x, p.y, unitFor(round.kind), girlH, lit, foundStates[i], true, i);
+          });
+        }
       });
-      if (hasHollowOccupant) {
-        const hp = g.map(0.498, 0.462);
-        const hLit = Math.max(0, 1 - Math.hypot(hp.x - focus.x, hp.y - focus.y) / (beamRadius * 1.2));
-        drawLitSprite(`${ART}cover-hollow.png`, hp.x, hp.y, g.dw * 0.145, 0.35 + hLit * 0.65, 0.55);
-      }
+      /* Found hollow targets pop out on top of the hollow rim */
+      hollowTargets.forEach(({ item, i }) => {
+        if (!foundStates[i] || !foundStates[i].found) return;
+        const p = g.map(item.u, item.v);
+        drawAnimalEntry(item, round.kind, p.x, p.y, unitFor(round.kind), girlH, 1, foundStates[i], true, i);
+      });
 
       /* 2. Draw all other neighbors & target animals sorted by depth (v) */
       const depthList = [
@@ -1085,16 +993,15 @@
         const p = g.map(item.u, item.v);
         const lit = Math.max(0, 1 - Math.hypot(p.x - focus.x, p.y - focus.y) / beamRadius);
         if (isTarget) {
-          drawAnimalEntry(item, round.kind, p.x, p.y, baseUnit, lit, foundStates[i], true, i);
+          drawAnimalEntry(item, round.kind, p.x, p.y, unitFor(round.kind), girlH, lit, foundStates[i], true, i);
         } else {
-          drawAnimalEntry(item, item.kind, p.x, p.y, baseUnit * 0.92, lit, neighborStates[i], false, i + 30);
+          drawAnimalEntry(item, item.kind, p.x, p.y, unitFor(item.kind), girlH, lit, neighborStates[i], false, i + 30);
         }
       });
 
       /* 3. Compute Lantern Girl pose + lantern hand position */
       const girlPose = roundWon ? 'cheering' : (nearUnfound ? 'pointing' : 'looking');
       const girlPos = g.map(GIRL_POS.u, GIRL_POS.v);
-      const girlH = Math.max(105, g.dh * 0.34);
       const cheerBounce = roundWon ? -Math.abs(Math.sin(timeTick * 0.14)) * (girlH * 0.08) : Math.sin(timeTick * 0.04) * 1.5;
       const girlImg = loadImg(`${ART}girl-${girlPose}.png`);
       let gw = girlH * 0.6, gh = girlH;
