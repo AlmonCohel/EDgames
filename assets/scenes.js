@@ -397,6 +397,14 @@ const EDScenes = (() => {
       <path d="M22.5 13 21 10.5M28.5 13 30 10.5"/>
       <circle cx="24" cy="17.5" r="1" fill="currentColor" stroke="none"/>
       <circle cx="27.2" cy="17.5" r="1" fill="currentColor" stroke="none"/>`,
+
+    /* An Edison filament bulb wired to a knife switch and battery dial. */
+    'circuit-lab': `
+      <path d="M16 5a7 7 0 0 1 4.5 12.3V21h-9v-3.7A7 7 0 0 1 16 5z"/>
+      <path d="M13 24h6M14 14v-3l2 2 2-2v3"/>
+      <path d="M5 27h7l4-4M20 27h7"/>
+      <circle cx="12" cy="27" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="20" cy="27" r="1.4" fill="currentColor" stroke="none"/>`,
   };
 
   /* Two of the nineteen say something with their direction rather than only

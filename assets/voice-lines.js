@@ -257,6 +257,10 @@
     'pl-master': 'הָכִינוּ אֶת הַמַּתְכּוֹן הַמָּלֵא לְמוֹקוֹ: גַּם מִדַּת הַשִּׁקּוּי וְגַם פְּרוּסוֹת הַפֵּרוֹת',
     'pl-high': 'יֵשׁ יוֹתֵר מִדַּי שִׁקּוּי! פִּתְחוּ אֶת הַבֶּרֶז כְּדֵי לְרוֹקֵן קְצָת',
     'pl-feed': 'הַשִּׁקּוּי מוּכָן! תְּנוּ לְמוֹקוֹ לִשְׁתּוֹת וּתְגַלּוּ לְמָה הוּא הוֹפֵךְ!',
+    'cl-spark': 'חַבְּרוּ אֶת הַכְּבָלִים, סִגְרוּ אֶת הַמַּפְסֵק, וְכַוְּנוּ אֶת הַמֶּתַח כְּדֵי לְהַדְלִיק אֶת הַנּוּרָה',
+    'cl-motor': 'הַפְעִילוּ אֶת מְנוֹעַ הָרוּחַ וְכַוְּנוּ אֶת הַכִּוּוּן וְהָעָצְמָה כְּדֵי לְהָשִׁיט אֶת הַסִּירָה לַמַּצּוֹף',
+    'cl-switches': 'סִגְרוּ אֶת הַמַּפְסְקִים הַנְּכוֹנִים בַּמַּעְגָּל כְּדֵי לְהַזְרִים חַשְׁמַל לַמְּכוֹנָה',
+    'cl-machine': 'הַמְּכוֹנָה הַגְּדוֹלָה: חַבְּרוּ אֶת כָּל הַמַּעְגָּל, הַמַּפְסְקִים וְהַמֶּתַח כְּדֵי לְהַפְעִיל אֶת הַמַּעְבָּדָה כֻּלָּהּ',
   });
   Object.assign(en, {
     'spell-ask': 'Listen to the word and spell it',
@@ -292,6 +296,10 @@
     'pl-master': 'Brew the full recipe for Moko: match both the potion level and the fruit slices',
     'pl-high': 'Too much potion! Open the drain tap to let some out',
     'pl-feed': 'The potion is ready! Feed it to Moko and see what happens!',
+    'cl-spark': 'Connect the cables, close the brass switch, and dial the voltage to light the Edison bulb',
+    'cl-motor': 'Power the brass wind motor and set the direction and voltage to sail the boat to the target buoy',
+    'cl-switches': 'Close the right switches in the circuit to send power to the machine',
+    'cl-machine': 'The Grand Contraption: wire the circuit, switches, and voltage to power the whole workbench',
   });
   he['num-30'] = 'שְׁלוֹשִׁים'; he['num-40'] = 'אַרְבָּעִים';
   [[2, 3, 4, 5], [3, 3, 4, 5], [4, 3, 4, 5], [5, 3, 4], [10, 3, 4]].forEach(([sz, ...ks]) => ks.forEach((k) => {

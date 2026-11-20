@@ -831,6 +831,43 @@ const EDCovers = (() => {
         <ellipse cx="0" cy="10" rx="6" ry="3.5" fill="#fb7185"/>
       </g>
       ${sparkle(116, 42, 9, '#ffd23f')}${sparkle(26, 66, 7, '#6ee7b7')}`,
+
+    /* The Inventor's Circuit Lab: walnut workbench, brass analog voltmeter, glowing Edison tungsten filament bulb, brass knife switch, and braided cables. */
+    'circuit-lab': () => `
+      <rect width="200" height="200" fill="#24170f"/>
+      <rect y="14" width="200" height="42" fill="#2d1d12" opacity=".7"/>
+      <rect y="60" width="200" height="44" fill="#352216" opacity=".65"/>
+      <rect y="108" width="200" height="44" fill="#2b1b11" opacity=".75"/>
+      <rect y="156" width="200" height="44" fill="#22140c"/>
+      <circle cx="144" cy="76" r="64" fill="url(#cv-sun)" opacity=".32"/>
+      <!-- Brass Battery & Voltmeter Unit -->
+      ${shadow(54, 154, 42, 9)}
+      <rect x="16" y="48" width="76" height="104" rx="10" fill="#3a2e25" stroke="#c89d54" stroke-width="3"/>
+      <rect x="22" y="54" width="64" height="44" rx="7" fill="#fdf6e2" stroke="#9b7432" stroke-width="2.5"/>
+      <path d="M32 86 A24 24 0 0 1 76 86" fill="none" stroke="#8c6728" stroke-width="2" stroke-dasharray="3 3"/>
+      <path d="M54 86 L69 66" stroke="#d93829" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="54" cy="86" r="4" fill="#9b7432"/>
+      <!-- Bakelite Rotary Dial -->
+      <circle cx="54" cy="124" r="18" fill="#1e1916" stroke="#d4a959" stroke-width="2.5"/>
+      <circle cx="54" cy="124" r="11" fill="#2c2520" stroke="#8c6728" stroke-width="1.5"/>
+      <line x1="54" y1="124" x2="64" y2="114" stroke="#ffd23f" stroke-width="3" stroke-linecap="round"/>
+      <!-- Braided Cloth Cables -->
+      <path d="M88 68 Q112 96 130 88" fill="none" stroke="#d93829" stroke-width="5.5" stroke-linecap="round"/>
+      <path d="M88 136 Q116 164 144 138" fill="none" stroke="#2b303a" stroke-width="5.5" stroke-linecap="round"/>
+      <!-- Brass Knife Switch -->
+      <rect x="96" y="148" width="46" height="22" rx="5" fill="#e6dec8" stroke="#9b7432" stroke-width="2"/>
+      <circle cx="107" cy="159" r="5" fill="#d4a959"/><circle cx="131" cy="159" r="5" fill="#d4a959"/>
+      <line x1="107" y1="159" x2="133" y2="147" stroke="#e09f3e" stroke-width="4.5" stroke-linecap="round"/>
+      <rect x="129" y="141" width="12" height="8" rx="3" fill="#b52b1e" transform="rotate(-24 133 145)"/>
+      <!-- Glowing Hand-Blown Edison Bulb -->
+      ${shadow(146, 152, 34, 8)}
+      <rect x="130" y="114" width="32" height="22" rx="5" fill="#c89d54" stroke="#7d5c21" stroke-width="2"/>
+      <line x1="132" y1="121" x2="160" y2="121" stroke="#7d5c21" stroke-width="2"/>
+      <line x1="132" y1="128" x2="160" y2="128" stroke="#7d5c21" stroke-width="2"/>
+      <path d="M122 74 C122 50 170 50 170 74 C170 92 158 102 158 114 H134 C134 102 122 92 122 74 Z" fill="rgba(255,220,120,.38)" stroke="#ffe596" stroke-width="2.5"/>
+      <path d="M138 112 V82 C138 70 144 68 146 78 C148 68 154 70 154 82 V112" fill="none" stroke="#fff7c2" stroke-width="3" stroke-linecap="round"/>
+      ${gloss(134, 68, 6, 14, -18)}
+      ${sparkle(146, 40, 8, '#ffe596')}${sparkle(178, 74, 7, '#ffd23f')}`,
   };
 
   const has = (id) => Boolean(ART[id]);

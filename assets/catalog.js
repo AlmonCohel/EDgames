@@ -43,6 +43,19 @@ const AGE_GROUPS = [
 
 const GAMES = [
   {
+    id: 'circuit-lab',
+    title: { he: 'מעבדת החשמל והמכונות', en: "The Inventor's Circuit Lab" },
+    emoji: '⚡',
+    subject: 'logic',
+    ageMin: 4, ageMax: 8,
+    blurb: {
+      he: 'מחברים כבלי בד, סוגרים מפסקי נחושת ומכוונים מתח כדי להדליק נורת להט, להשיט סירת מפרש ברוח ולהרים מטענים באלקטרומגנט!',
+      en: 'Clamp braided cables, throw brass knife switches, and dial the voltage to heat an Edison filament, sail a wooden boat, and hoist cargo with an electromagnet!',
+    },
+    sound: true,
+    status: 'ready',
+  },
+  {
     id: 'potion-lab',
     title: { he: 'מעבדת השיקויים של מוקו', en: "Moko's Magic Potion Lab" },
     emoji: '🧪',

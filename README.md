@@ -352,9 +352,20 @@ catalog 51):
   a leaf; match equal spots on both wings (doubles), count both wings together,
   and add the missing spots to reach a target total.
 
-Flagship 60fps physics & maths games added 2026-11-18 (catalog 53, Cartridges `#01`
-and `#02`, open to everyone):
+Flagship 60fps physics, logic & maths games added 2026-11-18 to 2026-11-20 (catalog 54,
+Cartridges `#01`–`#03`, open to everyone):
 
+- **The Inventor's Circuit Lab** (`circuit-lab`, logic, ages 4–8): a realistic
+  60fps walnut-and-brass engineering workbench built around a continuous
+  toy-first play loop (no wrong-answer buzzers). Children clamp 14-node
+  Verlet-physics braided cloth cables onto knurled brass binding posts, throw
+  glazed-porcelain and copper knife switches (`Series AND`, `Parallel OR`, and
+  `A/B Track Diverter`), flip a mechanical commutator polarity toggle (`+ / −`),
+  and dial a bakelite rotary voltage regulator (`3V`, `6V`, `9V`) while watching
+  a spring-damped analog voltmeter needle, a thermal blackbody tungsten Edison
+  filament bulb (`300K–2900K`), a brushed-brass DC fan motor blowing a wooden
+  sailboat across a 30-node shallow-water wave tank, and a copper-wound
+  electromagnet cargo crane respond in real time.
 - **Moko's Magic Potion Lab** (`potion-lab`, numbers, ages 4–8): a full-scene
   60fps moonlit alchemist's workshop with a 40-node shallow-water wave cauldron,
   crystal potion flasks (`+1`, `+2`, `+3`, `+5`) that tilt and pour real droplet
