@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EDgames — 3 Illustrative World Directions for Next Games</title>
+<title>EDgames — 3 Game Ideas &amp; Interactive Mock-ups (Style 1 + 3)</title>
 <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -89,7 +89,6 @@
     display: flex; flex-direction: column; gap: 22px;
   }
 
-  /* Authentic ED-DECK Console Chassis around each Illustrative World Canvas */
   .direction-section {
     display: flex; flex-direction: column; gap: 8px;
   }
@@ -116,9 +115,14 @@
     color: #f8fafc; padding: 4px 11px; border-radius: 99px;
     font-weight: 600; font-size: 12px;
   }
-  .ed-deck-pill--gold {
-    background: rgba(230, 190, 106, 0.16);
-    border-color: rgba(230, 190, 106, 0.5);
+  .ed-deck-pill--age34 {
+    background: rgba(34, 197, 94, 0.18);
+    border-color: rgba(74, 222, 128, 0.55);
+    color: #86efac;
+  }
+  .ed-deck-pill--age68 {
+    background: rgba(230, 190, 106, 0.18);
+    border-color: rgba(230, 190, 106, 0.55);
     color: #fde68a;
   }
   .ed-deck-pill--subj {
@@ -163,7 +167,7 @@
   }
   .diegetic-prompt {
     pointer-events: auto;
-    background: rgba(7, 16, 26, 0.82);
+    background: rgba(7, 16, 26, 0.84);
     backdrop-filter: blur(10px);
     border: 1.5px solid rgba(230, 190, 106, 0.55);
     color: #fef3c7;
@@ -175,17 +179,24 @@
     display: flex; align-items: center; gap: 8px;
   }
 
-  /* Floating Glass Game-Loop Spec Card inside the corner of the stage */
+  /* Floating Glass Game-Loop Spec Card inside the stage */
   .loop-card {
     pointer-events: auto;
-    background: rgba(8, 16, 26, 0.84);
+    background: rgba(8, 16, 26, 0.86);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(230, 190, 106, 0.38);
+    border: 1px solid rgba(230, 190, 106, 0.42);
     border-radius: 16px;
-    padding: 10px 14px;
-    max-width: 330px;
+    padding: 9px 14px;
+    max-width: 340px;
     box-shadow: 0 10px 28px rgba(0,0,0,0.55);
     color: #e2e8f0;
+  }
+  #sec-dir2 .hud-top-row, #sec-dir3 .hud-top-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  #sec-dir2 .loop-card, #sec-dir3 .loop-card {
+    max-width: 440px;
   }
   .loop-card h3 {
     margin: 0 0 3px;
@@ -193,10 +204,10 @@
     font-size: 0.98rem; color: #fff;
   }
   .loop-card .ref-tag {
-    font-size: 11px; color: var(--gold); font-weight: 700; display: block; margin-bottom: 5px;
+    font-size: 11px; color: var(--gold); font-weight: 700; display: block; margin-bottom: 4px;
   }
   .loop-card p {
-    margin: 0; font-size: 0.8rem; color: #cbd5e1; line-height: 1.4;
+    margin: 0; font-size: 0.8rem; color: #cbd5e1; line-height: 1.42;
   }
 
   .diegetic-controls {
@@ -205,7 +216,7 @@
     margin: 0 auto;
   }
   .world-action-btn {
-    background: rgba(10, 20, 32, 0.86);
+    background: rgba(10, 20, 32, 0.88);
     backdrop-filter: blur(8px);
     border: 1.5px solid rgba(230, 190, 106, 0.55);
     color: #f8fafc;
@@ -248,7 +259,7 @@
     .loop-card h3 { font-size: 0.8rem; }
     .loop-card p { font-size: 0.7rem; line-height: 1.28; }
     .diegetic-controls { gap: 4px; flex-wrap: nowrap; width: 100%; }
-    .world-action-btn { font-size: 10.5px; padding: 5px 7px; flex: 1; white-space: nowrap; }
+    .world-action-btn { font-size: 10px; padding: 5px 5px; flex: 1; white-space: normal; line-height: 1.15; text-align: center; }
   }
 </style>
 </head>
@@ -256,105 +267,121 @@
 
 <header class="review-bar">
   <div class="review-brand">
-    <span class="review-kicker">ED-DECK · ILLUSTRATIVE WORLDS</span>
-    <h1 class="review-title" data-i18n="pageTitle">3 כיוונים איוריים למשחקים הבאים</h1>
+    <span class="review-kicker">ED-DECK · NEXT 3 GAMES (STYLE 1 + 3)</span>
+    <h1 class="review-title" data-i18n="pageTitle">3 הצעות למשחקים הבאים (2 לגיל 3–4 · 1 לגיל 6–8)</h1>
   </div>
   <div class="review-tabs">
-    <button type="button" class="tab-btn active" data-view="all" data-i18n="tabAll">כל 3 הכיוונים</button>
-    <button type="button" class="tab-btn" data-view="dir1" data-i18n="tab1">1 · דיורמת הלפיד (Arise)</button>
-    <button type="button" class="tab-btn" data-view="dir2" data-i18n="tab2">2 · מונומנט איזומטרי (Monument Valley)</button>
-    <button type="button" class="tab-btn" data-view="dir3" data-i18n="tab3">3 · עמק הטבע והאסטרולב (Living Valley)</button>
+    <button type="button" class="tab-btn active" data-view="all" data-i18n="tabAll">כל 3 המשחקים</button>
+    <button type="button" class="tab-btn" data-view="dir1" data-i18n="tab1">1 · פנס היער הלוחץ (גיל 3–4)</button>
+    <button type="button" class="tab-btn" data-view="dir2" data-i18n="tab2">2 · גשר הנחל של הדובון (גיל 3–4)</button>
+    <button type="button" class="tab-btn" data-view="dir3" data-i18n="tab3">3 · עמק מראות השמש (גיל 6–8)</button>
     <button type="button" class="lang-btn" id="lang-switch">English</button>
   </div>
 </header>
 
 <main class="showcase-wrap">
 
-  <!-- ==================== DIRECTION 1: TORCHLIGHT DIORAMA (ARISE STYLE) ==================== -->
+  <!-- ==================== GAME IDEA 1 (AGES 3-4): THE LANTERN IN THE WHISPERING WOODS ==================== -->
   <section class="direction-section" id="sec-dir1">
     <div class="ed-deck-shell">
       <div class="ed-deck-top">
         <div class="ed-deck-meta">
-          <span class="ed-deck-pill"><span class="ed-led"></span> CARTRIDGE #55</span>
-          <span class="ed-deck-pill ed-deck-pill--gold" data-i18n="d1Badge">כיוון 1 · Torchlight Clay Diorama</span>
-          <span class="ed-deck-pill ed-deck-pill--subj" data-i18n="d1Subj">חשבון ושברים · גיל 5–8</span>
+          <span class="ed-deck-pill"><span class="ed-led"></span> IDEA #1</span>
+          <span class="ed-deck-pill ed-deck-pill--age34" data-i18n="d1Badge">גיל 3–4 · Style 1 (Arise Woodland Diorama)</span>
+          <span class="ed-deck-pill ed-deck-pill--subj" data-i18n="d1Subj">שליטה בעכבר/מגע, חיות וטבע, ספירה 1–5</span>
         </div>
-        <span class="ed-deck-pill" data-i18n="d1TouchHint">🔥 לחצו או גררו על אבני הרונות במזבח</span>
+        <span class="ed-deck-pill" data-i18n="d1TouchHint">🏮 הזיזו את הפנס כדי לגלות ולספור את גורי החיות</span>
       </div>
       <div class="world-stage" id="stage-dir1">
         <canvas class="world-canvas" id="canvas-dir1"></canvas>
         <div class="world-hud">
           <div class="hud-top-row">
             <div class="diegetic-prompt">
-              <span>🔥</span>
-              <span data-i18n="d1Prompt">האירו בלפיד השומר בדיוק 3 מתוך 4 אבני רונות על המזבח (3/4)</span>
+              <span>🔊</span>
+              <span id="d1-prompt" data-i18n="d1Prompt">״איפה מסתתרים 3 גוזלי ינשוף? האירו עליהם בפנס וגעו בכל אחד כדי לספור!״</span>
             </div>
             <div class="loop-card">
-              <span class="ref-tag">Ref 1 · Arise: A Simple Story (Piccolo Studio)</span>
-              <h3 data-i18n="d1Title">שומרי האור ביער העתיק</h3>
-              <p data-i18n="d1Loop">לולאת המשחק: הילד מוליך את אלומת הלפיד החיה על פני המזבח המפוסל כדי להדליק יחסי שברים (1/4 עד 4/4) ולהעיר את הענק הישן ונחיל הגחליליות.</p>
+              <span class="ref-tag" data-i18n="d1Ref">משחק 1 לגיל 3–4 · Style 1 (3D Clay &amp; Wood Diorama)</span>
+              <h3 data-i18n="d1Title">פנס היער הלוחץ — The Lantern in the Whispering Woods</h3>
+              <p data-i18n="d1Loop">לולאת המשחק (ללא קריאה!): שומעים קול של חיה ומחפשים עם אלומת הפנס החמה בין העצים → כשמוצאים את המחבוא החיות מציצות באור הזהוב → לוחצים עליהן אחת-אחת והמשחק סופר בקול (1.. 2.. 3!) עם גחליליות זוהרות.</p>
             </div>
           </div>
           <div class="diegetic-controls">
-            <button type="button" class="world-action-btn" data-d1-runes="1">1/4 · רונה אחת</button>
-            <button type="button" class="world-action-btn" data-d1-runes="2">2/4 · חצי מזבח</button>
-            <button type="button" class="world-action-btn active" data-d1-runes="3">3/4 · שלוש רונות ★</button>
-            <button type="button" class="world-action-btn" data-d1-runes="4">4/4 · מזבח שלם</button>
+            <button type="button" class="world-action-btn active" data-d1-spot="owls" data-i18n="d1Btn1">🦉 3 גוזלי ינשוף בעץ</button>
+            <button type="button" class="world-action-btn" data-d1-spot="hedgehogs" data-i18n="d1Btn2">🦔 2 קיפודים מתחת לבול העץ</button>
+            <button type="button" class="world-action-btn" data-d1-spot="fawn" data-i18n="d1Btn3">🦌 עופר אחד ליד הנחל</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ==================== DIRECTION 2: ISOMETRIC MONUMENT (MONUMENT VALLEY STYLE) ==================== -->
+  <!-- ==================== GAME IDEA 2 (AGES 3-4): THE WOODLAND STREAM CROSSING ==================== -->
   <section class="direction-section" id="sec-dir2">
     <div class="ed-deck-shell">
       <div class="ed-deck-top">
         <div class="ed-deck-meta">
-          <span class="ed-deck-pill"><span class="ed-led"></span> CARTRIDGE #56</span>
-          <span class="ed-deck-pill ed-deck-pill--gold" data-i18n="d2Badge">כיוון 2 · Axonometric 3D Architecture</span>
-          <span class="ed-deck-pill ed-deck-pill--subj" data-i18n="d2Subj">לוגיקה, גיאומטריה וזוויות · גיל 5–8</span>
+          <span class="ed-deck-pill"><span class="ed-led"></span> IDEA #2</span>
+          <span class="ed-deck-pill ed-deck-pill--age34" data-i18n="d2Badge">גיל 3–4 · Style 1 + 3 (Sculpted Riverbank Diorama)</span>
+          <span class="ed-deck-pill ed-deck-pill--subj" data-i18n="d2Subj">גדלים (קטן/בינוני/גדול), סדר 1–4 וגרירה</span>
         </div>
-        <span class="ed-deck-pill" data-i18n="d2TouchHint">☸️ סובבו את גלגל האבן הכתום במרכז המבנה</span>
+        <span class="ed-deck-pill" data-i18n="d2TouchHint">🐻 גררו או לחצו על אבן בגודל המתאים למערבולת במים</span>
       </div>
       <div class="world-stage" id="stage-dir2">
         <canvas class="world-canvas" id="canvas-dir2"></canvas>
         <div class="world-hud">
           <div class="hud-top-row">
             <div class="diegetic-prompt">
-              <span>🏛️</span>
-              <span data-i18n="d2Prompt">סובבו את גלגל האבן הכתום ב-180° (חצי סיבוב) כדי לחבר את גשר האלמוג של נור</span>
+              <span>🔊</span>
+              <span id="d2-prompt" data-i18n="d2Prompt">״עזרו לדובון לחצות למאורה החמה! איזו אבן מהחוף מתאימה למערבולת השלישית (3 נקודות)?״</span>
             </div>
             <div class="loop-card">
-              <span class="ref-tag">Ref 2 · Monument Valley 2 (ustwo games)</span>
-              <h3 data-i18n="d2Title">מגדלי המים והמבוך</h3>
-              <p data-i18n="d2Loop">לולאת המשחק: המבנה עצמו הוא המנגנון — סיבוב גלגל האבן המרכזי ב-90° ו-180° מחבר גשרים בלתי-אפשריים בתלת-ממד ומזרים מים באמה העתיקה.</p>
+              <span class="ref-tag" data-i18n="d2Ref">משחק 2 לגיל 3–4 · Style 1 + 3 (Tactile Water &amp; Clay Diorama)</span>
+              <h3 data-i18n="d2Title">גשר הנחל הקטן — The Woodland Stream Crossing</h3>
+              <p data-i18n="d2Loop">לולאת המשחק: הדובון רוצה לחצות למאורה המוארת → גוררים סלעים טבעיים בגדלים שונים (קטן •1, בינוני ••2, גדול •••3) לתוך המערבולות בנחל → אבן קטנה מדי צפה ומתנדנדת, והאבן המתאימה נוחתת ב״ספלאש״ והדובון קופץ עליה עד הבית!</p>
             </div>
           </div>
           <div class="diegetic-controls">
-            <button type="button" class="world-action-btn" data-d2-rot="0">0° · פתוח</button>
-            <button type="button" class="world-action-btn" data-d2-rot="90">90° · רבע סיבוב</button>
-            <button type="button" class="world-action-btn active" data-d2-rot="180">180° · גשר מחובר ★</button>
-            <button type="button" class="world-action-btn" data-d2-rot="270">270° · שלושת-רבעי</button>
+            <button type="button" class="world-action-btn" data-d2-stone="1" data-i18n="d2Btn1">• אבן קטנה (1)</button>
+            <button type="button" class="world-action-btn" data-d2-stone="2" data-i18n="d2Btn2">•• אבן בינונית (2)</button>
+            <button type="button" class="world-action-btn active" data-d2-stone="3" data-i18n="d2Btn3">••• אבן גדולה (3) ★</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ==================== DIRECTION 3: LIVING VALLEY PANORAMA & ASTROLABE ==================== -->
+  <!-- ==================== GAME IDEA 3 (AGES 6-8): THE SUN-MIRROR VALLEY ==================== -->
   <section class="direction-section" id="sec-dir3">
     <div class="ed-deck-shell">
       <div class="ed-deck-top">
         <div class="ed-deck-meta">
-          <span class="ed-deck-pill"><span class="ed-led"></span> CARTRIDGE #57</span>
-          <span class="ed-deck-pill ed-deck-pill--gold" data-i18n="d3Badge">כיוון 3 · Painterly Valley &amp; Gold Astrolabe</span>
-          <span class="ed-deck-pill ed-deck-pill--subj" data-i18n="d3Subj">טבע, מדע ומערכות אקולוגיות · גיל 4–8</span>
+          <span class="ed-deck-pill"><span class="ed-led"></span> IDEA #3</span>
+          <span class="ed-deck-pill ed-deck-pill--age68" data-i18n="d3Badge">גיל 6–8 · Style 1 + 3 Fusion (Valley Panorama &amp; Sculpted Monoliths)</span>
+          <span class="ed-deck-pill ed-deck-pill--subj" data-i18n="d3Subj">לוגיקה, אופטיקה וזוויות, חילוק וחיבור אלומות אור</span>
         </div>
-        <span class="ed-deck-pill" data-i18n="d3TouchHint">🌋 לחצו על מדליוני היסודות המוזהבים או על האסטרולב</span>
+        <span class="ed-deck-pill" data-i18n="d3TouchHint">☀️ סובבו את מראת האבן ואת גביש הפיצול כדי להאיר את העמק</span>
       </div>
       <div class="world-stage" id="stage-dir3">
         <canvas class="world-canvas" id="canvas-dir3"></canvas>
+        <div class="world-hud">
+          <div class="hud-top-row">
+            <div class="diegetic-prompt">
+              <span>☀️</span>
+              <span id="d3-prompt" data-i18n="d3Prompt">מגדל השמש מפיק אלומה בעוצמה 8 — פצלו אותה בגביש הטורקיז (8÷2) כדי להפעיל את החממה (4) ואת טחנת המים (4)!</span>
+            </div>
+            <div class="loop-card">
+              <span class="ref-tag" data-i18n="d3Ref">משחק 3 לגיל 6–8 · Style 1 + 3 (Panoramic Optics &amp; Math Puzzle)</span>
+              <h3 data-i18n="d3Title">עמק מראות השמש — The Sun-Mirror Valley</h3>
+              <p data-i18n="d3Loop">לולאת המשחק: מסובבים מונוליטים עם מראות עתיקות כדי לכוון קרן שמש חיה ברחבי העמק, ומעבירים אותה דרך גבישי קריסטל המפצלים או מחברים את עוצמת האור (למשל 8 מתפצל ל-4 ו-4) כדי להפעיל במקביל את טחנת המים ואת החממה ולהפריח את העמק!</p>
+            </div>
+          </div>
+          <div class="diegetic-controls">
+            <button type="button" class="world-action-btn" data-d3-mode="single" data-i18n="d3Btn1">קרן אחת (8 → טחנת מים בלבד)</button>
+            <button type="button" class="world-action-btn active" data-d3-mode="split" data-i18n="d3Btn2">💎 פיצול שווה בגביש (8 ÷ 2 = 4 + 4) ★</button>
+            <button type="button" class="world-action-btn" data-d3-mode="unequal" data-i18n="d3Btn3">פיצול 5 + 3 (חממה 5, טחנה 3)</button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -365,48 +392,78 @@
 (function () {
   const I18N = {
     he: {
-      pageTitle: '3 כיוונים איוריים למשחקים הבאים',
-      tabAll: 'כל 3 הכיוונים',
-      tab1: '1 · דיורמת הלפיד (Arise)',
-      tab2: '2 · מונומנט איזומטרי (Monument Valley)',
-      tab3: '3 · עמק הטבע והאסטרולב (Living Valley)',
-      d1Badge: 'כיוון 1 · Torchlight Clay Diorama',
-      d1Subj: 'חשבון ושברים · גיל 5–8',
-      d1TouchHint: '🔥 לחצו או גררו על אבני הרונות במזבח',
-      d1Prompt: 'האירו בלפיד השומר בדיוק 3 מתוך 4 אבני רונות על המזבח (3/4)',
-      d1Title: 'שומרי האור ביער העתיק',
-      d1Loop: 'לולאת המשחק: הילד מוליך את אלומת הלפיד החיה על פני המזבח המפוסל כדי להדליק יחסי שברים (1/4 עד 4/4) ולהעיר את הענק הישן ונחיל הגחליליות.',
-      d2Badge: 'כיוון 2 · Axonometric 3D Architecture',
-      d2Subj: 'לוגיקה, גיאומטריה וזוויות · גיל 5–8',
-      d2TouchHint: '☸️ סובבו את גלגל האבן הכתום במרכז המבנה',
-      d2Prompt: 'סובבו את גלגל האבן הכתום ב-180° (חצי סיבוב) כדי לחבר את גשר האלמוג של נור',
-      d2Title: 'מגדלי המים והמבוך',
-      d2Loop: 'לולאת המשחק: המבנה עצמו הוא המנגנון — סיבוב גלגל האבן המרכזי ב-90° ו-180° מחבר גשרים בלתי-אפשריים בתלת-ממד ומזרים מים באמה העתיקה.',
-      d3Badge: 'כיוון 3 · Painterly Valley & Gold Astrolabe',
-      d3Subj: 'טבע, מדע ומערכות אקולוגיות · גיל 4–8',
-      d3TouchHint: '🌋 לחצו על מדליוני היסודות המוזהבים או על האסטרולב',
+      pageTitle: '3 הצעות למשחקים הבאים (2 לגיל 3–4 · 1 לגיל 6–8)',
+      tabAll: 'כל 3 המשחקים',
+      tab1: '1 · פנס היער הלוחץ (גיל 3–4)',
+      tab2: '2 · גשר הנחל של הדובון (גיל 3–4)',
+      tab3: '3 · עמק מראות השמש (גיל 6–8)',
+      d1Badge: 'גיל 3–4 · Style 1 (Arise Woodland Diorama)',
+      d1Subj: 'שליטה בעכבר/מגע, חיות וטבע, ספירה 1–5',
+      d1TouchHint: '🏮 הזיזו את הפנס כדי לגלות ולספור את גורי החיות',
+      d1Prompt: '״איפה מסתתרים 3 גוזלי ינשוף? האירו עליהם בפנס וגעו בכל אחד כדי לספור!״',
+      d1Ref: 'משחק 1 לגיל 3–4 · Style 1 (3D Clay & Wood Diorama)',
+      d1Title: 'פנס היער הלוחץ — The Lantern in the Whispering Woods',
+      d1Loop: 'לולאת המשחק (ללא קריאה!): שומעים קול של חיה ומחפשים עם אלומת הפנס החמה בין העצים → כשמוצאים את המחבוא החיות מציצות באור הזהוב → לוחצים עליהן אחת-אחת והמשחק סופר בקול (1.. 2.. 3!) עם גחליליות זוהרות.',
+      d1Btn1: '🦉 3 גוזלי ינשוף בעץ',
+      d1Btn2: '🦔 2 קיפודים מתחת לבול העץ',
+      d1Btn3: '🦌 עופר אחד ליד הנחל',
+      d2Badge: 'גיל 3–4 · Style 1 + 3 (Sculpted Riverbank Diorama)',
+      d2Subj: 'גדלים (קטן/בינוני/גדול), סדר 1–4 וגרירה',
+      d2TouchHint: '🐻 גררו או לחצו על אבן בגודל המתאים למערבולת במים',
+      d2Prompt: '״עזרו לדובון לחצות למאורה החמה! איזו אבן מהחוף מתאימה למערבולת השלישית (3 נקודות)?״',
+      d2Ref: 'משחק 2 לגיל 3–4 · Style 1 + 3 (Tactile Water & Clay Diorama)',
+      d2Title: 'גשר הנחל הקטן — The Woodland Stream Crossing',
+      d2Loop: 'לולאת המשחק: הדובון רוצה לחצות למאורה המוארת → גוררים סלעים טבעיים בגדלים שונים (קטן •1, בינוני ••2, גדול •••3) לתוך המערבולות בנחל → אבן קטנה מדי צפה ומתנדנדת, והאבן המתאימה נוחתת ב״ספלאש״ והדובון קופץ עליה עד הבית!',
+      d2Btn1: '• אבן קטנה (1)',
+      d2Btn2: '•• אבן בינונית (2)',
+      d2Btn3: '••• אבן גדולה (3) ★',
+      d3Badge: 'גיל 6–8 · Style 1 + 3 Fusion (Valley Panorama & Sculpted Monoliths)',
+      d3Subj: 'לוגיקה, אופטיקה וזוויות, חילוק וחיבור אלומות אור',
+      d3TouchHint: '☀️ סובבו את מראת האבן ואת גביש הפיצול כדי להאיר את העמק',
+      d3Prompt: 'מגדל השמש מפיק אלומה בעוצמה 8 — פצלו אותה בגביש הטורקיז (8÷2) כדי להפעיל את החממה (4) ואת טחנת המים (4)!',
+      d3Ref: 'משחק 3 לגיל 6–8 · Style 1 + 3 (Panoramic Optics & Math Puzzle)',
+      d3Title: 'עמק מראות השמש — The Sun-Mirror Valley',
+      d3Loop: 'לולאת המשחק: מסובבים מונוליטים עם מראות עתיקות כדי לכוון קרן שמש חיה ברחבי העמק, ומעבירים אותה דרך גבישי קריסטל המפצלים או מחברים את עוצמת האור (למשל 8 מתפצל ל-4 ו-4) כדי להפעיל במקביל את טחנת המים ואת החממה ולהפריח את העמק!',
+      d3Btn1: 'קרן אחת (8 → טחנת מים בלבד)',
+      d3Btn2: '💎 פיצול שווה בגביש (8 ÷ 2 = 4 + 4) ★',
+      d3Btn3: 'פיצול 5 + 3 (חממה 5, טחנה 3)',
     },
     en: {
-      pageTitle: '3 Illustrative World Directions for Next Games',
-      tabAll: 'All 3 Directions',
-      tab1: '1 · Torchlight Diorama (Arise)',
-      tab2: '2 · Isometric Monument (Monument Valley)',
-      tab3: '3 · Living Valley & Astrolabe',
-      d1Badge: 'Direction 1 · Torchlight Clay Diorama',
-      d1Subj: 'Maths & Fractions · Ages 5–8',
-      d1TouchHint: '🔥 Tap or drag across the carved altar rune stones',
-      d1Prompt: 'Guide the Guardian’s torchlight to kindle 3 of the 4 carved altar runes (3/4)',
-      d1Title: 'Guardians of the Ember Glade',
-      d1Loop: 'Play Loop: Sweep the live volumetric torch beam across the sculpted stone altar to kindle fraction runes (1/4 to 4/4) and wake the sleeping giant.',
-      d2Badge: 'Direction 2 · Axonometric 3D Architecture',
-      d2Subj: 'Logic, Spatial Geometry & Angles · Ages 5–8',
-      d2TouchHint: '☸️ Rotate the central orange 4-spoke stone wheel',
-      d2Prompt: 'Turn the central orange stone wheel to 180° to bridge the coral aqueduct for Noor',
-      d2Title: 'The Floating Aqueduct Monument',
-      d2Loop: 'Play Loop: The architecture is the mechanism — turning the 4-spoke stone wheel by 90° and 180° locks impossible 3D bridges and channels crystal water.',
-      d3Badge: 'Direction 3 · Painterly Valley & Gold Astrolabe',
-      d3Subj: 'Nature, Science & Ecosystems · Ages 4–8',
-      d3TouchHint: '🌋 Click the engraved gold elemental gears or the celestial astrolabe',
+      pageTitle: '3 Next Game Proposals (2 for Ages 3–4 · 1 for Ages 6–8)',
+      tabAll: 'All 3 Games',
+      tab1: '1 · Whispering Woods Lantern (Ages 3–4)',
+      tab2: '2 · Woodland Stream Crossing (Ages 3–4)',
+      tab3: '3 · The Sun-Mirror Valley (Ages 6–8)',
+      d1Badge: 'Ages 3–4 · Style 1 (Arise Woodland Diorama)',
+      d1Subj: 'Mouse/Touch Tracking, Animal Habitats & Counting 1–5',
+      d1TouchHint: '🏮 Sweep the lantern to discover and count the baby animals',
+      d1Prompt: '“Where are the 3 baby owls hiding? Shine your warm lantern on them and tap each one to count!”',
+      d1Ref: 'Game 1 (Ages 3–4) · Style 1 (3D Clay & Wood Diorama)',
+      d1Title: 'The Lantern in the Whispering Woods — פנס היער הלוחץ',
+      d1Loop: 'Play Loop (Zero reading required!): Listen to an animal call & sweep the warm volumetric lantern beam across the 3D forest → baby animals peek out in golden rim-light → tap each one aloud (“1... 2... 3!”) as fireflies light up.',
+      d1Btn1: '🦉 3 Baby Owls in Hollow Oak',
+      d1Btn2: '🦔 2 Hedgehogs under Mossy Log',
+      d1Btn3: '🦌 1 Fawn by the Brook',
+      d2Badge: 'Ages 3–4 · Style 1 + 3 (Sculpted Riverbank Diorama)',
+      d2Subj: 'Size Comparison (Small/Medium/Large), Order 1–4 & Dragging',
+      d2TouchHint: '🐻 Drag or tap the right-sized stepping stone into the swirling water gap',
+      d2Prompt: '“Help Little Bear cross to his warm burrow! Which stone on the shore fits the 3rd whirlpool (3 dots)?”',
+      d2Ref: 'Game 2 (Ages 3–4) · Style 1 + 3 (Tactile Water & Clay Diorama)',
+      d2Title: 'The Woodland Stream Crossing — גשר הנחל הקטן',
+      d2Loop: 'Play Loop: Little Bear wants to cross to his candle-lit burrow → drag sculpted stones (Small •1, Medium ••2, Large •••3) into the stream gaps → a stone that is too small bobs gently, while the matching stone lands with a splash and Bear hops across!',
+      d2Btn1: '• Small Stone (1)',
+      d2Btn2: '•• Medium Stone (2)',
+      d2Btn3: '••• Large Stone (3) ★',
+      d3Badge: 'Ages 6–8 · Style 1 + 3 Fusion (Valley Panorama & Sculpted Monoliths)',
+      d3Subj: 'Spatial Logic, Reflection Angles & Beam-Splitting Math (÷ / +)',
+      d3TouchHint: '☀️ Rotate the stone mirror and crystal prism to power the valley landmarks',
+      d3Prompt: 'The Sun Tower beams power 8 — split it through the Turquoise Prism (8÷2) to power both the Greenhouse (4) and Watermill (4)!',
+      d3Ref: 'Game 3 (Ages 6–8) · Style 1 + 3 (Panoramic Optics & Math Puzzle)',
+      d3Title: 'The Sun-Mirror Valley — עמק מראות השמש',
+      d3Loop: 'Play Loop: Rotate sculpted stone mirrors to steer a live sunbeam across the 3D valley and pass it through crystal prisms that split or combine light power (e.g. 8 splits into 4 + 4) to simultaneously awaken the watermill, greenhouse, and glowing wildflower meadow!',
+      d3Btn1: 'Single Beam (8 → Watermill only)',
+      d3Btn2: '💎 Equal Prism Split (8 ÷ 2 = 4 + 4) ★',
+      d3Btn3: 'Unequal Split 5 + 3 (Greenhouse 5, Mill 3)',
     }
   };
 
@@ -460,9 +517,8 @@
     }
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
-    /* On narrow portrait phone screens, limit horizontal cropping so both characters and landmarks stay on screen */
     const isPortrait = W < H * 0.78;
-    const scale = isPortrait ? (W * 1.16) / iw : Math.max(W / iw, H / ih);
+    const scale = isPortrait ? (W * 1.14) / iw : Math.max(W / iw, H / ih);
     const dw = iw * scale;
     const dh = ih * scale;
     const ox = (W - dw) * focusU;
@@ -470,336 +526,65 @@
     ctx.drawImage(img, ox, oy, dw, dh);
 
     if (isPortrait) {
-      /* Seamless top atmospheric blend for portrait screens */
-      const topFade = ctx.createLinearGradient(0, oy - 4, 0, oy + 56);
+      const topFade = ctx.createLinearGradient(0, oy - 4, 0, oy + 48);
       topFade.addColorStop(0, bgTop);
       topFade.addColorStop(1, 'rgba(5, 19, 30, 0)');
       ctx.fillStyle = topFade;
-      ctx.fillRect(0, 0, W, oy + 58);
+      ctx.fillRect(0, 0, W, oy + 50);
 
-      const botFade = ctx.createLinearGradient(0, oy + dh - 56, 0, oy + dh + 4);
+      const botFade = ctx.createLinearGradient(0, oy + dh - 48, 0, oy + dh + 4);
       botFade.addColorStop(0, 'rgba(7, 23, 34, 0)');
       botFade.addColorStop(1, bgBot);
       ctx.fillStyle = botFade;
-      ctx.fillRect(0, oy + dh - 56, W, H - (oy + dh - 56));
+      ctx.fillRect(0, oy + dh - 48, W, H - (oy + dh - 48));
     }
 
     return (u, v) => ({ x: ox + u * dw, y: oy + v * dh, s: scale });
   }
 
   /* ============================================================================
-     DIRECTION 1: TORCHLIGHT CLAY DIORAMA (art-dir1.jpg + Live Volumetric Torch & Runes)
+     GAME IDEA 1 (AGES 3-4): THE LANTERN IN THE WHISPERING WOODS (art-idea1.jpg)
      ============================================================================ */
-  (function initDir1() {
+  (function initIdea1() {
     const stage = document.getElementById('stage-dir1');
     const canvas = document.getElementById('canvas-dir1');
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    img.src = 'art-dir1.jpg';
+    img.src = 'art-idea1.jpg';
 
     let W = 900, H = 540, dpr = 1, t = 0;
-    let activeRunes = 3;
+    let currentSpot = 'owls';
 
-    /* Normalized positions of the 4 carved rune niches on the stone altar in art-dir1.jpg */
-    const RUNE_NICHES = [
-      { u: 0.324, v: 0.656, glyph: 'ᚠ', label: '1/4' },
-      { u: 0.391, v: 0.655, glyph: 'ᛟ', label: '2/4' },
-      { u: 0.449, v: 0.654, glyph: 'ᛗ', label: '3/4' },
-      { u: 0.504, v: 0.653, glyph: 'ᛟ', label: '4/4' },
-    ];
-    const TORCH_POS = { u: 0.616, v: 0.295 };
+    const SPOTS = {
+      owls: {
+        u: 0.495, v: 0.425,
+        animals: [
+          { u: 0.473, v: 0.435, num: 1 },
+          { u: 0.496, v: 0.375, num: 2 },
+          { u: 0.521, v: 0.435, num: 3 },
+        ],
+      },
+      hedgehogs: {
+        u: 0.285, v: 0.62,
+        animals: [
+          { u: 0.264, v: 0.635, num: 1 },
+          { u: 0.305, v: 0.625, num: 2 },
+        ],
+      },
+      fawn: {
+        u: 0.618, v: 0.635,
+        animals: [
+          { u: 0.618, v: 0.635, num: 1 },
+        ],
+      },
+    };
+    const LANTERN_ORIGIN = { u: 0.755, v: 0.505 };
+    let beamU = SPOTS.owls.u;
+    let beamV = SPOTS.owls.v;
 
-    const embers = Array.from({ length: 38 }, () => ({
-      dx: (Math.random() - 0.5) * 32,
-      sp: 0.5 + Math.random() * 1.1,
-      r: 1.4 + Math.random() * 2.6,
-      phase: Math.random() * Math.PI * 2,
-    }));
-
-    function resize() {
-      const r = stage.getBoundingClientRect();
-      if (!r.width) return;
-      W = r.width; H = r.height;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(W * dpr);
-      canvas.height = Math.round(H * dpr);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const runeBtns = document.querySelectorAll('[data-d1-runes]');
-    function setRunes(n) {
-      activeRunes = n;
-      runeBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.d1Runes) === n));
-    }
-    runeBtns.forEach((b) => b.addEventListener('click', () => setRunes(Number(b.dataset.d1Runes))));
-
-    canvas.addEventListener('pointerdown', (e) => {
-      const r = canvas.getBoundingClientRect();
-      const u = (e.clientX - r.left) / r.width;
-      const next = u < 0.35 ? 1 : u < 0.42 ? 2 : u < 0.48 ? 3 : (activeRunes % 4) + 1;
-      setRunes(next);
-    });
-
-    function draw() {
-      t += 0.025;
-      ctx.save();
-      ctx.scale(dpr, dpr);
-
-      const map = drawArtCover(ctx, img, W, H, 0.48, 0.5);
-      const torch = map(TORCH_POS.u, TORCH_POS.v);
-
-      /* 1. Live Flickering Volumetric Torch Bloom & Light Cone onto the Altar */
-      ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-      const flicker = 1 + Math.sin(t * 6.5) * 0.06;
-      const tg = ctx.createRadialGradient(torch.x, torch.y, 4, torch.x, torch.y, 175 * flicker);
-      tg.addColorStop(0, 'rgba(255, 240, 170, 0.65)');
-      tg.addColorStop(0.35, 'rgba(255, 145, 35, 0.28)');
-      tg.addColorStop(1, 'rgba(255, 90, 0, 0)');
-      ctx.fillStyle = tg;
-      ctx.beginPath();
-      ctx.arc(torch.x, torch.y, 175 * flicker, 0, Math.PI * 2);
-      ctx.fill();
-
-      /* Volumetric Light Beam sweeping from Torch to the Active Rune Niches */
-      const targetNiche = map(RUNE_NICHES[activeRunes - 1].u, RUNE_NICHES[activeRunes - 1].v);
-      const firstNiche = map(RUNE_NICHES[0].u, RUNE_NICHES[0].v);
-      const beamGrad = ctx.createLinearGradient(torch.x, torch.y, targetNiche.x, targetNiche.y);
-      beamGrad.addColorStop(0, 'rgba(255, 195, 85, 0.32)');
-      beamGrad.addColorStop(1, 'rgba(255, 160, 40, 0.04)');
-      ctx.fillStyle = beamGrad;
-      ctx.beginPath();
-      ctx.moveTo(torch.x, torch.y);
-      ctx.lineTo(firstNiche.x - 24, firstNiche.y + 26);
-      ctx.lineTo(targetNiche.x + 28, targetNiche.y + 26);
-      ctx.closePath();
-      ctx.fill();
-
-      /* 2. Glowing Carved Golden Fraction Runes on the Stone Altar Face */
-      RUNE_NICHES.forEach((rn, idx) => {
-        const p = map(rn.u, rn.v);
-        const isLit = idx < activeRunes;
-        if (isLit) {
-          const rg = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, 38);
-          rg.addColorStop(0, 'rgba(255, 230, 120, 0.85)');
-          rg.addColorStop(0.5, 'rgba(255, 140, 20, 0.35)');
-          rg.addColorStop(1, 'rgba(255, 100, 0, 0)');
-          ctx.fillStyle = rg;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 38, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        /* Fraction badge right below each carved rune niche */
-        const bw = W < 540 ? 21 : 42;
-        const bh = W < 540 ? 16 : 22;
-        const byOff = W < 540 ? 14 : 26;
-        ctx.save();
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.fillStyle = isLit ? 'rgba(245, 158, 11, 0.94)' : 'rgba(15, 28, 38, 0.82)';
-        ctx.strokeStyle = isLit ? '#fef08a' : 'rgba(148, 163, 184, 0.45)';
-        ctx.lineWidth = isLit ? 1.8 : 1.2;
-        ctx.beginPath();
-        ctx.roundRect(p.x - bw / 2, p.y + byOff, bw, bh, 6);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = isLit ? '#1c1004' : '#94a3b8';
-        ctx.font = `700 ${W < 540 ? 9 : 12}px Fredoka, sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.fillText(rn.label, p.x, p.y + byOff + bh * 0.72);
-        ctx.restore();
-      });
-
-      /* 3. Rising Ember Sparks & Forest Fireflies */
-      embers.forEach((e) => {
-        const age = ((t * 25 * e.sp + e.phase * 18) % 90) / 90;
-        const ex = torch.x + e.dx + Math.sin(age * 6 + e.phase) * 14;
-        const ey = torch.y - age * 110;
-        ctx.fillStyle = `rgba(255, 220, 115, ${(1 - age) * 0.9})`;
-        ctx.beginPath();
-        ctx.arc(ex, ey, e.r * (1 - age * 0.4), 0, Math.PI * 2);
-        ctx.fill();
-      });
-      ctx.restore();
-
-      ctx.restore();
-      requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
-  })();
-
-  /* ============================================================================
-     DIRECTION 2: ISOMETRIC MONUMENT (art-dir2.jpg + Interactive 3D Orange Wheel)
-     ============================================================================ */
-  (function initDir2() {
-    const stage = document.getElementById('stage-dir2');
-    const canvas = document.getElementById('canvas-dir2');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.src = 'art-dir2.jpg';
-
-    let W = 900, H = 540, dpr = 1, t = 0;
-    let wheelTargetDeg = 180;
-    let wheelDeg = 180;
-
-    function resize() {
-      const r = stage.getBoundingClientRect();
-      if (!r.width) return;
-      W = r.width; H = r.height;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(W * dpr);
-      canvas.height = Math.round(H * dpr);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const rotBtns = document.querySelectorAll('[data-d2-rot]');
-    function setRot(deg) {
-      wheelTargetDeg = deg;
-      rotBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.d2Rot) === deg));
-    }
-    rotBtns.forEach((b) => b.addEventListener('click', () => setRot(Number(b.dataset.d2Rot))));
-
-    canvas.addEventListener('pointerdown', () => {
-      setRot((wheelTargetDeg + 90) % 360);
-    });
-
-    /* Helper: draw a 3-face isometric cube centered at (cx, cy) with radius r */
-    function drawIsoCube(cx, cy, r, topCol, leftCol, rightCol) {
-      const dx = r * 0.866;
-      const dy = r * 0.5;
-      /* Top face */
-      ctx.fillStyle = topCol;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - r);
-      ctx.lineTo(cx + dx, cy - dy);
-      ctx.lineTo(cx, cy);
-      ctx.lineTo(cx - dx, cy - dy);
-      ctx.closePath();
-      ctx.fill();
-      /* Left face */
-      ctx.fillStyle = leftCol;
-      ctx.beginPath();
-      ctx.moveTo(cx - dx, cy - dy);
-      ctx.lineTo(cx, cy);
-      ctx.lineTo(cx, cy + r);
-      ctx.lineTo(cx - dx, cy + dy);
-      ctx.closePath();
-      ctx.fill();
-      /* Right face */
-      ctx.fillStyle = rightCol;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(cx + dx, cy - dy);
-      ctx.lineTo(cx + dx, cy + dy);
-      ctx.lineTo(cx, cy + r);
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    function draw() {
-      t += 0.024;
-      wheelDeg += (wheelTargetDeg - wheelDeg) * 0.14;
-      const isConnected = Math.abs(wheelDeg - 180) < 10;
-
-      ctx.save();
-      ctx.scale(dpr, dpr);
-
-      const map = drawArtCover(ctx, img, W, H, 0.5, 0.54);
-      const center = map(0.496, 0.545);
-      const armLen = Math.min(W, H) * 0.082;
-
-      /* 1. Glowing Aqueduct Bridge Lock when rotated to 180° */
-      if (isConnected) {
-        const leftBridge = map(0.415, 0.535);
-        const rightBridge = map(0.578, 0.535);
-        ctx.save();
-        ctx.globalCompositeOperation = 'screen';
-        const bg = ctx.createLinearGradient(leftBridge.x, leftBridge.y, rightBridge.x, rightBridge.y);
-        bg.addColorStop(0, 'rgba(255, 138, 128, 0.25)');
-        bg.addColorStop(0.5, 'rgba(255, 215, 110, 0.65)');
-        bg.addColorStop(1, 'rgba(255, 138, 128, 0.25)');
-        ctx.strokeStyle = bg;
-        ctx.lineWidth = 18;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(leftBridge.x, leftBridge.y);
-        ctx.lineTo(rightBridge.x, rightBridge.y);
-        ctx.stroke();
-
-        /* Animated Golden Path Nodes from Noor up the stairs */
-        const pathNodes = [
-          [0.32, 0.72], [0.38, 0.68], [0.43, 0.63], [0.496, 0.545], [0.58, 0.49], [0.68, 0.42]
-        ];
-        pathNodes.forEach((pt, idx) => {
-          const np = map(pt[0], pt[1]);
-          const pulse = 0.5 + 0.5 * Math.sin(t * 4 - idx * 0.7);
-          ctx.fillStyle = `rgba(255, 235, 130, ${0.35 + pulse * 0.55})`;
-          ctx.beginPath();
-          ctx.arc(np.x, np.y, 5 + pulse * 4, 0, Math.PI * 2);
-          ctx.fill();
-        });
-        ctx.restore();
-      }
-
-      /* 2. Iconic Monument Valley 4-Spoke Isometric Tangerine Turnstile Wheel */
-      const rad = (wheelDeg * Math.PI) / 180;
-      const spokes = [0, Math.PI / 2, Math.PI, (Math.PI * 3) / 2];
-
-      /* Draw back spokes first, then center hub, then front spokes */
-      spokes.forEach((a) => {
-        const ang = rad + a;
-        const sx = center.x + Math.cos(ang) * armLen;
-        const sy = center.y + Math.sin(ang) * armLen * 0.62; // isometric foreshortening
-
-        ctx.strokeStyle = '#d85c1b';
-        ctx.lineWidth = 7;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(center.x, center.y);
-        ctx.lineTo(sx, sy);
-        ctx.stroke();
-
-        drawIsoCube(sx, sy, Math.min(W, H) * 0.024, '#ffd180', '#ff9e40', '#c65314');
-      });
-
-      /* Central Isometric Octagonal Drum Hub */
-      drawIsoCube(center.x, center.y, Math.min(W, H) * 0.038, '#ffe082', '#ffa726', '#d85c1b');
-
-      /* Subtle interactive rotation ring hint around the wheel */
-      ctx.strokeStyle = 'rgba(255, 224, 130, 0.42)';
-      ctx.lineWidth = 1.8;
-      ctx.setLineDash([5, 6]);
-      ctx.beginPath();
-      ctx.ellipse(center.x, center.y, armLen * 1.22, armLen * 0.78, 0, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      ctx.restore();
-      requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
-  })();
-
-  /* ============================================================================
-     DIRECTION 3: LIVING VALLEY PANORAMA & CELESTIAL ASTROLABE HUD (art-dir3.jpg)
-     ============================================================================ */
-  (function initDir3() {
-    const stage = document.getElementById('stage-dir3');
-    const canvas = document.getElementById('canvas-dir3');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.src = 'art-dir3.jpg';
-
-    let W = 900, H = 540, dpr = 1, t = 0;
-    let season = 0; // 0 = Volcanic Night, 1 = Golden Dawn, 2 = Cooling Monsoon
-    let activeGear = 0;
-
-    const pollen = Array.from({ length: 48 }, () => ({
-      u: Math.random(),
-      v: 0.62 + Math.random() * 0.36,
+    const fireflies = Array.from({ length: 32 }, () => ({
+      u: 0.15 + Math.random() * 0.7,
+      v: 0.2 + Math.random() * 0.6,
       r: 1.5 + Math.random() * 2.5,
       phase: Math.random() * Math.PI * 2,
     }));
@@ -815,201 +600,327 @@
     window.addEventListener('resize', resize);
     resize();
 
+    const spotBtns = document.querySelectorAll('[data-d1-spot]');
+    function setSpot(key) {
+      currentSpot = key;
+      spotBtns.forEach((b) => b.classList.toggle('active', b.dataset.d1Spot === key));
+    }
+    spotBtns.forEach((b) => b.addEventListener('click', () => setSpot(b.dataset.d1Spot)));
+
     canvas.addEventListener('pointerdown', (e) => {
       const r = canvas.getBoundingClientRect();
-      const px = e.clientX - r.left;
-      const py = e.clientY - r.top;
-      if (py < 78) {
-        season = (season + 1) % 3;
-        activeGear = season;
-        return;
-      }
-      if (py > H - 80 && px < 320) {
-        activeGear = Math.min(3, Math.max(0, Math.floor((px - 20) / 64)));
-        season = activeGear === 1 ? 2 : activeGear === 2 ? 1 : 0;
-        return;
-      }
-      activeGear = (activeGear + 1) % 4;
-      season = activeGear === 1 ? 2 : activeGear === 2 ? 1 : 0;
+      const u = (e.clientX - r.left) / r.width;
+      if (u < 0.38) setSpot('hedgehogs');
+      else if (u < 0.56) setSpot('owls');
+      else setSpot('fawn');
     });
 
     function draw() {
-      t += 0.022;
+      t += 0.025;
+      const target = SPOTS[currentSpot];
+      beamU += (target.u - beamU) * 0.12;
+      beamV += (target.v - beamV) * 0.12;
+
       ctx.save();
       ctx.scale(dpr, dpr);
 
-      const map = drawArtCover(ctx, img, W, H, 0.5, 0.5);
+      const map = drawArtCover(ctx, img, W, H, 0.5, 0.5, '#04121b', '#091812');
+      const lantern = map(LANTERN_ORIGIN.u, LANTERN_ORIGIN.v);
+      const focus = map(beamU, beamV);
 
-      /* 1. Dynamic Ecosystem Atmosphere Tint & Live Particles */
+      /* 1. Volumetric Golden Lantern Beam sweeping from the child's lantern to the animal hiding spot */
       ctx.save();
-      if (season === 1) {
-        /* Golden Dawn Warmth */
-        ctx.globalCompositeOperation = 'screen';
-        const dawn = ctx.createLinearGradient(0, 0, 0, H);
-        dawn.addColorStop(0, 'rgba(255, 160, 60, 0.22)');
-        dawn.addColorStop(1, 'rgba(255, 210, 120, 0.08)');
-        ctx.fillStyle = dawn;
-        ctx.fillRect(0, 0, W, H);
-      } else if (season === 2) {
-        /* Cooling Rainstorm Showers */
-        ctx.strokeStyle = 'rgba(186, 230, 253, 0.45)';
-        ctx.lineWidth = 1.5;
-        for (let r = 0; r < 65; r++) {
-          const rx = (r * 73 + t * 220) % W;
-          const ry = (r * 47 + t * 490) % H;
+      ctx.globalCompositeOperation = 'screen';
+      const beamGrad = ctx.createLinearGradient(lantern.x, lantern.y, focus.x, focus.y);
+      beamGrad.addColorStop(0, 'rgba(255, 210, 100, 0.48)');
+      beamGrad.addColorStop(1, 'rgba(255, 190, 75, 0.12)');
+      ctx.fillStyle = beamGrad;
+      ctx.beginPath();
+      ctx.moveTo(lantern.x, lantern.y);
+      ctx.lineTo(focus.x - 45, focus.y - 52);
+      ctx.lineTo(focus.x + 45, focus.y + 52);
+      ctx.closePath();
+      ctx.fill();
+
+      /* Warm Golden Spotlight Halo around the discovered animals */
+      const spotR = W < 540 ? 64 : 95;
+      const sg = ctx.createRadialGradient(focus.x, focus.y, 6, focus.x, focus.y, spotR);
+      sg.addColorStop(0, 'rgba(255, 230, 130, 0.62)');
+      sg.addColorStop(0.55, 'rgba(255, 160, 45, 0.25)');
+      sg.addColorStop(1, 'rgba(255, 120, 0, 0)');
+      ctx.fillStyle = sg;
+      ctx.beginPath();
+      ctx.arc(focus.x, focus.y, spotR, 0, Math.PI * 2);
+      ctx.fill();
+
+      /* Drifting Woodland Fireflies */
+      fireflies.forEach((f) => {
+        const fp = map(f.u, f.v);
+        const fx = fp.x + Math.sin(t * 1.4 + f.phase) * 14;
+        const fy = fp.y + Math.cos(t * 1.1 + f.phase) * 10;
+        const alpha = 0.35 + 0.55 * (0.5 + 0.5 * Math.sin(t * 3 + f.phase));
+        ctx.fillStyle = `rgba(255, 230, 120, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(fx, fy, f.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
+
+      /* 2. 1-to-1 Tap-to-Count Golden Number Orbs above each discovered baby animal */
+      target.animals.forEach((an, idx) => {
+        const ap = map(an.u, an.v);
+        const bob = Math.sin(t * 3.2 + idx) * 3.5;
+        const rad = W < 540 ? 11 : 15;
+        const oy = ap.y - (W < 540 ? 22 : 34) + bob;
+
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.95)';
+        ctx.strokeStyle = '#fef08a';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.arc(ap.x, oy, rad, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#1c1004';
+        ctx.font = `700 ${W < 540 ? 11 : 14}px Fredoka, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(String(an.num), ap.x, oy + (W < 540 ? 4 : 5));
+      });
+
+      ctx.restore();
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+
+  /* ============================================================================
+     GAME IDEA 2 (AGES 3-4): THE WOODLAND STREAM CROSSING (art-idea2.jpg)
+     ============================================================================ */
+  (function initIdea2() {
+    const stage = document.getElementById('stage-dir2');
+    const canvas = document.getElementById('canvas-dir2');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.src = 'art-idea2.jpg';
+
+    let W = 900, H = 540, dpr = 1, t = 0;
+    let selectedStone = 3; // 1 = Small, 2 = Medium, 3 = Large (matches 3rd gap!)
+
+    const SHORE_STONES = {
+      1: { u: 0.438, v: 0.84, label: '1' },
+      2: { u: 0.598, v: 0.82, label: '2' },
+      3: { u: 0.778, v: 0.79, label: '3' },
+    };
+    const TARGET_WHIRLPOOL = { u: 0.57, v: 0.51 };
+    const STEP_PATH = [
+      { u: 0.175, v: 0.34 }, // Bear cub
+      { u: 0.302, v: 0.50 }, // Stone 1
+      { u: 0.432, v: 0.49 }, // Stone 2
+      { u: 0.570, v: 0.51 }, // Gap 3 (Whirlpool)
+      { u: 0.708, v: 0.51 }, // Gap 4
+      { u: 0.845, v: 0.25 }, // Cozy Burrow
+    ];
+
+    function resize() {
+      const r = stage.getBoundingClientRect();
+      if (!r.width) return;
+      W = r.width; H = r.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const stoneBtns = document.querySelectorAll('[data-d2-stone]');
+    function setStone(n) {
+      selectedStone = n;
+      stoneBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.d2Stone) === n));
+    }
+    stoneBtns.forEach((b) => b.addEventListener('click', () => setStone(Number(b.dataset.d2Stone))));
+
+    canvas.addEventListener('pointerdown', () => {
+      setStone((selectedStone % 3) + 1);
+    });
+
+    function draw() {
+      t += 0.025;
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      const map = drawArtCover(ctx, img, W, H, 0.5, 0.5, '#071b24', '#081b18');
+      const whirl = map(TARGET_WHIRLPOOL.u, TARGET_WHIRLPOOL.v);
+      const shore = map(SHORE_STONES[selectedStone].u, SHORE_STONES[selectedStone].v);
+
+      /* 1. Glowing Water Ripple Rings around the Target Whirlpool */
+      ctx.save();
+      const pulse = (t * 0.8) % 1;
+      ctx.strokeStyle = selectedStone === 3
+        ? `rgba(255, 225, 110, ${0.85 - pulse * 0.6})`
+        : `rgba(125, 211, 252, ${0.75 - pulse * 0.5})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(whirl.x, whirl.y, (28 + pulse * 26) * (W < 540 ? 0.65 : 1), (14 + pulse * 13) * (W < 540 ? 0.65 : 1), 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      /* 2. Animated Drag Arc from the Selected Foreground Shore Stone into the Stream Whirlpool */
+      ctx.strokeStyle = selectedStone === 3 ? '#fde047' : '#fb923c';
+      ctx.lineWidth = 3.2;
+      ctx.setLineDash([7, 7]);
+      ctx.lineDashOffset = -t * 18;
+      ctx.beginPath();
+      ctx.moveTo(shore.x, shore.y - 12);
+      ctx.quadraticCurveTo((shore.x + whirl.x) * 0.5, Math.min(shore.y, whirl.y) - 48, whirl.x, whirl.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      /* Highlight ring around the selected shore stone */
+      ctx.strokeStyle = '#fde047';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(shore.x, shore.y, (24 + selectedStone * 10) * (W < 540 ? 0.62 : 1), (14 + selectedStone * 5) * (W < 540 ? 0.62 : 1), 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      /* 3. Stepping-Stone Hop Arcs from Bear Cub across the Stream when Stone 3 is Selected */
+      if (selectedStone === 3) {
+        for (let i = 0; i < 3; i++) {
+          const a = map(STEP_PATH[i].u, STEP_PATH[i].v);
+          const b = map(STEP_PATH[i + 1].u, STEP_PATH[i + 1].v);
+          ctx.strokeStyle = 'rgba(254, 240, 138, 0.75)';
+          ctx.lineWidth = 2.6;
           ctx.beginPath();
-          ctx.moveTo(rx, ry);
-          ctx.lineTo(rx - 7, ry + 18);
+          ctx.moveTo(a.x, a.y - 8);
+          ctx.quadraticCurveTo((a.x + b.x) * 0.5, Math.min(a.y, b.y) - 34, b.x, b.y - 8);
           ctx.stroke();
         }
       }
-
-      /* Floating Bioluminescent Cyan Wildflower Pollen & Campfire Embers */
-      ctx.globalCompositeOperation = 'screen';
-      pollen.forEach((p) => {
-        const pos = map(p.u, p.v);
-        const bobX = pos.x + Math.sin(t * 1.5 + p.phase) * 12;
-        const bobY = pos.y - ((t * 14 + p.phase * 20) % 55);
-        const alpha = 0.4 + 0.5 * Math.sin(t * 2.5 + p.phase);
-        ctx.fillStyle = p.u > 0.52 && p.u < 0.65
-          ? `rgba(255, 180, 60, ${alpha})`
-          : `rgba(64, 224, 255, ${alpha})`;
-        ctx.beginPath();
-        ctx.arc(bobX, bobY, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
       ctx.restore();
 
-      /* 2. Ornate Engraved Gold & Slate Celestial Astrolabe Top HUD (Reference 3) */
-      const barW = Math.min(W * 0.86, 780);
-      const barLeft = (W - barW) / 2;
-      ctx.fillStyle = 'rgba(9, 20, 30, 0.88)';
-      ctx.strokeStyle = '#c8a962';
-      ctx.lineWidth = 1.8;
+      ctx.restore();
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+
+  /* ============================================================================
+     GAME IDEA 3 (AGES 6-8): THE SUN-MIRROR VALLEY (art-idea3.jpg)
+     ============================================================================ */
+  (function initIdea3() {
+    const stage = document.getElementById('stage-dir3');
+    const canvas = document.getElementById('canvas-dir3');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.src = 'art-idea3.jpg';
+
+    let W = 900, H = 540, dpr = 1, t = 0;
+    let mode = 'split'; // 'single' | 'split' | 'unequal'
+
+    const NODES = {
+      tower:      { u: 0.202, v: 0.118, label: '☀️ 8' },
+      mirror:     { u: 0.448, v: 0.518, label: '🪞 8' },
+      prism:      { u: 0.575, v: 0.512, label: '💎 ÷2' },
+      greenhouse: { u: 0.835, v: 0.315, need: 4 },
+      watermill:  { u: 0.838, v: 0.685, need: 4 },
+    };
+
+    function resize() {
+      const r = stage.getBoundingClientRect();
+      if (!r.width) return;
+      W = r.width; H = r.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const modeBtns = document.querySelectorAll('[data-d3-mode]');
+    function setMode(m) {
+      mode = m;
+      modeBtns.forEach((b) => b.classList.toggle('active', b.dataset.d3Mode === m));
+    }
+    modeBtns.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.d3Mode)));
+
+    canvas.addEventListener('pointerdown', () => {
+      const order = ['single', 'split', 'unequal'];
+      setMode(order[(order.indexOf(mode) + 1) % order.length]);
+    });
+
+    function drawBadge(x, y, text, ok) {
+      const bw = W < 540 ? 48 : 62;
+      const bh = W < 540 ? 20 : 25;
+      ctx.fillStyle = ok ? 'rgba(20, 83, 45, 0.92)' : 'rgba(15, 23, 42, 0.88)';
+      ctx.strokeStyle = ok ? '#4ade80' : '#e6be6a';
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(barLeft, 0);
-      ctx.lineTo(barLeft + barW, 0);
-      ctx.lineTo(barLeft + barW - 28, 44);
-      ctx.lineTo(barLeft + 28, 44);
-      ctx.closePath();
+      ctx.roundRect(x - bw / 2, y - bh / 2, bw, bh, 99);
       ctx.fill();
       ctx.stroke();
 
-      /* Central Rotating Gold Celestial Astrolabe Compass */
-      const astX = W * 0.5, astY = 34;
-      ctx.fillStyle = '#0b1926';
-      ctx.strokeStyle = '#e6be6a';
-      ctx.lineWidth = 2.2;
-      ctx.beginPath();
-      ctx.arc(astX, astY, 32, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.save();
-      ctx.translate(astX, astY);
-      ctx.rotate(season * ((Math.PI * 2) / 3) + t * 0.15);
-      ctx.strokeStyle = '#e6be6a';
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      ctx.arc(0, 0, 22, 0, Math.PI * 2);
-      ctx.moveTo(-26, 0); ctx.lineTo(26, 0);
-      ctx.moveTo(0, -26); ctx.lineTo(0, 26);
-      ctx.stroke();
-      ctx.restore();
-
-      const sLabelsHe = ['🌋 לילה געשי · אנרגיית חום', '🌅 זריחת העמק · פוטוסינתזה', '🌧️ גשם מצנן · מחזור המים'];
-      const sLabelsEn = ['🌋 Volcanic Night · Thermal Energy', '🌅 Golden Dawn · Photosynthesis', '🌧️ Cooling Rain · Water Cycle'];
-      ctx.fillStyle = '#fef3c7';
-      ctx.font = `700 ${W < 520 ? 11.5 : 13}px Fredoka, Heebo, sans-serif`;
+      ctx.fillStyle = ok ? '#bbf7d0' : '#fef3c7';
+      ctx.font = `700 ${W < 540 ? 10 : 12.5}px Fredoka, sans-serif`;
       ctx.textAlign = 'center';
-      if (W < 540) {
-        /* On phone, render season pill cleanly below the central astrolabe so it never overlaps */
-        ctx.fillStyle = 'rgba(9, 20, 30, 0.88)';
-        ctx.strokeStyle = 'rgba(200, 169, 98, 0.55)';
-        ctx.lineWidth = 1.3;
+      ctx.fillText(text, x, y + (W < 540 ? 3.5 : 4.5));
+    }
+
+    function draw() {
+      t += 0.025;
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      const map = drawArtCover(ctx, img, W, H, 0.5, 0.5, '#071c29', '#05151a');
+      const pTower = map(NODES.tower.u, NODES.tower.v);
+      const pMirror = map(NODES.mirror.u, NODES.mirror.v);
+      const pPrism = map(NODES.prism.u, NODES.prism.v);
+      const pGreen = map(NODES.greenhouse.u, NODES.greenhouse.v);
+      const pMill = map(NODES.watermill.u, NODES.watermill.v);
+
+      /* 1. Live Animated Light-Energy Pulses Traveling Along the Optical Beams */
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      const drawPulseLine = (a, b, col) => {
+        ctx.strokeStyle = col;
+        ctx.lineWidth = W < 540 ? 4 : 6;
+        ctx.setLineDash([10, 18]);
+        ctx.lineDashOffset = -t * 36;
         ctx.beginPath();
-        ctx.roundRect(W * 0.5 - 96, 72, 192, 24, 12);
-        ctx.fill();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
         ctx.stroke();
-        ctx.fillStyle = '#fef3c7';
-        ctx.fillText((lang === 'he' ? sLabelsHe : sLabelsEn)[season], W * 0.5, 88);
-      } else {
-        ctx.fillText((lang === 'he' ? sLabelsHe : sLabelsEn)[season], barLeft + barW * 0.24, 26);
-        ctx.fillStyle = '#e6be6a';
-        ctx.fillText(lang === 'he' ? 'סובבו את האסטרולב ↻' : 'Turn Celestial Astrolabe ↻', barLeft + barW * 0.76, 26);
+        ctx.setLineDash([]);
+      };
+
+      drawPulseLine(pTower, pMirror, 'rgba(255, 240, 150, 0.85)');
+      drawPulseLine(pMirror, pPrism, 'rgba(255, 240, 150, 0.85)');
+      if (mode !== 'single') {
+        drawPulseLine(pPrism, pGreen, 'rgba(125, 249, 255, 0.8)');
       }
+      drawPulseLine(pPrism, pMill, 'rgba(255, 230, 130, 0.85)');
+      ctx.restore();
 
-      /* 3. Bottom Engraved Brass Elemental Gear Medallions & Diamond Crest (Reference 3) */
-      const gears = [
-        { icon: '🌋', he: 'חום ולבה', en: 'Volcano' },
-        { icon: '🌧️', he: 'גשם ונהר', en: 'Rain' },
-        { icon: '🌱', he: 'צמיחה', en: 'Flora' },
-        { icon: '⚙️', he: 'טחנת מים', en: 'Watermill' },
-      ];
-      const gearStartX = W < 540 ? (W - 3 * 64) / 2 : 42;
-      gears.forEach((g, idx) => {
-        const gx = gearStartX + idx * (W < 540 ? 64 : 60);
-        const gy = H - 36;
-        const isAct = activeGear === idx;
-        ctx.fillStyle = isAct ? 'rgba(68, 48, 20, 0.94)' : 'rgba(9, 20, 30, 0.9)';
-        ctx.strokeStyle = isAct ? '#fde047' : '#c8a962';
-        ctx.lineWidth = isAct ? 2.6 : 1.6;
-        ctx.beginPath();
-        ctx.arc(gx, gy, 20, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.font = '16px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(g.icon, gx, gy + 5);
-
-        ctx.fillStyle = '#fde68a';
-        ctx.font = '700 10px Fredoka, Heebo, sans-serif';
-        ctx.fillText(lang === 'he' ? g.he : g.en, gx, gy + 31);
-      });
-
-      /* Bottom-Center Gold Diamond Crest */
-      if (W >= 540) {
+      /* 2. Interactive Rotating Gold Ring around the Stone Mirror & Crystal Prism */
+      [pMirror, pPrism].forEach((pt, idx) => {
         ctx.save();
-        ctx.translate(W * 0.5, H - 24);
-        ctx.rotate(Math.PI / 4);
-        ctx.fillStyle = 'rgba(13, 28, 42, 0.92)';
-        ctx.strokeStyle = '#e6be6a';
-        ctx.lineWidth = 2.2;
+        ctx.translate(pt.x, pt.y);
+        ctx.rotate(t * (idx === 0 ? 0.5 : -0.7));
+        ctx.strokeStyle = idx === 0 ? '#fde047' : '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
         ctx.beginPath();
-        ctx.rect(-18, -18, 36, 36);
-        ctx.fill();
+        ctx.arc(0, 0, W < 540 ? 22 : 32, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
-      }
+      });
 
-      /* Right Mission / Chronicle Slate Overlay (Reference 3 Right Panel) */
-      const cardW = Math.min(270, W - 24);
-      const cardX = W < 540 ? (W - cardW) / 2 : W - cardW - 12;
-      const cardY = W < 540 ? 104 : 60;
-      ctx.fillStyle = 'rgba(8, 17, 26, 0.82)';
-      ctx.strokeStyle = 'rgba(200, 169, 98, 0.45)';
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      ctx.roundRect(cardX, cardY, cardW, 112, 12);
-      ctx.fill();
-      ctx.stroke();
+      /* 3. Diegetic Light-Power Math Badges on Each Landmark */
+      const greenPower = mode === 'single' ? 0 : mode === 'split' ? 4 : 5;
+      const millPower = mode === 'single' ? 8 : mode === 'split' ? 4 : 3;
 
-      ctx.fillStyle = '#e6be6a';
-      ctx.font = '700 12px Fredoka, Heebo, sans-serif';
-      ctx.textAlign = lang === 'he' ? 'right' : 'left';
-      const tx = lang === 'he' ? cardX + cardW - 12 : cardX + 12;
-      ctx.fillText(lang === 'he' ? 'משימות העמק החי (2/3)' : 'Living Valley Missions (2/3)', tx, cardY + 22);
-
-      ctx.fillStyle = '#e2e8f0';
-      ctx.font = '500 11.5px Heebo, sans-serif';
-      const m1 = lang === 'he' ? '✓ קררו את הלבה בגשם לאדמת בזלת פורייה' : '✓ Cool volcanic lava with rain into fertile soil';
-      const m2 = lang === 'he' ? '✓ האירו את פרחי הבר הזוהרים באור הזריחה' : '✓ Bloom glowing cyan wildflowers at dawn';
-      const m3 = lang === 'he' ? '○ הזרימו מים בנהר להנעת גלגל הטחנה' : '○ Channel river water to spin the golden mill';
-      ctx.fillText(m1, tx, cardY + 46);
-      ctx.fillText(m2, tx, cardY + 68);
-      ctx.fillStyle = '#fde047';
-      ctx.fillText(m3, tx, cardY + 90);
+      drawBadge(pTower.x, pTower.y - 26, '☀️ 8', true);
+      drawBadge(pMirror.x, pMirror.y + (W < 540 ? 28 : 42), '🪞 8', true);
+      drawBadge(pPrism.x, pPrism.y - (W < 540 ? 28 : 42), mode === 'split' ? '💎 8÷2' : mode === 'unequal' ? '💎 5+3' : '💎 8', mode === 'split');
+      drawBadge(pGreen.x, pGreen.y - (W < 540 ? 24 : 36), `🌿 ${greenPower}/4`, greenPower === 4);
+      drawBadge(pMill.x, pMill.y + (W < 540 ? 24 : 36), `⚙️ ${millPower}/4`, millPower === 4);
 
       ctx.restore();
       requestAnimationFrame(draw);
