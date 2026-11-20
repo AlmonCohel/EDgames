@@ -84,7 +84,26 @@
     { id: 'stream-bank',      u: 0.662, v: 0.630, cover: 'mushrooms', perch: false, ground: true  },
   ];
 
+  /* 11 hiding spots inside the centered portrait-phone zoom (u in [0.405, 0.592],
+     v in [0.225, 0.735]) so every animal stays well inside the visible screen
+     with >= 10% margin from every edge. */
+  const PORTRAIT_SPOTS = [
+    { id: 'hollow',          u: 0.499, v: 0.456, cover: 'hollow',    perch: true,  ground: true  },
+    { id: 'branch-left-hi',  u: 0.420, v: 0.235, cover: 'none',      perch: true,  ground: false },
+    { id: 'branch-right-hi', u: 0.580, v: 0.225, cover: 'none',      perch: true,  ground: false },
+    { id: 'branch-left-mid', u: 0.408, v: 0.355, cover: 'none',      perch: true,  ground: false },
+    { id: 'trunk-left',      u: 0.405, v: 0.535, cover: 'fern',      perch: false, ground: true  },
+    { id: 'trunk-right',     u: 0.592, v: 0.535, cover: 'fern',      perch: false, ground: true  },
+    { id: 'center-roots',    u: 0.495, v: 0.590, cover: 'leaves',    perch: false, ground: true  },
+    { id: 'left-roots',      u: 0.415, v: 0.655, cover: 'mushrooms', perch: false, ground: true  },
+    { id: 'right-roots',     u: 0.588, v: 0.650, cover: 'mushrooms', perch: false, ground: true  },
+    { id: 'moss-left',       u: 0.448, v: 0.735, cover: 'leaves',    perch: false, ground: true  },
+    { id: 'moss-right',      u: 0.552, v: 0.735, cover: 'none',      perch: false, ground: true  },
+  ];
+
   const PERCH_SPECIES = new Set(['owl', 'squirrel']);
+  const PROP_COVERS = ['fern', 'mushrooms', 'leaves'];
+  const MAX_SAME_COVER = 2;
 
   /* Empty-ground resting spots for the lantern beam at round start (away from all animals) */
   const REST_SPOTS = [
@@ -92,6 +111,14 @@
     { u: 0.735, v: 0.725 }, // mossy bank by the stream near the girl
     { u: 0.310, v: 0.758 }, // mossy foreground in front of the log
     { u: 0.725, v: 0.435 }, // open night air above the stream
+  ];
+
+  const PORTRAIT_REST_SPOTS = [
+    { u: 0.500, v: 0.770 }, // center mossy foreground above carved ledge
+    { u: 0.500, v: 0.255 }, // upper oak trunk between branches
+    { u: 0.555, v: 0.365 }, // right trunk side below hanging lantern
+    { u: 0.445, v: 0.365 }, // left trunk side
+    { u: 0.500, v: 0.680 }, // lower center moss
   ];
 
   const ROUNDS = {
@@ -132,13 +159,57 @@
     return out;
   }
 
-  function buildRound(spec) {
+  function assignRoundCovers(targets, neighbors, targetKind) {
+    const counts = Object.create(null);
+    const firstFlip = Object.create(null);
+    const all = shuffle([
+      ...targets.map((entry) => ({ entry, kind: targetKind })),
+      ...neighbors.map((entry) => ({ entry, kind: entry.kind })),
+    ]);
+
+    for (const { entry, kind } of all) {
+      if (!PROP_COVERS.includes(entry.cover)) continue;
+      const allowed = SMALL_SPECIES.has(kind) ? ['fern', 'mushrooms', 'leaves'] : ['fern', 'mushrooms'];
+      const preferred = allowed.includes(entry.cover) ? entry.cover : allowed[0];
+      const candidates = [preferred, ...shuffle(allowed.filter((c) => c !== preferred))];
+      const chosen = candidates.find((c) => (counts[c] || 0) < MAX_SAME_COVER);
+
+      if (!chosen) {
+        entry.cover = 'none';
+        continue;
+      }
+
+      counts[chosen] = (counts[chosen] || 0) + 1;
+      entry.cover = chosen;
+      if (counts[chosen] === 1) {
+        firstFlip[chosen] = Math.random() < 0.5 ? -1 : 1;
+        entry.coverFlip = firstFlip[chosen];
+      } else {
+        entry.coverFlip = -firstFlip[chosen];
+      }
+      entry.coverScale = 0.85 + Math.random() * 0.30;
+      entry.coverTilt = (Math.random() * 2 - 1) * 0.14;
+    }
+  }
+
+  function buildRound(spec, geom) {
+    let pool = HIDING_SPOTS;
+    if (geom && geom.isPortrait) {
+      const marginX = geom.W * 0.10;
+      const marginY = geom.H * 0.10;
+      const safe = PORTRAIT_SPOTS.filter((s) => {
+        const p = geom.map(s.u, s.v);
+        return p.x >= marginX && p.x <= geom.W - marginX && p.y >= marginY && p.y <= geom.H - marginY;
+      });
+      pool = safe.length >= spec.count ? safe : PORTRAIT_SPOTS;
+    }
+
     const canPerch = PERCH_SPECIES.has(spec.kind);
-    const eligible = HIDING_SPOTS.filter((s) => canPerch || s.ground);
+    const eligible = pool.filter((s) => canPerch || s.ground);
     const pickedTargets = shuffle(eligible).slice(0, spec.count);
     const usedIds = new Set(pickedTargets.map((s) => s.id));
 
-    const remaining = shuffle(HIDING_SPOTS.filter((s) => !usedIds.has(s.id)));
+    const remaining = shuffle(pool.filter((s) => !usedIds.has(s.id)));
     const otherSpecies = shuffle(SPECIES.filter((sp) => sp !== spec.kind));
     const neighbors = [];
     for (let i = 0; i < spec.neighborCount && remaining.length; i++) {
@@ -149,9 +220,12 @@
       neighbors.push({ kind: sp, u: spot.u, v: spot.v, cover: spot.cover, spotId: spot.id });
     }
 
+    const targets = pickedTargets.map((s) => ({ u: s.u, v: s.v, cover: s.cover, spotId: s.id }));
+    assignRoundCovers(targets, neighbors, spec.kind);
+
     return {
       kind: spec.kind,
-      targets: pickedTargets.map((s) => ({ u: s.u, v: s.v, cover: s.cover, spotId: s.id })),
+      targets,
       neighbors,
     };
   }
@@ -447,7 +521,8 @@
     const bgImg = loadImg(`${ART}bg.jpg`);
 
     let roundIdx = 0;
-    let round = buildRound(rounds[0]);
+    let round = { kind: rounds[0].kind, targets: [], neighbors: [] };
+    let roundPortrait = null;
     let locked = false;
     let roundWon = false;
     let rafId = 0;
@@ -545,7 +620,7 @@
         oy = (H - dh) * 0.5;
       }
       return {
-        isPortrait, scale, dw, dh, ox, oy,
+        isPortrait, W, H, scale, dw, dh, ox, oy,
         map: (u, v) => ({ x: ox + u * dw, y: oy + v * dh }),
         unmap: (x, y) => ({ u: (x - ox) / dw, v: (y - oy) / dh }),
       };
@@ -555,19 +630,19 @@
       const g = sceneGeom();
       const all = [...roundData.targets, ...roundData.neighbors];
       const beamR = Math.max(76, Math.min(g.dw * 0.125, g.dh * 0.22));
-      let best = REST_SPOTS[0];
+      const pool = g.isPortrait ? PORTRAIT_REST_SPOTS : REST_SPOTS;
+      let best = pool[0];
       let bestMin = -1;
-      for (const cand of REST_SPOTS) {
+      for (const cand of pool) {
         const cp = g.map(cand.u, cand.v);
+        if (g.isPortrait && (cp.x < W * 0.10 || cp.x > W * 0.90 || cp.y < H * 0.10 || cp.y > H * 0.90)) {
+          continue;
+        }
         let minD = Infinity;
         for (const a of all) {
           const ap = g.map(a.u, a.v);
           const d = Math.hypot(cp.x - ap.x, cp.y - ap.y);
           if (d < minD) minD = d;
-        }
-        // On portrait phone, prefer the visible center foreground spot if it's clear of all animals
-        if (g.isPortrait && cand === REST_SPOTS[0] && minD > beamR * 1.04) {
-          return cand;
         }
         if (minD > bestMin) {
           bestMin = minD;
@@ -598,20 +673,27 @@
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
+      const nowPortrait = W < H * 1.05;
+      if (roundPortrait !== null && roundPortrait !== nowPortrait && !locked && foundStates.every((s) => !s.found)) {
+        loadRound(roundIdx);
+        return;
+      }
       syncHitButtons();
     }
 
     function loadRound(idx) {
       roundIdx = idx;
-      round = buildRound(rounds[idx]);
+      camU = 0.50;
+      targetCamU = 0.50;
+      const g = sceneGeom();
+      roundPortrait = g.isPortrait;
+      round = buildRound(rounds[idx], g);
       locked = false;
       roundWon = false;
       foundStates = round.targets.map(() => ({ found: false, num: 0, pop: 0, peek: 0 }));
       neighborStates = round.neighbors.map(() => ({ wobble: 0, peek: 0 }));
 
       /* Start the lantern on empty ground away from every animal */
-      camU = 0.50;
-      targetCamU = 0.50;
       const rest = pickRestSpot(round);
       lanternU = rest.u;
       lanternV = rest.v;
@@ -708,14 +790,14 @@
       const px = e.clientX - r.left;
       const py = e.clientY - r.top;
       const g = sceneGeom();
+      const uv = g.unmap(px, py);
       if (g.isPortrait) {
-        const fx = Math.max(0, Math.min(1, px / Math.max(1, W)));
-        const fy = Math.max(0, Math.min(1, py / Math.max(1, H)));
-        targetU = 0.12 + fx * 0.74;
-        targetV = Math.max(0.12, Math.min(0.82, fy));
-        targetCamU = targetU;
+        const halfVisU = Math.min(0.5, (W / g.dw) * 0.5);
+        const minU = Math.max(0.08, 0.50 - halfVisU + 0.02);
+        const maxU = Math.min(0.92, 0.50 + halfVisU - 0.02);
+        targetU = Math.max(minU, Math.min(maxU, uv.u));
+        targetV = Math.max(0.12, Math.min(0.84, uv.v));
       } else {
-        const uv = g.unmap(px, py);
         targetU = Math.max(0.08, Math.min(0.84, uv.u));
         targetV = Math.max(0.12, Math.min(0.82, uv.v));
       }
@@ -767,7 +849,7 @@
       ctx2d.restore();
     }
 
-    function drawLitSprite(src, x, y, maxDim, warmBlend, nightStrength = 0.85, angle = 0) {
+    function drawLitSprite(src, x, y, maxDim, warmBlend, nightStrength = 0.85, angle = 0, flipX = 1) {
       const img = loadImg(src);
       if (!img.complete || !img.naturalWidth) return null;
       const s = maxDim / Math.max(img.naturalWidth, img.naturalHeight);
@@ -777,6 +859,7 @@
       ctx2d.save();
       ctx2d.translate(x, y);
       if (angle) ctx2d.rotate(angle);
+      if (flipX < 0) ctx2d.scale(-1, 1);
 
       const night = getNightSprite(src, img, nightStrength);
       if (night && warmBlend < 0.98) {
@@ -791,18 +874,22 @@
       return { dw, dh };
     }
 
-    function drawCoverProp(coverType, x, y, unit, girlH, lit) {
+    function drawCoverProp(entry, coverType, x, y, unit, girlH, lit) {
       if (!coverType || coverType === 'none' || coverType === 'log' || coverType === 'hollow') return;
       const src = `${ART}cover-${coverType}.png`;
-      const propSize = coverType === 'fern'
+      const baseSize = coverType === 'fern'
         ? girlH * 0.34
         : coverType === 'mushrooms'
           ? girlH * 0.28
           : girlH * 0.24;
+      const scale = entry.coverScale || 1;
+      const flip = entry.coverFlip || 1;
+      const tilt = entry.coverTilt || 0;
+      const propSize = baseSize * scale;
       const dy = coverType === 'fern' ? unit * 0.22 : coverType === 'leaves' ? unit * 0.32 : unit * 0.24;
-      const dx = coverType === 'fern' ? -unit * 0.10 : coverType === 'mushrooms' ? -unit * 0.08 : unit * 0.04;
+      const dx = (coverType === 'fern' ? -unit * 0.10 : coverType === 'mushrooms' ? -unit * 0.08 : unit * 0.04) * flip;
       drawGroundShadow(x + dx, y + dy + propSize * 0.26, propSize * 0.42, propSize * 0.11, 0.36);
-      drawLitSprite(src, x + dx, y + dy, propSize, lit * 0.88, 0.72);
+      drawLitSprite(src, x + dx, y + dy, propSize, lit * 0.88, 0.72, tilt, flip);
     }
 
     function drawAnimalEntry(entry, kind, x, y, unit, girlH, lit, st, isTarget, idx) {
@@ -854,16 +941,16 @@
       }
 
       // Enforce rule: leaf pile only for small animals
-      const cover = (entry.cover === 'leaves' && !SMALL_SPECIES.has(kind)) ? 'mushrooms' : entry.cover;
+      const cover = (entry.cover === 'leaves' && !SMALL_SPECIES.has(kind)) ? 'none' : entry.cover;
 
       if (isFound) {
         // Once found, cover stays behind the happy jumping animal
-        drawCoverProp(cover, x, y, unit, girlH, lit);
+        drawCoverProp(entry, cover, x, y, unit, girlH, lit);
         drawLitSprite(src, x, y + bounceY, unit * popScale, warmBlend, 0.90, wobbleAngle);
       } else {
         // Hidden/peeking: animal is tucked behind its foreground cover piece
         drawLitSprite(src, x, y + bounceY, unit * popScale, warmBlend, 0.90, wobbleAngle);
-        drawCoverProp(cover, x, y, unit, girlH, lit);
+        drawCoverProp(entry, cover, x, y, unit, girlH, lit);
       }
 
       // Golden firefly number orb above found target animals
