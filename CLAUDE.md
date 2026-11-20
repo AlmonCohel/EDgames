@@ -2,6 +2,8 @@
 
 Read this before touching `EDgames`. Alongside `README.md` and `docs/ACCOUNTS.md`, this records Almon's design and architecture decisions so Claude, Gemini (`gemini-mac`), and the PC agents stay aligned.
 
+> **Before building or rebuilding any game, read `docs/GAME-STANDARD.md` (set by Almon 2026-11-20).** A game is done only when `node scripts/shoot-game.mjs <id>` passes and every screenshot has been looked at. Paid voices come last, after Almon approves a game. Current pilot: `docs/briefs/whispering-woods-pilot.md`.
+
 ## 1. Current Design & Architecture (31 October 2026)
 
 - **Home screen (`play.html` + `assets/app.js` + `assets/styles.css`):**
