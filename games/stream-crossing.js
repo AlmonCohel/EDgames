@@ -154,6 +154,13 @@
     const bgImg = new Image();
     bgImg.src = 'assets/worlds/stream-crossing.jpg';
 
+    const stoneImgs = {};
+    ['circle', 'square', 'triangle', 'diamond'].forEach((sh) => {
+      const im = new Image();
+      im.src = `assets/worlds/stone-${sh}.png`;
+      stoneImgs[sh] = im;
+    });
+
     let roundIdx = 0;
     let round = rounds[0];
     let locked = false;
@@ -434,89 +441,73 @@
       }
     }
 
-    /* Helper: Draw a true 3D Sculpted Clay & Moss River Stone with Carved Glowing Holes */
+    /* Helper: Draw a REAL 3D Illustrated Clay & Moss River Stone Sprite with Carved Glowing Dots */
     function drawSculptedStone(x, y, sizeLevel, shape, dotsCount, isPlaced, isDragging) {
       ctx2d.save();
       ctx2d.translate(x, y);
       const useShape = mode === 'shapes';
-      const baseScale = (W < 540 ? 0.68 : 1) * (useShape ? 0.96 : (0.70 + sizeLevel * 0.14)) * (isDragging ? 1.08 : 1);
+      const spriteKey = useShape ? shape : 'circle';
+      const im = stoneImgs[spriteKey] || stoneImgs.circle;
+      const baseScale = (W < 540 ? 0.66 : 1) * (useShape ? 0.98 : (0.68 + sizeLevel * 0.14)) * (isDragging ? 1.08 : 1);
       ctx2d.scale(baseScale, baseScale);
 
       /* 1. Soft Water Ripples (in stream) or Ground Contact Shadow (on mossy shore) */
       if (isPlaced) {
         const pulse = Math.sin(timeTick * 0.05 + sizeLevel) * 2.2;
-        ctx2d.strokeStyle = 'rgba(175, 228, 245, 0.36)';
-        ctx2d.lineWidth = 2;
-        traceStonePath(shape, useShape, 9, 1.13 + pulse * 0.01);
+        ctx2d.strokeStyle = 'rgba(175, 228, 245, 0.42)';
+        ctx2d.lineWidth = 2.2;
+        ctx2d.beginPath();
+        ctx2d.ellipse(0, 14, 46 + pulse, 24 + pulse * 0.5, 0, 0, Math.PI * 2);
         ctx2d.stroke();
-        ctx2d.strokeStyle = 'rgba(175, 228, 245, 0.18)';
+        ctx2d.strokeStyle = 'rgba(175, 228, 245, 0.20)';
         ctx2d.lineWidth = 1.4;
-        traceStonePath(shape, useShape, 10, 1.24 + pulse * 0.015);
+        ctx2d.beginPath();
+        ctx2d.ellipse(0, 15, 55 + pulse * 1.2, 29 + pulse * 0.6, 0, 0, Math.PI * 2);
         ctx2d.stroke();
       } else {
-        ctx2d.fillStyle = 'rgba(7, 16, 9, 0.52)';
-        traceStonePath(shape, useShape, isDragging ? 18 : 11, 1.04);
+        ctx2d.fillStyle = 'rgba(6, 15, 8, 0.48)';
+        ctx2d.beginPath();
+        ctx2d.ellipse(2, isDragging ? 24 : 18, 42, 22, 0, 0, Math.PI * 2);
         ctx2d.fill();
       }
 
-      /* 2. Extruded 3D Stone Side-Wall / Slab Thickness */
-      const sideGrad = ctx2d.createLinearGradient(0, -10, 0, 28);
-      sideGrad.addColorStop(0, '#3e3d37');
-      sideGrad.addColorStop(1, '#1d1f1b');
-      ctx2d.fillStyle = sideGrad;
-      traceStonePath(shape, useShape, 8, 1);
-      ctx2d.fill();
+      /* 2. Draw the Real 3D Illustrated Mossy Clay Stone Sprite */
+      if (im && im.complete && im.naturalWidth) {
+        const targetW = spriteKey === 'diamond' ? 78 : 92;
+        const targetH = targetW * (im.naturalHeight / im.naturalWidth);
+        if (isDragging) {
+          ctx2d.shadowColor = 'rgba(254, 240, 138, 0.65)';
+          ctx2d.shadowBlur = 16;
+        }
+        ctx2d.drawImage(im, -targetW / 2, -targetH / 2, targetW, targetH);
+        ctx2d.shadowBlur = 0;
+      }
 
-      /* 3. Sculpted Top Stone Face (warm sunset key light from upper-left) */
-      const topGrad = ctx2d.createRadialGradient(-12, -10, 4, 4, 4, 46);
-      topGrad.addColorStop(0, '#9a917d');
-      topGrad.addColorStop(0.55, '#686458');
-      topGrad.addColorStop(1, '#3b3c35');
-      ctx2d.fillStyle = topGrad;
-      traceStonePath(shape, useShape, 0, 1);
-      ctx2d.fill();
-
-      /* Subtle velvety moss tuft along upper-back rim of the stone */
-      ctx2d.save();
-      traceStonePath(shape, useShape, 0, 1);
-      ctx2d.clip();
-      const mossGrad = ctx2d.createRadialGradient(-14, -18, 2, -10, -16, 26);
-      mossGrad.addColorStop(0, 'rgba(116, 152, 66, 0.65)');
-      mossGrad.addColorStop(1, 'rgba(72, 104, 42, 0)');
-      ctx2d.fillStyle = mossGrad;
-      ctx2d.fillRect(-44, -32, 88, 36);
-      ctx2d.restore();
-
-      /* Subtle warm rim highlight on top edge (no cartoon white outline) */
-      ctx2d.strokeStyle = isDragging ? 'rgba(254, 240, 138, 0.85)' : 'rgba(255, 232, 180, 0.24)';
-      ctx2d.lineWidth = isDragging ? 2.4 : 1.3;
-      traceStonePath(shape, useShape, 0, 0.99);
-      ctx2d.stroke();
-
-      /* 4. Carved Recessed Golden Glowing Holes on the Top Face */
+      /* 3. Carved Recessed Golden Glowing Holes on the Top Face of the 3D Stone */
+      const topOffsetY = spriteKey === 'triangle' ? -4 : spriteKey === 'diamond' ? -8 : -9;
       const dotCoords = {
-        1: [[0, 0]],
-        2: [[-12, -2], [12, 2]],
-        3: [[-14, 5], [0, -7], [14, 5]],
-        4: [[-12, -6], [12, -6], [-12, 6], [12, 6]],
-      }[dotsCount] || [[0, 0]];
+        1: [[0, topOffsetY]],
+        2: [[-13, topOffsetY - 2], [13, topOffsetY + 2]],
+        3: [[-14, topOffsetY + 5], [0, topOffsetY - 7], [14, topOffsetY + 5]],
+        4: [[-12, topOffsetY - 6], [12, topOffsetY - 6], [-12, topOffsetY + 6], [12, topOffsetY + 6]],
+      }[dotsCount] || [[0, topOffsetY]];
 
       dotCoords.forEach(([dx, dy]) => {
         /* Dark carved stone socket */
-        ctx2d.fillStyle = 'rgba(28, 22, 14, 0.72)';
+        ctx2d.fillStyle = 'rgba(28, 20, 12, 0.68)';
         ctx2d.beginPath();
-        ctx2d.ellipse(dx, dy + 0.8, 7.2, 5.2, 0, 0, Math.PI * 2);
+        ctx2d.ellipse(dx, dy + 0.8, 7.0, 4.9, 0, 0, Math.PI * 2);
         ctx2d.fill();
 
         /* Warm incandescent golden glow nestled inside the carved hole */
-        const holeGlow = ctx2d.createRadialGradient(dx, dy, 1, dx, dy, 8.5);
+        const holeGlow = ctx2d.createRadialGradient(dx, dy, 1, dx, dy, 8.8);
         holeGlow.addColorStop(0, '#fffbeb');
         holeGlow.addColorStop(0.42, '#fde047');
-        holeGlow.addColorStop(0.75, 'rgba(245, 158, 11, 0.85)');
+        holeGlow.addColorStop(0.76, 'rgba(245, 158, 11, 0.85)');
         holeGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
         ctx2d.fillStyle = holeGlow;
         ctx2d.beginPath();
-        ctx2d.ellipse(dx, dy, 8.5, 6.2, 0, 0, Math.PI * 2);
+        ctx2d.ellipse(dx, dy, 8.8, 6.2, 0, 0, Math.PI * 2);
         ctx2d.fill();
       });
 
