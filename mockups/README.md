@@ -1,5 +1,12 @@
 # Design directions
 
+> **November 2026 — Illustrative World Game Directions (`illustrative-worlds/`).**
+> Three interactive 60fps mock-ups for the next games, exploring three
+> atmospheric illustrative styles (*Arise: A Simple Story* Torchlight Clay
+> Diorama, *Monument Valley 2* Axonometric 3D Architecture, and *Nordic Living
+> Valley Panorama & Gold Astrolabe*):
+> https://almoncohel.github.io/EDgames/mockups/illustrative-worlds/
+>
 > **October 2026 — Architectural Redesign (`v4/`).** Five structural directions
 > for the whole app. **Direction 1 — Console Deck (`1-console/`) was picked by
 > Almon and is now the live home screen (`play.html`)**, complete with the
