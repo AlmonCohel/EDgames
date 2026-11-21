@@ -526,7 +526,9 @@
     const cam = {
       x: 0,
       targetX: 0,
-      introPhase: 'follow', // 'burrow' | 'follow'
+      introPhase: 'follow', // 'burrow' | 'glide' | 'follow'
+      glideFromX: 0,
+      glideT: 1,
     };
     let shorePatchCanvas = null;
 
@@ -675,11 +677,13 @@
         bankLeft: worldMap(0.178, 0.415),
         burrow:   worldMap(0.810, 0.345),
         slots,
+        /* On wide, short windows the painting is trimmed top and bottom, so keep the
+           shore stones fully inside the frame (with a small gap at the bottom). */
         shore: [
           screenMap(0.390, 0.855),
           screenMap(0.550, 0.845),
           screenMap(0.710, 0.855),
-        ],
+        ].map((p) => ({ x: p.x, y: Math.min(p.y, viewH - baseStoneW * 0.55 - 10) })),
       };
     }
 
@@ -837,17 +841,21 @@
       loadSubStep(true);
       const L = layout();
       if (isPortrait()) {
-        /* Briefly show the glowing burrow so the child sees where Bear is going, then slide back to Bear */
+        /* Hold on the glowing burrow (~1.5s while the task is spoken), then glide back to Bear (~1s) */
         cam.introPhase = 'burrow';
         cam.x = computeCamTarget(L);
         cam.targetX = cam.x;
+        cam.glideT = 1;
         tm.later(() => {
           if (cam.introPhase === 'burrow') {
-            cam.introPhase = 'follow';
+            cam.introPhase = 'glide';
+            cam.glideFromX = cam.x;
+            cam.glideT = 0;
           }
-        }, 580);
+        }, 1500);
       } else {
         cam.introPhase = 'follow';
+        cam.glideT = 1;
         cam.x = computeCamTarget(L);
         cam.targetX = cam.x;
       }
@@ -981,7 +989,7 @@
     function onChoiceDown(e, idx) {
       if (locked) return;
       e.preventDefault();
-      if (cam.introPhase === 'burrow') cam.introPhase = 'follow';
+      if (cam.introPhase !== 'follow') cam.introPhase = 'follow';
       const pt = clientToLocal(e);
       sfxPick();
       dragging = { idx, x: pt.x, y: pt.y, startX: pt.x, startY: pt.y, moved: false };
@@ -1183,7 +1191,15 @@
       const L = layout();
       cam.targetX = computeCamTarget(L);
       if (isPortrait()) {
-        cam.x += (cam.targetX - cam.x) * (1 - Math.exp(-dt * 4.8));
+        if (cam.introPhase === 'glide') {
+          cam.glideT = Math.min(1, cam.glideT + dt / 1.0);
+          const u = cam.glideT;
+          const ease = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+          cam.x = cam.glideFromX + (cam.targetX - cam.glideFromX) * ease;
+          if (cam.glideT >= 1) cam.introPhase = 'follow';
+        } else {
+          cam.x += (cam.targetX - cam.x) * (1 - Math.exp(-dt * 4.8));
+        }
       } else {
         cam.x = cam.targetX;
       }
