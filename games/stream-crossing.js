@@ -62,98 +62,55 @@
     return shuffle(pool.filter((x) => x !== correct)).slice(0, count);
   }
 
-  /* Build 4 randomized rounds for the active step — strictly ONE idea per round. */
+  /* Build 3 randomized rounds per step — every round starts with an EMPTY stream
+     of 3–4 stones, placed one glowing target at a time, strictly ONE idea per round. */
   function buildStepRounds(mode) {
-    if (mode === 'sizes') {
-      const targets = shuffle(SIZES);
-      return targets.map((sz) => {
-        const missIdx = 1 + Math.floor(Math.random() * 2); // slot 1 or 2 (centered in water)
-        const slots = [0, 1, 2, 3].map((i) => ({
-          placed: i !== missIdx,
-          idea: 'sizes',
-          size: i === missIdx ? sz : 'm',
-          shape: 'circle',
-          dots: 0,
-        }));
-        return { idea: 'sizes', slots, queue: [missIdx] };
-      });
-    }
-
-    if (mode === 'count') {
-      /* Build 1, 2, 3, 4 in order across progressive rounds. */
-      const plans = [
-        [0],       // round 1: place 1
-        [1],       // round 2: place 2
-        [1, 2],    // round 3: place 2, then 3
-        [1, 2, 3], // round 4: place 2, 3, 4
-      ];
-      return plans.map((missing) => {
-        const missSet = new Set(missing);
-        const slots = [0, 1, 2, 3].map((i) => ({
-          placed: !missSet.has(i),
-          idea: 'count',
-          size: 'l',
-          shape: 'circle',
-          dots: i + 1,
-        }));
-        return { idea: 'count', slots, queue: missing.slice() };
-      });
-    }
-
-    if (mode === 'shapes') {
-      const targets = shuffle(SHAPES);
-      return targets.map((sh) => {
-        const missIdx = 1 + Math.floor(Math.random() * 2);
-        const otherShapes = shuffle(SHAPES.filter((s) => s !== sh));
-        let k = 0;
-        const slots = [0, 1, 2, 3].map((i) => ({
-          placed: i !== missIdx,
-          idea: 'shapes',
-          size: 'l',
-          shape: i === missIdx ? sh : otherShapes[k++ % otherShapes.length],
-          dots: 0,
-        }));
-        return { idea: 'shapes', slots, queue: [missIdx] };
-      });
-    }
-
-    /* Bridge step: 4 rounds, each picking ONE random idea (sizes, count, or shapes),
-       covering all 3 ideas across the 4 rounds with 2 stones to place per round. */
-    const ideas = shuffle(['sizes', 'count', 'shapes', shuffle(['sizes', 'count', 'shapes'])[0]]);
-    return ideas.map((idea) => {
+    function makeRound(idea, count) {
+      const n = count;
+      const queue = Array.from({ length: n }, (_, i) => i);
       if (idea === 'sizes') {
-        const picked = shuffle(SIZES).slice(0, 2);
-        const slots = [0, 1, 2, 3].map((i) => ({
-          placed: i === 0 || i === 3,
+        const picked = shuffle(SIZES).slice(0, n);
+        const slots = picked.map((sz) => ({
+          placed: false,
           idea: 'sizes',
-          size: i === 1 ? picked[0] : (i === 2 ? picked[1] : 'm'),
+          size: sz,
           shape: 'circle',
           dots: 0,
         }));
-        return { idea: 'sizes', slots, queue: [1, 2] };
+        return { idea: 'sizes', slots, queue };
       }
       if (idea === 'count') {
-        const miss = Math.random() < 0.5 ? [1, 2] : [2, 3];
-        const missSet = new Set(miss);
-        const slots = [0, 1, 2, 3].map((i) => ({
-          placed: !missSet.has(i),
+        const slots = queue.map((i) => ({
+          placed: false,
           idea: 'count',
           size: 'l',
           shape: 'circle',
           dots: i + 1,
         }));
-        return { idea: 'count', slots, queue: miss };
+        return { idea: 'count', slots, queue };
       }
-      const shs = shuffle(SHAPES);
-      const slots = [0, 1, 2, 3].map((i) => ({
-        placed: i === 0 || i === 3,
+      const picked = shuffle(SHAPES).slice(0, n);
+      const slots = picked.map((sh) => ({
+        placed: false,
         idea: 'shapes',
         size: 'l',
-        shape: shs[i],
+        shape: sh,
         dots: 0,
       }));
-      return { idea: 'shapes', slots, queue: [1, 2] };
-    });
+      return { idea: 'shapes', slots, queue };
+    }
+
+    if (mode === 'sizes') {
+      return [makeRound('sizes', 3), makeRound('sizes', 3), makeRound('sizes', 4)];
+    }
+    if (mode === 'count') {
+      return [makeRound('count', 3), makeRound('count', 4), makeRound('count', 4)];
+    }
+    if (mode === 'shapes') {
+      return [makeRound('shapes', 3), makeRound('shapes', 4), makeRound('shapes', 4)];
+    }
+    /* Bridge step: 3 rounds covering sizes, count, and shapes in random order, 4 stones each. */
+    return shuffle(['sizes', 'count', 'shapes']).map((idea) => makeRound(idea, 4));
   }
 
   function makeChoicesForSlot(slot) {
@@ -473,7 +430,7 @@
   function drawUnderwaterTarget(g, cx, cy, slot, baseStoneW, timeTick, hovered) {
     const scale = slot.idea === 'sizes' ? SIZE_FACTOR[slot.size] : 0.84;
     const rx = baseStoneW * scale * 0.48;
-    const ry = rx * 0.72;
+    const ry = rx * 0.82;
     const pulse = 1 + Math.sin(timeTick * 2.8) * 0.045 + (hovered ? 0.06 : 0);
 
     g.save();
@@ -626,19 +583,27 @@
       const drawY = (viewH - drawH) * 0.5;
       const map = (u, v) => ({ x: drawX + u * drawW, y: drawY + v * drawH });
 
+      const slotCount = round ? round.slots.length : 4;
+
       if (isPortrait()) {
         /* Portrait phone: zoom to full height and frame the left mossy bank under Bear,
            open rippling stream in the middle, and foreground mossy shore at the bottom. */
         const portraitDrawX = (viewW - drawW) * 0.34;
         const baseStoneW = Math.min(viewW * 0.27, 108);
-        const bridgeStoneW = Math.min(viewW * 0.21, 82);
+        const bridgeStoneW = Math.min(viewW * (slotCount === 3 ? 0.24 : 0.21), slotCount === 3 ? 92 : 82);
         const bearH = Math.min(viewH * 0.19, 152);
-        const slots = [
-          { x: viewW * 0.16,  y: viewH * 0.54 },
-          { x: viewW * 0.385, y: viewH * 0.50 },
-          { x: viewW * 0.615, y: viewH * 0.53 },
-          { x: viewW * 0.84,  y: viewH * 0.49 },
-        ];
+        const slots = slotCount === 3
+          ? [
+              { x: viewW * 0.22, y: viewH * 0.53 },
+              { x: viewW * 0.50, y: viewH * 0.50 },
+              { x: viewW * 0.78, y: viewH * 0.52 },
+            ]
+          : [
+              { x: viewW * 0.16,  y: viewH * 0.54 },
+              { x: viewW * 0.385, y: viewH * 0.50 },
+              { x: viewW * 0.615, y: viewH * 0.53 },
+              { x: viewW * 0.84,  y: viewH * 0.49 },
+            ];
         const shore = [
           { x: viewW * 0.20, y: viewH * 0.79 },
           { x: viewW * 0.50, y: viewH * 0.77 },
@@ -656,16 +621,23 @@
       /* Tablet & laptop: align directly to the painted banks, open stream, and mossy foreground shore */
       const baseStoneW = Math.min(drawW * 0.112, viewW * 0.135, 138);
       const bearH = Math.min(drawH * 0.265, 205);
+      const slots = slotCount === 3
+        ? [
+            map(0.350, 0.515),
+            map(0.510, 0.495),
+            map(0.670, 0.510),
+          ]
+        : [
+            map(0.320, 0.515),
+            map(0.445, 0.495),
+            map(0.575, 0.515),
+            map(0.700, 0.495),
+          ];
       return {
         drawX, drawY, drawW, drawH, baseStoneW, bridgeStoneW: baseStoneW, bearH,
         bankLeft: map(0.178, 0.415),
         burrow:   map(0.810, 0.345),
-        slots: [
-          map(0.320, 0.515),
-          map(0.445, 0.495),
-          map(0.575, 0.515),
-          map(0.700, 0.495),
-        ],
+        slots,
         shore: [
           map(0.365, 0.825),
           map(0.540, 0.815),
@@ -676,7 +648,7 @@
 
     function bearAnchorFor(slotIdx, L) {
       if (slotIdx < 0) return L.bankLeft;
-      if (slotIdx >= 4) return L.burrow;
+      if (slotIdx >= L.slots.length) return L.burrow;
       const p = L.slots[slotIdx];
       return { x: p.x, y: p.y - L.bridgeStoneW * 0.10 };
     }
@@ -822,9 +794,10 @@
 
     function runCrossingSequence() {
       locked = true;
-      /* Hop across any remaining placed stones up to the burrow (slot 4) */
+      /* Hop across any remaining placed stones into the burrow (slot = round.slots.length) */
+      const burrowSlot = round.slots.length;
       const nextSlots = [];
-      for (let s = bear.slotIdx + 1; s <= 4; s++) nextSlots.push(s);
+      for (let s = bear.slotIdx + 1; s <= burrowSlot; s++) nextSlots.push(s);
 
       let step = 0;
       function hopNext() {
@@ -840,19 +813,16 @@
             } else {
               showEnd();
             }
-          }, 1500);
+          }, 1350);
           return;
         }
         const sIdx = nextSlots[step++];
         hopBearTo(sIdx, () => {
           const L = layout();
-          if (sIdx < 4) {
+          if (sIdx < burrowSlot) {
             spawnRipples(L.slots[sIdx].x, L.slots[sIdx].y + 8, 2);
-            if (round.idea === 'count' && window.EDVoice && window.EDVoiceLines) {
-              EDVoice.say(EDVoiceLines.num(round.slots[sIdx].dots), lang);
-            }
           }
-          tm.later(hopNext, 220);
+          tm.later(hopNext, 200);
         });
       }
       hopNext();
@@ -988,7 +958,7 @@
     }
 
     /* ---- Render loop ---- */
-    function drawStone(item, cx, cy, baseStoneW, lift = 0, wobble = 0) {
+    function drawStone(item, cx, cy, baseStoneW, lift = 0, wobble = 0, inWater = false) {
       const im = loadImg(`${ART}${stoneSpriteName(item)}`);
       if (!im.complete || !im.naturalWidth) return;
       const scale = item.idea === 'sizes' ? SIZE_FACTOR[item.size] : 0.86;
@@ -999,24 +969,63 @@
       g.translate(cx, cy - lift * 14);
       if (wobble) g.rotate(wobble);
 
-      /* Soft ground/water contact shadow */
-      const shY = h * 0.36 + lift * 12;
-      const shRx = w * 0.48;
-      const shRy = h * 0.25;
-      g.save();
-      g.translate(0, shY);
-      g.scale(1, shRy / shRx);
-      const sg = g.createRadialGradient(0, 0, shRx * 0.1, 0, 0, shRx);
-      sg.addColorStop(0, `rgba(4, 18, 26, ${0.42 - lift * 0.14})`);
-      sg.addColorStop(0.65, `rgba(4, 18, 26, ${0.22 - lift * 0.08})`);
-      sg.addColorStop(1, 'rgba(4, 18, 26, 0)');
-      g.fillStyle = sg;
-      g.beginPath();
-      g.arc(0, 0, shRx, 0, Math.PI * 2);
-      g.fill();
-      g.restore();
+      if (inWater) {
+        /* Soft diffused water ripple + dark wet shadow band where stone sits IN the stream (no bright ring) */
+        const rRx = w * 0.72;
+        const rRy = h * 0.30;
+        g.save();
+        g.translate(0, h * 0.36);
+        g.scale(1, rRy / rRx);
+        const rg = g.createRadialGradient(0, 0, rRx * 0.12, 0, 0, rRx);
+        rg.addColorStop(0, 'rgba(3, 18, 26, 0.72)');
+        rg.addColorStop(0.50, 'rgba(8, 34, 45, 0.44)');
+        rg.addColorStop(0.72, 'rgba(130, 198, 212, 0.16)');
+        rg.addColorStop(1, 'rgba(15, 50, 62, 0)');
+        g.fillStyle = rg;
+        g.beginPath();
+        g.arc(0, 0, rRx, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+      } else {
+        /* Soft mossy grass contact shadow under shore stones */
+        const shY = h * 0.36 + lift * 12;
+        const shRx = w * 0.54;
+        const shRy = h * 0.26;
+        g.save();
+        g.translate(0, shY);
+        g.scale(1, shRy / shRx);
+        const sg = g.createRadialGradient(0, 0, shRx * 0.1, 0, 0, shRx);
+        sg.addColorStop(0, `rgba(5, 16, 9, ${0.62 - lift * 0.22})`);
+        sg.addColorStop(0.60, `rgba(9, 24, 13, ${0.30 - lift * 0.12})`);
+        sg.addColorStop(1, 'rgba(9, 24, 13, 0)');
+        g.fillStyle = sg;
+        g.beginPath();
+        g.arc(0, 0, shRx, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+      }
 
+      /* Crisp 640px slate stone — zero blur */
       g.drawImage(im, -w * 0.5, -h * 0.5, w, h);
+
+      if (inWater) {
+        /* Feathered see-through stream water wash covering the submerged bottom ~22% of the stone */
+        const wRx = w * 0.54;
+        const wRy = h * 0.23;
+        g.save();
+        g.translate(0, h * 0.39);
+        g.scale(1, wRy / wRx);
+        const wg = g.createRadialGradient(0, 0, wRx * 0.15, 0, 0, wRx);
+        wg.addColorStop(0, 'rgba(15, 52, 65, 0.78)');
+        wg.addColorStop(0.55, 'rgba(18, 60, 73, 0.52)');
+        wg.addColorStop(0.82, 'rgba(20, 65, 78, 0.20)');
+        wg.addColorStop(1, 'rgba(20, 65, 78, 0)');
+        g.fillStyle = wg;
+        g.beginPath();
+        g.arc(0, 0, wRx, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+      }
 
       /* Glowing counting dots ONLY when item.dots > 0 (Count step) */
       if (item.dots > 0) {
@@ -1121,7 +1130,7 @@
       round.slots.forEach((slot, i) => {
         const pos = L.slots[i];
         if (slot.placed) {
-          drawStone(slot, pos.x, pos.y, L.bridgeStoneW, 0, 0);
+          drawStone(slot, pos.x, pos.y, L.bridgeStoneW, 0, 0, true);
         } else if (i === activeIdx) {
           drawUnderwaterTarget(g, pos.x, pos.y, slot, L.bridgeStoneW, timeTick, hoverActive);
         }
