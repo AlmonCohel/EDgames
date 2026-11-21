@@ -873,28 +873,9 @@ const EDCovers = (() => {
     'whispering-woods': () => `
       <image href="assets/worlds/whispering-woods/cover.jpg" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
 
-    /* The Woodland Stream Crossing: sculpted brown bear cub on mossy riverbank, swirling stream stepping stones with glowing dots, and warm burrow. */
+    /* The Woodland Stream Crossing: cover composed from the game's sculpted clay diorama art. */
     'stream-crossing': () => `
-      <rect width="200" height="200" fill="#0e3a4a"/>
-      <path d="M0 0 H74 Q90 100 58 200 H0 Z" fill="#1e4d2b"/>
-      <path d="M138 0 H200 V200 H126 Q152 100 138 0 Z" fill="#163d22"/>
-      <!-- Warm Candle-Lit Burrow on Right Bank -->
-      <path d="M148 56 A22 24 0 0 1 192 56 V76 H148 Z" fill="#451a03" stroke="#78350f" stroke-width="3"/>
-      <circle cx="170" cy="60" r="14" fill="url(#cv-sun)" opacity=".75"/>
-      <!-- Stepping Stones & Water Ripples -->
-      <ellipse cx="86" cy="112" rx="22" ry="13" fill="#64748b" stroke="#94a3b8" stroke-width="2.5"/>
-      <circle cx="80" cy="112" r="4" fill="#ffd23f"/><circle cx="92" cy="112" r="4" fill="#ffd23f"/>
-      <ellipse cx="128" cy="112" rx="24" ry="14" fill="none" stroke="#7dd3fc" stroke-width="2.5" stroke-dasharray="5 4"/>
-      <!-- Cute Brown Bear Cub on Left Bank -->
-      <g transform="translate(42 84)">
-        <circle cx="-13" cy="-22" r="8" fill="#78350f"/><circle cx="13" cy="-22" r="8" fill="#78350f"/>
-        <ellipse cx="0" cy="14" rx="22" ry="26" fill="#92400e"/>
-        <circle cx="0" cy="-10" r="19" fill="#b45309"/>
-        <ellipse cx="0" cy="-4" rx="9" ry="7" fill="#fde68a"/>
-        <circle cx="0" cy="-7" r="3.5" fill="#451a03"/>
-        ${eye(-7, -13, 2.8)}${eye(7, -13, 2.8)}
-      </g>
-      ${sparkle(170, 32, 7, '#ffd23f')}${sparkle(114, 152, 6, '#38bdf8')}`,
+      <image href="assets/worlds/stream-crossing/cover.jpg" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
 
     /* The Sun-Mirror Valley: cliffside sun tower beaming golden light into a turquoise crystal prism splitting into two beams. */
     'sun-mirror-valley': () => `
