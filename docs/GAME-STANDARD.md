@@ -51,6 +51,11 @@ of it.
   `assets/worlds/<game-id>/style.md` (the reference prompt).
 - Keep the files light. Aim for a background under 800 KB and each cut-out
   under 150 KB.
+- **Make images sharp enough for phone and laptop screens**, which show 2
+  pixels for every 1. Make each cut-out at least twice as wide as the biggest
+  size it is shown (a stone shown 200 px wide needs a 400–600 px file), and the
+  background at least 2400 px wide. Never blur a playable thing on purpose to
+  "match" a soft background; blend it with light, colour and shadow instead.
 
 ## 3. The game fills the screen
 
