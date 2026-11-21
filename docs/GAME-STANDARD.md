@@ -134,6 +134,11 @@ each one cost a full round of fixes. Check every one before you hand over.
 6. **A phone held upright.** A wide scene becomes a thin strip. Zoom in to fill
    the height (or show a "turn sideways" picture), and keep every target inside
    the visible part, at least 10% away from the edges.
+   The story's start and goal must be on screen too (for example the bear
+   *and* his burrow). If they don't fit, let the camera slide with the action
+   so the child always sees where the character is going. Every playable
+   thing sits on clear ground, never on top of a bank edge or a plant painted
+   in front.
 7. **The same cut-out stamped many times.** Use each prop at most twice per
    screen, and give each copy its own flip, size (85–115%) and small tilt.
 8. **A character painted into the background.** If a character moves, reacts
