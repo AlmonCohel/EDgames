@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>גשר הנחל הקטן — בחירת מראה האבנים | Stream Crossing Stone Mock-up</title>
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07131a;
+    --panel: #0e202b;
+    --border: rgba(246, 206, 128, 0.24);
+    --gold: #f5c970;
+    --text: #f4f7f8;
+    --muted: #a6bec6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Heebo', 'Fredoka', system-ui, sans-serif;
+    line-height: 1.45;
+    overflow-x: hidden;
+  }
+
+  /* Top sticky review bar */
+  .bar {
+    position: sticky; top: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap;
+    padding: 10px 16px;
+    background: rgba(7, 19, 26, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar-brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .pill-kicker {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #160c02; font-family: 'Fredoka', sans-serif;
+    font-weight: 700; font-size: 12px;
+    padding: 3px 10px; border-radius: 99px;
+  }
+  .bar h1 {
+    margin: 0; font-family: 'Fredoka', 'Heebo', sans-serif;
+    font-size: clamp(1rem, 2.2vw, 1.2rem); font-weight: 700;
+  }
+  .bar-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tab {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.14);
+    color: var(--text); font-family: inherit; font-weight: 600; font-size: 13px;
+    padding: 6px 13px; border-radius: 99px; cursor: pointer;
+  }
+  .tab.active {
+    background: linear-gradient(180deg, #f59e0b, #d97706);
+    border-color: #fde68a; color: #160c02;
+  }
+  .lang-btn {
+    background: rgba(245, 201, 112, 0.14);
+    border: 1.5px solid var(--gold); color: var(--gold);
+    font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 12.5px;
+    padding: 5px 12px; border-radius: 99px; cursor: pointer;
+  }
+
+  .wrap {
+    max-width: 1320px; margin: 0 auto;
+    padding: 18px 16px 48px;
+    display: flex; flex-direction: column; gap: 28px;
+  }
+
+  .intro {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 14px 18px;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .intro strong { color: var(--gold); }
+
+  .look-card {
+    background: var(--panel);
+    border: 1.5px solid var(--border);
+    border-radius: 22px;
+    padding: 18px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .look-card.hidden { display: none; }
+  .look-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .look-head h2 {
+    margin: 0; font-family: 'Fredoka', 'Heebo', sans-serif;
+    font-size: clamp(1.15rem, 2.3vw, 1.45rem); color: #fff;
+  }
+  .look-badge {
+    font-size: 12.5px; font-weight: 700; color: var(--gold);
+    background: rgba(245, 201, 112, 0.12);
+    border: 1px solid rgba(245, 201, 112, 0.35);
+    padding: 3px 11px; border-radius: 99px;
+  }
+  .look-desc {
+    margin: -6px 0 0; color: var(--muted); font-size: 0.93rem;
+  }
+
+  /* Viewport pair: Laptop + Phone upright side-by-side */
+  .devices-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .devices-grid { grid-template-columns: 1fr; justify-items: center; }
+    .device-frame--laptop { width: 100%; }
+    .device-frame--phone { width: min(340px, 100%); }
+  }
+
+  .device-col { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .device-label {
+    font-size: 12.5px; font-weight: 700; color: var(--gold);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* Scene canvas wrapper */
+  .scene {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    background: #061b24;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  }
+  .scene--laptop { aspect-ratio: 16 / 10; }
+  .scene--phone  { aspect-ratio: 390 / 760; }
+
+  .scene-bg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    pointer-events: none;
+  }
+  .scene--phone .scene-bg {
+    object-position: 34% center;
+  }
+
+  /* Little Bear placed on left bank */
+  .bear {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    z-index: 4;
+  }
+  .bear img {
+    display: block; width: 100%; height: auto;
+    filter: drop-shadow(0 6px 8px rgba(4, 15, 22, 0.42));
+  }
+  .bear::before {
+    content: '';
+    position: absolute; left: 50%; bottom: -4px;
+    width: 72%; height: 18px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(4, 16, 22, 0.45) 0%, rgba(4, 16, 22, 0.18) 58%, transparent 100%);
+    z-index: -1;
+  }
+
+  /* Underwater glowing target outline */
+  .water-target {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 3px solid rgba(186, 246, 255, 0.90);
+    background: radial-gradient(ellipse at center, rgba(165, 243, 252, 0.24) 0%, rgba(56, 189, 248, 0.08) 68%, transparent 100%);
+    box-shadow: 0 0 16px rgba(125, 232, 255, 0.72), inset 0 0 10px rgba(186, 246, 255, 0.35);
+    z-index: 2;
+  }
+  .water-target::after {
+    content: '';
+    position: absolute; inset: -11px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(186, 242, 255, 0.34);
+  }
+
+  /* WATER-PLACED STONE: dark wet waterline reflection + bright meniscus + water ripple ring */
+  .stone-water {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+  }
+  .stone-water .water-ripple {
+    position: absolute;
+    left: 50%; bottom: -10%;
+    width: 138%; height: 52%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    border: 1.5px solid rgba(184, 238, 248, 0.36);
+    box-shadow:
+      0 0 0 7px rgba(165, 232, 246, 0.12),
+      inset 0 0 10px rgba(3, 18, 26, 0.55);
+    pointer-events: none;
+  }
+  .stone-water .water-darkline {
+    position: absolute;
+    left: 50%; bottom: -7%;
+    width: 106%; height: 42%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(2, 16, 24, 0.72) 0%, rgba(4, 24, 34, 0.45) 56%, transparent 100%);
+    pointer-events: none;
+  }
+  .stone-water .water-meniscus {
+    position: absolute;
+    left: 50%; bottom: 1%;
+    width: 104%; height: 26%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    border-bottom: 2px solid rgba(196, 244, 255, 0.42);
+    filter: blur(0.6px);
+    pointer-events: none;
+  }
+  .stone-water img {
+    position: relative;
+    display: block; width: 100%; height: auto;
+    /* Match twilight scene warmth & subtle water bounce */
+    filter: brightness(0.88) contrast(1.04) saturate(1.06);
+  }
+
+  /* SHORE-PLACED STONE: soft grass contact shadow + foreground depth-of-field softness matching bg.jpg */
+  .stone-shore {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+  }
+  .stone-shore .grass-shadow {
+    position: absolute;
+    left: 50%; bottom: -10%;
+    width: 112%; height: 48%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(6, 18, 10, 0.68) 0%, rgba(10, 24, 12, 0.34) 55%, transparent 100%);
+    filter: blur(2.5px);
+    pointer-events: none;
+  }
+  .stone-shore img {
+    position: relative;
+    display: block; width: 100%; height: auto;
+    /* Match foreground mossy shore softness (depth-of-field blur) & warm mossy bounce */
+    filter: blur(0.85px) brightness(0.85) contrast(0.98) saturate(1.06);
+  }
+
+  /* Close-up specimen strip of all 4 shapes */
+  .specimens {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+  @media (max-width: 680px) {
+    .specimens { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .spec-tile {
+    background: radial-gradient(ellipse at 50% 65%, #163b47 0%, #091d26 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 14px 10px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .spec-tile img {
+    width: min(145px, 86%); height: auto; display: block;
+    filter: drop-shadow(0 8px 12px rgba(2, 12, 18, 0.65));
+  }
+  .spec-tile span {
+    font-size: 12.5px; font-weight: 600; color: var(--muted);
+  }
+
+  .voice-line {
+    font-size: 0.88rem; color: #fde68a;
+    background: rgba(245, 158, 11, 0.10);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px; padding: 7px 12px;
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-brand">
+    <span class="pill-kicker" data-he="מוקאפ אבנים" data-en="Stone Mock-up">מוקאפ אבנים</span>
+    <h1 data-he="גשר הנחל הקטן — 2 מראות חדשים לאבנים" data-en="Stream Crossing — 2 New Stone Looks">גשר הנחל הקטן — 2 מראות חדשים לאבנים</h1>
+  </div>
+  <div class="bar-controls">
+    <button class="tab active" data-view="both" data-he="השוואה של שניהם" data-en="Compare Both">השוואה של שניהם</button>
+    <button class="tab" data-view="a" data-he="מראה א׳ — חלוקי נחל" data-en="Look A — River Cobbles">מראה א׳ — חלוקי נחל</button>
+    <button class="tab" data-view="b" data-he="מראה ב׳ — אבני צפחה" data-en="Look B — Layered Slate">מראה ב׳ — אבני צפחה</button>
+    <button class="lang-btn" id="lang-btn">English</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="intro"
+       data-he="<strong>מה שופר בשני המראות:</strong> אור שקיעה זהוב מאותו כיוון של הסצנה (מאחור־למעלה), אבן נחל רטובה אמיתית עם טחב קטיפתי (לא חימר אפור), קו מים כהה רטוב וטבעת אדוות סביב אבנים במים, צל רך על הדשא וריכוך עדין לאבנים על הגדה הקדמית, וריבוע חלק לגמרי בלי הבליטה המוזרה. תבחר איזה מראה להכניס למשחק."
+       data-en="<strong>What changed in both looks:</strong> warm golden sunset light from the same back-top direction as the scene, real wet river stone with velvety moss (not grey putty), dark wet waterline + ripple ring in the water, soft grass contact shadow + foreground softness on the shore stones, and a clean square with no odd bump. Pick which look goes into the game.">
+    <strong>מה שופר בשני המראות:</strong> אור שקיעה זהוב מאותו כיוון של הסצנה (מאחור־למעלה), אבן נחל רטובה אמיתית עם טחב קטיפתי (לא חימר אפור), קו מים כהה רטוב וטבעת אדוות סביב אבנים במים, צל רך על הדשא וריכוך עדין לאבנים על הגדה הקדמית, וריבוע חלק לגמרי בלי הבליטה המוזרה. תבחר איזה מראה להכניס למשחק.
+  </div>
+
+  <!-- ==================== LOOK A ==================== -->
+  <section class="look-card" id="card-a">
+    <div class="look-head">
+      <h2 data-he="מראה א׳ — חלוקי נחל רטובים וחלקים" data-en="Look A — Smooth Wet River Cobbles">מראה א׳ — חלוקי נחל רטובים וחלקים</h2>
+      <span class="look-badge" data-he="חלוק נחל כהה ומבריק · אור שקיעה זהוב" data-en="Dark glossy river basalt · warm sunset sheen">חלוק נחל כהה ומבריק · אור שקיעה זהוב</span>
+    </div>
+    <p class="look-desc"
+       data-he="אבני נחל חלקות ומעוגלות שזרם המים שחק, בגוון בזלת וגרניט רטובה עם ברק שקיעה זהוב על הכיפה העליונה, קו מים טורקיז־כהה בתחתית וכריות טחב זיתי."
+       data-en="Water-worn rounded river cobbles in dark wet basalt and granite, catching a glossy golden sunset sheen across the gently domed top, a dark wet teal waterline at the base, and plush olive moss pillows.">
+      אבני נחל חלקות ומעוגלות שזרם המים שחק, בגוון בזלת וגרניט רטובה עם ברק שקיעה זהוב על הכיפה העליונה, קו מים טורקיז־כהה בתחתית וכריות טחב זיתי.
+    </p>
+
+    <div class="devices-grid">
+      <!-- Laptop view -->
+      <div class="device-col device-frame--laptop">
+        <div class="device-label" data-he="לפטופ (1280×800) — אבנים במים ועל הגדה" data-en="Laptop (1280×800) — Stones in water &amp; on shore">לפטופ (1280×800) — אבנים במים ועל הגדה</div>
+        <div class="scene scene--laptop">
+          <img class="scene-bg" src="../../assets/worlds/stream-crossing/bg.jpg" alt="">
+          <!-- Bear standing on left bank -->
+          <div class="bear" style="left:17.8%; top:43%; width:13.5%;">
+            <img src="../../assets/worlds/stream-crossing/bear-waiting.png" alt="">
+          </div>
+          <!-- Water stones: square (clean!), triangle, glowing circle target, star -->
+          <div class="stone-water" style="left:32%; top:51.5%; width:10.5%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-a-square.png" alt="Square">
+          </div>
+          <div class="stone-water" style="left:44.5%; top:49.5%; width:10.5%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-a-triangle.png" alt="Triangle">
+          </div>
+          <div class="water-target" style="left:57.5%; top:51.5%; width:10.8%; height:11.5%;"></div>
+          <div class="stone-water" style="left:70%; top:49.5%; width:10.5%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-a-star.png" alt="Star">
+          </div>
+          <!-- Shore stones (soft depth-of-field + grass contact shadow) -->
+          <div class="stone-shore" style="left:36.5%; top:82.5%; width:11.2%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-a-circle.png" alt="Circle">
+          </div>
+          <div class="stone-shore" style="left:54%; top:81.5%; width:11.2%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-a-square.png" alt="Square">
+          </div>
+          <div class="stone-shore" style="left:71.5%; top:82.5%; width:11.2%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-a-star.png" alt="Star">
+          </div>
+        </div>
+        <div class="voice-line"
+             data-he="הילד שומע: ״איפה האבן העגולה?״ · כל האבנים יושבות במים עם קו רטוב ואדווה, ועל הדשא עם צל רך וריכוך עדין."
+             data-en="Child hears: &ldquo;Find the circle stone!&rdquo; · Water stones sit with a dark wet waterline and ripple; shore stones blend softly into the grass.">
+          הילד שומע: ״איפה האבן העגולה?״ · כל האבנים יושבות במים עם קו רטוב ואדווה, ועל הדשא עם צל רך וריכוך עדין.
+        </div>
+      </div>
+
+      <!-- Phone upright view -->
+      <div class="device-col device-frame--phone">
+        <div class="device-label" data-he="טלפון לאורך (390×844)" data-en="Phone upright (390×844)">טלפון לאורך (390×844)</div>
+        <div class="scene scene--phone">
+          <img class="scene-bg" src="../../assets/worlds/stream-crossing/bg.jpg" alt="">
+          <div class="bear" style="left:19%; top:36%; width:31%;">
+            <img src="../../assets/worlds/stream-crossing/bear-waiting.png" alt="">
+          </div>
+          <div class="stone-water" style="left:17%; top:54%; width:20%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-a-square.png" alt="Square">
+          </div>
+          <div class="stone-water" style="left:39%; top:50%; width:20%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-a-triangle.png" alt="Triangle">
+          </div>
+          <div class="water-target" style="left:61.5%; top:53%; width:20%; height:8.2%;"></div>
+          <div class="stone-water" style="left:83.5%; top:49%; width:20%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-a-star.png" alt="Star">
+          </div>
+          <div class="stone-shore" style="left:20%; top:79%; width:24%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-a-circle.png" alt="Circle">
+          </div>
+          <div class="stone-shore" style="left:50%; top:77%; width:24%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-a-square.png" alt="Square">
+          </div>
+          <div class="stone-shore" style="left:80%; top:79%; width:24%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-a-star.png" alt="Star">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="specimens">
+      <div class="spec-tile"><img src="stones/look-a-circle.png" alt=""><span data-he="עיגול" data-en="Circle">עיגול</span></div>
+      <div class="spec-tile"><img src="stones/look-a-square.png" alt=""><span data-he="ריבוע (חלק, בלי בליטה)" data-en="Square (clean, no bump)">ריבוע (חלק, בלי בליטה)</span></div>
+      <div class="spec-tile"><img src="stones/look-a-triangle.png" alt=""><span data-he="משולש" data-en="Triangle">משולש</span></div>
+      <div class="spec-tile"><img src="stones/look-a-star.png" alt=""><span data-he="כוכב" data-en="Star">כוכב</span></div>
+    </div>
+  </section>
+
+  <!-- ==================== LOOK B ==================== -->
+  <section class="look-card" id="card-b">
+    <div class="look-head">
+      <h2 data-he="מראה ב׳ — אבני צפחה משוכבות וחמימות" data-en="Look B — Warm Sunlit Layered Flagstones">מראה ב׳ — אבני צפחה משוכבות וחמימות</h2>
+      <span class="look-badge" data-he="צפחה משוכבת · גוון אבן חמים" data-en="Layered brook slate · warm ochre top">צפחה משוכבת · גוון אבן חמים</span>
+    </div>
+    <p class="look-desc"
+       data-he="אבני מדרך שטוחות ומחוספסות בעדינות עם שכבות סלע טבעיות בדופן, משטח עליון חמים שמקבל את אור השקיעה והנר מהמחילה, קו מים כהה וטחב עשיר."
+       data-en="Flatter carved brook flagstones with natural horizontal slate layers along the sides, a warmer sun-kissed ochre stone top catching the sunset and burrow glow, dark wet waterline, and plush olive moss.">
+      אבני מדרך שטוחות ומחוספסות בעדינות עם שכבות סלע טבעיות בדופן, משטח עליון חמים שמקבל את אור השקיעה והנר מהמחילה, קו מים כהה וטחב עשיר.
+    </p>
+
+    <div class="devices-grid">
+      <!-- Laptop view -->
+      <div class="device-col device-frame--laptop">
+        <div class="device-label" data-he="לפטופ (1280×800) — אבנים במים ועל הגדה" data-en="Laptop (1280×800) — Stones in water &amp; on shore">לפטופ (1280×800) — אבנים במים ועל הגדה</div>
+        <div class="scene scene--laptop">
+          <img class="scene-bg" src="../../assets/worlds/stream-crossing/bg.jpg" alt="">
+          <div class="bear" style="left:17.8%; top:43%; width:13.5%;">
+            <img src="../../assets/worlds/stream-crossing/bear-waiting.png" alt="">
+          </div>
+          <div class="stone-water" style="left:32%; top:51.5%; width:10.5%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-b-square.png" alt="Square">
+          </div>
+          <div class="stone-water" style="left:44.5%; top:49.5%; width:10.5%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-b-triangle.png" alt="Triangle">
+          </div>
+          <div class="water-target" style="left:57.5%; top:51.5%; width:10.8%; height:11.5%;"></div>
+          <div class="stone-water" style="left:70%; top:49.5%; width:10.5%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-b-star.png" alt="Star">
+          </div>
+          <div class="stone-shore" style="left:36.5%; top:82.5%; width:11.2%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-b-circle.png" alt="Circle">
+          </div>
+          <div class="stone-shore" style="left:54%; top:81.5%; width:11.2%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-b-square.png" alt="Square">
+          </div>
+          <div class="stone-shore" style="left:71.5%; top:82.5%; width:11.2%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-b-star.png" alt="Star">
+          </div>
+        </div>
+        <div class="voice-line"
+             data-he="הילד שומע: ״איפה האבן העגולה?״ · הדובון קופץ על כל אבן מיד כשהיא מונחת, מנקודת התחלה עם נחל ריק."
+             data-en="Child hears: &ldquo;Find the circle stone!&rdquo; · Next round starts with an empty stream and Little Bear hops onto each stone right after it is placed.">
+          הילד שומע: ״איפה האבן העגולה?״ · הדובון קופץ על כל אבן מיד כשהיא מונחת, מנקודת התחלה עם נחל ריק.
+        </div>
+      </div>
+
+      <!-- Phone upright view -->
+      <div class="device-col device-frame--phone">
+        <div class="device-label" data-he="טלפון לאורך (390×844)" data-en="Phone upright (390×844)">טלפון לאורך (390×844)</div>
+        <div class="scene scene--phone">
+          <img class="scene-bg" src="../../assets/worlds/stream-crossing/bg.jpg" alt="">
+          <div class="bear" style="left:19%; top:36%; width:31%;">
+            <img src="../../assets/worlds/stream-crossing/bear-waiting.png" alt="">
+          </div>
+          <div class="stone-water" style="left:17%; top:54%; width:20%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-b-square.png" alt="Square">
+          </div>
+          <div class="stone-water" style="left:39%; top:50%; width:20%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-b-triangle.png" alt="Triangle">
+          </div>
+          <div class="water-target" style="left:61.5%; top:53%; width:20%; height:8.2%;"></div>
+          <div class="stone-water" style="left:83.5%; top:49%; width:20%;">
+            <span class="water-ripple"></span><span class="water-darkline"></span><span class="water-meniscus"></span>
+            <img src="stones/look-b-star.png" alt="Star">
+          </div>
+          <div class="stone-shore" style="left:20%; top:79%; width:24%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-b-circle.png" alt="Circle">
+          </div>
+          <div class="stone-shore" style="left:50%; top:77%; width:24%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-b-square.png" alt="Square">
+          </div>
+          <div class="stone-shore" style="left:80%; top:79%; width:24%;">
+            <span class="grass-shadow"></span>
+            <img src="stones/look-b-star.png" alt="Star">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="specimens">
+      <div class="spec-tile"><img src="stones/look-b-circle.png" alt=""><span data-he="עיגול" data-en="Circle">עיגול</span></div>
+      <div class="spec-tile"><img src="stones/look-b-square.png" alt=""><span data-he="ריבוע (חלק, בלי בליטה)" data-en="Square (clean, no bump)">ריבוע (חלק, בלי בליטה)</span></div>
+      <div class="spec-tile"><img src="stones/look-b-triangle.png" alt=""><span data-he="משולש" data-en="Triangle">משולש</span></div>
+      <div class="spec-tile"><img src="stones/look-b-star.png" alt=""><span data-he="כוכב" data-en="Star">כוכב</span></div>
+    </div>
+  </section>
+</main>
+
+<script>
+  let lang = 'he';
+  const langBtn = document.getElementById('lang-btn');
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+    langBtn.textContent = lang === 'he' ? 'English' : 'עברית';
+    document.querySelectorAll('[data-he]').forEach((el) => {
+      const val = el.getAttribute(lang === 'he' ? 'data-he' : 'data-en');
+      if (val != null) el.innerHTML = val;
+    });
+  }
+  langBtn.addEventListener('click', () => {
+    lang = lang === 'he' ? 'en' : 'he';
+    applyLang();
+  });
+
+  const tabs = document.querySelectorAll('.tab');
+  const cardA = document.getElementById('card-a');
+  const cardB = document.getElementById('card-b');
+  tabs.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabs.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const v = btn.dataset.view;
+      cardA.classList.toggle('hidden', v === 'b');
+      cardB.classList.toggle('hidden', v === 'a');
+    });
+  });
+</script>
+</body>
+</html>
