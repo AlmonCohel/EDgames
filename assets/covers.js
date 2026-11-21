@@ -869,37 +869,9 @@ const EDCovers = (() => {
       ${gloss(134, 68, 6, 14, -18)}
       ${sparkle(146, 40, 8, '#ffe596')}${sparkle(178, 74, 7, '#ffd23f')}`,
 
-    /* The Lantern in the Whispering Woods: nocturnal forest oak hollow with 3 baby owls illuminated by a warm golden lantern beam. */
+    /* The Lantern in the Whispering Woods: cover composed from the game's sculpted clay diorama art. */
     'whispering-woods': () => `
-      <rect width="200" height="200" fill="#071a26"/>
-      <circle cx="158" cy="34" r="16" fill="#fef3c7" opacity=".85"/>
-      <circle cx="164" cy="30" r="14" fill="#071a26"/>
-      <path d="M0 150 Q100 132 200 154 V200 H0 Z" fill="#0f2e22"/>
-      <!-- Ancient Oak Trunk & Hollow -->
-      <path d="M46 200 C58 140 58 60 42 0 H134 C118 60 120 140 138 200 Z" fill="#4a2c18" stroke="#29160a" stroke-width="3"/>
-      <ellipse cx="90" cy="96" rx="30" ry="34" fill="#1e0f07" stroke="#784727" stroke-width="3"/>
-      <!-- Golden Lantern Beam -->
-      <polygon points="164,116 62,68 62,126" fill="url(#cv-sun)" opacity=".36"/>
-      <!-- 3 Baby Owls inside the Hollow -->
-      <g transform="translate(74 102)">
-        <ellipse cx="0" cy="0" rx="11" ry="13" fill="#c89d66"/>
-        <circle cx="-4" cy="-3" r="4" fill="#fff"/><circle cx="4" cy="-3" r="4" fill="#fff"/>
-        ${eye(-4, -3, 2.2)}${eye(4, -3, 2.2)}
-      </g>
-      <g transform="translate(104 102)">
-        <ellipse cx="0" cy="0" rx="11" ry="13" fill="#c89d66"/>
-        <circle cx="-4" cy="-3" r="4" fill="#fff"/><circle cx="4" cy="-3" r="4" fill="#fff"/>
-        ${eye(-4, -3, 2.2)}${eye(4, -3, 2.2)}
-      </g>
-      <g transform="translate(89 82)">
-        <ellipse cx="0" cy="0" rx="11" ry="13" fill="#d9b382"/>
-        <circle cx="-4" cy="-3" r="4" fill="#fff"/><circle cx="4" cy="-3" r="4" fill="#fff"/>
-        ${eye(-4, -3, 2.2)}${eye(4, -3, 2.2)}
-      </g>
-      <!-- Glowing Forest Lantern -->
-      <rect x="152" y="102" width="24" height="32" rx="6" fill="#ffd23f" stroke="#92400e" stroke-width="3"/>
-      <path d="M156 102 A8 8 0 0 1 172 102" fill="none" stroke="#d97706" stroke-width="3"/>
-      ${sparkle(42, 68, 7, '#ffd23f')}${sparkle(136, 56, 8, '#ffe596')}`,
+      <image href="assets/worlds/whispering-woods/cover.jpg" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
 
     /* The Woodland Stream Crossing: sculpted brown bear cub on mossy riverbank, swirling stream stepping stones with glowing dots, and warm burrow. */
     'stream-crossing': () => `
