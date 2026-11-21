@@ -74,6 +74,7 @@ const SIZES = [
   { tag: 'phone', width: 390, height: 844, touch: true },
   { tag: 'tablet', width: 1024, height: 768, touch: true },
   { tag: 'laptop', width: 1280, height: 800, touch: false },
+  { tag: 'wide', width: 1460, height: 640, touch: false }, // big wide screen, browser bars take height
 ];
 
 const { chromium } = await loadPlaywright();
@@ -163,7 +164,7 @@ for (const id of ids) {
   fs.writeFileSync(path.join(out, 'index.html'), `<!doctype html><meta charset="utf-8"><title>${id} — review</title>
 <style>body{font:14px system-ui;background:#1d2027;color:#eee;margin:16px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap}
 .grid{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}figure{margin:0}img{display:block;border-radius:8px;border:1px solid #444}
-.phone img{width:195px}.tablet img{width:512px}.laptop img{width:640px}figcaption{opacity:.7;margin-top:4px}</style>
+.phone img{width:195px}.tablet img{width:512px}.laptop img{width:640px}.wide img{width:730px}figcaption{opacity:.7;margin-top:4px}</style>
 <h1>${id}</h1><pre>${report.join('\n').replace(/</g, '&lt;')}</pre>
 <h2>Cover</h2>${fs.existsSync(path.join(out, 'cover.png')) ? '<img src="cover.png" style="width:240px">' : '<p>none</p>'}
 ${art.length ? `<h2>Art pieces (light and dark backgrounds show bad edges)</h2><div class="grid">${art.map((f, i) => `<figure><img src="../../assets/worlds/${id}/${f}" style="max-width:${/^bg\./.test(f) ? 640 : 220}px;max-height:${/^bg\./.test(f) ? 400 : 220}px;background:${i % 2 ? '#d8cfbd' : '#173036'};padding:8px"><figcaption>${f}</figcaption></figure>`).join('')}</div>` : ''}

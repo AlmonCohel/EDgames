@@ -60,7 +60,9 @@ of it.
 ## 3. The game fills the screen
 
 - **The whole scene is visible with no scrolling** at phone (390×844), tablet
-  (1024×768) and laptop (1280×800) sizes.
+  (1024×768), laptop (1280×800) and wide-screen (1460×640) sizes. A wide,
+  short window trims the painting top and bottom, so keep playable things
+  inside the frame there too.
 - **The play area is most of the screen.** The title, step buttons and parent
   text sit behind one small button or in a thin bar, not stacked above the game.
   The screenshot script reports how much of the screen the stage takes and
