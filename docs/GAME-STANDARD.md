@@ -89,7 +89,7 @@ of it.
   is actually on screen.** Words like "museum-grade", "ray-traced", "photoreal"
   or "3D" are allowed only if a screenshot shows them.
 - **Don't call a game done because the code exists.** It is done when the
-  screenshots pass this page (section 9).
+  screenshots pass this page (section 10).
 
 ## 7. The cover matches the game
 
@@ -143,7 +143,28 @@ each one cost a full round of fixes. Check every one before you hand over.
 12. **The stage-size number lies on phones.** The script measures the game
     frame, not the painted scene. Always look at the phone pictures.
 
-## 9. What "done" means
+## 9. Almon sees the design at every stage
+
+Almon reviews the design himself, not only Claude. So every hand-over comes
+with something he can open from any device:
+
+- **Hand-over 1 (art) includes a mock-up page:** `mockups/<game-id>/index.html`,
+  committed and pushed, so it opens at
+  `https://almoncohel.github.io/EDgames/mockups/<game-id>/`. Hebrew first, with
+  an English toggle, like `mockups/illustrative-worlds/`. It shows:
+  - every art piece (background, each character pose, each object state),
+  - **one mock screen per step** built by layering the real art files (HTML
+    and CSS, not new code-drawn shapes), at laptop size and phone held
+    upright, showing the start of a round and the "right answer" moment,
+  - under each screen, one line of what the child hears,
+  - the cover at card size.
+  Wait for Almon's OK on the mock-up before writing game code.
+- **Hand-over 2 (game):** the game is pushed so Almon can play it live, and the
+  note gives the link `https://almoncohel.github.io/EDgames/game.html?id=<game-id>`.
+- **Always commit and push** what you hand over. Files only on the Mac can't
+  be seen by Almon.
+
+## 10. What "done" means
 
 1. Run the screenshot check:
    ```
@@ -159,10 +180,11 @@ each one cost a full round of fixes. Check every one before you hand over.
 3. **Go through section 8 one item at a time.** For each item write *pass* and
    the name of the screenshot that proves it (for example `he-phone-step3.png`),
    or *fail* and what is wrong. A hand-over without this list is not finished.
+   It also needs the mock-up page or live link from section 9.
 4. Hand over with a note of no more than 5 lines: what changed, the folder
    path, the section 8 list, and anything you know is still wrong.
 5. Claude reviews the screenshots against this page and sends back one list
-   of fixes.
+   of fixes. Almon looks at the same mock-up or live game himself.
 6. **Almon plays it with his daughter.** Her reaction is the final test.
 
 ## Checklist (copy into the hand-over note)
@@ -176,5 +198,6 @@ each one cost a full round of fixes. Check every one before you hand over.
 - [ ] Every touch gets a sound and a reaction; right answers are celebrated, wrong ones are gentle
 - [ ] Descriptions match the screenshots
 - [ ] Cover is made from the game's own art (`review-shots/<id>/cover.png`)
+- [ ] Mock-up page (art hand-over) or live link (game hand-over) pushed for Almon
 - [ ] Every item in section 8 passes, with a screenshot name for each
 - [ ] `node scripts/shoot-game.mjs <id>` ran clean and every picture was looked at

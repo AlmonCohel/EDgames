@@ -52,8 +52,16 @@ same clay-diorama style and light as `assets/worlds/stream-crossing.jpg`.
 - **`cover.jpg`:** 800×800, the bear on a stone mid-stream with the burrow
   glowing behind him, and no text.
 
-Run `node scripts/shoot-game.mjs stream-crossing` and hand over the art section
-of `review-shots/stream-crossing/index.html`.
+- **Mock-up page** `mockups/stream-crossing/index.html` (standard section 9):
+  all the art, plus one mock screen per step (Size, Count, Shape, Bridge) at
+  laptop and phone-upright size, made by layering the real art: the bear on the
+  shore, the stones offered, the glowing target outline, and the bear on the
+  stone after a right answer. One line under each screen says what the child
+  hears. Commit and push it so Almon can open
+  `https://almoncohel.github.io/EDgames/mockups/stream-crossing/`.
+
+Run `node scripts/shoot-game.mjs stream-crossing`, check the art section, and
+wait for Almon's OK on the mock-up before writing game code.
 
 ## Hand-over 2 — the game
 
@@ -84,5 +92,5 @@ of `review-shots/stream-crossing/index.html`.
 - **Cover:** point the `stream-crossing` entry in `assets/covers.js` to
   `cover.jpg` (section 7).
 
-Before handing over, write the section 8 list (pass or fail plus a screenshot
+Push the game and give Almon the live link. Before handing over, write the section 8 list (pass or fail plus a screenshot
 name for each) into the hand-over note.
