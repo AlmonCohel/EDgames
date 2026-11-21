@@ -515,12 +515,45 @@
       oopsTimer: 0,
     };
 
-    /* Drag & animation state */
+    /* Drag, camera & animation state */
     let dragging = null; // { idx, x, y, startX, startY, moved }
     let returning = null; // { idx, fromX, fromY, toX, toY, t }
     let ripples = [];
     let droplets = [];
     let sparks = [];
+
+    /* Sliding camera for portrait phones (world X offset in pixels) */
+    const cam = {
+      x: 0,
+      targetX: 0,
+      introPhase: 'follow', // 'burrow' | 'follow'
+    };
+    let shorePatchCanvas = null;
+
+    function getShorePatch() {
+      if (shorePatchCanvas) return shorePatchCanvas;
+      if (!bgImg.complete || !bgImg.naturalWidth) return null;
+      const bw = bgImg.naturalWidth;
+      const bh = bgImg.naturalHeight;
+      const off = document.createElement('canvas');
+      off.width = 520;
+      off.height = 280;
+      const og = off.getContext('2d');
+      /* Sample ONLY the clear mossy grass bank in the center of bg.jpg (no left/right cattails, no water) */
+      og.drawImage(bgImg, bw * 0.39, bh * 0.74, bw * 0.38, bh * 0.26, 0, 0, off.width, off.height);
+      /* Single-pass destination-in mask: softly feather the top edge so the mossy bank blends into the stream */
+      og.globalCompositeOperation = 'destination-in';
+      const mg = og.createLinearGradient(0, 0, 0, off.height);
+      mg.addColorStop(0.00, 'rgba(0,0,0,0)');
+      mg.addColorStop(0.16, 'rgba(0,0,0,0.85)');
+      mg.addColorStop(0.28, 'rgba(0,0,0,1)');
+      mg.addColorStop(1.00, 'rgba(0,0,0,1)');
+      og.fillStyle = mg;
+      og.fillRect(0, 0, off.width, off.height);
+      og.globalCompositeOperation = 'source-over';
+      shorePatchCanvas = off;
+      return shorePatchCanvas;
+    }
 
     root.innerHTML = `
       <div class="sc-stage-box" id="sc-box">
@@ -564,6 +597,9 @@
       canvas.height = Math.round(viewH * dpr);
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
       syncBearToSlot();
+      const L = layout();
+      cam.targetX = computeCamTarget(L);
+      cam.x = clampCam(cam.x, L);
       layoutHitTargets();
     }
 
@@ -572,78 +608,106 @@
     }
 
     /* Compute responsive coordinates that keep Bear, bridge slots, burrow, and shore stones
-       comfortably inside the visible frame on phone (390x844), tablet (1024x768), and laptop (1280x800). */
+       comfortably inside the visible frame on phone (390x844), tablet (1024x768), and laptop (1280x800).
+       World landmarks (bankLeft, burrow, slots) are in world X (0..drawW); shore stones are in screen X. */
     function layout() {
-      const bw = bgImg.naturalWidth || 1376;
-      const bh = bgImg.naturalHeight || 768;
+      const bw = bgImg.naturalWidth || 2560;
+      const bh = bgImg.naturalHeight || 1429;
       const scale = Math.max(viewW / bw, viewH / bh);
       const drawW = bw * scale;
       const drawH = bh * scale;
-      const drawX = (viewW - drawW) * 0.5;
       const drawY = (viewH - drawH) * 0.5;
-      const map = (u, v) => ({ x: drawX + u * drawW, y: drawY + v * drawH });
+      const worldMap = (u, v) => ({ x: u * drawW, y: drawY + v * drawH });
+      const landscapeCamX = (drawW - viewW) * 0.5;
 
       const slotCount = round ? round.slots.length : 4;
 
       if (isPortrait()) {
-        /* Portrait phone: zoom to full height and frame the left mossy bank under Bear,
-           open rippling stream in the middle, and foreground mossy shore at the bottom. */
-        const portraitDrawX = (viewW - drawW) * 0.34;
-        const baseStoneW = Math.min(viewW * 0.27, 108);
-        const bridgeStoneW = Math.min(viewW * (slotCount === 3 ? 0.24 : 0.21), slotCount === 3 ? 92 : 82);
-        const bearH = Math.min(viewH * 0.19, 152);
+        /* Portrait phone: zoom to full height, map Bear/slots/burrow onto the real painted banks & stream,
+           and let the camera slide smoothly from the burrow to Bear and across every hop. */
+        const baseStoneW = Math.min(viewW * 0.255, 100);
+        const bridgeStoneW = Math.min(viewW * 0.245, 96);
+        const bearH = Math.min(viewH * 0.195, 154);
         const slots = slotCount === 3
           ? [
-              { x: viewW * 0.22, y: viewH * 0.53 },
-              { x: viewW * 0.50, y: viewH * 0.50 },
-              { x: viewW * 0.78, y: viewH * 0.52 },
+              worldMap(0.340, 0.530),
+              worldMap(0.505, 0.505),
+              worldMap(0.670, 0.525),
             ]
           : [
-              { x: viewW * 0.16,  y: viewH * 0.54 },
-              { x: viewW * 0.385, y: viewH * 0.50 },
-              { x: viewW * 0.615, y: viewH * 0.53 },
-              { x: viewW * 0.84,  y: viewH * 0.49 },
+              worldMap(0.315, 0.535),
+              worldMap(0.445, 0.505),
+              worldMap(0.575, 0.530),
+              worldMap(0.700, 0.505),
             ];
         const shore = [
-          { x: viewW * 0.20, y: viewH * 0.79 },
-          { x: viewW * 0.50, y: viewH * 0.77 },
-          { x: viewW * 0.80, y: viewH * 0.79 },
+          { x: viewW * 0.195, y: viewH * 0.862 },
+          { x: viewW * 0.500, y: viewH * 0.850 },
+          { x: viewW * 0.805, y: viewH * 0.862 },
         ];
         return {
-          drawX: portraitDrawX, drawY, drawW, drawH, baseStoneW, bridgeStoneW, bearH,
-          bankLeft: { x: viewW * 0.18, y: viewH * 0.35 },
-          burrow:   { x: viewW * 0.84, y: viewH * 0.34 },
+          drawY, drawW, drawH, baseStoneW, bridgeStoneW, bearH,
+          bankLeft: worldMap(0.180, 0.415),
+          burrow:   worldMap(0.805, 0.355),
           slots,
           shore,
         };
       }
 
-      /* Tablet & laptop: align directly to the painted banks, open stream, and mossy foreground shore */
+      /* Tablet & laptop: whole diorama fits on screen; shore stones sit on the clear central mossy bank */
       const baseStoneW = Math.min(drawW * 0.112, viewW * 0.135, 138);
       const bearH = Math.min(drawH * 0.265, 205);
       const slots = slotCount === 3
         ? [
-            map(0.350, 0.515),
-            map(0.510, 0.495),
-            map(0.670, 0.510),
+            worldMap(0.350, 0.515),
+            worldMap(0.510, 0.495),
+            worldMap(0.670, 0.510),
           ]
         : [
-            map(0.320, 0.515),
-            map(0.445, 0.495),
-            map(0.575, 0.515),
-            map(0.700, 0.495),
+            worldMap(0.320, 0.515),
+            worldMap(0.445, 0.495),
+            worldMap(0.575, 0.515),
+            worldMap(0.700, 0.495),
           ];
+      const screenMap = (u, v) => ({ x: u * drawW - landscapeCamX, y: drawY + v * drawH });
       return {
-        drawX, drawY, drawW, drawH, baseStoneW, bridgeStoneW: baseStoneW, bearH,
-        bankLeft: map(0.178, 0.415),
-        burrow:   map(0.810, 0.345),
+        drawY, drawW, drawH, baseStoneW, bridgeStoneW: baseStoneW, bearH,
+        bankLeft: worldMap(0.178, 0.415),
+        burrow:   worldMap(0.810, 0.345),
         slots,
         shore: [
-          map(0.365, 0.825),
-          map(0.540, 0.815),
-          map(0.715, 0.825),
+          screenMap(0.390, 0.855),
+          screenMap(0.550, 0.845),
+          screenMap(0.710, 0.855),
         ],
       };
+    }
+
+    function clampCam(x, L) {
+      return Math.max(0, Math.min(Math.max(0, L.drawW - viewW), x));
+    }
+
+    function computeCamTarget(L) {
+      if (!isPortrait()) return (L.drawW - viewW) * 0.5;
+      if (cam.introPhase === 'burrow') {
+        /* Frame the warm candlelit burrow doorway on the right bank */
+        return clampCam(L.drawW * 0.84 - viewW * 0.52, L);
+      }
+      if (bear.slotIdx >= L.slots.length) {
+        /* Bear heading into or cheering at the burrow */
+        return clampCam(L.drawW * 0.84 - viewW * 0.54, L);
+      }
+      const bearPt = bearAnchorFor(bear.slotIdx, L);
+      const actIdx = activeSlotIdx();
+      const targetPt = actIdx >= 0 ? L.slots[actIdx] : L.burrow;
+      /* Frame both Bear and the next glowing target comfortably inside the portrait viewport */
+      const midX = (bearPt.x + targetPt.x) * 0.5;
+      return clampCam(midX - viewW * 0.5, L);
+    }
+
+    function activeCamX(L) {
+      if (!isPortrait()) return (L.drawW - viewW) * 0.5;
+      return clampCam(cam.x, L);
     }
 
     function bearAnchorFor(slotIdx, L) {
@@ -771,6 +835,22 @@
       bear.oopsTimer = 0;
       syncBearToSlot();
       loadSubStep(true);
+      const L = layout();
+      if (isPortrait()) {
+        /* Briefly show the glowing burrow so the child sees where Bear is going, then slide back to Bear */
+        cam.introPhase = 'burrow';
+        cam.x = computeCamTarget(L);
+        cam.targetX = cam.x;
+        tm.later(() => {
+          if (cam.introPhase === 'burrow') {
+            cam.introPhase = 'follow';
+          }
+        }, 580);
+      } else {
+        cam.introPhase = 'follow';
+        cam.x = computeCamTarget(L);
+        cam.targetX = cam.x;
+      }
     }
 
     function hopBearTo(targetSlotIdx, onLand) {
@@ -901,6 +981,7 @@
     function onChoiceDown(e, idx) {
       if (locked) return;
       e.preventDefault();
+      if (cam.introPhase === 'burrow') cam.introPhase = 'follow';
       const pt = clientToLocal(e);
       sfxPick();
       dragging = { idx, x: pt.x, y: pt.y, startX: pt.x, startY: pt.y, moved: false };
@@ -920,11 +1001,13 @@
       if (!dragging) return;
       const d = dragging;
       const L = layout();
+      const camXNow = activeCamX(L);
       const slotIdx = activeSlotIdx();
       const targetPos = slotIdx >= 0 ? L.slots[slotIdx] : null;
+      const targetScreenX = targetPos ? targetPos.x - camXNow : 0;
       const droppedOnWater = targetPos && (
-        Math.hypot(d.x - targetPos.x, d.y - targetPos.y) < L.baseStoneW * 1.15 ||
-        d.y < viewH * 0.64
+        Math.hypot(d.x - targetScreenX, d.y - targetPos.y) < L.baseStoneW * 1.15 ||
+        d.y < viewH * 0.68
       );
 
       if (!d.moved || droppedOnWater) {
@@ -987,17 +1070,18 @@
         g.fill();
         g.restore();
       } else {
-        /* Soft mossy grass contact shadow under shore stones */
-        const shY = h * 0.36 + lift * 12;
-        const shRx = w * 0.54;
-        const shRy = h * 0.26;
+        /* Grounded mossy grass contact shadow under shore stones (offset gently opposite sunset/candle light) */
+        const shY = h * 0.35 + lift * 12;
+        const shRx = w * 0.56;
+        const shRy = h * 0.28;
         g.save();
-        g.translate(0, shY);
+        g.translate(-w * 0.04, shY);
         g.scale(1, shRy / shRx);
-        const sg = g.createRadialGradient(0, 0, shRx * 0.1, 0, 0, shRx);
-        sg.addColorStop(0, `rgba(5, 16, 9, ${0.62 - lift * 0.22})`);
-        sg.addColorStop(0.60, `rgba(9, 24, 13, ${0.30 - lift * 0.12})`);
-        sg.addColorStop(1, 'rgba(9, 24, 13, 0)');
+        const sg = g.createRadialGradient(0, 0, shRx * 0.12, 0, 0, shRx);
+        sg.addColorStop(0, `rgba(4, 14, 8, ${0.74 - lift * 0.24})`);
+        sg.addColorStop(0.55, `rgba(7, 22, 12, ${0.42 - lift * 0.15})`);
+        sg.addColorStop(0.82, `rgba(9, 26, 14, ${0.15 - lift * 0.06})`);
+        sg.addColorStop(1, 'rgba(9, 26, 14, 0)');
         g.fillStyle = sg;
         g.beginPath();
         g.arc(0, 0, shRx, 0, Math.PI * 2);
@@ -1097,14 +1181,26 @@
       }
 
       const L = layout();
+      cam.targetX = computeCamTarget(L);
+      if (isPortrait()) {
+        cam.x += (cam.targetX - cam.x) * (1 - Math.exp(-dt * 4.8));
+      } else {
+        cam.x = cam.targetX;
+      }
+      const camXNow = activeCamX(L);
+
       g.clearRect(0, 0, viewW, viewH);
+
+      /* World layer (panned smoothly by -camXNow on upright phones, centered on tablet/laptop) */
+      g.save();
+      g.translate(-camXNow, 0);
 
       /* 1. Background diorama */
       if (bgImg.complete && bgImg.naturalWidth) {
-        g.drawImage(bgImg, L.drawX, L.drawY, L.drawW, L.drawH);
+        g.drawImage(bgImg, 0, L.drawY, L.drawW, L.drawH);
       } else {
         g.fillStyle = '#07222d';
-        g.fillRect(0, 0, viewW, viewH);
+        g.fillRect(camXNow, 0, viewW, viewH);
       }
 
       /* 2. Expanding water ripples */
@@ -1124,7 +1220,7 @@
       const activeIdx = activeSlotIdx();
       const targetPos = activeIdx >= 0 ? L.slots[activeIdx] : null;
       const hoverActive = Boolean(
-        dragging && targetPos && Math.hypot(dragging.x - targetPos.x, dragging.y - targetPos.y) < L.baseStoneW * 1.15
+        dragging && targetPos && Math.hypot(dragging.x - (targetPos.x - camXNow), dragging.y - targetPos.y) < L.baseStoneW * 1.15
       );
 
       round.slots.forEach((slot, i) => {
@@ -1139,29 +1235,7 @@
       /* 4. Little Bear cut-out */
       drawBear(L);
 
-      /* 5. Choice stones sitting calmly on the mossy foreground shore (all equal, nothing highlighted) */
-      choices.forEach((ch, idx) => {
-        if (dragging && dragging.idx === idx) return;
-        let x = L.shore[idx].x;
-        let y = L.shore[idx].y;
-        let wobble = 0;
-        if (returning && returning.idx === idx) {
-          const p = returning.t;
-          const ease = 1 - Math.pow(1 - p, 3);
-          x = returning.fromX + (returning.toX - returning.fromX) * ease;
-          y = returning.fromY + (returning.toY - returning.fromY) * ease;
-          wobble = Math.sin(p * Math.PI * 4) * (1 - p) * 0.14;
-        }
-        drawStone(ch, x, y, L.baseStoneW, 0, wobble);
-      });
-
-      /* 6. Currently dragged stone on top */
-      if (dragging) {
-        const ch = choices[dragging.idx];
-        if (ch) drawStone(ch, dragging.x, dragging.y, L.baseStoneW, 1, 0);
-      }
-
-      /* 7. Water splash droplets & golden celebration sparks */
+      /* 5. Water splash droplets & golden celebration sparks (in world space) */
       for (let i = droplets.length - 1; i >= 0; i--) {
         const p = droplets[i];
         p.x += p.vx;
@@ -1186,6 +1260,42 @@
         g.beginPath();
         g.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
         g.fill();
+      }
+
+      g.restore();
+
+      /* Portrait foreground clear mossy bank (keeps shore stones on clean grass, away from cattails & water) */
+      if (isPortrait()) {
+        const patch = getShorePatch();
+        if (patch) {
+          const maxCam = Math.max(1, L.drawW - viewW);
+          const panRatio = camXNow / maxCam;
+          const pad = 28;
+          const px = -pad * panRatio;
+          g.drawImage(patch, px, viewH * 0.695, viewW + pad, viewH * 0.315);
+        }
+      }
+
+      /* 6. Choice stones sitting calmly on the clear mossy foreground shore (all equal, nothing highlighted) */
+      choices.forEach((ch, idx) => {
+        if (dragging && dragging.idx === idx) return;
+        let x = L.shore[idx].x;
+        let y = L.shore[idx].y;
+        let wobble = 0;
+        if (returning && returning.idx === idx) {
+          const p = returning.t;
+          const ease = 1 - Math.pow(1 - p, 3);
+          x = returning.fromX + (returning.toX - returning.fromX) * ease;
+          y = returning.fromY + (returning.toY - returning.fromY) * ease;
+          wobble = Math.sin(p * Math.PI * 4) * (1 - p) * 0.14;
+        }
+        drawStone(ch, x, y, L.baseStoneW, 0, wobble);
+      });
+
+      /* 7. Currently dragged stone on top */
+      if (dragging) {
+        const ch = choices[dragging.idx];
+        if (ch) drawStone(ch, dragging.x, dragging.y, L.baseStoneW, 1, 0);
       }
 
       rafId = requestAnimationFrame(frame);
