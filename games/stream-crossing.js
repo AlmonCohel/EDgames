@@ -334,7 +334,7 @@
       width: 100%;
     }
     .sc-end-overlay .kit-end p { color: #c7e2de; }
-    .sc-end-overlay .btn--ghost { color: #fef9e7; border-color: rgba(255, 255, 255, 0.3); }
+    .sc-end-overlay .btn--ghost { color: #fef9e7; background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.35); box-shadow: none; }
 
     @media (max-width: 600px) {
       .sc-say-btn { width: 52px; height: 52px; font-size: 24px; }
@@ -984,17 +984,7 @@
     function showEnd() {
       locked = true;
       endOverlay.hidden = false;
-      EDKit.endCard(endOverlay, {
-        lang,
-        title: t.done,
-        score: `${rounds.length}/${rounds.length}`,
-        again: () => {
-          endOverlay.hidden = true;
-          rounds = buildStepRounds(mode);
-          startRound(0);
-        },
-        next: ctx.nextSet,
-      });
+      EDKit.end(endOverlay, ctx, lang);
     }
 
     /* ---- Render loop ---- */
@@ -1083,6 +1073,8 @@
 
       if (bear.hopT < 1) {
         bear.hopT = Math.min(1, bear.hopT + dt / 0.42);
+        /* Land where the hop ends, so the bear never flashes back on the stone he left. */
+        if (bear.hopT >= 1) { bear.x = bear.toX; bear.y = bear.toY; }
       }
       if (bear.oopsTimer > 0) {
         bear.oopsTimer = Math.max(0, bear.oopsTimer - dt);

@@ -109,7 +109,7 @@ header. It is the first thing a parent sees, so it must look like the game.
 
 ## 8. Common mistakes — check these before every hand-over
 
-These all happened in the first Whispering Woods rebuild (20–21 Nov 2026), and
+Items 1–12 happened in the first Whispering Woods rebuild (20–21 Nov 2026), and
 each one cost a full round of fixes. Check every one before you hand over.
 
 1. **The answer shows before the child starts.** At the start of a round,
@@ -142,6 +142,23 @@ each one cost a full round of fixes. Check every one before you hand over.
 11. **An old cover.** See section 7.
 12. **The stage-size number lies on phones.** The script measures the game
     frame, not the painted scene. Always look at the phone pictures.
+
+These were added after the Stream Crossing round (21 Nov 2026):
+
+13. **Art judged only on a plain background.** A cut-out can look fine alone
+    and still look pasted on in the scene. Judge every piece *placed in the
+    scene* (the mock-up page): same light direction and warmth, same softness
+    or blur as the painting around it, a contact shadow on the ground, and a
+    waterline, wet edge and ripple when it sits in water.
+14. **Never played to the end.** Play every step through all its rounds in the
+    browser and check that the end screen shows its buttons, that they are
+    readable and work, and that the console shows no errors. Call only
+    functions that exist in `assets/kit.js` (`EDKit.end`, `EDKit.dots`,
+    `EDKit.drag` and the others in its `return { … }` line).
+15. **Animation glitches.** A pose change or a move must not flash the
+    character back to where it was for a frame. Set the new position in the
+    same frame the move ends, and watch each move slowly (record the screen,
+    or set the animation speed low) before handing over.
 
 ## 9. Almon sees the design at every stage
 
