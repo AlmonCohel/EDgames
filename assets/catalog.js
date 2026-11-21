@@ -63,10 +63,11 @@ const GAMES = [
     subject: 'shapes',
     ageMin: 3, ageMax: 4,
     blurb: {
-      he: 'עוזרים לדובון לחצות את הנחל אל המאורה החמה! גוררים אבני נחל בגדלים, נקודות וצורות מתאימות לתוך המערבולות במים.',
-      en: 'Help Little Bear cross the woodland stream to his candle-lit burrow! Drag stepping stones of matching sizes, glowing dots, and shapes into the swirling water.',
+      he: 'עוזרים לדובון הקטן לחצות את הנחל הביתה! בוחרים את האבן הנכונה לפי גודל, ספירה או צורה ובונים יחד גשר מעל המים.',
+      en: 'Help Little Bear cross the stream to his cozy burrow! Pick the matching stone by size, count, or shape to build a bridge across the water.',
     },
     sound: true,
+    fullscreen: true,
     status: 'ready',
   },
   {
