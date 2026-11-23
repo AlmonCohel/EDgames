@@ -31,6 +31,22 @@ Read this before touching `EDgames`. Alongside `README.md` and `docs/ACCOUNTS.md
   - **The Inventor's Circuit Lab (`circuit-lab`, `games/circuit-lab.js`, Cartridge `#04`)** introduces a realistic play-first game loop and museum-grade physical materials (walnut wood planks, brushed brass, 14-node Verlet cloth-braided cables, porcelain knife switches, curved-glass analog voltmeter, blackbody tungsten Edison bulb, shallow-water wave tank sailboat driven by a brushed-brass DC fan motor, and a copper-wound electromagnet cargo crane) teaching electrical loops, voltage regulation (`3V / 6V / 9V`), motor polarity (`+ / −`), and physical Boolean logic (`AND` series / `OR` parallel / track diverter).
   - **Moko's Magic Potion Lab (`potion-lab`, `games/potion-lab.js`, Cartridge `#05`)** and **The Star Factory (`star-factory`, `games/star-factory.js`, Cartridge `#06`)** provide full-scene 60fps high-DPI interactive math worlds with a 40-node shallow-water fluid wave solver, gravity-simulated pouring streams, buoyancy physics for sliced fruit pieces, subtraction drain valves, and multi-layered expressive characters (**Moko the Alchemy Monster** with 5 visual transformations and **Lumi the Star-Bot**).
 
+## Before pushing
+
+Install the browser test tools once from the repo root:
+
+```sh
+npm install --no-save --package-lock=false playwright@1.64.1
+npx playwright install chromium
+```
+
+Run `node scripts/smoke-games.mjs` before each push. It starts a local static
+server and opens the landing page, the play page, and every ready game in the
+catalog at 390 px and 1280 px. Paid games use a throwaway Pro session, and all
+requests stay local. The table shows which pages opened, and the command exits
+with an error if a page logs a console or JavaScript error, a request fails, or a
+game never shows its first screen.
+
 ## 2. Standing Constraints
 
 - **Vanilla HTML/CSS/JS only.** No frameworks, no build step, no TypeScript in the frontend. Must work when opened over `http://` and degrade gracefully on `file://`.
