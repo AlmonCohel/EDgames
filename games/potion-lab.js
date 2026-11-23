@@ -416,6 +416,10 @@
       /* Build Whole Magical Fruits on the Oak Chopping Board (left counter). */
       const boardX = 138;
       const boardY = 366;
+      const scoopBounds = { x: 70, y: 288, w: 140, h: 26 };
+      const resetBounds = { x: CAUL_CX - CAUL_R - 74, y: TABLE_Y - 30, w: 84, h: 26 };
+      const hits = (pt, { x, y, w, h }) =>
+        pt.x >= x && pt.x <= x + w && pt.y >= y && pt.y <= y + h;
       const boardFruits = spec.fruits.map((mult, idx) => ({
         id: `fruit-${mult}`,
         mult,
@@ -503,6 +507,8 @@
         const pctY = (y) => `${((y / H) * 100).toFixed(2)}%`;
         const pctW = (w) => `${((w / W) * 100).toFixed(2)}%`;
         const pctH = (h) => `${((h / H) * 100).toFixed(2)}%`;
+        const boxStyle = ({ x, y, w, h }) =>
+          `left:${pctX(x)};top:${pctY(y)};width:${pctW(w)};height:${pctH(h)}`;
 
         const btns = [];
         flasks.forEach((f) => {
@@ -523,7 +529,7 @@
         if (logicalSlices > 0) {
           btns.push(`<button type="button" class="pl-hotspot" data-action="scoop"
             aria-label="${text.scoopLabel}"
-            style="left:${pctX(boardX - 55)};top:${pctY(boardY - 76)};width:${pctW(110)};height:${pctH(32)}"></button>`);
+            style="${boxStyle(scoopBounds)}"></button>`);
         }
         if (phase === 'ready') {
           btns.push(`<button type="button" class="pl-hotspot" data-action="feed"
@@ -532,10 +538,13 @@
         }
         btns.push(`<button type="button" class="pl-hotspot" data-action="reset-cauldron"
           aria-label="${text.emptyBtn}"
-          style="left:${pctX(CAUL_CX - CAUL_R - 72)};top:${pctY(TABLE_Y - 34)};width:${pctW(86)};height:${pctH(32)}"></button>`);
+          style="${boxStyle(resetBounds)}"></button>`);
 
+        const focused = document.activeElement;
+        const activeLabel = hotspotsEl.contains(focused) && focused.getAttribute('aria-label');
         hotspotsEl.innerHTML = btns.join('');
         hotspotsEl.querySelectorAll('.pl-hotspot').forEach((b) => {
+          if (activeLabel && b.getAttribute('aria-label') === activeLabel) b.focus({ preventScroll: true });
           b.addEventListener('click', () => {
             const act = b.dataset.action;
             if (act === 'flask') {
@@ -567,8 +576,8 @@
           EDVoice.say('pl-high', lang);
           return;
         }
-        const add = flask.addVal;
-        logicalVol = Math.min(MAX_VOL + 2, logicalVol + add);
+        const add = Math.min(MAX_VOL + 2 - logicalVol, flask.addVal);
+        logicalVol += add;
         if (historyTerms.length === 0) historyTerms.push(`${add}`);
         else historyTerms.push(`+ ${add}`);
         if (historyTerms.length > 5) historyTerms = [`${logicalVol}`];
@@ -680,6 +689,7 @@
 
       function resetCauldronState() {
         if (phase === 'drinking' || phase === 'transformed') return;
+        cancelDrag();
         logicalVol = spec.startVol;
         logicalSlices = 0;
         floatingSlices = [];
@@ -729,6 +739,7 @@
         if (phase !== 'ready') return;
         phase = 'drinking';
         serveMug.active = false;
+        syncHotspots();
         moko.gulpTimer = 0.85;
         moko.targetMouth = 0.4;
         sfxGulp(0);
@@ -753,6 +764,8 @@
             slots[round].textContent = roundTransform.icon;
             slots[round].classList.add('earned');
           }
+          const dot = wrap.querySelectorAll('.kit-dot')[round];
+          if (dot) dot.classList.add('done');
 
           sfxTransform();
           spawnParticles(moko.x, moko.y - 30, 44, {
@@ -770,10 +783,7 @@
 
       /* ---- Direct Canvas Pointer Handling (Touch / Mouse / Pen) ---- */
       let dragItem = null;
-      /* dragItem can be:
-         - { kind: 'flask', flask, startX, startY, moved: false }
-         - { kind: 'mug', startX, startY, moved: false }
-         - { kind: 'knife-swipe', lastX, lastY } */
+      /* Each flask, mug, or knife gesture belongs to one pointer. */
 
       function toCanvasPt(e) {
         const r = canvas.getBoundingClientRect();
@@ -784,7 +794,7 @@
       }
 
       function onPointerDown(e) {
-        if (e.button > 0) return;
+        if (e.button > 0 || e.isPrimary === false || dragItem) return;
         const pt = toCanvasPt(e);
         pointer.x = pt.x;
         pointer.y = pt.y;
@@ -800,7 +810,7 @@
         if (phase === 'ready') {
           if (Math.hypot(pt.x - serveMug.x, pt.y - serveMug.y) <= 46) {
             try { canvas.setPointerCapture(e.pointerId); } catch { /* ignore */ }
-            dragItem = { kind: 'mug', startX: pt.x, startY: pt.y, moved: false };
+            dragItem = { kind: 'mug', pointerId: e.pointerId, startX: pt.x, startY: pt.y, moved: false };
             return;
           }
           if (Math.hypot(pt.x - moko.x, pt.y - moko.y) <= 78) {
@@ -834,12 +844,18 @@
             try { canvas.setPointerCapture(e.pointerId); } catch { /* ignore */ }
             sfxCorkPop();
             f.scale = 1.12;
-            dragItem = { kind: 'flask', flask: f, startX: pt.x, startY: pt.y, moved: false };
+            dragItem = { kind: 'flask', pointerId: e.pointerId, flask: f, startX: pt.x, startY: pt.y, moved: false };
             return;
           }
         }
 
-        /* 5. Check Brass Drain Spigots on the left of the cauldron. */
+        /* 5. The reset pill borders the second drain's larger tap area. */
+        if (hits(pt, resetBounds)) {
+          resetCauldronState();
+          return;
+        }
+
+        /* 6. Check Brass Drain Spigots on the left of the cauldron. */
         for (const d of drains) {
           if (Math.hypot(pt.x - d.x, pt.y - d.y) <= 34) {
             triggerDrain(d);
@@ -847,16 +863,9 @@
           }
         }
 
-        /* 6. Check Reset Cauldron Pill on lower left of cauldron. */
-        if (pt.x >= CAUL_CX - CAUL_R - 76 && pt.x <= CAUL_CX - CAUL_R + 18
-            && pt.y >= TABLE_Y - 36 && pt.y <= TABLE_Y + 4) {
-          resetCauldronState();
-          return;
-        }
-
         /* 7. Check Scoop Slice (-1) button or floating fruit slices in the cauldron. */
         if (logicalSlices > 0) {
-          if (pt.x >= boardX - 58 && pt.x <= boardX + 58 && pt.y >= boardY - 82 && pt.y <= boardY - 46) {
+          if (hits(pt, scoopBounds)) {
             scoopOneSlice();
             return;
           }
@@ -876,10 +885,11 @@
 
         /* 9. Otherwise start a knife swipe gesture (swiping across fruits on the chopping board slices them!). */
         try { canvas.setPointerCapture(e.pointerId); } catch { /* ignore */ }
-        dragItem = { kind: 'knife-swipe', lastX: pt.x, lastY: pt.y, points: [pt] };
+        dragItem = { kind: 'knife-swipe', pointerId: e.pointerId, points: [pt] };
       }
 
       function onPointerMove(e) {
+        if (e.isPrimary === false || (dragItem && dragItem.pointerId !== e.pointerId)) return;
         const pt = toCanvasPt(e);
         pointer.x = pt.x;
         pointer.y = pt.y;
@@ -919,8 +929,8 @@
         }
       }
 
-      function onPointerUp() {
-        if (!dragItem) return;
+      function onPointerUp(e) {
+        if (dragItem?.pointerId !== e.pointerId) return;
         const st = dragItem;
         dragItem = null;
 
@@ -941,16 +951,37 @@
         }
       }
 
+      function cancelDrag() {
+        if (!dragItem) return;
+        const st = dragItem;
+        dragItem = null;
+        if (st.kind === 'flask') {
+          st.flask.tilt = 0;
+          st.flask.scale = 1;
+        } else if (st.kind === 'mug') {
+          serveMug.x = serveMug.homeX;
+          serveMug.y = serveMug.homeY;
+        }
+        if (canvas.hasPointerCapture(st.pointerId)) canvas.releasePointerCapture(st.pointerId);
+      }
+
+      function onPointerCancel(e) {
+        if (dragItem?.pointerId === e.pointerId) cancelDrag();
+      }
+
       canvas.addEventListener('pointerdown', onPointerDown);
       canvas.addEventListener('pointermove', onPointerMove);
       canvas.addEventListener('pointerup', onPointerUp);
-      canvas.addEventListener('pointercancel', onPointerUp);
+      canvas.addEventListener('pointercancel', onPointerCancel);
+      canvas.addEventListener('lostpointercapture', onPointerCancel);
 
       activeCleanup = () => {
+        cancelDrag();
         canvas.removeEventListener('pointerdown', onPointerDown);
         canvas.removeEventListener('pointermove', onPointerMove);
         canvas.removeEventListener('pointerup', onPointerUp);
-        canvas.removeEventListener('pointercancel', onPointerUp);
+        canvas.removeEventListener('pointercancel', onPointerCancel);
+        canvas.removeEventListener('lostpointercapture', onPointerCancel);
       };
 
       syncHotspots();
@@ -964,13 +995,15 @@
         const t = nowMs / 1000;
 
         const dpr = Math.min(2, window.devicePixelRatio || 1);
-        if (canvas.width !== W * dpr || canvas.height !== H * dpr) {
-          canvas.width = W * dpr;
-          canvas.height = H * dpr;
+        const pixelWidth = Math.round(W * dpr);
+        const pixelHeight = Math.round(H * dpr);
+        if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+          canvas.width = pixelWidth;
+          canvas.height = pixelHeight;
         }
         const gctx = canvas.getContext('2d');
         gctx.save();
-        gctx.scale(dpr, dpr);
+        gctx.scale(pixelWidth / W, pixelHeight / H);
 
         /* ---- 1. Step Physics Simulations ---- */
         stepWavePhysics(dt);
@@ -1376,7 +1409,7 @@
 
         /* Scoop 1 Slice (-1) Button if slices > 0 */
         if (logicalSlices > 0) {
-          roundRectPath(gctx, bx + 16, by - 90, bw - 32, 26, 10);
+          roundRectPath(gctx, scoopBounds.x, scoopBounds.y, scoopBounds.w, scoopBounds.h, 10);
           gctx.fillStyle = logicalSlices > spec.targetSlices && needsSlices ? '#e11d48' : '#3b2863';
           gctx.fill();
           gctx.lineWidth = 1.8;
@@ -1527,9 +1560,8 @@
 
         /* Reset Cauldron Pill on table to the left of cauldron */
         gctx.save();
-        const rstX = CAUL_CX - CAUL_R - 74;
-        const rstY = TABLE_Y - 30;
-        roundRectPath(gctx, rstX, rstY, 84, 26, 9);
+        const { x: rstX, y: rstY, w: rstW, h: rstH } = resetBounds;
+        roundRectPath(gctx, rstX, rstY, rstW, rstH, 9);
         gctx.fillStyle = 'rgba(30, 22, 51, 0.85)';
         gctx.fill();
         gctx.lineWidth = 1.5;
@@ -1539,7 +1571,7 @@
         gctx.font = '700 11.5px Fredoka, Heebo, sans-serif';
         gctx.textAlign = 'center';
         gctx.textBaseline = 'middle';
-        gctx.fillText(text.emptyBtn, rstX + 42, rstY + 13);
+        gctx.fillText(text.emptyBtn, rstX + rstW / 2, rstY + rstH / 2);
         gctx.restore();
 
         /* 3. Cauldron Glass Interior & Clipped 40-Node Wave Liquid */

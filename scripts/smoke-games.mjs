@@ -5,9 +5,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { checkCircuitLab } from './check-circuit-lab.mjs';
+import { checkPotionLab } from './check-potion-lab.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const circuitOnly = process.argv.includes('--circuit-lab');
+const gameCheck = process.argv.includes('--circuit-lab') ? 'circuit-lab'
+  : process.argv.includes('--potion-lab') ? 'potion-lab' : null;
+const checks = { 'circuit-lab': checkCircuitLab, 'potion-lab': checkPotionLab };
 const sizes = [{ width: 390, height: 844 }, { width: 1280, height: 800 }];
 const timeout = 8000;
 const cartridges = '#cartridge-grid .cartridge[data-status="ready"]';
@@ -108,6 +111,7 @@ try {
 
   for (const viewport of sizes) {
     const options = { viewport, hasTouch: viewport.width === 390, serviceWorkers: 'block' };
+    if (gameCheck === 'potion-lab') options.deviceScaleFactor = 1.333;
     const guest = await browser.newContext(options);
     const record = async (context, name, route, screen, afterLoad) => {
       const { errors, result } = await open(context, origin, route, screen, afterLoad);
@@ -118,8 +122,8 @@ try {
       return result;
     };
 
-    if (!circuitOnly) await record(guest, 'Home', '/', 'main h1');
-    const ids = circuitOnly ? ['circuit-lab'] : await record(guest, 'Play', '/play.html', cartridges, async (page) => {
+    if (!gameCheck) await record(guest, 'Home', '/', 'main h1');
+    const ids = gameCheck ? [gameCheck] : await record(guest, 'Play', '/play.html', cartridges, async (page) => {
       // Read the rendered catalog so new ready games (including missing modules) get tested.
       const cards = await page.locator(cartridges).all();
       return Promise.all(cards.map((card) => card.getAttribute('data-id')));
@@ -136,7 +140,7 @@ try {
     });
     for (const id of ids) {
       await record(pro, id, `/game.html?id=${encodeURIComponent(id)}`, firstScreen,
-        circuitOnly ? checkCircuitLab : undefined);
+        checks[gameCheck]);
     }
     await pro.close();
   }
