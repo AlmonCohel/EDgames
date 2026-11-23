@@ -871,11 +871,11 @@ const EDCovers = (() => {
 
     /* The Lantern in the Whispering Woods: cover composed from the game's sculpted clay diorama art. */
     'whispering-woods': () => `
-      <image href="assets/worlds/whispering-woods/cover.jpg" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
+      <image href="assets/worlds/whispering-woods/cover.webp" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
 
     /* The Woodland Stream Crossing: cover composed from the game's sculpted clay diorama art. */
     'stream-crossing': () => `
-      <image href="assets/worlds/stream-crossing/cover.jpg" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
+      <image href="assets/worlds/stream-crossing/cover.webp" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
 
     /* The Sun-Mirror Valley: cliffside sun tower beaming golden light into a turquoise crystal prism splitting into two beams. */
     'sun-mirror-valley': () => `

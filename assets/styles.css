@@ -890,6 +890,7 @@ body.app { padding-bottom: 110px; }
   --console-card-ink: #151821;
   --console-muted: #525866;
   --console-accent: #ff5722;
+  --console-launch: #d34215;
   --console-highlight: #ffc400;
 }
 
@@ -900,6 +901,7 @@ body[data-kid-theme="princess"] {
   --console-card-ink: #43183d;
   --console-muted: #7c4473;
   --console-accent: #c92a81;
+  --console-launch: var(--console-accent);
   --console-highlight: #ffd166;
 }
 
@@ -910,6 +912,7 @@ body[data-kid-theme="spiderman"] {
   --console-card-ink: #0b132b;
   --console-muted: #334673;
   --console-accent: #e62429;
+  --console-launch: var(--console-accent);
   --console-highlight: #ffd60a;
 }
 
@@ -1310,7 +1313,7 @@ body[data-kid-theme="spiderman"] .spotlight-stage {
   min-height: 52px;
   border-radius: 16px;
   border: 0;
-  background: var(--console-accent);
+  background: var(--console-launch);
   color: #ffffff;
   font: inherit;
   font-size: 1.1rem;
@@ -1321,11 +1324,11 @@ body[data-kid-theme="spiderman"] .spotlight-stage {
   justify-content: center;
   gap: 10px;
   box-shadow: 0 5px 0 rgba(0, 0, 0, 0.25);
-  transition: transform 0.12s ease, filter 0.12s ease;
+  transition: transform 0.12s ease, background-color 0.12s ease;
   cursor: pointer;
 }
 .play-launch-btn:hover {
-  filter: brightness(1.06);
+  background-color: color-mix(in srgb, var(--console-launch) 96%, black);
 }
 .play-launch-btn:active {
   transform: translateY(3px);

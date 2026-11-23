@@ -11,20 +11,25 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
 <!-- Sets lang, dir and kid-theme before the first paint. -->
 <script src="assets/i18n.js"></script>
+<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet"></noscript>
+<script src="assets/glyphs.js" defer></script>
+<script src="assets/scenes.js" defer></script>
+<script src="assets/covers.js" defer></script>
+<script src="assets/catalog.js" defer></script>
+<script src="assets/tiers.js" defer></script>
+<script src="assets/auth.js" defer></script>
+<script src="assets/recent.js" defer></script>
+<script src="assets/music.js" defer></script>
+<script src="assets/play-shell.js" defer></script>
+<script src="assets/app.js" defer></script>
+<script src="assets/player.js" defer></script>
 <script src="https://project-tracker-3mm.pages.dev/pulse.js" data-app="d4c4f260-4360-4c05-8722-5e3d29e341b9" defer></script>
 </head>
 <body class="app">
-
-<!-- The drawings go in before any markup that references them, so every <use>
-     below resolves as the page is parsed rather than after it. -->
-<script src="assets/glyphs.js"></script>
-<script src="assets/scenes.js"></script>
-<script src="assets/covers.js"></script>
-<script>EDGlyphs.inject(); EDScenes.inject(); EDCovers.inject();</script>
 
 <div class="console-chassis">
   <!-- Top Console Hardware Bar -->
@@ -207,15 +212,5 @@
   </div>
 </dialog>
 
-<script src="assets/catalog.js"></script>
-<script src="assets/tiers.js"></script>
-<script src="assets/auth.js"></script>
-<script src="assets/recent.js"></script>
-<script src="assets/app.js"></script>
-<!-- The site's tune (home screen only) and tap sounds, with the switch in the app bar. -->
-<script src="assets/music.js"></script>
-<script>EDMusic.init({ music: true });</script>
-<!-- Games open in a layer over this page and stay alive behind it. -->
-<script src="assets/player.js"></script>
 </body>
 </html>

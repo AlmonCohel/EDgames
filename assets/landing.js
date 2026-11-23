@@ -12,6 +12,8 @@
     return q ? `${path}?${q}` : path;
   };
 
+  EDGlyphs.inject();
+  EDCovers.inject();
   EDLang.applyStatic();
   EDLang.mountToggle();
 
