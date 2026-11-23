@@ -33,6 +33,16 @@ Read this before touching `EDgames`. Alongside `README.md` and `docs/ACCOUNTS.md
 
 ## Before pushing
 
+Run `node scripts/check-game-media.mjs` from the repo root before each push.
+It reads the game content lists and checks the files under `assets/` without a
+browser or network. The table shows gaps and file reuse per game, followed by
+the affected entries and files without runtime references. A dash means the
+game has no word or spoken picture list covered by the audit. Emoji and drawn
+art count as pictures. Reusing the same file for the same word is allowed.
+The check exits with status 1 when it finds any issues, including existing
+content without assigned media and retained design art unused by the site.
+Update the audit when a game adds a new content format or dynamic asset path.
+
 Install the browser test tools once from the repo root:
 
 ```sh
