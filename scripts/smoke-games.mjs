@@ -4,8 +4,10 @@ import { createServer } from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { checkCircuitLab } from './check-circuit-lab.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const circuitOnly = process.argv.includes('--circuit-lab');
 const sizes = [{ width: 390, height: 844 }, { width: 1280, height: 800 }];
 const timeout = 8000;
 const cartridges = '#cartridge-grid .cartridge[data-status="ready"]';
@@ -116,8 +118,8 @@ try {
       return result;
     };
 
-    await record(guest, 'Home', '/', 'main h1');
-    const ids = await record(guest, 'Play', '/play.html', cartridges, async (page) => {
+    if (!circuitOnly) await record(guest, 'Home', '/', 'main h1');
+    const ids = circuitOnly ? ['circuit-lab'] : await record(guest, 'Play', '/play.html', cartridges, async (page) => {
       // Read the rendered catalog so new ready games (including missing modules) get tested.
       const cards = await page.locator(cartridges).all();
       return Promise.all(cards.map((card) => card.getAttribute('data-id')));
@@ -133,7 +135,8 @@ try {
       ] }] },
     });
     for (const id of ids) {
-      await record(pro, id, `/game.html?id=${encodeURIComponent(id)}`, firstScreen);
+      await record(pro, id, `/game.html?id=${encodeURIComponent(id)}`, firstScreen,
+        circuitOnly ? checkCircuitLab : undefined);
     }
     await pro.close();
   }

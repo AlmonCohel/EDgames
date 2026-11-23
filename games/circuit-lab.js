@@ -335,33 +335,33 @@
   `;
 
   /* ---- Procedural Realistic WebAudio Synthesizer ---- */
-  function sfxClamp() {
-    if (!window.EDSound || !EDSound.canPlay()) return;
-    EDSound.tone({ freq: 240, end: 180, dur: 0.045, type: 'triangle', gain: 0.16 });
-    setTimeout(() => EDSound.tone({ freq: 1120, end: 1480, dur: 0.04, type: 'sine', gain: 0.14 }), 28);
+  function sfxClamp(tm) {
+    if (typeof EDSound === 'undefined' || EDSound.quiet()) return;
+    EDSound.note([240, 180], { seconds: 0.045, wave: 'triangle', gain: 0.16 });
+    tm.later(() => EDSound.note([1120, 1480], { seconds: 0.04, wave: 'sine', gain: 0.14 }), 28);
   }
 
-  function sfxKnifeSwitch(closed, live) {
-    if (!window.EDSound || !EDSound.canPlay()) return;
-    EDSound.tone({ freq: closed ? 320 : 260, end: closed ? 190 : 140, dur: 0.055, type: 'triangle', gain: 0.18 });
+  function sfxKnifeSwitch(closed, live, tm) {
+    if (typeof EDSound === 'undefined' || EDSound.quiet()) return;
+    EDSound.note(closed ? [320, 190] : [260, 140], { seconds: 0.055, wave: 'triangle', gain: 0.18 });
     if (closed) {
-      setTimeout(() => EDSound.tone({ freq: 880, end: 620, dur: 0.035, type: 'square', gain: 0.08 }), 20);
+      tm.later(() => EDSound.note([880, 620], { seconds: 0.035, wave: 'square', gain: 0.08 }), 20);
     }
     if (closed && live) {
-      setTimeout(() => EDSound.tone({ freq: 2400, end: 1200, dur: 0.06, type: 'sawtooth', gain: 0.07 }), 32);
+      tm.later(() => EDSound.note([2400, 1200], { seconds: 0.06, wave: 'sawtooth', gain: 0.07 }), 32);
     }
   }
 
   function sfxDetent(v) {
-    if (!window.EDSound || !EDSound.canPlay()) return;
+    if (typeof EDSound === 'undefined' || EDSound.quiet()) return;
     const pitch = v === 3 ? 420 : v === 6 ? 560 : 720;
-    EDSound.tone({ freq: pitch, end: pitch * 1.18, dur: 0.04, type: 'triangle', gain: 0.15 });
+    EDSound.note([pitch, pitch * 1.18], { seconds: 0.04, wave: 'triangle', gain: 0.15 });
   }
 
-  function sfxBell() {
-    if (!window.EDSound || !EDSound.canPlay()) return;
+  function sfxBell(tm) {
+    if (typeof EDSound === 'undefined' || EDSound.quiet()) return;
     [1046.5, 1318.5, 1567.98, 2093].forEach((f, i) => {
-      setTimeout(() => EDSound.tone({ freq: f, end: f * 1.01, dur: 0.32, type: 'sine', gain: 0.14 - i * 0.02 }), i * 55);
+      tm.later(() => EDSound.note([f, f * 1.01], { seconds: 0.32, wave: 'sine', gain: 0.14 - i * 0.02 }), i * 55);
     });
   }
 
@@ -466,6 +466,8 @@
     let locked = false;
     let rafId = 0;
     const tm = EDKit.timers();
+    const pointerEvents = new AbortController();
+    let drag = null;
 
     /* ---- Live Physical State ---- */
     const wirePos = createVerletCable('pos', '#c93326', '#ff8b7e');
@@ -680,29 +682,23 @@
           swCenterX, topBusY, botBusY,
         };
       }
-      syncHtmlControls();
+    }
+
+    function positionWireHit(wire, button) {
+      button.style.left = `${wire.connected ? wire.postX : wire.plugX}px`;
+      button.style.top = `${wire.connected ? wire.postY : wire.plugY}px`;
     }
 
     function syncHtmlControls() {
-      if (!layout.consoleW) return;
       const { phone, compact, midX, midW, dialCx, dialCy, dialR, polCx, polCy, swCenterX, topBusY } = layout;
 
       /* Wire hit targets follow either the loose plug or the binding post */
-      const posTargetX = wirePos.connected ? wirePos.postX : wirePos.plugX || wirePos.restX;
-      const posTargetY = wirePos.connected ? wirePos.postY : wirePos.plugY || wirePos.restY;
-      hitWirePos.style.left = `${posTargetX}px`;
-      hitWirePos.style.top = `${posTargetY}px`;
-      hitWirePos.style.width = '54px';
-      hitWirePos.style.height = '54px';
-      hitWirePos.classList.toggle('cl-hit--pulse', !wirePos.connected);
-
-      const negTargetX = wireNeg.connected ? wireNeg.postX : wireNeg.plugX || wireNeg.restX;
-      const negTargetY = wireNeg.connected ? wireNeg.postY : wireNeg.plugY || wireNeg.restY;
-      hitWireNeg.style.left = `${negTargetX}px`;
-      hitWireNeg.style.top = `${negTargetY}px`;
-      hitWireNeg.style.width = '54px';
-      hitWireNeg.style.height = '54px';
-      hitWireNeg.classList.toggle('cl-hit--pulse', !wireNeg.connected);
+      for (const [wire, button] of [[wirePos, hitWirePos], [wireNeg, hitWireNeg]]) {
+        positionWireHit(wire, button);
+        button.style.width = '54px';
+        button.style.height = '54px';
+        button.classList.toggle('cl-hit--pulse', !wire.connected);
+      }
 
       /* Switches */
       if (round.topology === 'series') {
@@ -784,13 +780,20 @@
     }
 
     function resize() {
-      const r = box.getBoundingClientRect();
-      W = Math.max(300, r.width);
-      H = Math.max(380, r.height);
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      const scale = Math.min(window.devicePixelRatio || 1, 2);
+      if (!width || !height || (layout.consoleW && W === width && H === height && dpr === scale)) return;
+      stopDrag();
+      W = width;
+      H = height;
+      dpr = scale;
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
       computeLayout();
+      initCablePoints(wirePos);
+      initCablePoints(wireNeg);
+      syncHtmlControls();
     }
 
     /* ---- Live Circuit Nodal Solver ---- */
@@ -896,6 +899,8 @@
     }
 
     function loadRound(idx) {
+      stopDrag();
+      tm.clear();
       roundIdx = idx;
       round = rounds[idx];
       locked = false;
@@ -926,9 +931,10 @@
 
     function completeRound() {
       if (locked) return;
+      stopDrag();
       locked = true;
       lockCta.classList.remove('ready');
-      sfxBell();
+      sfxBell(tm);
       bellVel = 0.42;
       spawnSparks(W * 0.72, H * 0.36, 26, '#ffd23f');
       spawnSparks(W * 0.72, H * 0.64, 22, '#4ade80');
@@ -952,19 +958,19 @@
       if (locked || wire.connected) return;
       wire.connected = true;
       wire.dragging = false;
-      sfxClamp();
+      sfxClamp(tm);
       spawnSparks(wire.postX, wire.postY, 12, '#ffd23f');
       updateHeadlineAndHint();
     }
 
-    hitWirePos.addEventListener('click', () => clampCable(wirePos));
-    hitWireNeg.addEventListener('click', () => clampCable(wireNeg));
+    hitWirePos.addEventListener('click', (e) => { if (e.detail === 0) clampCable(wirePos); });
+    hitWireNeg.addEventListener('click', (e) => { if (e.detail === 0) clampCable(wireNeg); });
 
     hitSw1.addEventListener('click', () => {
       if (locked) return;
       sw1.closed = !sw1.closed;
       const st = evaluateCircuit();
-      sfxKnifeSwitch(sw1.closed, st.busLive);
+      sfxKnifeSwitch(sw1.closed, st.busLive, tm);
       if (sw1.closed && st.bothWires) {
         spawnSparks(layout.swCenterX, layout.topBusY, 14, '#ffd23f');
       }
@@ -975,7 +981,7 @@
       if (locked) return;
       sw2.closed = !sw2.closed;
       const st = evaluateCircuit();
-      sfxKnifeSwitch(sw2.closed, st.busLive);
+      sfxKnifeSwitch(sw2.closed, st.busLive, tm);
       if (sw2.closed && st.bothWires) {
         spawnSparks(layout.swCenterX + 16, layout.topBusY + 30, 14, '#ffd23f');
       }
@@ -989,7 +995,7 @@
       } else {
         diverter = diverter === 'A' ? 'B' : 'A';
       }
-      sfxKnifeSwitch(true, true);
+      sfxKnifeSwitch(true, true, tm);
       spawnSparks(layout.swCenterX, layout.topBusY + 58, 12, '#ffd23f');
       updateHeadlineAndHint();
     });
@@ -997,7 +1003,7 @@
     hitPolarity.addEventListener('click', () => {
       if (locked) return;
       polarity = polarity === 1 ? -1 : 1;
-      sfxKnifeSwitch(true, true);
+      sfxKnifeSwitch(true, true, tm);
       spawnSparks(layout.polCx, layout.polCy, 10, '#60a5fa');
       updateHeadlineAndHint();
     });
@@ -1024,8 +1030,13 @@
     });
 
     /* Canvas pointer drag for Verlet cables and rotary dial */
-    let activeDragWire = null;
-    let draggingDial = false;
+    function stopDrag() {
+      if (!drag) return;
+      const { id, wire } = drag;
+      drag = null;
+      if (wire) wire.dragging = false;
+      if (box.hasPointerCapture(id)) box.releasePointerCapture(id);
+    }
 
     function pointerPos(e) {
       const r = canvas.getBoundingClientRect();
@@ -1033,19 +1044,20 @@
     }
 
     box.addEventListener('pointerdown', (e) => {
-      if (locked) return;
+      if (locked || drag || !e.isPrimary || e.button !== 0) return;
       const p = pointerPos(e);
-      for (const w of [wirePos, wireNeg]) {
-        if (!w.connected && Math.hypot(p.x - w.plugX, p.y - w.plugY) < 42) {
-          activeDragWire = w;
-          w.dragging = true;
-          w.plugX = p.x;
-          w.plugY = p.y;
-          return;
-        }
-      }
-      if (Math.hypot(p.x - layout.dialCx, p.y - layout.dialCy) <= layout.dialR + 10) {
-        draggingDial = true;
+      const button = e.target.closest('button');
+      if (button && button !== hitWirePos && button !== hitWireNeg) return;
+      const wire = button === hitWirePos ? wirePos : button === hitWireNeg ? wireNeg
+        : [wirePos, wireNeg].find((w) => !w.connected && Math.hypot(p.x - w.plugX, p.y - w.plugY) < 42);
+      if (wire?.connected) return;
+      if (!wire && Math.hypot(p.x - layout.dialCx, p.y - layout.dialCy) > layout.dialR + 10) return;
+
+      drag = { id: e.pointerId, wire, start: p, moved: false };
+      box.setPointerCapture(e.pointerId);
+      if (wire) {
+        wire.dragging = true;
+      } else {
         const nextV = supplyVolt === 3 ? 6 : supplyVolt === 6 ? 9 : 3;
         supplyVolt = nextV;
         sfxDetent(nextV);
@@ -1053,17 +1065,23 @@
       }
     });
 
-    window.addEventListener('pointermove', (e) => {
-      if (activeDragWire) {
-        const p = pointerPos(e);
-        activeDragWire.plugX = p.x;
-        activeDragWire.plugY = p.y;
-        if (Math.hypot(p.x - activeDragWire.postX, p.y - activeDragWire.postY) < 44) {
-          clampCable(activeDragWire);
-          activeDragWire = null;
-        }
-      } else if (draggingDial) {
-        const p = pointerPos(e);
+    function movedFromStart(p) {
+      return Math.hypot(p.x - drag.start.x, p.y - drag.start.y) >= 9;
+    }
+
+    const onPointer = { signal: pointerEvents.signal };
+    box.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== drag?.id) return;
+      const p = pointerPos(e);
+      const { wire } = drag;
+      if (wire) {
+        if (wire.connected) return;
+        drag.moved ||= movedFromStart(p);
+        if (!drag.moved) return;
+        wire.plugX = p.x;
+        wire.plugY = p.y;
+        if (Math.hypot(p.x - wire.postX, p.y - wire.postY) < 44) clampCable(wire);
+      } else {
         const dx = p.x - layout.dialCx;
         const nextV = dx < -14 ? 3 : dx > 14 ? 9 : 6;
         if (nextV !== supplyVolt) {
@@ -1072,15 +1090,26 @@
           updateHeadlineAndHint();
         }
       }
-    });
+    }, onPointer);
 
-    window.addEventListener('pointerup', () => {
-      if (activeDragWire) {
-        clampCable(activeDragWire);
-        activeDragWire = null;
+    box.addEventListener('pointerup', (e) => {
+      if (e.pointerId !== drag?.id) return;
+      const { wire, moved } = drag;
+      if (wire) {
+        const p = pointerPos(e);
+        if ((!moved && !movedFromStart(p)) || Math.hypot(p.x - wire.postX, p.y - wire.postY) < 44) {
+          clampCable(wire);
+        }
       }
-      draggingDial = false;
-    });
+      stopDrag();
+    }, onPointer);
+
+    function cancelPointer(e) {
+      if (e.pointerId === drag?.id) stopDrag();
+    }
+    box.addEventListener('pointercancel', cancelPointer, onPointer);
+    box.addEventListener('lostpointercapture', cancelPointer, onPointer);
+    window.addEventListener('edpause', stopDrag, onPointer);
 
     /* ---- Drawing Helpers for Realistic Hardware ---- */
     function drawScrew(x, y, r, angle = 0.4) {
@@ -1779,6 +1808,8 @@
 
       stepVerletCable(wirePos, phone ? 46 : 72);
       stepVerletCable(wireNeg, phone ? 46 : 72);
+      if (!wirePos.connected) positionWireHit(wirePos, hitWirePos);
+      if (!wireNeg.connected) positionWireHit(wireNeg, hitWireNeg);
 
       ctx2d.save();
       ctx2d.scale(dpr, dpr);
@@ -2128,6 +2159,8 @@
     rafId = requestAnimationFrame(tick);
 
     cleanupFn = () => {
+      stopDrag();
+      pointerEvents.abort();
       cancelAnimationFrame(rafId);
       ro.disconnect();
       tm.clear();
