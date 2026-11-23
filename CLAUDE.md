@@ -39,8 +39,10 @@ browser or network. The table shows gaps and file reuse per game, followed by
 the affected entries and files without runtime references. A dash means the
 game has no word or spoken picture list covered by the audit. Emoji and drawn
 art count as pictures. Reusing the same file for the same word is allowed.
-The check exits with status 1 when it finds any issues, including existing
-content without assigned media and retained design art unused by the site.
+The check exits with status 1 only for broken media (a referenced file that is
+missing, mis-cased or empty, an invalid inline picture, an unreadable game, or a
+file shared by different words). Words without a recording or picture yet, and
+unused design art, are listed for information: voices are added last on purpose.
 Update the audit when a game adds a new content format or dynamic asset path.
 
 Install the browser test tools once from the repo root:

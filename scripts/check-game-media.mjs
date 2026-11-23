@@ -402,4 +402,11 @@ printDetails('Picture and sound gaps', [...gaps].map(([detail, owners]) => `${de
 printDetails('Files shared by different words', collisions);
 printDetails('Files without a runtime reference (includes retained design art)', unused);
 console.log(`\n${games.size} games. ${gaps.size} gaps, ${collisions.length} files shared by different words, ${unused.length} unused media files.`);
-if (gaps.size || collisions.length || unused.length) process.exitCode = 1;
+// Words still waiting for a recording or picture are listed, not failed: voices
+// are added last on purpose. A push is blocked only by things that are broken.
+const REPORT_ONLY = ['No recording assigned: ', 'No picture assigned: '];
+const broken = [...gaps.keys()].filter((key) => !REPORT_ONLY.some((p) => key.startsWith(p)));
+if (broken.length || collisions.length) process.exitCode = 1;
+console.log(broken.length || collisions.length
+  ? `FAIL: ${broken.length} broken references, ${collisions.length} shared files.`
+  : 'OK: no broken media references (missing recordings/pictures and unused files are listed for information).');
