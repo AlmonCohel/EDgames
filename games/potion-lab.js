@@ -14,7 +14,7 @@
      compensation puzzle (like 5 + 3 - 1 = 7)? Open the brass drain valve on the
      left of the cauldron to drain liquid into the catch-beaker!
    - OAK CHOPPING BOARD (Equal Groups & Multiplication): Swipe or tap whole
-     Star-Berries (x2 halves) and Moon-Apples (x3 wedges) with the enchanted
+     lemons (x2 halves) and Moon-Apples (x3 wedges) with the enchanted
      cleaver; the slices leap into the cauldron and bob on the waves with real
      buoyancy physics!
    - MOKO THE ALCHEMY MONSTER: Tracks your hands with big glossy eyes, points to
@@ -27,9 +27,11 @@
    volume and sliced ingredients). */
 
 (function () {
+  const FRUIT_ICONS = { lemon: '🍋', apple: '🍏' };
+
   const SETS = [
     { id: 'pour', emoji: '🧪', label: { he: 'מודדים שיקוי', en: 'Measure & Pour' }, mode: 'pour' },
-    { id: 'slice', emoji: '🍓', label: { he: 'חותכים מרכיבים', en: 'Slice & Multiply' }, mode: 'slice' },
+    { id: 'slice', emoji: FRUIT_ICONS.lemon, label: { he: 'חותכים מרכיבים', en: 'Slice & Multiply' }, mode: 'slice' },
     { id: 'exact', emoji: '⚖️', label: { he: 'מתכון מדויק', en: 'Exact Alchemy' }, mode: 'exact' },
     { id: 'master', emoji: '👑', label: { he: 'שיקוי המאסטר', en: 'Master Alchemist' }, mode: 'master' },
   ];
@@ -61,7 +63,7 @@
         { id: 'dragon', icon: '🐉', name: 'דרקון כוכבים!' },
       ],
       mokoChats: ['מממ... טעים!', 'עוד שיקוי! ★', 'זה מבעבע! 🫧', 'איזה ריח קסום!'],
-      berry: 'פטל כוכבים',
+      lemon: 'לימון',
       apple: 'תפוח ירח',
     },
     en: {
@@ -90,7 +92,7 @@
         { id: 'dragon', icon: '🐉', name: 'Star Dragon!' },
       ],
       mokoChats: ['Yum yum!', 'More potion! ★', 'So bubbly! 🫧', 'Smells magical!'],
-      berry: 'Star-Berry',
+      lemon: 'Lemon',
       apple: 'Moon-Apple',
     },
   };
@@ -417,13 +419,14 @@
       const boardFruits = spec.fruits.map((mult, idx) => ({
         id: `fruit-${mult}`,
         mult,
-        kind: mult === 3 ? 'apple' : 'berry',
-        name: mult === 3 ? text.apple : text.berry,
+        kind: mult === 3 ? 'apple' : 'lemon',
         x: boardX + (spec.fruits.length > 1 ? (idx === 0 ? -36 : 38) : 0),
         y: boardY - 12,
         slashTimer: 0,
         scale: 1,
       }));
+
+      const recipeFruitIcons = boardFruits.map((fruit) => FRUIT_ICONS[fruit.kind]).join('');
 
       /* Golden Serve Mug that rises when the recipe is complete! */
       const serveMug = {
@@ -491,7 +494,7 @@
         if (!needsSlices) {
           return `${volExpr}   (🎯 ${spec.targetVol})`;
         }
-        return `🧪 ${logicalVol}/${spec.targetVol}   |   🍓 ${logicalSlices}/${spec.targetSlices}`;
+        return `🧪 ${logicalVol}/${spec.targetVol}   |   ${recipeFruitIcons} ${logicalSlices}/${spec.targetSlices}`;
       }
 
       /* Sync semantic overlay buttons over interactive canvas objects for keyboard & test accessibility. */
@@ -514,7 +517,7 @@
         });
         boardFruits.forEach((bf) => {
           btns.push(`<button type="button" class="pl-hotspot" data-action="fruit" data-mult="${bf.mult}"
-            aria-label="${text.fruitAria(bf.name, bf.mult)}"
+            aria-label="${text.fruitAria(text[bf.kind], bf.mult)}"
             style="left:${pctX(bf.x - 34)};top:${pctY(bf.y - 30)};width:${pctW(68)};height:${pctH(64)}"></button>`);
         });
         if (logicalSlices > 0) {
@@ -641,10 +644,10 @@
         logicalSlices += added;
 
         spawnParticles(bf.x, bf.y, 16, {
-          colors: bf.kind === 'apple' ? ['#4ade80', '#bbf7d0', '#fde68a'] : ['#fb7185', '#fda4af', '#fde68a'],
+          colors: bf.kind === 'apple' ? ['#4ade80', '#bbf7d0', '#fde68a'] : ['#facc15', '#fde68a', '#fef9c3'],
           speed: 140,
         });
-        spawnFloatText(bf.x, bf.y - 28, `+${added} 🍓`, '#fde68a');
+        spawnFloatText(bf.x, bf.y - 28, `+${added} ${FRUIT_ICONS[bf.kind]}`, '#fde68a');
 
         /* Add `added` buoyant fruit slices that arc into the cauldron and float on the waves! */
         for (let i = 0; i < added; i += 1) {
@@ -667,10 +670,10 @@
       function scoopOneSlice() {
         if ((phase !== 'brew' && phase !== 'ready') || logicalSlices <= 0) return;
         logicalSlices -= 1;
-        floatingSlices.pop();
+        const removed = floatingSlices.pop();
         sfxCorkPop();
         splashWave(0.5, -10);
-        spawnFloatText(CAUL_CX - 40, CAUL_TOP_Y - 10, '−1 🍓', '#fda4af');
+        spawnFloatText(CAUL_CX - 40, CAUL_TOP_Y - 10, `−1 ${FRUIT_ICONS[removed.kind]}`, '#fda4af');
         EDVoice.say(EDVoiceLines.num(logicalSlices), lang);
         evaluateBrewState();
       }
@@ -1368,7 +1371,7 @@
           gctx.font = '700 15px Fredoka, Heebo, sans-serif';
           gctx.textAlign = 'center';
           gctx.textBaseline = 'middle';
-          gctx.fillText(`🍓 ${logicalSlices} / ${spec.targetSlices} ${ok ? '✓' : ''}`, bx + bw / 2, by - 111);
+          gctx.fillText(`${recipeFruitIcons} ${logicalSlices} / ${spec.targetSlices} ${ok ? '✓' : ''}`, bx + bw / 2, by - 111);
         }
 
         /* Scoop 1 Slice (-1) Button if slices > 0 */
@@ -1414,14 +1417,17 @@
             gctx.ellipse(6, -20, 7, 4, -0.4, 0, Math.PI * 2);
             gctx.fill();
           } else {
-            /* Glowing Star-Berry (x2 halves) */
-            gctx.fillStyle = '#f43f5e';
-            gctx.strokeStyle = '#ffe4e6';
+            /* Glowing Lemon (x2 halves) */
+            gctx.fillStyle = '#facc15';
+            gctx.strokeStyle = '#fef9c3';
             gctx.lineWidth = 2.2;
             gctx.beginPath();
-            gctx.moveTo(0, -19);
-            gctx.bezierCurveTo(24, -19, 24, 15, 0, 22);
-            gctx.bezierCurveTo(-24, 15, -24, -19, 0, -19);
+            gctx.moveTo(-26, 1);
+            gctx.bezierCurveTo(-17, -5, -18, -19, 0, -19);
+            gctx.bezierCurveTo(18, -19, 17, -5, 26, 1);
+            gctx.bezierCurveTo(17, 7, 18, 20, 0, 20);
+            gctx.bezierCurveTo(-18, 20, -17, 7, -26, 1);
+            gctx.closePath();
             gctx.fill();
             gctx.stroke();
           }
@@ -1635,7 +1641,7 @@
           gctx.beginPath();
           gctx.arc(0, 0, 11, 0, Math.PI);
           gctx.closePath();
-          gctx.fillStyle = fs.kind === 'apple' ? '#4ade80' : '#fb7185';
+          gctx.fillStyle = fs.kind === 'apple' ? '#4ade80' : '#facc15';
           gctx.fill();
           gctx.lineWidth = 2;
           gctx.strokeStyle = '#ffffff';
