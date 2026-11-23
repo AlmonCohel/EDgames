@@ -6,11 +6,13 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { checkCircuitLab } from './check-circuit-lab.mjs';
 import { checkPotionLab } from './check-potion-lab.mjs';
+import { checkStarFactory } from './check-star-factory.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const gameCheck = process.argv.includes('--circuit-lab') ? 'circuit-lab'
-  : process.argv.includes('--potion-lab') ? 'potion-lab' : null;
-const checks = { 'circuit-lab': checkCircuitLab, 'potion-lab': checkPotionLab };
+const checks = {
+  'circuit-lab': checkCircuitLab, 'potion-lab': checkPotionLab, 'star-factory': checkStarFactory,
+};
+const gameCheck = Object.keys(checks).find((id) => process.argv.includes(`--${id}`));
 const sizes = [{ width: 390, height: 844 }, { width: 1280, height: 800 }];
 const timeout = 8000;
 const cartridges = '#cartridge-grid .cartridge[data-status="ready"]';
@@ -111,7 +113,7 @@ try {
 
   for (const viewport of sizes) {
     const options = { viewport, hasTouch: viewport.width === 390, serviceWorkers: 'block' };
-    if (gameCheck === 'potion-lab') options.deviceScaleFactor = 1.333;
+    if (gameCheck === 'potion-lab' || gameCheck === 'star-factory') options.deviceScaleFactor = 1.333;
     const guest = await browser.newContext(options);
     const record = async (context, name, route, screen, afterLoad) => {
       const { errors, result } = await open(context, origin, route, screen, afterLoad);

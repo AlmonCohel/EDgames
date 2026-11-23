@@ -465,10 +465,23 @@
           });
         } else {
           /* Two neat rows on the workbench when many blocks are present. */
-          const half = Math.ceil(count / 2);
+          const rowWidth = (row) => row.reduce((s, b) => s + b.value * UNIT_W, 0) + (row.length - 1) * 14;
+          let half = Math.ceil(count / 2);
+          const widestRow = (split) => Math.max(rowWidth(benchBlocks.slice(0, split)), rowWidth(benchBlocks.slice(split)));
+          // Equal block counts can still put nearly all the units on one row.
+          if (widestRow(half) > W - 36) {
+            let bestWidth = widestRow(half);
+            for (let split = 1; split < count; split += 1) {
+              const width = widestRow(split);
+              if (width < bestWidth) {
+                half = split;
+                bestWidth = width;
+              }
+            }
+          }
           const rows = [benchBlocks.slice(0, half), benchBlocks.slice(half)];
           rows.forEach((row, rIdx) => {
-            const rw = row.reduce((s, b) => s + b.value * UNIT_W, 0) + (row.length - 1) * 14;
+            const rw = rowWidth(row);
             let sx = (W - rw) / 2;
             row.forEach((b) => {
               b.w = b.value * UNIT_W;
@@ -482,6 +495,7 @@
 
       function resetPuzzleBlocks() {
         if (phase !== 'build') return;
+        cancelGesture();
         gaps.forEach((g) => {
           g.blocks = [];
           g.overhang = null;
@@ -625,6 +639,7 @@
             const id = Number(btn.dataset.blockId);
             const blk = benchBlocks.find((x) => x.id === id);
             if (!blk) return;
+            cancelGesture();
             if (laserMode && blk.value >= 2) {
               const g = gaps[activeGapIdx] || gaps[0];
               const rem = Math.max(1, g.target - gapFilledUnits(g));
@@ -641,7 +656,9 @@
             const id = Number(btn.dataset.sliceId);
             const cut = Number(btn.dataset.cut);
             const blk = benchBlocks.find((x) => x.id === id);
-            if (blk) sliceBenchBlock(blk, cut);
+            if (!blk) return;
+            cancelGesture();
+            sliceBenchBlock(blk, cut);
           });
         });
       }
@@ -807,6 +824,20 @@
           b.tx = gx;
           gx += b.value * UNIT_W;
         });
+        if (gap.overhang) {
+          const preview = gap.overhang;
+          const keep = gap.target - gapFilledUnits(gap);
+          const extra = preview.block.value - keep;
+          if (extra > 0) {
+            preview.keep = keep;
+            preview.extra = extra;
+            preview.block.x = gx;
+            preview.block.tx = gx;
+          } else {
+            benchBlocks.push(preview.block);
+            gap.overhang = null;
+          }
+        }
         benchBlocks.push(blk);
         layoutBench();
         sfxPickup();
@@ -859,13 +890,16 @@
       /* Wire toolbar buttons. */
       laserBtn.addEventListener('click', () => {
         if (phase !== 'build') return;
+        cancelGesture();
         laserMode = !laserMode;
         sfxPickup();
         updateHtmlControls();
       });
       overhangCutBtn.addEventListener('click', () => {
         const ovGap = currentOverhangGap();
-        if (ovGap) sliceOverhangOnGap(ovGap);
+        if (!ovGap) return;
+        cancelGesture();
+        sliceOverhangOnGap(ovGap);
       });
       resetBlocksBtn.addEventListener('click', () => {
         sfxPickup();
@@ -874,9 +908,28 @@
 
       /* ---- Canvas Pointer (Touch / Mouse / Pen) Direct Manipulation ---- */
       let dragState = null;
-      /* dragState can be:
-         - { kind: 'block', block, offsetX, offsetY, startX, startY, moved: false, fuseTarget: null, hoverGap: null }
-         - { kind: 'laser-swipe', points: [{x, y}], slicedIds: Set } */
+
+      function startGesture(e, state) {
+        dragState = { ...state, pointerId: e.pointerId };
+        try { canvas.setPointerCapture(e.pointerId); } catch { /* ignore */ }
+      }
+
+      function endGesture() {
+        const state = dragState;
+        dragState = null;
+        if (!state) return null;
+        if (canvas.hasPointerCapture(state.pointerId)) canvas.releasePointerCapture(state.pointerId);
+        if (state.kind === 'block') {
+          state.block.tilt = 0;
+          state.block.scaleX = 1;
+          state.block.scaleY = 1;
+        }
+        return state;
+      }
+
+      function cancelGesture() {
+        if (endGesture()?.kind === 'block') layoutBench();
+      }
 
       function toCanvasCoords(e) {
         const r = canvas.getBoundingClientRect();
@@ -903,7 +956,7 @@
       }
 
       function onPointerDown(e) {
-        if (e.button > 0) return;
+        if (e.button > 0 || dragState) return;
         const pt = toCanvasCoords(e);
         pointer.x = pt.x;
         pointer.y = pt.y;
@@ -926,7 +979,7 @@
             if (Math.hypot(pt.x - cutX, pt.y - cutY) <= 34
                 || (pt.x >= g.overhang.block.x && pt.x <= g.overhang.block.x + g.overhang.block.w
                     && pt.y >= g.overhang.block.y - 22 && pt.y <= g.overhang.block.y + BLOCK_H + 22)) {
-              sliceOverhangOnGap(g);
+              startGesture(e, { kind: 'tap', start: pt, action: () => sliceOverhangOnGap(g) });
               return;
             }
           }
@@ -937,7 +990,7 @@
           const b = benchBlocks[i];
           const seamK = hitTestSeam(b, pt.x, pt.y);
           if (seamK > 0) {
-            sliceBenchBlock(b, seamK);
+            startGesture(e, { kind: 'tap', start: pt, action: () => sliceBenchBlock(b, seamK) });
             return;
           }
         }
@@ -946,20 +999,18 @@
         for (let i = benchBlocks.length - 1; i >= 0; i -= 1) {
           const b = benchBlocks[i];
           if (pt.x >= b.x - 6 && pt.x <= b.x + b.w + 6 && pt.y >= b.y - 6 && pt.y <= b.y + BLOCK_H + 6) {
-            try { canvas.setPointerCapture(e.pointerId); } catch { /* ignore */ }
             sfxPickup();
-            dragState = {
+            startGesture(e, {
               kind: 'block',
               block: b,
               offsetX: pt.x - b.x,
               offsetY: pt.y - b.y,
               startX: pt.x,
               startY: pt.y,
-              lastX: pt.x,
               moved: false,
               fuseTarget: null,
               hoverGap: null,
-            };
+            });
             b.scaleX = 1.08;
             b.scaleY = 1.08;
             return;
@@ -971,27 +1022,29 @@
           for (let i = g.blocks.length - 1; i >= 0; i -= 1) {
             const b = g.blocks[i];
             if (pt.x >= b.x && pt.x <= b.x + b.w && pt.y >= g.y - 8 && pt.y <= g.y + BLOCK_H + 8) {
-              returnGapBlockToBench(g, b);
+              startGesture(e, { kind: 'tap', start: pt, action: () => returnGapBlockToBench(g, b) });
               return;
             }
           }
           if (pt.x >= g.x && pt.x <= g.x + g.width && pt.y >= g.y - 24 && pt.y <= g.y + BLOCK_H + 24) {
-            activeGapIdx = g.index;
-            updateHtmlControls();
+            startGesture(e, { kind: 'tap', start: pt, action: () => {
+              activeGapIdx = g.index;
+              updateHtmlControls();
+            } });
             return;
           }
         }
 
         /* 6. Starting a drag on empty space starts a Laser Swipe gesture! */
-        try { canvas.setPointerCapture(e.pointerId); } catch { /* ignore */ }
-        dragState = {
+        startGesture(e, {
           kind: 'laser-swipe',
           points: [pt],
           slicedIds: new Set(),
-        };
+        });
       }
 
       function onPointerMove(e) {
+        if (dragState && e.pointerId !== dragState.pointerId) return;
         const pt = toCanvasCoords(e);
         pointer.x = pt.x;
         pointer.y = pt.y;
@@ -1037,11 +1090,13 @@
 
             /* Check proximity to any bridge gap! */
             let bestGap = null;
+            let bestGapDistance = Infinity;
             for (const g of gaps) {
-              if (gapFilledUnits(g) >= g.target) continue;
-              if (bCx >= g.x - 36 && bCx <= g.x + g.width + 36 && bCy >= g.y - 55 && bCy <= g.y + BLOCK_H + 55) {
+              if (gapFilledUnits(g) >= g.target || bCy < g.y - 55 || bCy > g.y + BLOCK_H + 55) continue;
+              const distance = Math.max(g.x - bCx, bCx - (g.x + g.width), 0);
+              if (distance <= 36 && distance < bestGapDistance) {
                 bestGap = g;
-                break;
+                bestGapDistance = distance;
               }
             }
             dragState.hoverGap = bestGap;
@@ -1050,17 +1105,17 @@
           dragState.points.push(pt);
           if (dragState.points.length > 14) dragState.points.shift();
           const prev = dragState.points[dragState.points.length - 2];
-          if (!prev) return;
+          if (!prev || pt.x === prev.x || Math.hypot(pt.x - prev.x, pt.y - prev.y) < 6) return;
 
           /* Did the swipe segment cross a block's vertical seam? */
           for (const b of [...benchBlocks]) {
             if (b.value < 2 || dragState.slicedIds.has(b.id)) continue;
             for (let k = 1; k < b.value; k += 1) {
               const sx = b.x + k * UNIT_W;
-              const crossedX = (prev.x <= sx && pt.x >= sx) || (prev.x >= sx && pt.x <= sx);
-              const midY = (prev.y + pt.y) / 2;
-              const insideY = midY >= b.y - 16 && midY <= b.y + BLOCK_H + 16;
-              if (crossedX && insideY && Math.hypot(pt.x - prev.x, pt.y - prev.y) >= 6) {
+              const crossing = (sx - prev.x) / (pt.x - prev.x);
+              if (crossing < 0 || crossing > 1) continue;
+              const y = prev.y + (pt.y - prev.y) * crossing;
+              if (y >= b.y - 16 && y <= b.y + BLOCK_H + 16) {
                 dragState.slicedIds.add(b.id);
                 sliceBenchBlock(b, k);
                 break;
@@ -1070,17 +1125,18 @@
         }
       }
 
-      function onPointerUp() {
-        if (!dragState) return;
-        const st = dragState;
-        dragState = null;
+      function onPointerUp(e) {
+        if (!dragState || e.pointerId !== dragState.pointerId) return;
+        const st = endGesture();
+
+        if (st.kind === 'tap') {
+          const pt = toCanvasCoords(e);
+          if (Math.hypot(pt.x - st.start.x, pt.y - st.start.y) <= 8) st.action();
+          return;
+        }
 
         if (st.kind === 'block') {
           const b = st.block;
-          b.tilt = 0;
-          b.scaleX = 1;
-          b.scaleY = 1;
-
           if (!st.moved) {
             /* It was a tap on the block! */
             if (laserMode && b.value >= 2) {
@@ -1111,16 +1167,23 @@
         }
       }
 
+      function onPointerCancel(e) {
+        if (dragState?.pointerId === e.pointerId) cancelGesture();
+      }
+
       canvas.addEventListener('pointerdown', onPointerDown);
       canvas.addEventListener('pointermove', onPointerMove);
       canvas.addEventListener('pointerup', onPointerUp);
-      canvas.addEventListener('pointercancel', onPointerUp);
+      canvas.addEventListener('pointercancel', onPointerCancel);
+      canvas.addEventListener('lostpointercapture', onPointerCancel);
 
       activeCleanup = () => {
         canvas.removeEventListener('pointerdown', onPointerDown);
         canvas.removeEventListener('pointermove', onPointerMove);
         canvas.removeEventListener('pointerup', onPointerUp);
-        canvas.removeEventListener('pointercancel', onPointerUp);
+        canvas.removeEventListener('pointercancel', onPointerCancel);
+        canvas.removeEventListener('lostpointercapture', onPointerCancel);
+        cancelGesture();
       };
 
       resetPuzzleBlocks();
@@ -1135,13 +1198,15 @@
 
         /* Resize high-DPI canvas backing store if needed. */
         const dpr = Math.min(2, window.devicePixelRatio || 1);
-        if (canvas.width !== W * dpr || canvas.height !== H * dpr) {
-          canvas.width = W * dpr;
-          canvas.height = H * dpr;
+        const pixelWidth = Math.round(W * dpr);
+        const pixelHeight = Math.round(H * dpr);
+        if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+          canvas.width = pixelWidth;
+          canvas.height = pixelHeight;
         }
         const gctx = canvas.getContext('2d');
         gctx.save();
-        gctx.scale(dpr, dpr);
+        gctx.scale(pixelWidth / W, pixelHeight / H);
 
         /* 1. Update Physics & Animations */
         const gearMult = phase === 'rolling' ? 3.5 : 1;
