@@ -192,20 +192,25 @@
     }
   }
 
+  function spotInFrame(geom, spot, inset = 0) {
+    const p = geom.map(spot.u, spot.v);
+    const mx = geom.W * inset;
+    const my = geom.H * inset;
+    return p.x >= mx && p.x <= geom.W - mx && p.y >= my && p.y <= geom.H - my;
+  }
+
   function buildRound(spec, geom) {
-    let pool = HIDING_SPOTS;
-    if (geom && geom.isPortrait) {
-      const marginX = geom.W * 0.10;
-      const marginY = geom.H * 0.10;
-      const safe = PORTRAIT_SPOTS.filter((s) => {
-        const p = geom.map(s.u, s.v);
-        return p.x >= marginX && p.x <= geom.W - marginX && p.y >= marginY && p.y <= geom.H - marginY;
-      });
-      pool = safe.length >= spec.count ? safe : PORTRAIT_SPOTS;
+    const canPerch = PERCH_SPECIES.has(spec.kind);
+    const canHide = (s) => canPerch || s.ground;
+    const spots = geom.isPortrait ? PORTRAIT_SPOTS : HIDING_SPOTS;
+    const visible = spots.filter((s) => spotInFrame(geom, s));
+    let pool = visible.filter(canHide).length >= spec.count ? visible : spots;
+    if (geom.isPortrait) {
+      const safe = visible.filter((s) => spotInFrame(geom, s, 0.10));
+      if (safe.filter(canHide).length >= spec.count) pool = safe;
     }
 
-    const canPerch = PERCH_SPECIES.has(spec.kind);
-    const eligible = pool.filter((s) => canPerch || s.ground);
+    const eligible = pool.filter(canHide);
     const pickedTargets = shuffle(eligible).slice(0, spec.count);
     const usedIds = new Set(pickedTargets.map((s) => s.id));
 
@@ -537,6 +542,7 @@
     let foundStates = [];
     let neighborStates = [];
     let sparks = [];
+    let press = null;
 
     const fireflies = Array.from({ length: 30 }, () => ({
       u: 0.08 + Math.random() * 0.84,
@@ -673,15 +679,16 @@
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
-      const nowPortrait = W < H * 1.05;
-      if (roundPortrait !== null && roundPortrait !== nowPortrait && !locked && foundStates.every((s) => !s.found)) {
-        loadRound(roundIdx);
+      const geom = sceneGeom();
+      const clipped = round.targets.some((spot) => !spotInFrame(geom, spot));
+      if (roundPortrait !== null && !locked && (roundPortrait !== geom.isPortrait || clipped)) {
+        loadRound(roundIdx, foundStates);
         return;
       }
       syncHitButtons();
     }
 
-    function loadRound(idx) {
+    function loadRound(idx, previousFinds = []) {
       roundIdx = idx;
       camU = 0.50;
       targetCamU = 0.50;
@@ -690,8 +697,13 @@
       round = buildRound(rounds[idx], g);
       locked = false;
       roundWon = false;
-      foundStates = round.targets.map(() => ({ found: false, num: 0, pop: 0, peek: 0 }));
+      foundStates = round.targets.map((_, i) => previousFinds[i]?.found
+        ? { found: true, num: previousFinds[i].num, pop: 0, peek: 0 }
+        : { found: false, num: 0, pop: 0, peek: 0 });
+      const foundCount = foundStates.filter((s) => s.found).length;
       neighborStates = round.neighbors.map(() => ({ wobble: 0, peek: 0 }));
+      sparks = [];
+      press = null;
 
       /* Start the lantern on empty ground away from every animal */
       const rest = pickRestSpot(round);
@@ -708,7 +720,7 @@
       /* Bottom firefly counter bar with the target animal's own real clay portrait */
       counterBar.innerHTML =
         `<img class="ww-target-icon" src="${ART}${round.kind}-found.png" alt="">` +
-        round.targets.map((_, i) => `<span class="ww-slot" data-slot="${i}">${i + 1}</span>`).join('');
+        round.targets.map((_, i) => `<span class="ww-slot${i < foundCount ? ' found' : ''}" data-slot="${i}">${i + 1}</span>`).join('');
 
       /* Accessible 64px+ tap buttons for each target animal */
       uiLayer.innerHTML = '';
@@ -719,8 +731,7 @@
         b.dataset.animal = String(i);
         b.setAttribute('aria-label', t.targetAria(spInfo.sing, i + 1));
         b.addEventListener('click', (e) => {
-          e.stopPropagation();
-          onTapTarget(i);
+          if (e.detail === 0) onTapTarget(i);
         });
         uiLayer.append(b);
         return b;
@@ -729,7 +740,7 @@
 
       /* Speak the EXACT task for this round ("Find 3 owls!", etc.) */
       const voiceKey = `ww-find-${round.targets.length}-${round.kind}`;
-      EDKit.voice(root, voiceKey, lang);
+      if (!foundCount) EDKit.voice(root, voiceKey, lang);
     }
 
     function onTapTarget(idx) {
@@ -803,34 +814,62 @@
       }
     }
 
-    box.addEventListener('pointermove', updateLanternFromPointer);
+    function movedFromPress(e) {
+      return Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10;
+    }
+
+    function cancelPress(e) {
+      if (press?.id === e.pointerId) press = null;
+    }
+
+    box.addEventListener('pointermove', (e) => {
+      if (!e.isPrimary) return;
+      if (press?.id === e.pointerId && movedFromPress(e)) press.moved = true;
+      updateLanternFromPointer(e);
+    });
     box.addEventListener('pointerdown', (e) => {
+      if (locked || !e.isPrimary || e.button !== 0) return;
       if (e.target.closest('.ww-hud-top, .ww-end-overlay')) return;
+      press = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: false };
+      updateLanternFromPointer(e);
+    });
+    box.addEventListener('pointercancel', cancelPress);
+    box.addEventListener('pointerleave', cancelPress);
+    box.addEventListener('pointerup', (e) => {
+      if (press?.id !== e.pointerId) return;
+      const moved = press.moved || movedFromPress(e);
+      press = null;
+      if (locked || moved || e.target.closest('.ww-hud-top, .ww-end-overlay')) return;
       const r = canvas.getBoundingClientRect();
       const px = e.clientX - r.left;
       const py = e.clientY - r.top;
       const g = sceneGeom();
 
-      if (!locked) {
-        const hitR = Math.max(36, g.dw * 0.040);
-        for (let i = 0; i < round.targets.length; i++) {
-          const p = g.map(round.targets[i].u, round.targets[i].v);
-          if (Math.hypot(px - p.x, py - p.y) < hitR) {
-            onTapTarget(i);
-            return;
-          }
+      const hitR = Math.max(36, g.dw * 0.040);
+      let nearest = -1;
+      let nearestDist = hitR;
+      for (let i = 0; i < round.targets.length; i++) {
+        const p = g.map(round.targets[i].u, round.targets[i].v);
+        const dist = Math.hypot(px - p.x, py - p.y);
+        if (dist < nearestDist) {
+          nearest = i;
+          nearestDist = dist;
         }
-        for (let i = 0; i < round.neighbors.length; i++) {
-          const nb = round.neighbors[i];
-          const p = g.map(nb.u, nb.v);
-          if (Math.hypot(px - p.x, py - p.y) < hitR * 0.9) {
-            targetU = nb.u;
-            targetV = nb.v;
-            neighborStates[i].wobble = 1;
-            sfxRustle();
-            spawnSparks(p.x, p.y, 6);
-            return;
-          }
+      }
+      if (nearest >= 0) {
+        onTapTarget(nearest);
+        return;
+      }
+      for (let i = 0; i < round.neighbors.length; i++) {
+        const nb = round.neighbors[i];
+        const p = g.map(nb.u, nb.v);
+        if (Math.hypot(px - p.x, py - p.y) < hitR * 0.9) {
+          targetU = nb.u;
+          targetV = nb.v;
+          neighborStates[i].wobble = 1;
+          sfxRustle();
+          spawnSparks(p.x, p.y, 6);
+          return;
         }
       }
       updateLanternFromPointer(e);

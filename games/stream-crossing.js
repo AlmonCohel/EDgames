@@ -507,16 +507,14 @@
     /* Bear state: positioned on left bank, or on a bridge slot (0..3), or at burrow (4) */
     const bear = {
       pose: 'waiting',
-      x: 0, y: 0,
-      fromX: 0, fromY: 0,
-      toX: 0, toY: 0,
       hopT: 1,
+      fromSlotIdx: -1,
       slotIdx: -1, // -1 = left bank, 0..3 = bridge stone, 4 = burrow
       oopsTimer: 0,
     };
 
     /* Drag, camera & animation state */
-    let dragging = null; // { idx, x, y, startX, startY, moved }
+    let dragging = null; // { pointerId, idx, x, y, startX, startY, moved }
     let returning = null; // { idx, fromX, fromY, toX, toY, t }
     let ripples = [];
     let droplets = [];
@@ -598,7 +596,6 @@
       canvas.width = Math.round(viewW * dpr);
       canvas.height = Math.round(viewH * dpr);
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      syncBearToSlot();
       const L = layout();
       cam.targetX = computeCamTarget(L);
       cam.x = clampCam(cam.x, L);
@@ -721,15 +718,6 @@
       return { x: p.x, y: p.y - L.bridgeStoneW * 0.10 };
     }
 
-    function syncBearToSlot() {
-      const L = layout();
-      const pt = bearAnchorFor(bear.slotIdx, L);
-      if (bear.hopT >= 1) {
-        bear.x = pt.x;
-        bear.y = pt.y;
-      }
-    }
-
     function spawnRipples(x, y, count = 3) {
       for (let i = 0; i < count; i++) {
         ripples.push({ x, y, r: 14 + i * 10, maxR: 78 + i * 18, life: 1 });
@@ -837,7 +825,6 @@
       bear.slotIdx = -1;
       bear.hopT = 1;
       bear.oopsTimer = 0;
-      syncBearToSlot();
       loadSubStep(true);
       const L = layout();
       if (isPortrait()) {
@@ -862,19 +849,12 @@
     }
 
     function hopBearTo(targetSlotIdx, onLand) {
-      const L = layout();
-      const dest = bearAnchorFor(targetSlotIdx, L);
-      bear.fromX = bear.x;
-      bear.fromY = bear.y;
-      bear.toX = dest.x;
-      bear.toY = dest.y;
+      bear.fromSlotIdx = bear.slotIdx;
       bear.slotIdx = targetSlotIdx;
       bear.hopT = 0;
       bear.pose = 'hop';
       sfxHop(Math.max(0, targetSlotIdx));
       tm.later(() => {
-        bear.x = dest.x;
-        bear.y = dest.y;
         bear.hopT = 1;
         if (onLand) onLand();
       }, 430);
@@ -891,6 +871,7 @@
       function hopNext() {
         if (step >= nextSlots.length) {
           bear.pose = 'cheer';
+          dotsEl.children[roundIdx].classList.add('done');
           const L = layout();
           spawnSparks(L.burrow.x, L.burrow.y - 30, 26);
           sfxCheer();
@@ -927,6 +908,7 @@
 
       if (choice.correct) {
         locked = true;
+        dragging = null;
         round.slots[slotIdx].placed = true;
         spawnRipples(targetPos.x, targetPos.y + 8, 3);
         spawnSplash(targetPos.x, targetPos.y, 16);
@@ -987,16 +969,16 @@
     }
 
     function onChoiceDown(e, idx) {
-      if (locked) return;
+      if (locked || dragging || !e.isPrimary || e.button !== 0) return;
       e.preventDefault();
       if (cam.introPhase !== 'follow') cam.introPhase = 'follow';
       const pt = clientToLocal(e);
       sfxPick();
-      dragging = { idx, x: pt.x, y: pt.y, startX: pt.x, startY: pt.y, moved: false };
+      dragging = { pointerId: e.pointerId, idx, x: pt.x, y: pt.y, startX: pt.x, startY: pt.y, moved: false };
     }
 
     function onPointerMove(e) {
-      if (!dragging) return;
+      if (!dragging || dragging.pointerId !== e.pointerId) return;
       const pt = clientToLocal(e);
       if (Math.hypot(pt.x - dragging.startX, pt.y - dragging.startY) > 10) {
         dragging.moved = true;
@@ -1005,8 +987,15 @@
       dragging.y = pt.y;
     }
 
-    function onPointerUp() {
-      if (!dragging) return;
+    function returnDrag(L, d) {
+      const shorePos = L.shore[d.idx];
+      returning = { idx: d.idx, fromX: d.x, fromY: d.y, toX: shorePos.x, toY: shorePos.y, t: 0 };
+      dragging = null;
+    }
+
+    function onPointerUp(e) {
+      if (!dragging || dragging.pointerId !== e.pointerId) return;
+      onPointerMove(e);
       const d = dragging;
       const L = layout();
       const camXNow = activeCamX(L);
@@ -1020,17 +1009,20 @@
 
       if (!d.moved || droppedOnWater) {
         tryChoice(d.idx);
+        dragging = null;
       } else {
         /* Gently slide back to shore if released on the bank */
-        const shorePos = L.shore[d.idx];
-        returning = { idx: d.idx, fromX: d.x, fromY: d.y, toX: shorePos.x, toY: shorePos.y, t: 0 };
+        returnDrag(L, d);
       }
-      dragging = null;
+    }
+
+    function onPointerCancel(e) {
+      if (dragging && dragging.pointerId === e.pointerId) returnDrag(layout(), dragging);
     }
 
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
-    window.addEventListener('pointercancel', onPointerUp);
+    window.addEventListener('pointercancel', onPointerCancel);
 
     sayBtn.addEventListener('click', () => {
       speakCurrentTask();
@@ -1132,13 +1124,15 @@
       const h = L.bearH;
       const w = h * (im.naturalWidth / im.naturalHeight);
 
-      let bx = bear.x;
-      let by = bear.y;
+      const destination = bearAnchorFor(bear.slotIdx, L);
+      let bx = destination.x;
+      let by = destination.y;
       let arcY = 0;
       if (bear.hopT < 1) {
+        const start = bearAnchorFor(bear.fromSlotIdx, L);
         const p = bear.hopT;
-        bx = bear.fromX + (bear.toX - bear.fromX) * p;
-        by = bear.fromY + (bear.toY - bear.fromY) * p;
+        bx = start.x + (destination.x - start.x) * p;
+        by = start.y + (destination.y - start.y) * p;
         arcY = -Math.sin(p * Math.PI) * Math.min(72, h * 0.42);
       } else if (bear.pose === 'waiting') {
         arcY = Math.sin(timeTick * 2.2) * 2.2;
@@ -1174,8 +1168,6 @@
 
       if (bear.hopT < 1) {
         bear.hopT = Math.min(1, bear.hopT + dt / 0.42);
-        /* Land where the hop ends, so the bear never flashes back on the stone he left. */
-        if (bear.hopT >= 1) { bear.x = bear.toX; bear.y = bear.toY; }
       }
       if (bear.oopsTimer > 0) {
         bear.oopsTimer = Math.max(0, bear.oopsTimer - dt);
@@ -1332,7 +1324,7 @@
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerCancel);
     };
   }
 
