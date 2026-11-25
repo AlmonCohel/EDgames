@@ -157,12 +157,14 @@ const EDKit = window.EDKit = (() => {
       st = null;
     };
     el.addEventListener('pointerdown', (e) => {
-      if (e.button > 0 || el.disabled) return;
-      st = { x: e.clientX, y: e.clientY, moved: false, ghost: null };
+      /* Already mid-gesture from another finger on the same card: a second
+         touch here must not overwrite it and orphan its ghost. */
+      if (e.button > 0 || el.disabled || st) return;
+      st = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: false, ghost: null };
       try { el.setPointerCapture(e.pointerId); } catch { /* not capturable */ }
     });
     el.addEventListener('pointermove', (e) => {
-      if (!st) return;
+      if (!st || e.pointerId !== st.id) return;
       if (!st.moved) {
         if (Math.hypot(e.clientX - st.x, e.clientY - st.y) < 9) return;
         st.moved = true;
@@ -179,14 +181,14 @@ const EDKit = window.EDKit = (() => {
       st.ghost.style.top = `${st.r.top + e.clientY - st.y}px`;
     });
     el.addEventListener('pointerup', (e) => {
-      if (!st) return;
+      if (!st || e.pointerId !== st.id) return;
       const moved = st.moved;
       drop();
       if (!moved) { if (onTap) onTap(); return; }
       const under = document.elementFromPoint(e.clientX, e.clientY);
       if (onDrop) onDrop(under);
     });
-    el.addEventListener('pointercancel', drop);
+    el.addEventListener('pointercancel', (e) => { if (st && e.pointerId === st.id) drop(); });
     el.addEventListener('click', (e) => { if (e.detail === 0 && onTap) onTap(); });
   }
 

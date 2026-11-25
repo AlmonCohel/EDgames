@@ -8,11 +8,13 @@ import { checkCircuitLab } from './check-circuit-lab.mjs';
 import { checkPotionLab } from './check-potion-lab.mjs';
 import { checkStarFactory } from './check-star-factory.mjs';
 import { checkStreamCrossing, checkWhisperingWoods } from './check-woodland-games.mjs';
+import { checkSentenceTrain } from './check-word-games.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const checks = {
   'circuit-lab': checkCircuitLab, 'potion-lab': checkPotionLab, 'star-factory': checkStarFactory,
   'stream-crossing': checkStreamCrossing, 'whispering-woods': checkWhisperingWoods,
+  'sentence-train': checkSentenceTrain,
 };
 const gameCheck = Object.keys(checks).find((id) => process.argv.includes(`--${id}`));
 const sizes = [{ width: 390, height: 844 }, { width: 1280, height: 800 }];
