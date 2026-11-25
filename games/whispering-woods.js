@@ -502,14 +502,26 @@
     }
   }
 
+  /* getNightSprite's per-pixel pass is cheap once, but every target and
+     neighbor animal needs it on the very first drawn frame — doing it there
+     bunches several full-image pixel passes into one frame instead of
+     spreading them across each picture's own load. Warming them here, as
+     each picture arrives, keeps the first frame light. */
+  function warmNightSprite(src, strength) {
+    const img = loadImg(src);
+    const go = () => getNightSprite(src, img, strength);
+    if (img.complete && img.naturalWidth) go();
+    else img.addEventListener('load', go, { once: true });
+  }
+
   function preloadArt() {
     loadImg(`${ART}bg.jpg`);
     SPECIES.forEach((sp) => {
-      loadImg(`${ART}${sp}-hidden.png`);
-      loadImg(`${ART}${sp}-found.png`);
-      loadImg(`${ART}${sp}-happy.png`);
+      warmNightSprite(`${ART}${sp}-hidden.png`, 0.90);
+      warmNightSprite(`${ART}${sp}-found.png`, 0.90);
+      warmNightSprite(`${ART}${sp}-happy.png`, 0.90);
     });
-    COVERS.forEach((cv) => loadImg(`${ART}cover-${cv}.png`));
+    COVERS.forEach((cv) => warmNightSprite(`${ART}cover-${cv}.png`, 0.72));
     GIRL_POSES.forEach((p) => loadImg(`${ART}girl-${p}.png`));
   }
 

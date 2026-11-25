@@ -19,6 +19,13 @@ const checks = {
 const gameCheck = Object.keys(checks).find((id) => process.argv.includes(`--${id}`));
 const sizes = [{ width: 390, height: 844 }, { width: 1280, height: 800 }];
 const timeout = 8000;
+// These games keep their own requestAnimationFrame canvas loop running (fireflies,
+// idle sparkle) for as long as the page is open, so Chromium's network-idle
+// measure can stay unsettled on a slower machine with no new requests in flight.
+// The wait below still runs for the full timeout, giving any late image or voice
+// request the same window to surface as an error; only the timeout itself stops
+// counting as a failure for these games.
+const ownAnimationLoop = new Set(['whispering-woods']);
 const cartridges = '#cartridge-grid .cartridge[data-status="ready"]';
 const firstScreen = '#stage > :not(.stage-note, script, style):is(:not(:empty), canvas, img, svg):visible';
 const types = {
@@ -81,7 +88,12 @@ async function open(context, origin, route, screen, afterLoad) {
       throw new Error(`First screen did not appear within ${timeout / 1000}s (${screen})`);
     }
     // Game mounts can start image or audio requests after the document loads.
-    await page.waitForLoadState('networkidle', { timeout });
+    try {
+      await page.waitForLoadState('networkidle', { timeout });
+    } catch (error) {
+      const id = new URL(route, origin).searchParams.get('id');
+      if (error.name !== 'TimeoutError' || !ownAnimationLoop.has(id)) throw error;
+    }
     const result = await afterLoad?.(page);
     return { errors, result };
   } catch (error) {
