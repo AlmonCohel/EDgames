@@ -55,7 +55,7 @@
   /* A real picture of real games, one from each plan's corner of the catalog. */
   const showcase = ['count-the-ducks', 'color-pop', 'robot-code', 'princess-dress', 'english-words', 'animal-sounds'];
   document.getElementById('hero-art').innerHTML = showcase
-    .filter((id) => EDCovers.has(id))
+    .filter((id) => EDCovers.has(id) && gameById(id))
     .map((id) => `<div class="hero-tile" data-subject="${gameById(id).subject}">${EDCovers.art(id)}</div>`)
     .join('');
 
