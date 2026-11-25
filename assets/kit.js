@@ -159,6 +159,10 @@ const EDKit = window.EDKit = (() => {
     el.addEventListener('pointerdown', (e) => {
       /* Already mid-gesture from another finger on the same card: a second
          touch here must not overwrite it and orphan its ghost. */
+      // A gesture whose finger no longer holds the card (capture failed or was
+      // lost, and its pointerup landed elsewhere) is over: clear it, or the card
+      // would never drag again.
+      if (st && !el.hasPointerCapture?.(st.id)) drop();
       if (e.button > 0 || el.disabled || st) return;
       st = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: false, ghost: null };
       try { el.setPointerCapture(e.pointerId); } catch { /* not capturable */ }
@@ -189,6 +193,7 @@ const EDKit = window.EDKit = (() => {
       if (onDrop) onDrop(under);
     });
     el.addEventListener('pointercancel', (e) => { if (st && e.pointerId === st.id) drop(); });
+    el.addEventListener('lostpointercapture', (e) => { if (st && e.pointerId === st.id) drop(); });
     el.addEventListener('click', (e) => { if (e.detail === 0 && onTap) onTap(); });
   }
 
