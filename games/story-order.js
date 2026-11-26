@@ -12,6 +12,14 @@
    it, which is the question the game is about — not told they were wrong. */
 
 (function () {
+  // Reuse the seed and soil from this game's cover.
+  const SEED = '<ellipse cx="38" cy="106" rx="6" ry="4" fill="#a86d38"/>';
+  const PLANTED_SEED = `<svg viewBox="27 97 22 22" focusable="false">
+    <rect x="18" y="68" width="40" height="52" fill="#d9f2ff"/>
+    <path d="M18 108h40v12H18z" fill="#8a5a2f"/>${SEED}
+  </svg>`;
+  const LOOSE_SEED = `<svg viewBox="31 99 14 14" focusable="false">${SEED}</svg>`;
+
   /* Three runs, growing by one picture each time. The scenes of every tale are
      written here in the order they happened; the shuffle is what the child
      undoes. */
@@ -26,7 +34,7 @@
           { emoji: '🦢', he: 'ברבור גדול ולבן', en: 'A big white swan' },
         ],
         [
-          { emoji: '🌰', he: 'גרגר קסום', en: 'A magic bean' },
+          { picture: PLANTED_SEED, he: 'גרגר קסום', en: 'A magic bean' },
           { emoji: '🌱', he: 'נבט קטן', en: 'A little sprout' },
           { emoji: '🌳', he: 'עץ עד השמיים', en: 'A tree up to the sky' },
         ],
@@ -36,7 +44,7 @@
           { emoji: '👦', he: 'ילד אמיתי', en: 'A real boy' },
         ],
         [
-          { emoji: '🧺', he: 'סל עם עוגות', en: 'A basket of cakes' },
+          { emoji: '🧺🍰', he: 'סל עם עוגות', en: 'A basket of cakes' },
           { emoji: '🌲', he: 'שביל ביער', en: 'A path through the forest' },
           { emoji: '🏡', he: 'הבית של סבתא', en: "Grandmother's house" },
         ],
@@ -54,20 +62,20 @@
         ],
         [
           { emoji: '🐷', he: 'שלושה חזירים', en: 'Three little pigs' },
-          { emoji: '🌾', he: 'בית מקש מתעופף', en: 'A straw house blows away' },
-          { emoji: '🧱', he: 'בונים בית מלבנים', en: 'A brick house goes up' },
+          { emoji: '🌾🏚️', he: 'בית מקש מתעופף', en: 'A straw house blows away' },
+          { emoji: '🧱🏠', he: 'בונים בית מלבנים', en: 'A brick house goes up' },
           { emoji: '🐺', he: 'הזאב מתייאש', en: 'The wolf gives up' },
         ],
         [
           { emoji: '🏰', he: 'שמחה בטירה', en: 'A happy castle' },
           { emoji: '🧵', he: 'דוקרת אצבע בכישור', en: 'A prick from a spindle' },
           { emoji: '😴', he: 'שינה ארוכה מאוד', en: 'A very long sleep' },
-          { emoji: '🌸', he: 'מתעוררים', en: 'Waking up' },
+          { emoji: '🥱', he: 'מתעוררים', en: 'Waking up' },
         ],
         [
           { emoji: '🍞', he: 'פירורי לחם בדרך', en: 'Breadcrumbs on the way' },
           { emoji: '🌲', he: 'יער חשוך', en: 'A dark forest' },
-          { emoji: '🍬', he: 'בית ממתקים', en: 'A house of sweets' },
+          { emoji: '🍬🏠', he: 'בית ממתקים', en: 'A house of sweets' },
           { emoji: '🏡', he: 'חוזרים הביתה', en: 'Home again' },
         ],
       ],
@@ -80,21 +88,21 @@
           { emoji: '👑', he: 'כתר נופל לבאר', en: 'A crown falls in the well' },
           { emoji: '🐸', he: 'צפרדע מוצאת אותו', en: 'A frog finds it' },
           { emoji: '🤝', he: 'הבטחה קטנה', en: 'A little promise' },
-          { emoji: '🏰', he: 'ארוחה בטירה', en: 'Dinner at the castle' },
+          { emoji: '🏰🍽️', he: 'ארוחה בטירה', en: 'Dinner at the castle' },
           { emoji: '🤴', he: 'הצפרדע היא נסיך', en: 'The frog is a prince' },
         ],
         [
           { emoji: '🌾', he: 'חדר מלא קש', en: 'A room full of straw' },
           { emoji: '🧵', he: 'גלגל טווייה', en: 'A spinning wheel' },
-          { emoji: '✨', he: 'הקש הופך לזהב', en: 'The straw turns to gold' },
+          { emoji: '🌾🏅', he: 'הקש הופך לזהב', en: 'The straw turns to gold' },
           { emoji: '👑', he: 'המלך מופתע', en: 'The king is amazed' },
-          { emoji: '🎉', he: 'חגיגה בארמון', en: 'A feast in the palace' },
+          { emoji: '🍽️🎉', he: 'חגיגה בארמון', en: 'A feast in the palace' },
         ],
         [
           { emoji: '🐄', he: 'פרה בשוק', en: 'A cow at the market' },
-          { emoji: '🌰', he: 'שקית גרגרים', en: 'A bag of beans' },
-          { emoji: '🌳', he: 'גבעול עד העננים', en: 'A stalk up to the clouds' },
-          { emoji: '☁️', he: 'טירה בעננים', en: 'A castle in the clouds' },
+          { emoji: '🛍️', picture: LOOSE_SEED, he: 'שקית גרגרים', en: 'A bag of beans' },
+          { emoji: '🌿☁️', he: 'גבעול עד העננים', en: 'A stalk up to the clouds' },
+          { emoji: '🏰☁️', he: 'טירה בעננים', en: 'A castle in the clouds' },
           { emoji: '💰', he: 'אוצר חוזר הביתה', en: 'Treasure comes home' },
         ],
       ],
@@ -132,26 +140,33 @@
   const TALES_PER_RUN = 3;
 
   const CSS = `
-    .so { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 8px 0 20px; width: 100%; }
-    .so-progress { display: flex; gap: 9px; }
+    body.game-deck #stage:has(> .so) { min-height: 0; }
+    .so {
+      --so-scene-height: 10dvh;
+      display: flex; flex: 1; flex-direction: column; gap: clamp(8px, 2dvh, 18px);
+    }
+    .so-progress { display: flex; justify-content: center; gap: 9px; }
     .so-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--border); }
     .so-dot.done { background: var(--pos); }
     .so-ask { text-align: center; }
     .so-ask h2 { margin: 0 0 6px; font-size: 1.4rem; }
-    .so-hint { margin: 0; color: var(--text-soft); font-size: 0.95rem; min-height: 1.6em; }
+    .so-hint { margin: 0; color: var(--text-soft); font-size: 0.95rem; line-height: 1.4; min-height: 1.4em; }
     .so-strip, .so-tray {
-      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
-      width: 100%; max-width: 660px;
+      flex: 1 0 0;
+      display: grid; gap: clamp(8px, 1vw, 14px);
+      grid-template-columns: repeat(var(--so-columns), minmax(0, 1fr));
+      grid-auto-rows: minmax(min-content, 1fr);
     }
     .so-slot, .so-card {
-      flex: 1 1 104px; max-width: 140px; min-height: 124px;
+      min-width: 0; min-height: 64px;
+      container-type: inline-size;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
       border-radius: var(--radius-sm); padding: 8px 6px;
     }
     .so-slot { border: 2px dashed var(--border); background: var(--bg-raise); }
     .so-slot.full { border-style: solid; border-color: var(--pos); background: var(--sub-tint, var(--sel-tint)); }
     .so-order {
-      font-weight: 700; font-size: 1.1rem;
+      font-weight: 700; font-size: clamp(1.25rem, 4dvh, 2rem);
       font-variant-numeric: tabular-nums; color: var(--text-soft);
     }
     .so-card {
@@ -165,22 +180,39 @@
     .so-card.used { visibility: hidden; }
     .so-card.nope { animation: so-shake 0.36s ease; }
     @keyframes so-shake { 25% { transform: translateX(-7px); } 75% { transform: translateX(7px); } }
-    .so-scene { font-size: 40px; line-height: 1; }
-    .so-caption { font-size: 0.85rem; line-height: 1.25; text-align: center; }
+    .so-scene {
+      display: flex; align-items: center;
+      font-size: clamp(24px, min(40cqi, var(--so-scene-height)), 80px); line-height: 1; white-space: nowrap;
+    }
+    .so-scene svg { width: 1.3em; height: 1.3em; border-radius: 0.15em; }
+    .so-caption { font-size: clamp(0.78rem, 5cqi, 1.15rem); line-height: 1.25; text-align: center; }
     .so-end { text-align: center; margin: auto; }
     .so-end .so-stars { font-size: 46px; letter-spacing: 4px; }
     .so-end h2 { margin: 10px 0 6px; font-size: 1.7rem; }
     .so-end p { color: var(--text-soft); margin: 0 0 22px; }
     .so-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    @media (max-width: 560px) {
-      .so-strip, .so-tray { gap: 8px; }
-      .so-slot, .so-card { flex-basis: 88px; min-height: 104px; }
-      .so-scene { font-size: 32px; }
-      .so-caption { font-size: 0.78rem; }
+    .so[data-scenes="3"] { --so-columns: 3; }
+    .so[data-scenes="4"] { --so-columns: 4; }
+    .so[data-scenes="5"] { --so-columns: 5; }
+    @media (max-height: 700px) {
+      .so { --so-scene-height: 6dvh; }
+    }
+    /* Six tracks let the last two targets sit centered below the first three. */
+    @media (max-width: 480px) {
+      .so[data-scenes="5"] { --so-columns: 6; }
+      .so[data-scenes="5"] :is(.so-slot, .so-card) { grid-column: span 2; }
+      .so[data-scenes="5"] :is(.so-slot, .so-card):nth-child(4) { grid-column: 2 / span 2; }
+      .so-hint { min-height: 2.8em; }
+    }
+    @media (max-width: 365px) {
+      .so[data-scenes="4"] { --so-columns: 2; }
     }
   `;
 
   const shuffle = (arr) => arr.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
+  const showScene = (scene, lang) => `
+    <span class="so-scene" aria-hidden="true">${scene.emoji || ''}${scene.picture || ''}</span>
+    <span class="so-caption">${scene[lang]}</span>`;
 
   let timers = [];
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
@@ -212,6 +244,7 @@
       if (tale >= tales.length) return finish();
 
       const scenes = tales[tale];
+      wrap.dataset.scenes = scenes.length;
       next = 0;
       locked = false;
 
@@ -238,9 +271,7 @@
         b.className = 'so-card';
         b.dataset.index = i;
         b.setAttribute('aria-label', scene[lang]);
-        b.innerHTML = `
-          <span class="so-scene" aria-hidden="true">${scene.emoji}</span>
-          <span class="so-caption">${scene[lang]}</span>`;
+        b.innerHTML = showScene(scene, lang);
         b.addEventListener('click', () => place(b, i, scenes));
         tray.append(b);
       });
@@ -263,9 +294,7 @@
       const slot = wrap.querySelectorAll('.so-slot')[next];
       slot.classList.add('full');
       slot.setAttribute('aria-label', `${text.slot(next + 1)}: ${scene[lang]}`);
-      slot.innerHTML = `
-        <span class="so-scene" aria-hidden="true">${scene.emoji}</span>
-        <span class="so-caption">${scene[lang]}</span>`;
+      slot.innerHTML = showScene(scene, lang);
 
       card.classList.add('used');
       card.disabled = true;
