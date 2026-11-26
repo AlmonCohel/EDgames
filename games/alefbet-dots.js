@@ -30,6 +30,18 @@
     heart: { pts: heart, fill: '#ff4d6d' },
   };
 
+  // Keep the 28-unit hit circles apart while the lines still join the original outline.
+  const TARGETS = {
+    house: [[50, 8], [100, 34], [70, 43], [80, 90], [20, 90], [30, 43], [0, 34]],
+    crown: [[10, 86], [6, 25], [26, 54], [50, 14], [74, 54], [94, 25], [90, 86]],
+    boat: [[46, 8], [72, 44], [101, 60], [76, 90], [24, 90], [5, 60], [41, 59]],
+    kite: [[50, 4], [76, 20], [94, 47], [50, 94], [6, 47], [24, 20]],
+    fish: [[3, 48], [24, 24], [56, 19], [77, 46], [100, 23], [100, 80], [70, 74], [43, 91], [23, 69]],
+    star: [[50, 3], [67, 30], [99, 36], [78, 58], [83, 92], [50, 73], [17, 92], [22, 58], [1, 36], [33, 30]],
+    tree: [[50, 4], [95, 25], [65, 36], [99, 62], [69, 67], [69, 100], [31, 100], [31, 67], [1, 62], [35, 36], [5, 25]],
+    heart: [[50, 113], [77, 94], [95, 69], [101, 38], [91, 9], [65, -5], [50, 43], [35, -5], [9, 9], [-1, 38], [5, 69], [23, 94]],
+  };
+
   const SETS = [
     { id: 'short', emoji: '🏠', label: { he: 'עד ז', en: 'Up to Zayin' }, pics: ['house', 'crown', 'boat', 'kite'], rounds: 3 },
     { id: 'medium', emoji: '⭐', label: { he: 'עד י', en: 'Up to Yud' }, pics: ['fish', 'star'], rounds: 2 },
@@ -42,19 +54,35 @@
   };
 
   const CSS = `
-    .ad-paper { width: min(100%, 460px, max(280px, calc(100vh - 340px))); aspect-ratio: 1; border-radius: var(--radius); background: #fffdf6; border: 2px solid var(--border); box-shadow: 0 6px 0 var(--edge, var(--border)); }
-    .ad-paper svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    body.game-deck .console-chassis--game:has(.ad-game) { height: 100dvh; }
+    body.game-deck .game-console-screen:has(.ad-game),
+    body.game-deck #stage:has(> .ad-game) { min-height: min-content; }
+    .kit.ad-game { flex: 1; min-height: 0; padding: 4px 0 6px; }
+    .ad-info { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .ad-paper { position: relative; align-self: stretch; flex: 1; min-width: 0; min-height: min(100vw, 420px); border-radius: var(--radius); background: #fffdf6; border: 2px solid var(--border); box-shadow: 0 6px 0 var(--edge, var(--border)); }
+    .ad-paper svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    @media (min-width: 800px) {
+      .kit.ad-game:has(.ad-paper) { flex-direction: row; }
+      .ad-info { flex: 0 0 23%; }
+      .ad-info .kit-head { flex-direction: column; }
+      .ad-paper { min-height: 260px; }
+    }
     .ad-shape { fill: transparent; transition: fill .8s ease; }
     .ad-shape.on { fill: var(--f); }
     .ad-line { stroke: var(--sub-solid, #0f8ea0); stroke-width: 1.6; stroke-linecap: round; }
+    .ad-guides { pointer-events: none; }
+    .ad-guides line { stroke: #8d9ab0; stroke-width: .6; }
+    .ad-guides circle { fill: #52607c; }
     .ad-dot { cursor: pointer; }
     .ad-dot circle.hit { fill: transparent; }
     .ad-dot circle.pin { fill: #fff; stroke: #52607c; stroke-width: .8; }
-    .ad-dot.next circle.pin { fill: #ffe27a; stroke: #e0a800; animation: ad-pulse .8s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-    @keyframes ad-pulse { to { transform: scale(1.35); } }
+    .ad-dot.next circle.pin { fill: #ffe27a; stroke: #a57900; animation: ad-pulse .8s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+    @keyframes ad-pulse { to { transform: scale(1.16); } }
     .ad-dot.done circle.pin { fill: var(--sub-solid, #0f8ea0); stroke: none; }
-    .ad-dot text { font: 700 6px Heebo, Fredoka, sans-serif; fill: #1e2a44; pointer-events: none; }
-    .ad-dot.wob { animation: kit-shake .4s ease; transform-box: fill-box; }
+    .ad-dot.done text { fill: #fff; }
+    .ad-dot text { font: 800 9px Heebo, Fredoka, sans-serif; fill: #1e2a44; }
+    .ad-marker { pointer-events: none; }
+    .ad-dot.wob .ad-marker { animation: kit-shake .4s ease; transform-box: fill-box; transform-origin: center; }
   `;
 
   const clock = EDKit.timers();
@@ -68,7 +96,7 @@
     const order = EDKit.shuffle(set.pics);
     let round = 0;
     const wrap = document.createElement('div');
-    wrap.className = 'kit';
+    wrap.className = 'kit ad-game';
     root.append(wrap);
 
     function next() {
@@ -77,23 +105,29 @@
       const pic = PICS[name];
       const n = pic.pts.length;
       let at = 0;
-      /* Labels sit outside the outline, pushed away from its middle. */
-      const cx = pic.pts.reduce((s, p) => s + p[0], 0) / n;
-      const cy = pic.pts.reduce((s, p) => s + p[1], 0) / n;
-      const label = ([x, y]) => { const d = Math.hypot(x - cx, y - cy) || 1; return [x + ((x - cx) / d) * 7, y + ((y - cy) / d) * 7 + 2]; };
+      const targets = TARGETS[name];
       wrap.innerHTML = `
-        ${EDKit.dots(set.rounds, round)}
-        ${EDKit.head(text.ask, lang)}
+        <div class="ad-info">
+          ${EDKit.dots(set.rounds, round)}
+          ${EDKit.head(text.ask, lang)}
+        </div>
         <div class="ad-paper">
-          <svg viewBox="-8 -8 116 116" aria-hidden="true">
+          <svg viewBox="-16 -20 132 150" aria-hidden="true">
             <polygon class="ad-shape" style="--f:${pic.fill}" points="${pic.pts.map((p) => p.join(',')).join(' ')}"/>
+            <g class="ad-guides">
+              ${pic.pts.map(([x, y], i) => `
+                <line x1="${x}" y1="${y}" x2="${targets[i][0]}" y2="${targets[i][1]}"/>
+                <circle cx="${x}" cy="${y}" r="1.3"/>`).join('')}
+            </g>
             <g class="ad-lines"></g>
-            ${pic.pts.map((p, i) => { const [lx, ly] = label(p); return `
-              <g class="ad-dot${i === 0 ? ' next' : ''}" data-i="${i}">
-                <circle class="hit" cx="${p[0]}" cy="${p[1]}" r="6"/>
-                <circle class="pin" cx="${p[0]}" cy="${p[1]}" r="2.6"/>
-                <text x="${lx}" y="${ly}" text-anchor="middle">${ALEFBET[i]}</text>
-              </g>`; }).join('')}
+            ${targets.map(([x, y], i) => `
+              <g class="ad-dot${i === 0 ? ' next' : ''}" data-i="${i}" transform="translate(${x} ${y})">
+                <circle class="hit" r="14"/>
+                <g class="ad-marker">
+                  <circle class="pin" r="8"/>
+                  <text y="3.25" text-anchor="middle">${ALEFBET[i]}</text>
+                </g>
+              </g>`).join('')}
           </svg>
         </div>`;
       EDKit.voice(wrap, ['dots-ask'], lang);
