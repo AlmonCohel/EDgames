@@ -2160,3 +2160,88 @@ body.game-deck.game-fullscreen .stage {
   }
 }
 .chatty-cover svg { width: 56px; height: 56px; }
+
+/* Phone header (Almon's pick, 26 Nov 2026): on a phone the title, badges, step
+   chips and reset took about 240 px, nearly half the screen above most games.
+   Now it is one row: title, a button naming the step on screen (the
+   steps open under it), and reset as an icon. Badges are hidden there, since
+   the home card already shows age and subject. Full-screen games keep their
+   own strip, and wider screens are unchanged. */
+.game-sets-toggle { display: none; }
+@media (max-width: 640px) {
+  body.game-deck:not(.game-fullscreen) .game-deck-bar {
+    position: relative;
+    flex-wrap: nowrap;
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  body.game-deck:not(.game-fullscreen) .game-header { flex: 1 1 auto; min-width: 0; }
+  /* The picture is the one the child just tapped on the home screen; the row
+     needs its room for the title and the step. */
+  body.game-deck:not(.game-fullscreen) .game-header .game-mark { display: none; }
+  body.game-deck:not(.game-fullscreen) .game-header { padding-inline-start: 4px; }
+  body.game-deck:not(.game-fullscreen) .game-header-text { min-width: 0; flex-wrap: nowrap; }
+  body.game-deck:not(.game-fullscreen) .game-header h1 {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  body.game-deck:not(.game-fullscreen) .game-header .badges { display: none; }
+  body.game-deck:not(.game-fullscreen) .game-sets {
+    width: auto;
+    flex: none;
+    flex-wrap: nowrap;
+    margin-inline-start: 0;
+    gap: 6px;
+  }
+  body.game-deck:not(.game-fullscreen) .game-sets-label { display: none; }
+  body.game-deck:not(.game-fullscreen) .game-sets-toggle:not([hidden]) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 46vw;
+    min-height: 40px;
+    padding: 0 8px 0 10px;
+    border-radius: 12px;
+    border: 1.5px solid var(--console-accent);
+    background: var(--console-accent);
+    color: #ffffff;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .game-sets-current { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .game-sets-current .emoji { margin-inline-end: 4px; }
+  .game-sets-toggle .ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
+  .game-sets.is-open .game-sets-toggle .ico { transform: rotate(180deg); }
+  body.game-deck:not(.game-fullscreen) .game-sets-chips { display: none; }
+  body.game-deck:not(.game-fullscreen) .game-sets.is-open .game-sets-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: absolute;
+    inset-inline: 0;
+    top: calc(100% + 6px);
+    z-index: 20;
+    padding: 10px;
+    background: #ffffff;
+    border: 2px solid rgba(21, 24, 33, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(21, 24, 33, 0.18);
+  }
+  body.game-deck:not(.game-fullscreen) .game-sets.is-open .game-sets-chips .chip { min-height: 44px; font-size: 0.86rem; }
+  body.game-deck:not(.game-fullscreen) .hw-reset-btn {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+    justify-content: center;
+    flex: none;
+  }
+  body.game-deck:not(.game-fullscreen) .hw-reset-btn span { display: none; }
+  /* The theme badge pushed the top bar onto a second row; the theme still
+     shows in the colours, as it does in the full-screen games. */
+  body.game-deck .kid-crust { display: none !important; }
+}

@@ -87,6 +87,12 @@
 
       <div class="game-sets" id="game-sets">
         <span class="game-sets-label" id="set-label" data-i18n="game.sets.label" hidden>ערכה</span>
+        <!-- Phones only (styles.css): the steps fold behind this one button,
+             which names the step on screen, so the game keeps the screen. -->
+        <button type="button" class="game-sets-toggle" id="sets-toggle" aria-expanded="false" aria-controls="set-chips" hidden>
+          <span class="game-sets-current" id="sets-current"></span>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
         <div class="game-sets-chips" id="set-chips" role="group" aria-labelledby="set-label"></div>
         <!-- Starts the step on screen over — the set the child is in, never the
              whole game from its first set. -->

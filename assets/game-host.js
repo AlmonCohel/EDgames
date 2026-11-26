@@ -26,6 +26,22 @@ const back = document.getElementById('back');
 const setRow = document.getElementById('game-sets');
 const setChips = document.getElementById('set-chips');
 const resetBtn = document.getElementById('game-reset');
+const setsToggle = document.getElementById('sets-toggle');
+const setsCurrent = document.getElementById('sets-current');
+
+/* On a phone the step picker folds behind one button (see styles.css), so the
+   title row stays one line and the game gets the screen. Picking a step, a tap
+   anywhere else, or Escape folds it again. On wider screens the button is
+   hidden by CSS and none of this shows. */
+function openSets(open) {
+  setRow.classList.toggle('is-open', open);
+  setsToggle.setAttribute('aria-expanded', String(open));
+}
+setsToggle.addEventListener('click', () => openSets(!setRow.classList.contains('is-open')));
+document.addEventListener('click', (e) => { if (!setRow.contains(e.target)) openSets(false); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && setRow.classList.contains('is-open')) { openSets(false); setsToggle.focus(); }
+});
 
 /* Inside the home screen's layer (see assets/player.js) "back" hides the layer
    and keeps this page alive underneath, so the game is still where the child
@@ -142,14 +158,18 @@ function buildSetChips(sets, onPick) {
     b.className = 'chip';
     b.setAttribute('aria-pressed', 'false');
     b.innerHTML = `<span class="emoji" aria-hidden="true">${set.emoji}</span>${EDLang.pick(set.label)}`;
-    b.addEventListener('click', () => onPick(i));
+    b.addEventListener('click', () => { openSets(false); onPick(i); });
     return b;
   }));
   document.getElementById('set-label').hidden = false;
+  setsToggle.hidden = false;
+  setsToggle.setAttribute('aria-label', EDLang.t('game.sets.label'));
 }
 
 function markSet(index) {
-  setChips.querySelectorAll('.chip').forEach((c, i) => c.setAttribute('aria-pressed', String(i === index)));
+  const chips = setChips.querySelectorAll('.chip');
+  chips.forEach((c, i) => c.setAttribute('aria-pressed', String(i === index)));
+  if (chips[index]) setsCurrent.innerHTML = chips[index].innerHTML;
 }
 
 function loadModule(game) {
@@ -232,6 +252,9 @@ async function start() {
   if (sets) buildSetChips(sets, (i) => { index = i; play(); });
   /* Back to the start of this step — the same set, from its first round. */
   resetBtn.hidden = false;
+  /* On a phone the button shows only its icon, so it carries its words here. */
+  resetBtn.setAttribute('aria-label', EDLang.t('game.reset'));
+  resetBtn.title = EDLang.t('game.reset');
   resetBtn.addEventListener('click', () => {
     if (window.EDVoice) EDVoice.stop();
     if (window.EDSound) EDSound.hush();
