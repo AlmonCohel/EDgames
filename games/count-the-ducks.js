@@ -66,7 +66,11 @@
   const ROUNDS = 5;
 
   const CSS = `
-    .cd { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 8px 0 20px; width: 100%; }
+    .cd {
+      display: flex; flex: 1; flex-direction: column; align-items: center;
+      container-type: inline-size;
+      gap: clamp(10px, 2dvh, 20px); padding: 4px 0 8px; width: 100%;
+    }
     .cd-progress { display: flex; gap: 9px; }
     .cd-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--border); }
     .cd-dot.done { background: var(--pos); }
@@ -75,12 +79,16 @@
     .cd-hint { margin: 0; color: var(--text-soft); font-size: 0.95rem; min-height: 1.6em; }
     .cd-lake {
       display: flex; flex-wrap: wrap; align-content: center; justify-content: center;
-      gap: 10px 16px; padding: 22px;
-      width: 100%; max-width: 640px; min-height: 210px;
+      flex: 1 0 auto;
+      gap: 10px clamp(8px, 2cqi, 22px); padding: 16px;
+      width: 100%; min-height: 170px;
       background: var(--surface);
       border: 1.5px solid var(--border); border-radius: var(--radius);
     }
-    .cd-swimmer { font-size: 46px; line-height: 1; animation: cd-bob 2.6s ease-in-out infinite; }
+    .cd-swimmer {
+      font-size: clamp(36px, min(11cqi, 12dvh), 120px);
+      line-height: 1; animation: cd-bob 2.6s ease-in-out infinite;
+    }
     .cd-swimmer:nth-child(even) { animation-delay: -1.3s; }
     .cd-swimmer.extra { opacity: 0.85; }
     @keyframes cd-bob { 50% { transform: translateY(-6px); } }
@@ -102,10 +110,18 @@
     .cd-end h2 { margin: 10px 0 6px; font-size: 1.7rem; }
     .cd-end p { color: var(--text-soft); margin: 0 0 22px; }
     .cd-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    @media (max-height: 700px) {
+      body.game-deck #stage:has(> .cd) { min-height: 0; }
+      .cd { gap: 10px; padding-block: 0; }
+      .cd-lake { gap: 8px 12px; padding: 10px; }
+      .cd-number { width: 72px; height: 72px; }
+    }
     @media (max-width: 560px) {
-      .cd-swimmer { font-size: 36px; }
-      .cd-lake { gap: 8px 12px; padding: 16px; min-height: 170px; }
-      .cd-number { width: 72px; height: 72px; font-size: 1.7rem; }
+      .cd-swimmer { font-size: clamp(36px, 14cqi, 46px); }
+      .cd-lake { gap: 8px; padding: 12px; }
+      .cd-numbers { width: 100%; gap: 8px; }
+      .cd-number { width: clamp(64px, 22cqi, 72px); height: 72px; font-size: 1.7rem; }
+      .cd-actions .btn { min-width: 64px; min-height: 64px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .cd-swimmer { animation: none; }
