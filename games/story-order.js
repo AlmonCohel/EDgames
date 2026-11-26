@@ -142,8 +142,8 @@
   const CSS = `
     body.game-deck #stage:has(> .so) { min-height: 0; }
     .so {
-      --so-scene-height: 10dvh;
-      display: flex; flex: 1; flex-direction: column; gap: clamp(8px, 2dvh, 18px);
+      --so-gap: clamp(8px, 2dvh, 18px);
+      display: flex; flex: 1; flex-direction: column; gap: var(--so-gap);
     }
     .so-progress { display: flex; justify-content: center; gap: 9px; }
     .so-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--border); }
@@ -151,15 +151,26 @@
     .so-ask { text-align: center; }
     .so-ask h2 { margin: 0 0 6px; font-size: 1.4rem; }
     .so-hint { margin: 0; color: var(--text-soft); font-size: 0.95rem; line-height: 1.4; min-height: 1.4em; }
-    .so-strip, .so-tray {
-      flex: 1 0 0;
-      display: grid; gap: clamp(8px, 1vw, 14px);
-      grid-template-columns: repeat(var(--so-columns), minmax(0, 1fr));
-      grid-auto-rows: minmax(min-content, 1fr);
+    /* Give slots and cards equal space, then pack the rows towards their shared gap. */
+    .so-board {
+      --so-cell-gap: clamp(8px, 1vw, 14px);
+      --so-card-width: calc((100cqw - (var(--so-cards-across) - 1) * var(--so-cell-gap)) / var(--so-cards-across));
+      --so-card-height: clamp(64px,
+        (100% - (var(--so-rows) - 1) * var(--so-cell-gap)) / var(--so-rows),
+        1.3 * var(--so-card-width));
+      container-type: inline-size;
+      display: grid; flex: 1; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: var(--so-gap);
     }
+    .so-strip, .so-tray {
+      display: grid; gap: var(--so-cell-gap);
+      grid-template-columns: repeat(var(--so-columns), minmax(0, 1fr));
+      grid-auto-rows: var(--so-card-height);
+    }
+    .so-strip { align-content: end; }
+    .so-tray { align-content: start; }
     .so-slot, .so-card {
       min-width: 0; min-height: 64px;
-      container-type: inline-size;
+      container-type: size;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
       border-radius: var(--radius-sm); padding: 8px 6px;
     }
@@ -182,37 +193,55 @@
     @keyframes so-shake { 25% { transform: translateX(-7px); } 75% { transform: translateX(7px); } }
     .so-scene {
       display: flex; align-items: center;
-      font-size: clamp(24px, min(40cqi, var(--so-scene-height)), 80px); line-height: 1; white-space: nowrap;
+      --so-picture-width: 48cqi;
+      font-size: min(var(--so-picture-width), max(22px, 100cqh - var(--so-caption-space, 42px)), 112px);
+      line-height: 1; white-space: nowrap;
     }
-    .so-scene svg { width: 1.3em; height: 1.3em; border-radius: 0.15em; }
+    .so-scene--pair { --so-picture-width: 24cqi; }
+    .so-scene svg { width: 1.08em; height: 1.08em; border-radius: 0.15em; }
     .so-caption { font-size: clamp(0.78rem, 5cqi, 1.15rem); line-height: 1.25; text-align: center; }
     .so-end { text-align: center; margin: auto; }
     .so-end .so-stars { font-size: 46px; letter-spacing: 4px; }
     .so-end h2 { margin: 10px 0 6px; font-size: 1.7rem; }
     .so-end p { color: var(--text-soft); margin: 0 0 22px; }
     .so-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .so { --so-rows: 1; --so-cards-across: var(--so-columns); }
     .so[data-scenes="3"] { --so-columns: 3; }
     .so[data-scenes="4"] { --so-columns: 4; }
     .so[data-scenes="5"] { --so-columns: 5; }
-    @media (max-height: 700px) {
-      .so { --so-scene-height: 6dvh; }
+    @media (max-width: 640px) {
+      body.game-deck:has(#stage > .so) .game-header h1 {
+        font-size: clamp(0.8rem, 4vw, 0.875rem);
+        line-height: 1.3; white-space: normal; overflow-wrap: anywhere;
+      }
     }
     /* Six tracks let the last two targets sit centered below the first three. */
     @media (max-width: 480px) {
-      .so[data-scenes="5"] { --so-columns: 6; }
+      .so[data-scenes="4"] { --so-columns: 2; --so-rows: 2; }
+      .so[data-scenes="4"] .so-board { width: min(100%, 280px); align-self: center; }
+      .so[data-scenes="5"] { --so-columns: 6; --so-cards-across: 3; --so-rows: 2; }
       .so[data-scenes="5"] :is(.so-slot, .so-card) { grid-column: span 2; }
       .so[data-scenes="5"] :is(.so-slot, .so-card):nth-child(4) { grid-column: 2 / span 2; }
       .so-hint { min-height: 2.8em; }
     }
-    @media (max-width: 365px) {
-      .so[data-scenes="4"] { --so-columns: 2; }
+    @media (max-width: 480px) and (max-height: 700px) {
+      body.game-deck #stage:has(> .so) { padding: 8px; }
+      .so { --so-gap: 8px; --so-caption-space: 34px; }
+      .so-ask h2 { font-size: 1.2rem; line-height: 1.2; }
+      .so-hint { font-size: 0.85rem; }
+      .so-slot, .so-card { padding: 4px; gap: 3px; }
+      .so-caption { font-size: 0.72rem; line-height: 1.15; }
     }
   `;
 
   const shuffle = (arr) => arr.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
-  const showScene = (scene, lang) => `
-    <span class="so-scene" aria-hidden="true">${scene.emoji || ''}${scene.picture || ''}</span>
-    <span class="so-caption">${scene[lang]}</span>`;
+  const showScene = (scene, lang) => {
+    const emojis = scene.emoji?.match(/\p{Extended_Pictographic}/gu) || [];
+    const paired = emojis.length > 1 || (scene.emoji && scene.picture);
+    return `
+      <span class="so-scene${paired ? ' so-scene--pair' : ''}" aria-hidden="true">${scene.emoji || ''}${scene.picture || ''}</span>
+      <span class="so-caption">${scene[lang]}</span>`;
+  };
 
   let timers = [];
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
@@ -256,13 +285,15 @@
           <h2 aria-live="polite">${text.ask}</h2>
           <p class="so-hint">${text.placed(0, scenes.length)}</p>
         </div>
-        <div class="so-strip">
-          ${scenes.map((_, i) => `
-            <div class="so-slot" aria-label="${text.slot(i + 1)}: ${text.blank}">
-              <span class="so-order" aria-hidden="true">${i + 1}</span>
-            </div>`).join('')}
-        </div>
-        <div class="so-tray"></div>`;
+        <div class="so-board">
+          <div class="so-strip">
+            ${scenes.map((_, i) => `
+              <div class="so-slot" aria-label="${text.slot(i + 1)}: ${text.blank}">
+                <span class="so-order" aria-hidden="true">${i + 1}</span>
+              </div>`).join('')}
+          </div>
+          <div class="so-tray"></div>
+        </div>`;
 
       const tray = wrap.querySelector('.so-tray');
       shuffle(scenes.map((scene, i) => ({ scene, i }))).forEach(({ scene, i }) => {
