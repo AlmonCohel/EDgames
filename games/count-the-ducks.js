@@ -117,10 +117,21 @@
       .cd-number { width: 72px; height: 72px; }
     }
     @media (max-width: 560px) {
-      .cd-swimmer { font-size: clamp(36px, 14cqi, 46px); }
-      .cd-lake { gap: 8px; padding: 12px; }
+      .cd-lake {
+        container-type: inline-size;
+        gap: 12px 8px;
+        padding: 12px;
+      }
+      .cd-swimmer { font-size: clamp(36px, min(24cqi, 12dvh), 90px); }
+      .cd-swimmer:only-child { font-size: clamp(36px, min(52cqi, 24dvh), 180px); }
+      .cd-lake:has(> :nth-child(6)) .cd-swimmer {
+        font-size: clamp(32px, min(18cqi, 8dvh), 76px);
+      }
       .cd-numbers { width: 100%; gap: 8px; }
       .cd-number { width: clamp(64px, 22cqi, 72px); height: 72px; font-size: 1.7rem; }
+      .cd-numbers:has(> :nth-child(4)) .cd-number {
+        max-width: calc((100cqi - 24px) / 4);
+      }
       .cd-actions .btn { min-width: 64px; min-height: 64px; }
     }
     @media (prefers-reduced-motion: reduce) {
