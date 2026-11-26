@@ -19,13 +19,19 @@ const checks = {
 const gameCheck = Object.keys(checks).find((id) => process.argv.includes(`--${id}`));
 const sizes = [{ width: 390, height: 844 }, { width: 1280, height: 800 }];
 const timeout = 8000;
-// These games keep their own requestAnimationFrame canvas loop running (fireflies,
-// idle sparkle) for as long as the page is open, so Chromium's network-idle
-// measure can stay unsettled on a slower machine with no new requests in flight.
-// The wait below still runs for the full timeout, giving any late image or voice
-// request the same window to surface as an error; only the timeout itself stops
-// counting as a failure for these games.
-const ownAnimationLoop = new Set(['whispering-woods']);
+// "Settled" = no request of this page in flight for 500 ms, counted here rather
+// than with Playwright's networkidle: on a phone-sized touch screen Whispering
+// Woods starts its picture loads after a ~1 s first-frame paint, and Chromium's
+// network-idle signal then never fires although every request has finished
+// (traced 2026-11-26: 46 requests, all done within 3 s, none open after 15 s).
+async function settled(page, net, timeout) {
+  const end = Date.now() + timeout;
+  while (Date.now() < end) {
+    if (!net.inflight.size && Date.now() - net.last >= 500) return;
+    await page.waitForTimeout(100);
+  }
+  throw new Error(`Still loading after ${timeout / 1000}s (${net.inflight.size} request(s) open)`);
+}
 const cartridges = '#cartridge-grid .cartridge[data-status="ready"]';
 const firstScreen = '#stage > :not(.stage-note, script, style):is(:not(:empty), canvas, img, svg):visible';
 const types = {
@@ -58,6 +64,12 @@ async function open(context, origin, route, screen, afterLoad) {
     if (message.type() === 'error') errors.add(`Console: ${message.text()}`);
   });
   page.on('pageerror', (error) => errors.add(`Page error: ${error.message}`));
+  // Every start and finish moves `last`, so even a request too quick to be seen
+  // open still counts as activity.
+  const net = { inflight: new Set(), last: Date.now() };
+  page.on('request', (request) => { net.inflight.add(request); net.last = Date.now(); });
+  page.on('requestfinished', (request) => { net.inflight.delete(request); net.last = Date.now(); });
+  page.on('requestfailed', (request) => { net.inflight.delete(request); net.last = Date.now(); });
   page.on('response', (response) => {
     if (response.status() >= 400) errors.add(`HTTP ${response.status()}: ${response.url()}`);
   });
@@ -88,12 +100,7 @@ async function open(context, origin, route, screen, afterLoad) {
       throw new Error(`First screen did not appear within ${timeout / 1000}s (${screen})`);
     }
     // Game mounts can start image or audio requests after the document loads.
-    try {
-      await page.waitForLoadState('networkidle', { timeout });
-    } catch (error) {
-      const id = new URL(route, origin).searchParams.get('id');
-      if (error.name !== 'TimeoutError' || !ownAnimationLoop.has(id)) throw error;
-    }
+    await settled(page, net, timeout);
     const result = await afterLoad?.(page);
     return { errors, result };
   } catch (error) {
