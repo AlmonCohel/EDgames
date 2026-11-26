@@ -113,11 +113,18 @@
   const PEEK_MS = 2600;
 
   const CSS = `
-    .pk { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 8px 0 20px; width: 100%; }
+    .pk {
+      --pk-piece-size: clamp(76px, 7vw, 96px);
+      display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center; gap: clamp(14px, 3vw, 36px); width: 100%;
+      max-width: 1040px; margin: auto;
+    }
+    .pk-reference, .pk-pieces {
+      display: grid; justify-items: center; align-items: center; gap: 12px; text-align: center;
+    }
     .pk-progress { display: flex; gap: 9px; }
     .pk-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--border); }
     .pk-dot.done { background: var(--pos); }
-    .pk-ask { text-align: center; }
     .pk-ask h2 { margin: 0 0 6px; font-size: 1.4rem; }
     .pk-hint { margin: 0; color: var(--text-soft); font-size: 0.95rem; min-height: 1.6em; }
 
@@ -143,11 +150,13 @@
     .pk-cover.lifted { opacity: 0; pointer-events: none; }
 
     .pk-board {
-      padding: 14px; border-radius: var(--radius);
+      /* Leave enough height for the console bars even with the four-row pond. */
+      --pk-cell-size: clamp(84px, calc((100dvh - 360px) / var(--pk-cols)), 112px);
+      padding: 8px; border-radius: var(--radius);
       background: var(--surface); border: 1.5px solid var(--border);
     }
-    .pk-board .pk-grid { width: min(340px, 78vw); }
-    .pk-board .pk-cell { font-size: clamp(24px, 8vw, 40px); }
+    .pk-board .pk-grid { width: calc(var(--pk-cols) * (var(--pk-cell-size) + 6px) - 6px); }
+    .pk-board .pk-cell { font-size: calc(var(--pk-cell-size) * 0.52); }
     .pk-hole {
       font: inherit; padding: 0; color: var(--text); cursor: pointer;
       border: 2px dashed var(--sub-ink, var(--border)); background: transparent;
@@ -161,10 +170,13 @@
     @keyframes pk-drop { from { transform: scale(1.3); opacity: 0.4; } }
 
     .pk-tray-label { color: var(--text-soft); font-size: 0.95rem; margin: 0; }
-    .pk-tray { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; min-height: 66px; align-items: center; }
+    .pk-tray {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+      max-width: calc(2 * var(--pk-piece-size) + 8px);
+    }
     .pk-piece {
-      width: 62px; height: 62px; display: grid; place-items: center;
-      font-size: 32px; line-height: 1; cursor: pointer;
+      width: var(--pk-piece-size); height: var(--pk-piece-size); display: grid; place-items: center;
+      padding: 0; font-size: calc(var(--pk-piece-size) * 0.52); line-height: 1; cursor: pointer;
       background: var(--bg-raise); border: 2px solid var(--border); border-radius: var(--radius-sm);
       transition: transform 0.12s ease;
     }
@@ -172,15 +184,58 @@
     .pk-piece[aria-pressed="true"] { border-color: var(--sub-ink, var(--sel-ink)); background: var(--sub-tint, var(--sel-tint)); }
     .pk-piece.gone { visibility: hidden; }
 
-    .pk-end { text-align: center; margin: auto; }
+    .pk-end { grid-column: 1 / -1; text-align: center; margin: auto; }
     .pk-end .pk-stars { font-size: 46px; letter-spacing: 4px; }
     .pk-end h2 { margin: 10px 0 6px; font-size: 1.7rem; }
     .pk-end p { color: var(--text-soft); margin: 0 0 22px; }
     .pk-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-    @media (max-width: 560px) {
-      .pk-piece { width: 54px; height: 54px; font-size: 28px; }
-      .pk-board { padding: 10px; }
+    @media (max-height: 700px) {
+      body.game-deck #stage:has(> .pk) { min-height: 0; padding: 12px; }
+      .pk-reference { gap: 8px; }
+      .pk-model .pk-grid { width: 120px; }
+    }
+    @media (min-width: 1200px) and (max-height: 700px) {
+      /* The controls and title fit side by side in the short, wide window. */
+      .game-deck-bar:has(+ #stage > .pk),
+      .game-deck-bar:has(+ #stage > .pk) :is(.game-header, .game-sets) { flex-wrap: nowrap; }
+      body.game-deck .game-deck-bar:has(+ #stage > .pk) :is(.game-sets-chips .chip, .hw-reset-btn) {
+        padding-inline: 8px;
+      }
+      .pk-board { --pk-cell-size: clamp(84px, calc((100dvh - 300px) / var(--pk-cols)), 112px); }
+    }
+    @media (max-width: 900px) {
+      .pk {
+        --pk-piece-size: clamp(64px, 17.4vw, 84px);
+        grid-template-columns: minmax(82px, 1fr) minmax(0, max-content);
+        grid-template-areas: "progress progress" "ask ask" "board board" "model pieces";
+        align-items: start; justify-items: center; gap: 8px; max-width: 408px;
+      }
+      .pk:has([data-peek]) {
+        grid-template-areas: "progress progress" "ask ask" "board board" "model pieces" "peek pieces";
+      }
+      .pk-reference { display: contents; }
+      .pk-progress { grid-area: progress; }
+      .pk-ask { grid-area: ask; text-align: center; }
+      .pk-ask h2 { font-size: 1.2rem; margin-bottom: 2px; }
+      .pk-hint { line-height: 1.35; min-height: 2.7em; }
+      .pk-model { grid-area: model; gap: 2px; text-align: center; }
+      .pk-model .pk-grid { width: 82px; gap: 2px; }
+      .pk-model .pk-cell { font-size: 14px; }
+      .pk-model-label { font-size: 0.75rem; line-height: 1.2; }
+      .pk-board { grid-area: board; width: 100%; padding: 5px; }
+      .pk-board .pk-grid { width: 100%; }
+      .pk-board .pk-cell { font-size: clamp(26px, 9vw, 50px); }
+      .pk-pieces { grid-area: pieces; gap: 6px; min-width: 0; }
+      .pk-tray { width: calc(3 * var(--pk-piece-size) + 12px); max-width: 100%; gap: 6px; }
+      .pk [data-peek] { grid-area: peek; padding-inline: 6px; font-size: 0.85rem; }
+      .pk [data-peek], .pk-actions .btn { min-width: 64px; min-height: 64px; }
+    }
+    @media (max-width: 640px) {
+      body.game-deck #stage:has(> .pk) { padding: 10px 4px; }
+      .game-deck-bar:has(+ #stage > .pk) .game-sets-current {
+        white-space: normal; line-height: 1.15;
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       .pk-cell.set { animation: none; }
@@ -244,26 +299,30 @@
       pieces = shuffle(holes).map((i) => ({ emoji: pic.cells[i], placed: false }));
 
       wrap.innerHTML = `
-        <div class="pk-progress" role="img" aria-label="${text.step(picture + 1, pictures.length)}">
-          ${pictures.map((_, i) => `<span class="pk-dot ${i < picture ? 'done' : ''}"></span>`).join('')}
-        </div>
-        <div class="pk-ask">
-          <h2>${text.ask(pic[lang] || pic.he)}</h2>
-          <p class="pk-hint" aria-live="polite">${set.remember ? text.covered : text.lead}</p>
-        </div>
-        <div class="pk-model">
-          <div class="pk-grid" style="--pk-cols:${pic.columns}" aria-hidden="true">
-            ${pic.cells.map((c) => `<span class="pk-cell">${c}</span>`).join('')}
+        <div class="pk-reference">
+          <div class="pk-progress" role="img" aria-label="${text.step(picture + 1, pictures.length)}">
+            ${pictures.map((_, i) => `<span class="pk-dot ${i < picture ? 'done' : ''}"></span>`).join('')}
           </div>
-          <span class="pk-model-label">${text.model}</span>
-          ${set.remember ? '<span class="pk-cover lifted" aria-hidden="true">🙈</span>' : ''}
+          <div class="pk-ask">
+            <h2>${text.ask(pic[lang] || pic.he)}</h2>
+            <p class="pk-hint" aria-live="polite">${set.remember ? text.covered : text.lead}</p>
+          </div>
+          <div class="pk-model">
+            <div class="pk-grid" style="--pk-cols:${pic.columns}" aria-hidden="true">
+              ${pic.cells.map((c) => `<span class="pk-cell">${c}</span>`).join('')}
+            </div>
+            <span class="pk-model-label">${text.model}</span>
+            ${set.remember ? '<span class="pk-cover lifted" aria-hidden="true">🙈</span>' : ''}
+          </div>
+          ${set.remember ? `<button type="button" class="btn btn--ghost" data-peek>${text.peek}</button>` : ''}
         </div>
-        ${set.remember ? `<button type="button" class="btn btn--ghost" data-peek>${text.peek}</button>` : ''}
-        <div class="pk-board">
-          <div class="pk-grid" style="--pk-cols:${pic.columns}"></div>
+        <div class="pk-board" style="--pk-cols:${pic.columns}">
+          <div class="pk-grid"></div>
         </div>
-        <p class="pk-tray-label">${text.tray}</p>
-        <div class="pk-tray"></div>`;
+        <div class="pk-pieces">
+          <p class="pk-tray-label">${text.tray}</p>
+          <div class="pk-tray"></div>
+        </div>`;
 
       const board = wrap.querySelector('.pk-board .pk-grid');
       pic.cells.forEach((cell, i) => {
