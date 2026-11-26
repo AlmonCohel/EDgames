@@ -1,0 +1,340 @@
+[
+  {
+    "label": "account.html @ phone",
+    "loadMs": 990,
+    "nav": {
+      "domContentLoaded": 275.69999980926514,
+      "loadEvent": 371
+    },
+    "longTasksCount": 1,
+    "longTasksTotalMs": 75,
+    "totalBytes": 229375,
+    "reqCount": 15,
+    "smallTargets": [
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 22,
+        "h": 22
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 224,
+        "h": 40
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 104,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 171,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 123,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": "foot-privacy",
+        "cls": "",
+        "w": 44,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": "foot-terms",
+        "cls": "",
+        "w": 72,
+        "h": 23
+      }
+    ],
+    "unlabeled": [
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input name=\"email\" type=\"email\" autocomplete=\"email\" dir=\"ltr\" required=\"\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input name=\"password\" type=\"password\" autocomplete=\"new-password\" dir=\"ltr\" required=\"\" minlength=\"8\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"free\" checked=\"\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"basic\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"pro\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"checkbox\" name=\"accept\">"
+      }
+    ],
+    "unsizedImgs": []
+  },
+  {
+    "label": "account.html @ laptop",
+    "loadMs": 990,
+    "nav": {
+      "domContentLoaded": 277.5,
+      "loadEvent": 363.20000076293945
+    },
+    "longTasksCount": 1,
+    "longTasksTotalMs": 86,
+    "totalBytes": 229375,
+    "reqCount": 15,
+    "smallTargets": [
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 22,
+        "h": 22
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 82,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 104,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 171,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 123,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": "foot-privacy",
+        "cls": "",
+        "w": 44,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": "foot-terms",
+        "cls": "",
+        "w": 72,
+        "h": 23
+      }
+    ],
+    "unlabeled": [
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input name=\"email\" type=\"email\" autocomplete=\"email\" dir=\"ltr\" required=\"\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input name=\"password\" type=\"password\" autocomplete=\"new-password\" dir=\"ltr\" required=\"\" minlength=\"8\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"free\" checked=\"\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"basic\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"pro\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"checkbox\" name=\"accept\">"
+      }
+    ],
+    "unsizedImgs": []
+  },
+  {
+    "label": "privacy.html @ phone",
+    "loadMs": 1030,
+    "nav": {
+      "domContentLoaded": 279.30000019073486,
+      "loadEvent": 420.4000005722046
+    },
+    "longTasksCount": 0,
+    "longTasksTotalMs": 0,
+    "totalBytes": 180116,
+    "reqCount": 10,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 173,
+        "h": 20
+      }
+    ],
+    "unlabeled": [],
+    "unsizedImgs": []
+  },
+  {
+    "label": "privacy.html @ laptop",
+    "loadMs": 998,
+    "nav": {
+      "domContentLoaded": 270,
+      "loadEvent": 373.5999994277954
+    },
+    "longTasksCount": 0,
+    "longTasksTotalMs": 0,
+    "totalBytes": 180116,
+    "reqCount": 10,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 173,
+        "h": 20
+      }
+    ],
+    "unlabeled": [],
+    "unsizedImgs": []
+  },
+  {
+    "label": "terms.html @ phone",
+    "loadMs": 965,
+    "nav": {
+      "domContentLoaded": 270.5,
+      "loadEvent": 359.3999996185303
+    },
+    "longTasksCount": 0,
+    "longTasksTotalMs": 0,
+    "totalBytes": 178199,
+    "reqCount": 10,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 173,
+        "h": 20
+      }
+    ],
+    "unlabeled": [],
+    "unsizedImgs": []
+  },
+  {
+    "label": "terms.html @ laptop",
+    "loadMs": 950,
+    "nav": {
+      "domContentLoaded": 219.5,
+      "loadEvent": 322.19999980926514
+    },
+    "longTasksCount": 0,
+    "longTasksTotalMs": 0,
+    "totalBytes": 178199,
+    "reqCount": 10,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 173,
+        "h": 20
+      }
+    ],
+    "unlabeled": [],
+    "unsizedImgs": []
+  }
+]

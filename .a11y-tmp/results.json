@@ -1,0 +1,744 @@
+[
+  {
+    "label": "play.html @ phone",
+    "loadMs": 1035,
+    "nav": {
+      "domContentLoaded": 181.5,
+      "loadEvent": 377.69999980926514
+    },
+    "longTasksCount": 1,
+    "longTasksTotalMs": 111,
+    "totalBytes": 566897,
+    "reqCount": 24,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "console-logo",
+        "w": 40,
+        "h": 40
+      },
+      {
+        "tag": "BUTTON",
+        "id": "age-all",
+        "cls": "age-btn",
+        "w": 85,
+        "h": 30
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "w": 43,
+        "h": 30
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "w": 43,
+        "h": 30
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "w": 43,
+        "h": 30
+      },
+      {
+        "tag": "BUTTON",
+        "id": "sound-toggle",
+        "cls": "hw-btn sound-toggle",
+        "w": 38,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": "lang-toggle",
+        "cls": "hw-btn lang-toggle",
+        "w": 46,
+        "h": 36
+      },
+      {
+        "tag": "A",
+        "id": "account-chip",
+        "cls": "hw-btn account-chip",
+        "w": 38,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": "settings-toggle",
+        "cls": "hw-btn hw-btn--settings",
+        "w": 129,
+        "h": 36
+      },
+      {
+        "tag": "INPUT",
+        "id": "q",
+        "cls": "",
+        "w": 297,
+        "h": 23
+      },
+      {
+        "tag": "BUTTON",
+        "id": "subject-all",
+        "cls": "channel-key",
+        "w": 123,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 137,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 146,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 132,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 136,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 114,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 144,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 135,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 142,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 97,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 92,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 95,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": "chatty-key",
+        "cls": "channel-key channel-key--chatty",
+        "w": 162,
+        "h": 37
+      }
+    ],
+    "unlabeled": [],
+    "unsizedImgs": []
+  },
+  {
+    "label": "play.html @ laptop",
+    "loadMs": 908,
+    "nav": {
+      "domContentLoaded": 133.5999994277954,
+      "loadEvent": 277.69999980926514
+    },
+    "longTasksCount": 1,
+    "longTasksTotalMs": 102,
+    "totalBytes": 566897,
+    "reqCount": 24,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "console-logo",
+        "w": 40,
+        "h": 40
+      },
+      {
+        "tag": "BUTTON",
+        "id": "age-all",
+        "cls": "age-btn",
+        "w": 85,
+        "h": 30
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "w": 43,
+        "h": 30
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "w": 43,
+        "h": 30
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "w": 43,
+        "h": 30
+      },
+      {
+        "tag": "BUTTON",
+        "id": "sound-toggle",
+        "cls": "hw-btn sound-toggle",
+        "w": 86,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": "lang-toggle",
+        "cls": "hw-btn lang-toggle",
+        "w": 90,
+        "h": 36
+      },
+      {
+        "tag": "A",
+        "id": "account-chip",
+        "cls": "hw-btn account-chip",
+        "w": 81,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": "settings-toggle",
+        "cls": "hw-btn hw-btn--settings",
+        "w": 129,
+        "h": 36
+      },
+      {
+        "tag": "INPUT",
+        "id": "q",
+        "cls": "",
+        "w": 155,
+        "h": 23
+      },
+      {
+        "tag": "BUTTON",
+        "id": "subject-all",
+        "cls": "channel-key",
+        "w": 123,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 137,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 146,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 132,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 136,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 114,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 144,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 135,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 142,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 97,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 92,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "channel-key",
+        "w": 95,
+        "h": 37
+      },
+      {
+        "tag": "BUTTON",
+        "id": "chatty-key",
+        "cls": "channel-key channel-key--chatty",
+        "w": 162,
+        "h": 37
+      }
+    ],
+    "unlabeled": [],
+    "unsizedImgs": []
+  },
+  {
+    "label": "game.html @ phone",
+    "loadMs": 1011,
+    "nav": {
+      "domContentLoaded": 282.30000019073486,
+      "loadEvent": 401.69999980926514
+    },
+    "longTasksCount": 0,
+    "longTasksTotalMs": 0,
+    "totalBytes": 410700,
+    "reqCount": 22,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "id": "back",
+        "cls": "hw-btn hw-btn--back",
+        "w": 143,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": "sound-toggle",
+        "cls": "hw-btn sound-toggle",
+        "w": 38,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": "lang-toggle",
+        "cls": "hw-btn lang-toggle",
+        "w": 38,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "w": 135,
+        "h": 34
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "w": 106,
+        "h": 34
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "w": 109,
+        "h": 34
+      },
+      {
+        "tag": "BUTTON",
+        "id": "game-reset",
+        "cls": "hw-reset-btn game-reset",
+        "w": 191,
+        "h": 34
+      }
+    ],
+    "unlabeled": [],
+    "unsizedImgs": []
+  },
+  {
+    "label": "game.html @ laptop",
+    "loadMs": 947,
+    "nav": {
+      "domContentLoaded": 229.39999961853027,
+      "loadEvent": 341
+    },
+    "longTasksCount": 0,
+    "longTasksTotalMs": 0,
+    "totalBytes": 410700,
+    "reqCount": 22,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "id": "back",
+        "cls": "hw-btn hw-btn--back",
+        "w": 143,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": "sound-toggle",
+        "cls": "hw-btn sound-toggle",
+        "w": 86,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": "lang-toggle",
+        "cls": "hw-btn lang-toggle",
+        "w": 90,
+        "h": 36
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "w": 149,
+        "h": 38
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "w": 118,
+        "h": 38
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "w": 121,
+        "h": 38
+      },
+      {
+        "tag": "BUTTON",
+        "id": "game-reset",
+        "cls": "hw-reset-btn game-reset",
+        "w": 204,
+        "h": 38
+      }
+    ],
+    "unlabeled": [],
+    "unsizedImgs": []
+  },
+  {
+    "label": "account.html @ phone",
+    "loadMs": 940,
+    "nav": {
+      "domContentLoaded": 237.10000038146973,
+      "loadEvent": 331.30000019073486
+    },
+    "longTasksCount": 1,
+    "longTasksTotalMs": 58,
+    "totalBytes": 229338,
+    "reqCount": 15,
+    "smallTargets": [
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 22,
+        "h": 22
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 224,
+        "h": 40
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 104,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 171,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 123,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": "foot-privacy",
+        "cls": "",
+        "w": 44,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": "foot-terms",
+        "cls": "",
+        "w": 72,
+        "h": 23
+      }
+    ],
+    "unlabeled": [
+      {
+        "tag": "A",
+        "id": "logo",
+        "cls": "",
+        "html": "<a id=\"logo\" href=\"index.html?home=1\"><img class=\"avatar\" src=\"favicon.svg\" alt=\"\" width=\"44\" height=\"44\"></a>"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input name=\"email\" type=\"email\" autocomplete=\"email\" dir=\"ltr\" required=\"\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input name=\"password\" type=\"password\" autocomplete=\"new-password\" dir=\"ltr\" required=\"\" minlength=\"8\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"free\" checked=\"\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"basic\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"pro\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"checkbox\" name=\"accept\">"
+      }
+    ],
+    "unsizedImgs": []
+  },
+  {
+    "label": "account.html @ laptop",
+    "loadMs": 968,
+    "nav": {
+      "domContentLoaded": 262.8999996185303,
+      "loadEvent": 352.3999996185303
+    },
+    "longTasksCount": 1,
+    "longTasksTotalMs": 83,
+    "totalBytes": 229338,
+    "reqCount": 15,
+    "smallTargets": [
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 1,
+        "h": 1
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "w": 22,
+        "h": 22
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 82,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 104,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 171,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": null,
+        "cls": "",
+        "w": 123,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": "foot-privacy",
+        "cls": "",
+        "w": 44,
+        "h": 23
+      },
+      {
+        "tag": "A",
+        "id": "foot-terms",
+        "cls": "",
+        "w": 72,
+        "h": 23
+      }
+    ],
+    "unlabeled": [
+      {
+        "tag": "A",
+        "id": "logo",
+        "cls": "",
+        "html": "<a id=\"logo\" href=\"index.html?home=1\"><img class=\"avatar\" src=\"favicon.svg\" alt=\"\" width=\"44\" height=\"44\"></a>"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input name=\"email\" type=\"email\" autocomplete=\"email\" dir=\"ltr\" required=\"\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input name=\"password\" type=\"password\" autocomplete=\"new-password\" dir=\"ltr\" required=\"\" minlength=\"8\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"free\" checked=\"\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"basic\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"radio\" name=\"plan\" value=\"pro\">"
+      },
+      {
+        "tag": "INPUT",
+        "id": null,
+        "cls": "",
+        "html": "<input type=\"checkbox\" name=\"accept\">"
+      }
+    ],
+    "unsizedImgs": []
+  }
+]

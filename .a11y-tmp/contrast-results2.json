@@ -1,0 +1,76 @@
+[
+  {
+    "label": "play.html @ phone",
+    "failures": []
+  },
+  {
+    "label": "play.html @ laptop",
+    "failures": []
+  },
+  {
+    "label": "game.html @ phone",
+    "failures": [
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "text": "🔴צבעים ראשונים",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 3.16,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "emoji",
+        "text": "🔴",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 3.16,
+        "req": 4.5
+      }
+    ]
+  },
+  {
+    "label": "game.html @ laptop",
+    "failures": [
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "text": "🔴צבעים ראשונים",
+        "fontSize": 13.76,
+        "bold": true,
+        "cr": 3.16,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "emoji",
+        "text": "🔴",
+        "fontSize": 13.76,
+        "bold": true,
+        "cr": 3.16,
+        "req": 4.5
+      }
+    ]
+  },
+  {
+    "label": "account.html-login @ phone",
+    "failures": []
+  },
+  {
+    "label": "account.html-login @ laptop",
+    "failures": []
+  },
+  {
+    "label": "account.html-signup @ phone",
+    "failures": []
+  },
+  {
+    "label": "account.html-signup @ laptop",
+    "failures": []
+  }
+]

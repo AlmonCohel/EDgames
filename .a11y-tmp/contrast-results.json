@@ -1,0 +1,488 @@
+[
+  {
+    "label": "play.html @ phone",
+    "failures": [
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "text": "3–4",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "text": "5–6",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "text": "7–8",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": "bay-count",
+        "cls": "bay-count",
+        "text": "57 קלטות",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "אותיות ומילים",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "מספרים וחשבון",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "צורות וצבעים",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "זיכרון וחשיבה",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "חיות וטבע",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "צלילים ומוזיקה",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "מקלדת ועכבר",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "נסיכות וקסמים",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "אנגלית",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "חשבון",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "לוגיקה",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "text",
+        "id": null,
+        "cls": "[object SVGAnimatedString]",
+        "text": "Aa",
+        "fontSize": 16,
+        "bold": true,
+        "cr": 1.54,
+        "req": 3
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "צ׳אטי · אנגלית",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1.54,
+        "req": 4.5
+      }
+    ]
+  },
+  {
+    "label": "play.html @ laptop",
+    "failures": [
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "text": "3–4",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "text": "5–6",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "age-btn",
+        "text": "7–8",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "מוזיקה",
+        "fontSize": 13.12,
+        "bold": true,
+        "cr": 2.28,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "English",
+        "fontSize": 13.12,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "כניסה",
+        "fontSize": 13.12,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": "bay-count",
+        "cls": "bay-count",
+        "text": "57 קלטות",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "אותיות ומילים",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "מספרים וחשבון",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "צורות וצבעים",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "זיכרון וחשיבה",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "חיות וטבע",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "צלילים ומוזיקה",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "מקלדת ועכבר",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "נסיכות וקסמים",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "אנגלית",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "חשבון",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "לוגיקה",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "text",
+        "id": null,
+        "cls": "[object SVGAnimatedString]",
+        "text": "Aa",
+        "fontSize": 16,
+        "bold": true,
+        "cr": 1.54,
+        "req": 3
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "צ׳אטי · אנגלית",
+        "fontSize": 13.44,
+        "bold": true,
+        "cr": 1.54,
+        "req": 4.5
+      }
+    ]
+  },
+  {
+    "label": "game.html @ phone",
+    "failures": [
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "חזרה למשחקים",
+        "fontSize": 13.12,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "text": "🔴צבעים ראשונים",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 3.16,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "emoji",
+        "text": "🔴",
+        "fontSize": 12.8,
+        "bold": true,
+        "cr": 3.16,
+        "req": 4.5
+      }
+    ]
+  },
+  {
+    "label": "game.html @ laptop",
+    "failures": [
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "חזרה למשחקים",
+        "fontSize": 13.12,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "מוזיקה",
+        "fontSize": 13.12,
+        "bold": true,
+        "cr": 2.28,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "",
+        "text": "English",
+        "fontSize": 13.12,
+        "bold": true,
+        "cr": 1,
+        "req": 4.5
+      },
+      {
+        "tag": "BUTTON",
+        "id": null,
+        "cls": "chip",
+        "text": "🔴צבעים ראשונים",
+        "fontSize": 13.76,
+        "bold": true,
+        "cr": 3.16,
+        "req": 4.5
+      },
+      {
+        "tag": "SPAN",
+        "id": null,
+        "cls": "emoji",
+        "text": "🔴",
+        "fontSize": 13.76,
+        "bold": true,
+        "cr": 3.16,
+        "req": 4.5
+      }
+    ]
+  },
+  {
+    "label": "account.html-login @ phone",
+    "failures": []
+  },
+  {
+    "label": "account.html-login @ laptop",
+    "failures": []
+  },
+  {
+    "label": "account.html-signup @ phone",
+    "failures": []
+  },
+  {
+    "label": "account.html-signup @ laptop",
+    "failures": []
+  }
+]
