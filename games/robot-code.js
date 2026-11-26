@@ -42,21 +42,55 @@
   const MAX_PLAN = 16;
 
   const CSS = `
-    .rc-board { position: relative; display: grid; gap: 4px; width: min(66vw, 42vh, 340px); aspect-ratio: 1; border: 6px solid #c9d6ea; background: #c9d6ea; border-radius: 18px; }
-    .rc-cell { background: #f5f8fd; border-radius: 9px; display: grid; place-items: center; font-size: clamp(20px, 6.5vw, 32px); }
-    .rc-robot { position: absolute; display: grid; place-items: center; font-size: clamp(24px, 7.5vw, 38px); transition: left .36s ease, top .36s ease; pointer-events: none; }
+    .kit.rc-game { flex: 1; justify-content: center; padding: 0; container-type: inline-size; }
+    .rc-layout { display: grid; grid-template: "guide" "board" "controls" / minmax(0, 1fr); justify-items: center; align-items: center; gap: 8px; width: 100%; }
+    .rc-console { display: contents; }
+    .rc-guide { grid-area: guide; display: grid; justify-items: center; gap: 4px; }
+    .rc-progress { display: flex; align-items: center; justify-content: center; gap: 12px; }
+    .rc-progress .kit-hint { margin: 0; min-height: 0; }
+    .rc-progress .kit-hint:empty { display: none; }
+    .rc-controls { grid-area: controls; display: grid; justify-items: center; gap: 8px; width: 100%; }
+    .rc-board {
+      grid-area: board; position: relative; display: grid; gap: 4px; container-type: inline-size;
+      width: min(100%, 380px, max(200px, 100dvh - 530px)); aspect-ratio: 1;
+      border: 6px solid #c9d6ea; background: #c9d6ea; border-radius: 18px;
+    }
+    .rc-cell { background: #f5f8fd; border-radius: 9px; display: grid; place-items: center; font-size: clamp(18px, 9cqi, 42px); }
+    .rc-robot { position: absolute; display: grid; place-items: center; font-size: clamp(24px, 14cqi, 60px); transition: left .36s ease, top .36s ease; pointer-events: none; }
     .rc-robot.bump { animation: kit-shake .4s ease; }
-    .rc-plan { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; align-items: center; min-height: 50px; width: 100%; max-width: 520px; padding: 6px; background: #eef3fb; border-radius: 14px; font-size: .92rem; color: var(--text-soft); }
-    .rc-step { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 9px; background: #fff; font-size: 1.25rem; box-shadow: 0 2px 0 var(--edge); }
-    .rc-step.empty { background: transparent; box-shadow: none; border: 2px dashed #b9c9e0; }
+    .rc-plan { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; align-items: center; min-height: 42px; width: 100%; max-width: 440px; padding: 5px; background: #eef3fb; border-radius: 14px; font-size: .92rem; text-align: center; color: var(--text-soft); }
+    .rc-step { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; background: #fff; font-size: 1.25rem; box-shadow: 0 2px 0 var(--edge); }
+    .rc-step--empty { background: transparent; box-shadow: none; border: 2px dashed #b9c9e0; }
     .rc-step.now { background: #ffe27a; }
-    .rc-pad { display: grid; grid-template-columns: repeat(3, 58px); grid-template-rows: repeat(2, 58px); gap: 8px; justify-content: center; }
-    .rc-pad .kit-opt { min-width: 0; min-height: 0; width: 58px; height: 58px; padding: 0; font-size: 1.7rem; border-radius: 16px; }
-    .rc-pad [data-m="up"] { grid-column: 2; grid-row: 1; }
-    .rc-pad [data-m="left"] { grid-column: 1; grid-row: 2; }
-    .rc-pad [data-m="down"] { grid-column: 2; grid-row: 2; }
-    .rc-pad [data-m="right"] { grid-column: 3; grid-row: 2; }
+    .rc-pad { display: grid; grid-template-areas: "left up down right"; gap: 8px; justify-content: center; padding-bottom: 6px; }
+    .rc-pad .kit-opt { min-width: 64px; min-height: 64px; padding: 0; font-size: 1.7rem; border-radius: 16px; }
+    .rc-pad [data-m="up"] { grid-area: up; }
+    .rc-pad [data-m="left"] { grid-area: left; }
+    .rc-pad [data-m="down"] { grid-area: down; }
+    .rc-pad [data-m="right"] { grid-area: right; }
     .rc-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    @container (min-width: 580px) {
+      .rc-layout { display: flex; justify-content: center; gap: clamp(18px, 4cqi, 48px); }
+      .rc-console { display: grid; justify-items: center; gap: 12px; width: 440px; min-width: 0; }
+      .rc-guide, .rc-controls { grid-area: auto; }
+      .rc-board { flex: none; width: min(50cqi - 16px, clamp(230px, 100dvh - 330px, 460px)); }
+      @media (min-height: 701px) {
+        .rc-pad { grid-template-areas: ". up ." "left down right"; }
+      }
+    }
+    @media (max-height: 700px) {
+      body.game-deck #stage:has(> .rc-game) { min-height: 0; }
+    }
+    @media (max-width: 640px) {
+      .rc-guide .kit-head h2 { font-size: 1.15rem; line-height: 1.25; }
+      .rc-guide .kit-say { width: 64px; height: 64px; }
+      .rc-actions { gap: 8px; }
+      .rc-actions .btn, .rc-game .kit-actions .btn { min-width: 64px; min-height: 64px; justify-content: center; }
+      .rc-actions .btn { padding-inline: 10px; font-size: .9rem; }
+    }
+    @container (max-width: 279px) {
+      .rc-pad { grid-template-areas: "left up" "down right"; }
+    }
   `;
 
   const clock = EDKit.timers();
@@ -107,7 +141,7 @@
 
     let round = 0;
     const wrap = document.createElement('div');
-    wrap.className = 'kit';
+    wrap.className = 'kit rc-game';
     root.append(wrap);
 
     function next() {
@@ -119,27 +153,38 @@
 
       /* One cell and one 4px gap, as a share of the board's inside. */
       const pitch = (i) => `calc(${i} * (100% + 4px) / ${set.size})`;
+      const tracks = `repeat(${set.size}, minmax(0, 1fr))`;
       wrap.innerHTML = `
-        ${EDKit.dots(ROUNDS, round)}
-        ${EDKit.head(text.ask, lang)}
-        <p class="kit-hint" aria-live="polite">${set.exact ? text.steps(board.need) : ''}</p>
-        <div class="rc-board" dir="ltr" style="grid-template-columns:repeat(${set.size},1fr)">
-          ${Array.from({ length: set.size * set.size }, (_, i) => {
-            const x = i % set.size;
-            const y = Math.floor(i / set.size);
-            const inner = board.walls.has(`${x},${y}`) ? '🧱' : (x === board.goal.x && y === board.goal.y ? '🔋' : '');
-            return `<div class="rc-cell">${inner}</div>`;
-          }).join('')}
-          <div class="rc-robot" aria-hidden="true">🤖</div>
-        </div>
-        <div class="rc-plan" dir="ltr"></div>
-        <div class="rc-pad" dir="ltr">
-          ${Object.entries(MOVES).map(([id, m]) => `<button type="button" class="kit-opt" data-m="${id}" aria-label="${text[id]}">${m.glyph}</button>`).join('')}
-        </div>
-        <div class="rc-actions">
-          <button type="button" class="btn rc-run">${text.run}</button>
-          <button type="button" class="btn btn--ghost rc-undo">${text.undo}</button>
-          <button type="button" class="btn btn--ghost rc-clear">${text.clear}</button>
+        <div class="rc-layout">
+          <div class="rc-board" dir="ltr" style="grid-template: ${tracks} / ${tracks}">
+            ${Array.from({ length: set.size * set.size }, (_, i) => {
+              const x = i % set.size;
+              const y = Math.floor(i / set.size);
+              const inner = board.walls.has(`${x},${y}`) ? '🧱' : (x === board.goal.x && y === board.goal.y ? '🔋' : '');
+              return `<div class="rc-cell">${inner}</div>`;
+            }).join('')}
+            <div class="rc-robot" aria-hidden="true">🤖</div>
+          </div>
+          <div class="rc-console">
+            <div class="rc-guide">
+              <div class="rc-progress">
+                ${EDKit.dots(ROUNDS, round)}
+                <p class="kit-hint" aria-live="polite">${set.exact ? text.steps(board.need) : ''}</p>
+              </div>
+              ${EDKit.head(text.ask, lang)}
+            </div>
+            <div class="rc-controls">
+              <div class="rc-pad" dir="ltr">
+                ${['left', 'up', 'down', 'right'].map((id) => `<button type="button" class="kit-opt" data-m="${id}" aria-label="${text[id]}">${MOVES[id].glyph}</button>`).join('')}
+              </div>
+              <div class="rc-plan" dir="ltr"></div>
+              <div class="rc-actions">
+                <button type="button" class="btn rc-run">${text.run}</button>
+                <button type="button" class="btn btn--ghost rc-undo">${text.undo}</button>
+                <button type="button" class="btn btn--ghost rc-clear">${text.clear}</button>
+              </div>
+            </div>
+          </div>
         </div>`;
       EDKit.voice(wrap, 'robot-ask', lang);
 
@@ -158,7 +203,7 @@
 
       function drawPlan(active = -1) {
         const slots = plan.map((m, i) => `<span class="rc-step${i === active ? ' now' : ''}">${MOVES[m].glyph}</span>`);
-        if (set.exact) for (let i = plan.length; i < limit; i += 1) slots.push('<span class="rc-step empty"></span>');
+        if (set.exact) for (let i = plan.length; i < limit; i += 1) slots.push('<span class="rc-step rc-step--empty"></span>');
         planEl.innerHTML = slots.length ? slots.join('') : text.empty;
       }
 
