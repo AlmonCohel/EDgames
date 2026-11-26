@@ -2,7 +2,7 @@
 
 Read this before touching `EDgames`. Alongside `README.md` and `docs/ACCOUNTS.md`, this records Almon's design and architecture decisions so Claude, Gemini (`gemini-mac`), and the PC agents stay aligned.
 
-> **Before building or rebuilding any game, read `docs/GAME-STANDARD.md` (set by Almon 2026-11-20).** A game is done only when `node scripts/shoot-game.mjs <id>` passes and every screenshot has been looked at. Paid voices come last, after Almon approves a game. Finished example: Whispering Woods (`docs/briefs/whispering-woods-pilot.md`). Current brief: `docs/briefs/stream-crossing.md`. Check section 8 (common mistakes) of the standard before every hand-over, and push a mock-up page (art) or live link (game) for Almon to review himself (section 9).
+> **Before building or rebuilding any game, read `docs/GAME-STANDARD.md` (set by Almon 2026-11-20).** A game is done only when `node scripts/shoot-game.mjs <id>` passes and every screenshot has been looked at. Paid voices come last, after Almon approves a game. Finished example: Whispering Woods (`docs/briefs/whispering-woods-pilot.md`). Current brief: `docs/briefs/sun-mirror-valley.md`, then in order `potion-lab.md`, `star-factory.md`, `circuit-lab.md` (Almon's 26 Nov sort: these 4 get the bigger pass; one game at a time, each waits for his OK). 8 other games get small Codex fixes (board cards); the remaining 45 stay as they are on purpose. Check section 8 (common mistakes) of the standard before every hand-over, and push a mock-up page (art) or live link (game) for Almon to review himself (section 9).
 
 ## 1. Current Design & Architecture (31 October 2026)
 
