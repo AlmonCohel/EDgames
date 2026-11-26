@@ -24,20 +24,39 @@
   const ROUNDS = 4;
   const PER_ROUND = 3;
   const HUES = ['#ff5d8f', '#ffc531', '#4aa3ff', '#3ccf7a', '#a66cff', '#ff8a1f'];
+  const BALLOON_WIDTH = 74;
+  const BALLOON_HEIGHT = 92;
+  const SWAY = 10;
+  const SIDE_INSET = SWAY + 4;
+  const SKY_INSET = 8;
 
   const CSS = `
-    .lb-sky { position: relative; width: min(100%, 680px); height: min(56vh, 430px); min-height: 300px; border-radius: var(--radius); overflow: hidden;
+    body.game-deck #stage:has(> .lb-game) { min-height: 0; }
+    .lb-game { gap: 10px; padding: 4px 0 8px; }
+    .lb-prompt { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .lb-sky { position: relative; width: min(100%, 680px); height: clamp(140px, calc(100dvh - 460px), 430px); border-radius: var(--radius); overflow: hidden;
       background: linear-gradient(180deg, #7fd0ff, #d9f2ff); touch-action: manipulation; }
     .lb-target { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 18px; background: var(--sub-solid); color: #fff; font-size: 2.6rem; font-weight: 700; font-family: Heebo, Fredoka, sans-serif; }
-    .lb-b { position: absolute; left: 0; top: 0; width: 74px; height: 92px; border: none; padding: 0; background: none; cursor: pointer; will-change: transform; }
+    .lb-b { position: absolute; left: calc(${SIDE_INSET}px + (100% - ${BALLOON_WIDTH + 2 * SIDE_INSET}px) * var(--lane)); top: 0;
+      width: ${BALLOON_WIDTH}px; height: ${BALLOON_HEIGHT}px; border: none; padding: 0; background: none; cursor: pointer; will-change: transform; }
     .lb-b .skin { position: absolute; inset: 0 0 18px; border-radius: 50% 50% 48% 48% / 55% 55% 45% 45%; background: var(--h);
       box-shadow: inset -8px -10px 0 rgba(0,0,0,.12), inset 8px 8px 0 rgba(255,255,255,.3); display: grid; place-items: center;
       color: #fff; font-size: 2.3rem; font-weight: 700; font-family: Heebo, Fredoka, sans-serif; text-shadow: 0 2px 0 rgba(0,0,0,.2); }
     .lb-b .skin::after { content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--h); }
     .lb-b .str { position: absolute; left: 50%; bottom: 0; width: 1.5px; height: 18px; background: #6b7a90; }
-    .lb-b.wob { animation: kit-shake .4s ease; }
+    .lb-b.wob { animation: lb-wobble .4s ease; }
+    @keyframes lb-wobble { 25% { rotate: -3deg; } 75% { rotate: 3deg; } }
     .lb-pop { position: absolute; font-size: 44px; pointer-events: none; animation: lb-pop .5s ease forwards; }
     @keyframes lb-pop { from { transform: scale(.6); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+    @media (min-width: 641px) {
+      .lb-prompt { flex-direction: row; }
+    }
+    @media (max-width: 640px) {
+      .lb-sky { height: clamp(140px, calc(100dvh - 420px), 430px); }
+    }
+    @media (max-height: 700px) {
+      body.game-deck #stage:has(> .lb-game) { padding-block: 10px; }
+    }
   `;
 
   let frame = null;
@@ -54,17 +73,19 @@
     let target = null;
     let letters = [];
     let balloons = [];
-    let spawnIn = 0;
+    let spawnIn = set.every;
     let last = performance.now();
     let sinceTarget = 0;
 
     const wrap = document.createElement('div');
-    wrap.className = 'kit';
+    wrap.className = 'kit lb-game';
     root.append(wrap);
     wrap.innerHTML = `
       <div class="kit-dots-slot"></div>
-      ${EDKit.head(text.ask, lang)}
-      <div class="lb-target" aria-live="polite"></div>
+      <div class="lb-prompt">
+        ${EDKit.head(text.ask, lang)}
+        <div class="lb-target" aria-live="polite"></div>
+      </div>
       <div class="lb-sky"></div>
       <p class="kit-hint" aria-live="polite"></p>`;
     const sky = wrap.querySelector('.lb-sky');
@@ -81,20 +102,27 @@
       EDKit.voice(wrap, ['balloons-pop', EDVoiceLines.letter(target)], lang);
     }
 
-    function spawn() {
+    const bottom = () => sky.clientHeight - BALLOON_HEIGHT - SKY_INSET;
+
+    function position(item) {
+      item.el.style.transform = `translate(${Math.sin(item.sway) * SWAY}px, ${item.y}px)`;
+    }
+
+    function spawn(ch, lane = Math.random(), y = bottom()) {
       /* At least every third balloon is one to pop, so there is always something to do. */
       sinceTarget += 1;
-      const ch = sinceTarget >= 3 || Math.random() < 0.38 ? target : EDKit.pick(letters);
+      ch ??= sinceTarget >= 3 || Math.random() < 0.38 ? target : EDKit.pick(letters);
       if (ch === target) sinceTarget = 0;
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'lb-b';
       b.setAttribute('aria-label', ch);
       b.style.setProperty('--h', EDKit.pick(HUES));
+      b.style.setProperty('--lane', lane);
       b.innerHTML = `<span class="skin">${ch}</span><span class="str"></span>`;
-      const x = 8 + Math.random() * (sky.clientWidth - 90);
-      const item = { el: b, ch, x, y: sky.clientHeight + 10, sway: Math.random() * 6.28, speed: set.speed * (0.85 + Math.random() * 0.3) };
+      const item = { el: b, ch, y, sway: Math.random() * 6.28, speed: set.speed * (0.85 + Math.random() * 0.3) };
       b.addEventListener('pointerdown', (e) => { e.preventDefault(); tap(item); });
+      position(item);
       sky.append(b);
       balloons.push(item);
     }
@@ -107,11 +135,12 @@
         return;
       }
       item.gone = true;
+      const x = item.el.offsetLeft + Math.sin(item.sway) * SWAY;
       item.el.remove();
       const boom = document.createElement('span');
       boom.className = 'lb-pop';
       boom.textContent = '💥';
-      boom.style.left = `${item.x + 10}px`;
+      boom.style.left = `${x + 10}px`;
       boom.style.top = `${item.y}px`;
       sky.append(boom);
       clock.later(() => boom.remove(), 600);
@@ -129,19 +158,24 @@
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       spawnIn -= dt * 1000;
+      const maxY = bottom();
       if (spawnIn <= 0 && round < ROUNDS) { spawn(); spawnIn = set.every; }
       balloons = balloons.filter((b) => {
         if (b.gone) return false;
-        b.y -= b.speed * dt;
+        b.y = Math.min(maxY, b.y - b.speed * dt);
+        if (b.y < SKY_INSET) { b.el.remove(); return false; }
         b.sway += dt * 1.6;
-        b.el.style.transform = `translate(${b.x + Math.sin(b.sway) * 10}px, ${b.y}px)`;
-        if (b.y < -110) { b.el.remove(); return false; }
+        position(b);
         return true;
       });
       frame = requestAnimationFrame(tick);
     }
 
     newRound();
+    /* Start with a choice already in the sky, with room for both strings and the rise. */
+    const [left, right] = EDKit.shuffle([target, EDKit.pick(letters.filter((ch) => ch !== target))]);
+    spawn(left, 0.14 + Math.random() * 0.08, bottom() * 0.75);
+    spawn(right, 0.78 + Math.random() * 0.08, bottom() * 0.9);
     frame = requestAnimationFrame(tick);
   }
 
