@@ -92,7 +92,11 @@
   };
 
   const CSS = `
-    .wd { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 8px 0 20px; width: 100%; }
+    .wd {
+      --wd-rack-gap: 12px;
+      display: flex; flex-direction: column; align-items: center; gap: 18px;
+      padding: 8px 0 20px; width: 100%; container-type: inline-size;
+    }
     .wd-progress { display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; }
     .wd-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--border); }
     .wd-dot.done { background: var(--pos); }
@@ -102,16 +106,16 @@
 
     .wd-window {
       display: grid; place-items: center; gap: 8px;
-      padding: 20px 28px; min-width: 220px;
+      padding: 20px 28px; width: min(100%, 220px);
       background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius);
     }
     .wd-sky { font-size: 74px; line-height: 1; }
     .wd-day { font-weight: 700; font-size: 1.2rem; }
 
-    .wd-rack { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; max-width: 640px; }
+    .wd-rack { display: flex; flex-wrap: wrap; gap: var(--wd-rack-gap); justify-content: center; width: 100%; }
     .wd-item {
       display: flex; flex-direction: column; align-items: center; gap: 4px;
-      width: 104px; padding: 12px 8px;
+      width: clamp(64px, 28cqw, 104px); min-height: 64px; padding: 12px 8px;
       background: var(--bg-raise); border: 2px solid var(--border); border-radius: var(--radius-sm);
       color: var(--text); cursor: pointer;
       transition: transform 0.12s ease;
@@ -133,11 +137,33 @@
     .wd-end p { color: var(--text-soft); margin: 0 0 22px; }
     .wd-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
+    @media (min-width: 641px) {
+      .wd { flex: 1; justify-content: center; }
+    }
+    @container (min-width: 760px) {
+      .wd-window { width: clamp(280px, 38cqw, 410px); }
+      .wd-sky { font-size: clamp(86px, 10cqw, 112px); }
+      .wd-item {
+        /* Leave room for the full seven-item rack on one row. */
+        width: min(148px, calc((100cqw - 6 * var(--wd-rack-gap)) / 7));
+        padding: 16px 6px;
+      }
+      .wd-item .wd-thing { font-size: clamp(50px, 6cqw, 68px); }
+      .wd-item .wd-name { font-size: 0.95rem; }
+    }
+    @media (min-width: 641px) and (max-height: 700px) {
+      body.game-deck #stage:has(> .wd) { min-height: 0; padding-block: 10px; }
+      .wd { gap: 10px; padding: 6px 0; }
+      .wd-window { display: flex; justify-content: center; align-items: center; gap: 14px; padding: 10px 12px; }
+      .wd-sky { font-size: clamp(64px, 8cqw, 86px); }
+      .wd-item { padding-block: 9px; }
+    }
     @media (max-width: 560px) {
       .wd-sky { font-size: 58px; }
-      .wd-item { width: 88px; padding: 10px 6px; }
+      .wd-item { width: clamp(64px, 28cqw, 88px); padding: 10px 6px; }
       .wd-item .wd-thing { font-size: 34px; }
       .wd-item .wd-name { font-size: 0.76rem; }
+      .wd-actions .btn { min-width: 64px; min-height: 64px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .wd-item.yes { animation: none; }
