@@ -95,7 +95,10 @@
   const BEAT_MS = 540;
 
   const CSS = `
-    .pp { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 8px 0 20px; width: 100%; }
+    .pp {
+      display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; padding: 8px 0 20px; width: 100%; container-type: inline-size;
+    }
     .pp-progress { display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; }
     .pp-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--border); }
     .pp-dot.done { background: var(--pos); }
@@ -106,21 +109,21 @@
     /* A keyboard is low-note-left in every language — see the note above. */
     .pp-board {
       direction: ltr;
-      display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px;
-      width: 100%; max-width: 640px;
+      display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px;
+      flex: 1 0 auto; width: 100%; max-height: 380px;
       padding: 12px; border-radius: var(--radius);
       background: var(--surface); border: 1.5px solid var(--border);
     }
     .pp-key {
       display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px;
-      min-height: 132px; padding: 8px 2px 10px;
+      min-height: 180px; padding: 8px 2px 20px;
       background: var(--bg-raise); border: 2px solid var(--border);
       border-radius: 6px 6px var(--radius-sm) var(--radius-sm);
       color: var(--text); cursor: pointer;
       transition: transform 0.1s ease, background 0.15s ease;
     }
-    .pp-key .pp-face { font-size: 34px; line-height: 1; }
-    .pp-key .pp-name { font-size: 0.72rem; font-weight: 700; text-align: center; }
+    .pp-key .pp-face { font-size: clamp(34px, 8cqi, 84px); line-height: 1; }
+    .pp-key .pp-name { font-size: 0.95rem; font-weight: 700; text-align: center; }
     .pp-key:hover:not([disabled]) { transform: translateY(-3px); }
     /* Pressed by the child and lit by the tune are deliberately the same thing
        to look at: what the game just did is what it is asking for back. */
@@ -137,13 +140,23 @@
     .pp-end p { color: var(--text-soft); margin: 0 0 22px; }
     .pp-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-    /* Eight keys across a phone would be 38px each, under the 44px this site
-       taps with. Two rows of four keeps the scale climbing left to right and
-       the keys big enough to hit. */
-    @media (max-width: 560px) {
-      .pp-board { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 10px; }
-      .pp-key { min-height: 96px; }
+    /* The console stage's default minimum is taller than the space left
+       below the header in a short laptop window. */
+    @media (max-height: 700px) {
+      body.game-deck #stage:has(> .pp) { min-height: 0; }
+    }
+    @media (max-height: 700px), (max-width: 640px) {
+      .pp { gap: 12px; padding-block: 0; }
+    }
+
+    /* Two rows keep the keys at least 64px wide on a 390px phone and
+       preserve the left-to-right scale. */
+    @container (max-width: 600px) {
+      .pp-board { flex: none; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 10px; }
+      .pp-key { min-height: 96px; padding-bottom: 10px; }
       .pp-key .pp-face { font-size: 30px; }
+      .pp-key .pp-name { font-size: 0.72rem; }
+      .pp-listen .btn, .pp-actions .btn { min-width: 64px; min-height: 64px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .pp-key { transition: background 0.15s ease; }
