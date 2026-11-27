@@ -655,7 +655,10 @@
 
       /* Tablet & laptop: whole diorama fits on screen; shore stones sit on the clear central mossy bank */
       const baseStoneW = Math.min(drawW * 0.112, viewW * 0.135, 138);
-      const bearH = Math.min(drawH * 0.265, 205);
+      /* A phone held sideways with the browser bar showing trims the top of the
+         painting; Bear stands on the bank, so shrink him rather than cut his head. */
+      const bankLeftY = drawY + 0.415 * drawH;
+      const bearH = Math.max(60, Math.min(drawH * 0.265, 205, bankLeftY - 8));
       const slots = slotCount === 3
         ? [
             worldMap(0.350, 0.515),

@@ -58,8 +58,11 @@ const EDPlayer = window.EDPlayer = (() => {
       evict();
       const frame = document.createElement('iframe');
       frame.title = EDLang.pick(gameById(id).title);
-      /* Clap the Beat asks for the microphone from inside the frame. */
-      frame.allow = 'microphone; autoplay';
+      /* Clap the Beat asks for the microphone from inside the frame, and the
+         full-screen button needs the frame's leave too. */
+      frame.allow = 'microphone; autoplay; fullscreen';
+      /* The game's full-screen button fills the screen from inside the frame. */
+      frame.allowFullscreen = true;
       frame.src = href;
       frame.addEventListener('load', () => {
         try {

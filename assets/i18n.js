@@ -191,6 +191,8 @@ const UI = {
 
     'game.pageTitle':    'משחק — הגנון של עלמון',
     'game.back':         'חזרה למשחקים',
+    'game.fullscreen':     'מסך מלא',
+    'game.fullscreenExit': 'יציאה ממסך מלא',
     'game.loadingTitle': 'טוען…',
     'game.allGames':     'לכל המשחקים',
     'game.sets.label':   'שלב',
@@ -383,6 +385,8 @@ const UI = {
 
     'game.pageTitle':    'Game — EDgames',
     'game.back':         'Back to games',
+    'game.fullscreen':     'Full screen',
+    'game.fullscreenExit': 'Exit full screen',
     'game.loadingTitle': 'Loading…',
     'game.allGames':     'All the games',
     'game.sets.label':   'Step',

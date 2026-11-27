@@ -47,7 +47,38 @@ document.addEventListener('keydown', (e) => {
    and keeps this page alive underneath, so the game is still where the child
    left it when they come back to it. */
 const embedded = Boolean(window.EDPause && EDPause.embedded);
+/* Full screen (Almon, 27 Nov 2026: on a phone held sideways the browser bars
+   left too little of the game). The button only shows where the browser can
+   do it; iPhone Safari cannot for a page, so there it stays hidden. */
+const fsBtn = document.getElementById('fullscreen-toggle');
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+function paintFullscreen() {
+  const on = Boolean(fsEl());
+  document.documentElement.classList.toggle('is-fullscreen', on);
+  const label = EDLang.t(on ? 'game.fullscreenExit' : 'game.fullscreen');
+  document.getElementById('fullscreen-label').textContent = label;
+  fsBtn.setAttribute('aria-label', label);
+  fsBtn.setAttribute('aria-pressed', String(on));
+}
+function exitFullscreen() {
+  if (!fsEl()) return;
+  try { (document.exitFullscreen || document.webkitExitFullscreen).call(document)?.catch?.(() => {}); } catch { /* fine */ }
+}
+if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
+  fsBtn.hidden = false;
+  paintFullscreen();
+  fsBtn.addEventListener('click', () => {
+    if (fsEl()) { exitFullscreen(); return; }
+    const el = document.documentElement;
+    const go = el.requestFullscreen || el.webkitRequestFullscreen;
+    try { go.call(el, { navigationUI: 'hide' })?.catch?.(() => {}); } catch { /* fine */ }
+  });
+  document.addEventListener('fullscreenchange', paintFullscreen);
+  document.addEventListener('webkitfullscreenchange', paintFullscreen);
+}
+
 function leave() {
+  exitFullscreen();
   if (embedded) { try { window.parent.EDPlayer.close(); return; } catch { /* fall through */ } }
   location.href = gridHref;
 }
@@ -78,6 +109,7 @@ back.addEventListener('click', (e) => {
   }
   if (history.length > 1 && document.referrer.includes(location.host)) {
     e.preventDefault();
+    exitFullscreen();
     history.back();
   }
 });

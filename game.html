@@ -69,6 +69,13 @@
 
     <div class="console-controls">
       <span class="brand-kicker game-deck-kicker"><span class="led-dot" aria-hidden="true"></span><span data-i18n="console.kicker">ED-DECK · קונסולת משחקים</span></span>
+      <!-- Hides the browser bars so the whole game fits; shown only where the
+           browser can do it (game-host.js). -->
+      <button type="button" class="hw-btn fullscreen-toggle" id="fullscreen-toggle" hidden>
+        <svg class="ico ico-enter" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+        <svg class="ico ico-exit" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+        <span id="fullscreen-label" data-i18n="game.fullscreen">מסך מלא</span>
+      </button>
       <button type="button" class="hw-btn sound-toggle" id="sound-toggle"></button>
       <button type="button" class="hw-btn lang-toggle" id="lang-toggle"></button>
     </div>

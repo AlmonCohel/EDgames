@@ -2245,3 +2245,64 @@ body.game-deck.game-fullscreen .stage {
      shows in the colours, as it does in the full-screen games. */
   body.game-deck .kid-crust { display: none !important; }
 }
+
+/* Full screen + phone held sideways (Almon, 27 Nov 2026). On a phone in
+   landscape the browser bar and our two header rows left the Bear game about
+   half the height, so the picture was cut top and bottom.
+   1. A full-screen button sits in the top bar (game-host.js shows it only
+      where the browser can do it). It shows as an icon on its own.
+   2. On short, wide screens the full-screen games put the top bar and the
+      step row on ONE thin row, buttons as icons, so the game gets the rest. */
+.fullscreen-toggle .ico-exit { display: none; }
+.is-fullscreen .fullscreen-toggle .ico-enter { display: none; }
+.is-fullscreen .fullscreen-toggle .ico-exit { display: block; }
+.fullscreen-toggle span { display: none; }
+@media (max-height: 520px) and (orientation: landscape) {
+  body.game-deck.game-fullscreen .console-chassis--game {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 0;
+  }
+  body.game-deck.game-fullscreen .game-console-screen { display: contents; }
+  body.game-deck.game-fullscreen .console-top {
+    flex: none;
+    min-height: 0;
+    height: 40px;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255, 215, 120, 0.14);
+  }
+  body.game-deck.game-fullscreen .console-top .brand-cluster,
+  body.game-deck.game-fullscreen .console-top .console-controls { gap: 6px; }
+  body.game-deck.game-fullscreen .game-deck-bar {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 40px;
+    padding: 4px 8px;
+  }
+  body.game-deck.game-fullscreen .stage {
+    flex: 1 1 100%;
+    height: calc(100dvh - 40px);
+  }
+  body.game-deck.game-fullscreen .console-top .hw-btn,
+  body.game-deck.game-fullscreen .hw-reset-btn {
+    min-height: 32px;
+    padding: 0 8px;
+  }
+  /* Icons only; each button keeps its name for screen readers. */
+  body.game-deck.game-fullscreen .console-top .hw-btn--back span,
+  body.game-deck.game-fullscreen .console-top .sound-toggle span,
+  body.game-deck.game-fullscreen .hw-reset-btn span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  body.game-deck.game-fullscreen .game-sets-chips .chip {
+    min-height: 30px;
+    padding: 0 9px;
+    font-size: 0.78rem;
+  }
+}
