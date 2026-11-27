@@ -1909,16 +1909,11 @@
       if (!wasMoved) {
         /* Tap turns a reliable 8 degrees (toward the tap when off-pivot, clockwise on-pivot)
            and snaps onto the target when landing within about one step of it. */
-        const pv = pivotInClient(piece);
-        const dist = Math.hypot(e.clientX - pv.x, e.clientY - pv.y);
-        let dirSign = 1;
-        if (dist >= 48) {
-          const tapPolar = Math.atan2(e.clientY - pv.y, e.clientX - pv.x) * DEG;
-          const cur = piece === 'mirror' ? mirrorAngle : crystalAngle;
-          const diff = angleDiff(tapPolar, cur);
-          if (Math.abs(diff) >= 1) dirSign = diff > 0 ? 1 : -1;
-        }
-        applyTapStep(piece, dirSign);
+        /* Always the same direction: turning "toward the tap" made repeated taps on
+           one spot rock back and forth forever, because the angle that lights the
+           target is not the angle that faces the tap. One direction + snap means
+           steady tapping always reaches the target (Claude, 2026-11-27). */
+        applyTapStep(piece, 1);
       }
 
       /* In whole-valley round, if mirror now lights crystal, switch active focus cleanly to crystal */
