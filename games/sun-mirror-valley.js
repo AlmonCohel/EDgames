@@ -53,6 +53,7 @@
       infoLabel: 'הוראות להורים',
       hearAgain: 'לשמוע שוב',
       done: 'כל הכבוד! העמק כולו מאיר!',
+      playAgain: 'שוב',
       mirrorAria: 'סיבוב המראה',
       crystalAria: 'סיבוב הגביש',
     },
@@ -69,6 +70,7 @@
       infoLabel: 'Parent note',
       hearAgain: 'Hear again',
       done: 'Well done! The whole valley is glowing!',
+      playAgain: 'Play again',
       mirrorAria: 'Turn the mirror',
       crystalAria: 'Turn the crystal',
     },
@@ -317,7 +319,7 @@
     .smv-stage.is-portrait .smv-phone-sky {
       display: block;
       top: 0;
-      height: 31%;
+      height: 28%;
       background-image: url('assets/worlds/sun-mirror-valley/bg.jpg');
       background-repeat: no-repeat;
       background-size: 260% 560%;
@@ -330,7 +332,7 @@
     .smv-stage.is-portrait .smv-phone-meadow {
       display: block;
       bottom: 0;
-      height: 44%;
+      height: 36%;
       background-image: url('assets/worlds/sun-mirror-valley/bg.jpg');
       background-repeat: no-repeat;
       background-size: 165% 400%;
@@ -338,6 +340,27 @@
       filter: brightness(0.92);
       -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.82) 18%, #000 34%, #000 100%);
       mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.82) 18%, #000 34%, #000 100%);
+    }
+
+    /* Portrait-only upper-left lighthouse cliff sampled seamlessly from bg.jpg */
+    .smv-portrait-tower {
+      display: none;
+      position: absolute;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .smv-stage.is-portrait .smv-portrait-tower { display: block; }
+    .smv-portrait-tower.is-css-fallback {
+      background-image: url('assets/worlds/sun-mirror-valley/bg.jpg');
+      background-repeat: no-repeat;
+      -webkit-mask-image:
+        linear-gradient(to bottom, transparent 0%, #000 10%, #000 62%, rgba(0,0,0,0.45) 82%, transparent 100%),
+        linear-gradient(to right, #000 0%, #000 62%, rgba(0,0,0,0.45) 84%, transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image:
+        linear-gradient(to bottom, transparent 0%, #000 10%, #000 62%, rgba(0,0,0,0.45) 82%, transparent 100%),
+        linear-gradient(to right, #000 0%, #000 62%, rgba(0,0,0,0.45) 84%, transparent 100%);
+      mask-composite: intersect;
     }
 
     /* Proportional 2560x1429 world camera */
@@ -357,8 +380,8 @@
       pointer-events: none;
     }
     .smv-stage.is-portrait .smv-bg {
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 84%, transparent 100%);
-      mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 84%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 11%, #000 84%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 11%, #000 84%, transparent 100%);
     }
 
     .smv-ground-shadow {
@@ -383,9 +406,9 @@
       pointer-events: none;
     }
     .smv-stage.is-portrait .smv-mirror {
-      left: 44.2%;
-      top: 66.4%;
-      width: 9.4%;
+      left: 46.2%;
+      top: 66.8%;
+      width: 12.2%;
     }
     .smv-mirror-stand {
       display: block;
@@ -444,7 +467,9 @@
       pointer-events: none;
     }
     .smv-stage.is-portrait .smv-crystal {
-      width: 5.0%;
+      left: 58.2%;
+      top: 58.6%;
+      width: 6.8%;
     }
     .smv-crystal[hidden] { display: none; }
     .smv-crystal-turn {
@@ -481,6 +506,11 @@
       transform: translate(-50%, -100%);
       z-index: 4;
       pointer-events: none;
+    }
+    .smv-stage.is-portrait .smv-greenhouse {
+      left: 83.4%;
+      top: 44.8%;
+      width: 12.8%;
     }
     .smv-greenhouse img {
       display: block;
@@ -520,6 +550,9 @@
       transform: translate(-50%, -50%) scaleX(0.62) skewY(-12deg);
       z-index: 5;
       pointer-events: none;
+    }
+    .smv-stage.is-portrait .smv-wheel {
+      width: 7.4%;
     }
     .smv-wheel-shadow {
       position: absolute;
@@ -603,7 +636,11 @@
       z-index: 9;
       pointer-events: none;
     }
-    .smv-stage.is-portrait .smv-hiker { width: 6.8%; }
+    .smv-stage.is-portrait .smv-hiker {
+      left: 66.4%;
+      top: 81.2%;
+      width: 8.6%;
+    }
     .smv-hiker img {
       display: none;
       width: 100%;
@@ -897,6 +934,7 @@
 
         <div class="smv-world" id="smv-world">
           <img class="smv-bg" id="smv-bg" src="${ART.bg}" alt="" draggable="false">
+          <img class="smv-portrait-tower" id="smv-portrait-tower" alt="" draggable="false" aria-hidden="true">
 
           <div class="smv-greenhouse" id="smv-gh">
             <span class="smv-gh-aura"></span>
@@ -955,12 +993,12 @@
         </div>
 
         <div class="smv-phone-flowers" aria-hidden="true">
-          <div class="smv-flower" style="left:26%; top:88%; width:24%; transform:translate(-50%,-100%) rotate(-7deg);">
+          <div class="smv-flower" style="left:24%; top:95%; width:23%; transform:translate(-50%,-100%) rotate(-7deg);">
             <span class="smv-ground-shadow"></span>
             <img class="img-closed" src="${ART.flowersClosed}" alt="" draggable="false">
             <img class="img-open" src="${ART.flowersOpen}" alt="" draggable="false">
           </div>
-          <div class="smv-flower" style="left:75%; top:84%; width:17%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
+          <div class="smv-flower" style="left:78%; top:93%; width:17%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
             <span class="smv-ground-shadow"></span>
             <img class="img-closed" src="${ART.flowersClosed}" alt="" draggable="false">
             <img class="img-open" src="${ART.flowersOpen}" alt="" draggable="false">
@@ -998,6 +1036,8 @@
 
     const stageEl = root.querySelector('#smv-stage');
     const worldEl = root.querySelector('#smv-world');
+    const bgImgEl = root.querySelector('#smv-bg');
+    const portraitTowerEl = root.querySelector('#smv-portrait-tower');
     const ghEl = root.querySelector('#smv-gh');
     const wheelEl = root.querySelector('#smv-wheel');
     const wheelImgEl = root.querySelector('#smv-wheel-img');
@@ -1060,6 +1100,74 @@
       crystalSplitMid: 3.55,
     };
 
+    /* Portrait-only lighthouse cliff crop in bg.jpg (true 1:1 ratio, feathered edges) */
+    const PORTRAIT_TOWER_CROP = {
+      u0: 0.085, u1: 0.295, // width = 0.210 * 2560 = 537.6px
+      v0: 0.020, v1: 0.680, // height = 0.660 * 1429 = 943.1px (anchors cliff down into left hillside)
+    };
+    const PORTRAIT_TOWER_LANTERN = {
+      fx: (TOWER_UV.u - PORTRAIT_TOWER_CROP.u0) / (PORTRAIT_TOWER_CROP.u1 - PORTRAIT_TOWER_CROP.u0),
+      fy: (TOWER_UV.v - PORTRAIT_TOWER_CROP.v0) / (PORTRAIT_TOWER_CROP.v1 - PORTRAIT_TOWER_CROP.v0),
+      aspect: ((PORTRAIT_TOWER_CROP.u1 - PORTRAIT_TOWER_CROP.u0) * WORLD_W) /
+              ((PORTRAIT_TOWER_CROP.v1 - PORTRAIT_TOWER_CROP.v0) * WORLD_H),
+    };
+    let portraitTowerRendered = false;
+
+    function renderPortraitTower() {
+      if (!bgImgEl || !bgImgEl.complete || !bgImgEl.naturalWidth) return;
+      if (portraitTowerRendered) return;
+      const bw = bgImgEl.naturalWidth;
+      const bh = bgImgEl.naturalHeight;
+      const sx = PORTRAIT_TOWER_CROP.u0 * bw;
+      const sy = PORTRAIT_TOWER_CROP.v0 * bh;
+      const sw = (PORTRAIT_TOWER_CROP.u1 - PORTRAIT_TOWER_CROP.u0) * bw;
+      const sh = (PORTRAIT_TOWER_CROP.v1 - PORTRAIT_TOWER_CROP.v0) * bh;
+      const cw = 360;
+      const ch = Math.round(cw / PORTRAIT_TOWER_LANTERN.aspect);
+      try {
+        const off = document.createElement('canvas');
+        off.width = cw;
+        off.height = ch;
+        const g = off.getContext('2d');
+        g.drawImage(bgImgEl, sx, sy, sw, sh, 0, 0, cw, ch);
+
+        /* Soft edge masks so sky, right mountain, and lower cliff merge seamlessly into the valley */
+        g.globalCompositeOperation = 'destination-in';
+
+        const topG = g.createLinearGradient(0, 0, 0, ch);
+        topG.addColorStop(0.00, 'rgba(0,0,0,0)');
+        topG.addColorStop(0.09, 'rgba(0,0,0,1)');
+        topG.addColorStop(0.62, 'rgba(0,0,0,1)');
+        topG.addColorStop(0.84, 'rgba(0,0,0,0.45)');
+        topG.addColorStop(1.00, 'rgba(0,0,0,0)');
+        g.fillStyle = topG;
+        g.fillRect(0, 0, cw, ch);
+
+        const rightG = g.createLinearGradient(0, 0, cw, 0);
+        rightG.addColorStop(0.00, 'rgba(0,0,0,1)');
+        rightG.addColorStop(0.64, 'rgba(0,0,0,1)');
+        rightG.addColorStop(0.85, 'rgba(0,0,0,0.42)');
+        rightG.addColorStop(1.00, 'rgba(0,0,0,0)');
+        g.fillStyle = rightG;
+        g.fillRect(0, 0, cw, ch);
+
+        g.globalCompositeOperation = 'source-over';
+        portraitTowerEl.src = off.toDataURL('image/png');
+        portraitTowerEl.classList.remove('is-css-fallback');
+      } catch {
+        /* file:// fallback when canvas cannot export data URL */
+        portraitTowerEl.removeAttribute('src');
+        portraitTowerEl.classList.add('is-css-fallback');
+        const bgW = (100 / (PORTRAIT_TOWER_CROP.u1 - PORTRAIT_TOWER_CROP.u0)).toFixed(2);
+        const bgH = (100 / (PORTRAIT_TOWER_CROP.v1 - PORTRAIT_TOWER_CROP.v0)).toFixed(2);
+        const posX = ((PORTRAIT_TOWER_CROP.u0 / (1 - (PORTRAIT_TOWER_CROP.u1 - PORTRAIT_TOWER_CROP.u0))) * 100).toFixed(2);
+        const posY = ((PORTRAIT_TOWER_CROP.v0 / (1 - (PORTRAIT_TOWER_CROP.v1 - PORTRAIT_TOWER_CROP.v0))) * 100).toFixed(2);
+        portraitTowerEl.style.backgroundSize = `${bgW}% ${bgH}%`;
+        portraitTowerEl.style.backgroundPosition = `${posX}% ${posY}%`;
+      }
+      portraitTowerRendered = true;
+    }
+
     function measureLandmarks() {
       const wRect = worldEl.getBoundingClientRect();
       const sRect = stageEl.getBoundingClientRect();
@@ -1080,7 +1188,19 @@
         };
       }
 
-      pts.tower = { x: TOWER_UV.u * worldW, y: TOWER_UV.v * worldH };
+      if (isPortraitMode) {
+        const tr = portraitTowerEl.getBoundingClientRect();
+        if (tr.width > 10 && tr.height > 10) {
+          pts.tower = {
+            x: (tr.left - wRect.left) + tr.width * PORTRAIT_TOWER_LANTERN.fx,
+            y: (tr.top - wRect.top) + tr.height * PORTRAIT_TOWER_LANTERN.fy,
+          };
+        } else {
+          pts.tower = { x: TOWER_UV.u * worldW, y: TOWER_UV.v * worldH };
+        }
+      } else {
+        pts.tower = { x: TOWER_UV.u * worldW, y: TOWER_UV.v * worldH };
+      }
       pts.mirror = centerOf(mirrorFaceWrapEl, 0.5, 0.5, 0.440, 0.576);
       pts.crystal = centerOf(crystalEl, 0.5, 0.43, 0.576, 0.505);
       pts.greenhouse = centerOf(ghEl, 0.5, 0.54, 0.838, 0.365);
@@ -1118,16 +1238,30 @@
       stageEl.classList.toggle('is-portrait', isPortraitMode);
 
       if (isPortraitMode) {
-        /* Portrait phone (390x844): exact approved mock-up framing so mirror, crystal,
-           greenhouse & watermill are ALL visible together, with smooth camera slide. */
-        const w = vw * 1.78;
-        const h = w * (WORLD_H / WORLD_W);
-        const top = vh * 0.205;
-        const leftPct = camMode === 'solved' || camMode === 'crystal' ? -0.655 : -0.605;
+        /* Portrait phone (360x780, 390x844, 430x932):
+           Fill vertical height so mirror, crystal, greenhouse & watermill are clearly bigger,
+           and perch the painted lighthouse cliff in the upper-left below the HUD so the
+           glowing lantern + incoming sunbeam, mirror, crystal and targets are all visible together. */
+        const w = vw * 1.80;
+        const h = Math.min(vh * 0.75, w * 0.76);
+        const top = Math.max(vh * 0.165, 112);
+        const left = (camMode === 'solved' || camMode === 'crystal') ? -vw * 0.625 : -vw * 0.605;
         worldEl.style.width = `${w.toFixed(1)}px`;
         worldEl.style.height = `${h.toFixed(1)}px`;
         worldEl.style.top = `${top.toFixed(1)}px`;
-        worldEl.style.left = `${(vw * leftPct).toFixed(1)}px`;
+        worldEl.style.left = `${left.toFixed(1)}px`;
+
+        /* Position the unstretched lighthouse + cliff inside worldEl so its lantern always sits
+           in the upper-left below the HUD (stage y >= 72px) and clear of the mirror. */
+        renderPortraitTower();
+        const towerW = vw * 0.42;
+        const towerH = towerW / PORTRAIT_TOWER_LANTERN.aspect;
+        const towerStageLeft = -vw * 0.105;
+        const towerStageTop = Math.max(66, vh * 0.092);
+        portraitTowerEl.style.width = `${towerW.toFixed(1)}px`;
+        portraitTowerEl.style.height = `${towerH.toFixed(1)}px`;
+        portraitTowerEl.style.left = `${(towerStageLeft - left).toFixed(1)}px`;
+        portraitTowerEl.style.top = `${(towerStageTop - top).toFixed(1)}px`;
       } else {
         /* Tablet (1024x768), Laptop (1280x800), Wide (1460x640):
            cover viewport cleanly with zero scrolling and keep tower, mirror, crystal,
@@ -1340,7 +1474,7 @@
       beamsSvg.setAttribute('viewBox', `0 0 ${W.toFixed(1)} ${H.toFixed(1)}`);
 
       const defs = [`
-        <filter id="${uid}-blur" x="-40%" y="-40%" width="180%" height="180%">
+        <filter id="${uid}-blur" filterUnits="userSpaceOnUse" x="-160" y="-160" width="${(W + 320).toFixed(1)}" height="${(H + 320).toFixed(1)}">
           <feGaussianBlur stdDeviation="${(3.6 * scale).toFixed(2)}"/>
         </filter>
         <radialGradient id="${uid}-gold-glint">
@@ -1577,6 +1711,11 @@
         } else {
           endOverlay.hidden = false;
           EDKit.end(endOverlay, ctx, lang, t.done);
+          /* On the last step, replace "Next step" with "Play again" / "שוב" */
+          if (SETS[SETS.length - 1].mode === mode) {
+            const againBtn = endOverlay.querySelector('[data-again]');
+            if (againBtn) againBtn.textContent = t.playAgain;
+          }
         }
       }, 1950);
     }
@@ -1644,15 +1783,16 @@
     }
 
     function pickPieceForPointer(clientX, clientY, explicitPiece) {
-      if (explicitPiece) {
-        if (explicitPiece === 'mirror' && round.mirrorMovable) return 'mirror';
-        if (explicitPiece === 'crystal' && round.crystalMovable) return 'crystal';
-      }
       if (round.mirrorMovable && !round.crystalMovable) return 'mirror';
       if (round.crystalMovable && !round.mirrorMovable) return 'crystal';
 
-      /* Both movable (Step 4 finale): touching directly near either piece grabs it;
-         dragging anywhere else turns the active piece (mirror until crystal is lit, then crystal). */
+      /* Both movable (Step 4 finale): while the crystal has no incoming light yet,
+         keep control on the mirror so tapping/dragging toward the crystal aims the
+         mirror into it instead of grabbing an unlit crystal with no visible beam. */
+      if (!evaluateOptics().mirrorHitsCrystal) return 'mirror';
+
+      if (explicitPiece === 'mirror' || explicitPiece === 'crystal') return explicitPiece;
+
       const pm = pivotInClient('mirror');
       const pc = pivotInClient('crystal');
       const dm = Math.hypot(clientX - pm.x, clientY - pm.y);
@@ -1693,6 +1833,18 @@
       try { stageEl.setPointerCapture(e.pointerId); } catch { /* ignore */ }
     }
 
+    const TAP_STEP_DEG = 8;
+    const TAP_SNAP_DEG = 8.5;
+
+    function goalAngleForPiece(piece) {
+      if (piece === 'mirror') {
+        if (round.hasCrystal) return angles.mirrorToCrystal;
+        return round.target === 'mill' ? angles.mirrorToMill : angles.mirrorToGreenhouse;
+      }
+      if (round.isSplit) return angles.crystalSplitMid;
+      return round.target === 'mill' ? angles.crystalToMill : angles.crystalToGreenhouse;
+    }
+
     function applyAngleDelta(piece, deltaDeg) {
       if (Math.abs(deltaDeg) < 0.05) return;
       if (piece === 'mirror') {
@@ -1702,6 +1854,17 @@
       }
       sfxTurnTick(piece === 'crystal');
       syncVisuals();
+    }
+
+    function applyTapStep(piece, dirSign) {
+      const cur = piece === 'mirror' ? mirrorAngle : crystalAngle;
+      const goal = goalAngleForPiece(piece);
+      const next = normAngle(cur + dirSign * TAP_STEP_DEG);
+      /* Snap cleanly onto the target when a tap lands within about one step of it */
+      const delta = Math.abs(angleDiff(next, goal)) <= TAP_SNAP_DEG
+        ? angleDiff(goal, cur)
+        : dirSign * TAP_STEP_DEG;
+      applyAngleDelta(piece, delta);
     }
 
     function onPointerMove(e) {
@@ -1744,8 +1907,18 @@
       if (solved) return;
 
       if (!wasMoved) {
-        /* Tap gives an immediate gentle 16-degree turn + stone/crystal sound */
-        applyAngleDelta(piece, 16);
+        /* Tap turns a reliable 8 degrees (toward the tap when off-pivot, clockwise on-pivot)
+           and snaps onto the target when landing within about one step of it. */
+        const pv = pivotInClient(piece);
+        const dist = Math.hypot(e.clientX - pv.x, e.clientY - pv.y);
+        let dirSign = 1;
+        if (dist >= 48) {
+          const tapPolar = Math.atan2(e.clientY - pv.y, e.clientX - pv.x) * DEG;
+          const cur = piece === 'mirror' ? mirrorAngle : crystalAngle;
+          const diff = angleDiff(tapPolar, cur);
+          if (Math.abs(diff) >= 1) dirSign = diff > 0 ? 1 : -1;
+        }
+        applyTapStep(piece, dirSign);
       }
 
       /* In whole-valley round, if mirror now lights crystal, switch active focus cleanly to crystal */
@@ -1772,21 +1945,26 @@
     /* Keyboard support on the hit buttons */
     function onHitKey(e, piece) {
       if (solved) return;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        activePiece = piece;
-        updateActiveHitRings();
-        applyAngleDelta(piece, 8);
+      let dirSign = 0;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        dirSign = 1;
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        activePiece = piece;
+        dirSign = -1;
+      }
+      if (!dirSign) return;
+      e.preventDefault();
+      activePiece = piece;
+      updateActiveHitRings();
+      applyTapStep(piece, dirSign);
+      const state = syncVisuals();
+      if (round.mirrorMovable && round.crystalMovable && state.mirrorHitsCrystal && activePiece === 'mirror') {
+        activePiece = 'crystal';
+        camMode = 'crystal';
+        applyCamera();
         updateActiveHitRings();
-        applyAngleDelta(piece, -8);
-      } else if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        activePiece = piece;
-        updateActiveHitRings();
-        applyAngleDelta(piece, 16);
+      }
+      if (state.goalMet) {
+        completeRound(state);
       }
     }
 
@@ -1873,8 +2051,10 @@
         crystalAngle,
         activePiece,
         solved,
+        isPortraitMode,
         angles: { ...angles },
         pts: {
+          tower: { ...pts.tower },
           mirror: { ...pts.mirror },
           crystal: { ...pts.crystal },
           greenhouse: { ...pts.greenhouse },
