@@ -1040,7 +1040,10 @@
 
     function pointerPos(e) {
       const r = canvas.getBoundingClientRect();
-      return { x: e.clientX - r.left, y: e.clientY - r.top };
+      /* On a phone held sideways the page shrinks the game (CSS zoom), so the
+         screen distance is turned back into the board's own pixels. */
+      const k = canvas.clientWidth ? r.width / canvas.clientWidth : 1;
+      return { x: (e.clientX - r.left) / k, y: (e.clientY - r.top) / k };
     }
 
     box.addEventListener('pointerdown', (e) => {

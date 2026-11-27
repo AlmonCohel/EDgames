@@ -306,8 +306,11 @@
       apple.addEventListener('pointermove', (e) => {
         if (!grab) return;
         const field_ = field.getBoundingClientRect();
-        const left = Math.min(Math.max(0, e.clientX - field_.left - grab.dx), field.clientWidth - apple.offsetWidth);
-        const top = Math.min(Math.max(0, e.clientY - field_.top - grab.dy), field.clientHeight - apple.offsetHeight);
+        /* Screen pixels to the field's own pixels (the game is shrunk on a phone
+           held sideways), so the apple stays under the finger. */
+        const k = field.offsetWidth ? field_.width / field.offsetWidth : 1;
+        const left = Math.min(Math.max(0, (e.clientX - field_.left - grab.dx) / k), field.clientWidth - apple.offsetWidth);
+        const top = Math.min(Math.max(0, (e.clientY - field_.top - grab.dy) / k), field.clientHeight - apple.offsetHeight);
         apple.style.left = `${left}px`;
         apple.style.top = `${top}px`;
       });

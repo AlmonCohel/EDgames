@@ -128,7 +128,10 @@ export async function checkCircuitLab(page) {
 
   await check('a dial gesture cannot change a completed round', async () => {
     const { x, y } = await center(voltage(6));
-    const dialY = y - (viewport.width === 390 ? 36 : 58);
+    // On a phone held sideways the game is shrunk to fit (stage zoom), so the
+    // distance from the button up to the dial shrinks with it.
+    const zoom = await page.evaluate(() => parseFloat(document.getElementById('stage').style.zoom) || 1);
+    const dialY = y - (viewport.width === 390 ? 36 : 58) * zoom;
     await page.mouse.move(x, dialY);
     await page.mouse.down();
     await page.mouse.move(x + 1, dialY);
@@ -142,7 +145,10 @@ export async function checkCircuitLab(page) {
 
   await check('bench reset cancels an in-flight dial gesture', async () => {
     const { x, y } = await center(voltage(6));
-    const dialY = y - (viewport.width === 390 ? 36 : 58);
+    // On a phone held sideways the game is shrunk to fit (stage zoom), so the
+    // distance from the button up to the dial shrinks with it.
+    const zoom = await page.evaluate(() => parseFloat(document.getElementById('stage').style.zoom) || 1);
+    const dialY = y - (viewport.width === 390 ? 36 : 58) * zoom;
     await page.mouse.move(x, dialY);
     await page.mouse.down();
     assert.equal(await page.locator(voltage(9)).getAttribute('aria-pressed'), 'true');

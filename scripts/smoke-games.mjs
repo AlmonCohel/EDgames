@@ -17,7 +17,9 @@ const checks = {
   'sentence-train': checkSentenceTrain,
 };
 const gameCheck = Object.keys(checks).find((id) => process.argv.includes(`--${id}`));
-const sizes = [{ width: 390, height: 844 }, { width: 1280, height: 800 }];
+// 844x390 = a phone held sideways (added 27 Nov 2026): the game is shrunk to
+// fit there, so the game checks also prove taps and drags still land.
+const sizes = [{ width: 390, height: 844 }, { width: 1280, height: 800 }, { width: 844, height: 390 }];
 const timeout = 8000;
 // "Settled" = no request of this page in flight for 500 ms, counted here rather
 // than with Playwright's networkidle: on a phone-sized touch screen Whispering

@@ -279,6 +279,9 @@ async function start() {
       again: () => { if (sets) index = (index + 1) % sets.length; play(); },
       exit: leave,
     });
+    /* Sized before the first frame on a phone held sideways, so nothing moves
+       under a finger that is already on it. */
+    fitStage();
   }
 
   if (sets) buildSetChips(sets, (i) => { index = i; play(); });
@@ -299,4 +302,53 @@ async function start() {
   });
 }
 
+/* Phone held sideways (Almon, 27 Nov 2026). styles.css gives the game the
+   screen under one thin row; here a game taller than that space is shrunk
+   (CSS zoom) until all of it fits, so a child never has to scroll to reach it.
+   The full-screen games draw to whatever size they get and are left alone.
+   It re-checks when the screen turns and when the game changes what it shows
+   (a new round, the end screen). */
+const SIDEWAYS = window.matchMedia('(max-height: 520px) and (orientation: landscape)');
+let fitTimer = 0;
+let fitting = false;
+function fitStage() {
+  fitTimer = 0;
+  if (fitting) return;
+  const st = stage.style;
+  if (!SIDEWAYS.matches || document.body.classList.contains('game-fullscreen')) {
+    st.zoom = ''; st.height = '';
+    return;
+  }
+  fitting = true;
+  try {
+    const top = stage.getBoundingClientRect().top;
+    const avail = Math.max(120, window.innerHeight - top - 8);
+    /* The game at its own height, at the width it would get at this size.
+       Shrinking makes it a little wider, and wider can mean shorter. */
+    let zoom = 1;
+    for (let i = 0; i < 4; i++) {
+      st.zoom = String(zoom);
+      st.height = 'auto';
+      const need = stage.getBoundingClientRect().height;
+      if (need <= avail + 1) break;
+      zoom = Math.max(0.45, Math.floor(zoom * (avail / need) * 100) / 100);
+    }
+    st.zoom = zoom === 1 ? '' : String(zoom);
+    st.height = `${avail / zoom}px`;
+  } finally {
+    fitting = false;
+  }
+}
+/* A game that animates by adding and removing elements changes all the time,
+   so a check already waiting is never pushed back; it just runs. */
+function fitSoon(ms = 120) {
+  if (fitTimer) return;
+  fitTimer = setTimeout(fitStage, ms);
+}
+SIDEWAYS.addEventListener?.('change', () => fitSoon(0));
+window.addEventListener('resize', () => fitSoon());
+new MutationObserver(() => fitSoon(60)).observe(stage, { childList: true, subtree: true });
+stage.addEventListener('load', () => fitSoon(), true);
+
 start();
+fitSoon(0);

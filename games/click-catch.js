@@ -299,7 +299,8 @@
       field.addEventListener('pointerdown', (e) => {
         if (locked || finished || e.target !== field) return;
         const box = field.getBoundingClientRect();
-        splash(e.clientX - box.left, e.clientY - box.top);
+        const k = field.offsetWidth ? box.width / field.offsetWidth : 1; // shrunk on a phone held sideways
+        splash((e.clientX - box.left) / k, (e.clientY - box.top) / k);
         hint(text.aim(count === 1 ? oneName : manyName));
       });
 

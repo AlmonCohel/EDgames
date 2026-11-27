@@ -503,6 +503,7 @@
     let rafId = 0;
     let timeTick = 0;
     const tm = EDKit.timers();
+    let alive = true;
 
     /* Bear state: positioned on left bank, or on a bridge slot (0..3), or at burrow (4) */
     const bear = {
@@ -878,14 +879,22 @@
           const L = layout();
           spawnSparks(L.burrow.x, L.burrow.y - 30, 26);
           sfxCheer();
-          if (window.EDVoice) EDVoice.say('sc-yay', lang);
-          tm.later(() => {
+          /* The next task waits until "Well done! Little Bear made it home!" has been
+             said in full (it used to cut in after 1.35 s). At most 6 s, in case
+             the sound never reports back. */
+          const praised = window.EDVoice ? EDVoice.say('sc-yay', lang) : Promise.resolve();
+          const shown = new Promise((ok) => tm.later(ok, 1350));
+          const cap = new Promise((ok) => tm.later(ok, 6000));
+          let moved = false;
+          Promise.race([Promise.all([praised, shown]), cap]).then(() => tm.later(() => {
+            if (!alive || moved) return;
+            moved = true;
             if (roundIdx + 1 < rounds.length) {
               startRound(roundIdx + 1);
             } else {
               showEnd();
             }
-          }, 1350);
+          }, 300));
           return;
         }
         const sIdx = nextSlots[step++];
@@ -1321,6 +1330,7 @@
     rafId = requestAnimationFrame(frame);
 
     cleanupFn = () => {
+      alive = false;
       cancelAnimationFrame(rafId);
       tm.clear();
       if (ro) ro.disconnect();

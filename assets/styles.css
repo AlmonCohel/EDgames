@@ -1973,7 +1973,7 @@ body.game-deck[data-kid-theme="spiderman"] .stage {
   box-shadow: 5px 5px 0 #0b132b;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 640px), (max-height: 520px) and (orientation: landscape) {
   .game-deck-kicker {
     display: none;
   }
@@ -2150,7 +2150,7 @@ body.game-deck.game-fullscreen .stage {
   overflow: hidden;
   display: flex;
 }
-@media (max-width: 640px) {
+@media (max-width: 640px), (max-height: 520px) and (orientation: landscape) {
   body.game-deck.game-fullscreen .hw-reset-btn span {
     display: none;
   }
@@ -2168,7 +2168,7 @@ body.game-deck.game-fullscreen .stage {
    the home card already shows age and subject. Full-screen games keep their
    own strip, and wider screens are unchanged. */
 .game-sets-toggle { display: none; }
-@media (max-width: 640px) {
+@media (max-width: 640px), (max-height: 520px) and (orientation: landscape) {
   body.game-deck:not(.game-fullscreen) .game-deck-bar {
     position: relative;
     flex-wrap: nowrap;
@@ -2304,5 +2304,65 @@ body.game-deck.game-fullscreen .stage {
     min-height: 30px;
     padding: 0 9px;
     font-size: 0.78rem;
+  }
+}
+
+/* Every other game on a phone held sideways (Almon, 27 Nov 2026): the game
+   started about 250 px down a 310-390 px screen, so a child saw only the top of
+   it. Now the top bar and the title row share one thin row (the phone header
+   above: title, step button, reset icon), the game takes the rest, and
+   game-host.js shrinks the game (CSS zoom) until all of it fits, so nothing
+   needs scrolling. */
+@media (max-height: 520px) and (orientation: landscape) {
+  body.game-deck:not(.game-fullscreen) { min-height: 0; height: 100dvh; overflow: hidden; }
+  body.game-deck:not(.game-fullscreen) .console-chassis--game {
+    max-width: none;
+    min-height: 0;
+    height: 100dvh;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: stretch;
+    padding: 6px 8px 8px;
+    gap: 6px;
+  }
+  body.game-deck:not(.game-fullscreen) .game-console-screen { display: contents; }
+  body.game-deck:not(.game-fullscreen) .console-top {
+    flex: none;
+    flex-wrap: nowrap;
+    height: 46px;
+    padding: 3px 6px;
+    gap: 6px;
+    border-radius: 14px;
+  }
+  body.game-deck:not(.game-fullscreen) .console-top .brand-cluster,
+  body.game-deck:not(.game-fullscreen) .console-top .console-controls { gap: 6px; flex-wrap: nowrap; }
+  body.game-deck:not(.game-fullscreen) .game-deck-kicker { display: none; }
+  body.game-deck:not(.game-fullscreen) .console-top .hw-btn { min-height: 36px; padding: 0 9px; }
+  body.game-deck:not(.game-fullscreen) .console-top .hw-btn--back span,
+  body.game-deck:not(.game-fullscreen) .console-top .sound-toggle span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  body.game-deck:not(.game-fullscreen) .game-deck-bar {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 46px;
+    padding: 3px 8px;
+    border-radius: 14px;
+  }
+  body.game-deck:not(.game-fullscreen) .game-sets-toggle:not([hidden]) { min-height: 36px; }
+  body.game-deck:not(.game-fullscreen) .hw-reset-btn { min-width: 36px; min-height: 36px; }
+  body.game-deck:not(.game-fullscreen) .stage {
+    flex: 1 1 100%;
+    min-height: 0;
+    height: calc(100dvh - 66px);
+    padding: 8px;
+    border-radius: 16px;
+    overflow: auto;
   }
 }
