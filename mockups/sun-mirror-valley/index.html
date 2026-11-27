@@ -27,6 +27,7 @@
     line-height: 1.45;
     overflow-x: hidden;
   }
+  bdi { unicode-bidi: isolate; }
 
   .bar {
     position: sticky; top: 0; z-index: 50;
@@ -139,6 +140,7 @@
   .device-col { display: flex; flex-direction: column; gap: 7px; width: 100%; }
   .device-label {
     display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
     font-size: 12.5px; font-weight: 700; color: var(--gold);
   }
   .device-sub {
@@ -155,51 +157,111 @@
     background: #061823;
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
     user-select: none;
+    direction: ltr; /* Coordinates inside scenes are always LTR world space */
   }
   .scene--laptop { aspect-ratio: 16 / 10; }
-  .scene--phone  { aspect-ratio: 390 / 844; }
+  .scene--phone  {
+    aspect-ratio: 390 / 844;
+    background: linear-gradient(
+      to bottom,
+      #061c28 0%,
+      #0c2f3f 18%,
+      #103b4a 34%,
+      #0a2832 70%,
+      #072029 85%,
+      #04141c 100%
+    );
+  }
 
-  /* World camera inner stage:
-     On laptop (16:10), the 16:9 painting fills the height and width cleanly.
-     On upright phone (390x844), zooming in so the active valley (central hill mirror,
-     riverside crystal, greenhouse cliff, watermill, and helper) fills the tall screen
-     with every target >= 10% inside the visible frame, and camera slides smoothly. */
+  /* Seamless portrait sky & foreground meadow continuation layers (phone upright only):
+     Uses the real painted sky clouds and foreground meadow grass from bg.jpg so the
+     upright 390x844 phone feels like one continuous full-bleed twilight painting with
+     zero empty solid-colour bands, while keeping mirror, crystal, and targets on screen. */
+  .phone-sky-ext,
+  .phone-meadow-ext {
+    display: none;
+    position: absolute;
+    left: 0; right: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .scene--phone .phone-sky-ext {
+    display: block;
+    top: 0;
+    height: 31%;
+    background-image: url('../../assets/worlds/sun-mirror-valley/bg.jpg');
+    background-repeat: no-repeat;
+    background-size: 260% 560%;
+    background-position: 50% 0%;
+    transform: scaleY(-1);
+    filter: brightness(0.94);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.88) 0%, #000 35%, #000 78%, transparent 100%);
+    mask-image: linear-gradient(to top, rgba(0,0,0,0.88) 0%, #000 35%, #000 78%, transparent 100%);
+  }
+  .scene--phone .phone-meadow-ext {
+    display: block;
+    bottom: 0;
+    height: 44%;
+    background-image: url('../../assets/worlds/sun-mirror-valley/bg.jpg');
+    background-repeat: no-repeat;
+    background-size: 165% 400%;
+    background-position: 34% 99%;
+    filter: brightness(0.92);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.82) 18%, #000 34%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.82) 18%, #000 34%, #000 100%);
+  }
+
+  /* World camera inner stage */
   .camera-world {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    z-index: 1;
   }
+
+  /* Upright phone (390x844): proportional 2560x1429 world framed so the mirror, crystal,
+     and targets (greenhouse + watermill) are ALL visible together on screen (>=10% from edges),
+     with a gentle sliding camera shift between start and solved. Top sky and bottom grass
+     feather seamlessly into the real painted twilight sky and foreground grass layers. */
   .scene--phone .camera-world {
-    /* Full-height proportional 16:9 world on upright phone (height: 100%, width: 388.4%,
-       zero squeeze or distortion — exact 1:1 circles for the mirror face and watermill wheel!).
-       Notice `right: auto` overrides RTL defaults so `left` pans across the 16:9 world cleanly:
-       at the start of a round (`left: -136%`), the camera frames the central hill mirror &
-       riverside crystal; on the right-answer moment (`left: -210%`), the camera slides smoothly
-       to show the beam hitting the lit greenhouse and turning watermill wheel! */
-    height: 100%;
-    aspect-ratio: 16 / 9;
-    width: auto;
-    right: auto;
-    left: -268%;
-    top: 0;
+    inset: auto;
+    top: 20.5%;
+    width: 178%;
+    aspect-ratio: 2560 / 1429;
+    height: auto;
+    left: -64%;
     transition: left 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .scene--phone[data-moment="start"] .camera-world {
-    left: -136%;
+    left: -60.5%;
   }
-  .scene--phone[data-cam="left"] .camera-world {
-    left: -136% !important;
+  .scene--phone[data-moment="solved"] .camera-world {
+    left: -65.5%;
   }
-  .scene--phone[data-cam="right"] .camera-world {
-    left: -268% !important;
+  .scene--phone .scene-bg {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 84%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 84%, transparent 100%);
   }
-  .scene--phone .mirror-rig { width: 8.8% !important; }
-  .scene--phone .crystal-rig { width: 4.8% !important; }
+  /* Keep touchable objects large on phone (>=64px on 390px screen) */
+  .scene--phone .mirror-rig { width: 9.4% !important; }
+  .scene--phone .crystal-rig { width: 5.0% !important; }
   .scene--phone .greenhouse-rig { width: 10.6% !important; }
-  .scene--phone .wheel-rig { width: 6.0% !important; }
-  .scene--phone .hiker-rig { width: 6.4% !important; }
-  .scene--phone .flower-rig { width: 7.5% !important; }
+  .scene--phone .wheel-rig { width: 5.8% !important; }
+  .scene--phone .hiker-rig { width: 6.8% !important; }
+
+  /* Phone foreground flowers sit naturally in the extended lower twilight meadow,
+     varied in size (115% vs 85%), horizontally flipped, and tilted in opposite directions */
+  .phone-flowers-layer {
+    display: none;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9;
+  }
+  .scene--phone .phone-flowers-layer { display: block; }
+  .scene--phone .camera-world .flower-rig { display: none; }
 
   .scene-bg {
     position: absolute;
@@ -211,7 +273,7 @@
     pointer-events: none;
   }
 
-  /* Thin top fullscreen bar inside mock scene (matches full-screen game look) */
+  /* Thin top fullscreen bar inside mock scene */
   .hud-bar {
     position: absolute;
     top: 8px; left: 10px; right: 10px;
@@ -219,7 +281,9 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 6px;
     pointer-events: none;
+    direction: rtl;
   }
+  html[dir="ltr"] .hud-bar { direction: ltr; }
   .hud-pill {
     background: rgba(7, 19, 28, 0.78);
     backdrop-filter: blur(8px);
@@ -244,37 +308,25 @@
     box-shadow: 0 0 6px rgba(251, 191, 36, 0.8);
   }
 
-  /* Placed cut-out props with ground contact shadows and zero CSS blur */
-  .prop {
-    position: absolute;
-    transform: translate(-50%, -100%);
-    pointer-events: none;
-    z-index: 5;
-  }
-  .prop--center {
-    transform: translate(-50%, -50%);
-  }
-  .prop img {
-    display: block;
-    width: 100%;
-    height: auto;
-    /* Crisp 2x cut-out, zero blur */
-  }
   .ground-shadow {
     position: absolute;
-    left: 50%; bottom: -7%;
+    left: 50%; bottom: -6%;
     width: 92%; height: 22%;
     transform: translateX(-50%);
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(4, 15, 12, 0.72) 0%, rgba(5, 18, 15, 0.36) 58%, transparent 100%);
+    background: radial-gradient(ellipse at center, rgba(4, 15, 12, 0.72) 0%, rgba(5, 18, 15, 0.34) 56%, transparent 100%);
     z-index: -1;
+    pointer-events: none;
   }
 
-  /* Stone Mirror assembly: stand + rotatable face */
+  /* ==================== STONE MIRROR ASSEMBLY ====================
+     Mirror face swings visibly on its side pivot pins (scaleX + skewY + 3D bronze backing
+     thickness + directional light-to-shadow shading across the glass), and brightens while lit. */
   .mirror-rig {
     position: absolute;
     transform: translate(-50%, -100%);
     z-index: 6;
+    pointer-events: none;
   }
   .mirror-rig .mirror-stand-img {
     display: block;
@@ -283,75 +335,234 @@
   }
   .mirror-rig .mirror-face-wrap {
     position: absolute;
-    left: 50%; top: 47%;
-    width: 68%;
-    transform: translate(-50%, -50%) rotate(var(--mirror-deg, -38deg));
-    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    left: 51.4%;
+    top: 45.5%;
+    width: 65%;
+    transform: translate(-50%, -50%);
   }
-  .mirror-rig .mirror-face-wrap img {
+  .mirror-rig .mirror-disc {
+    position: relative;
+    width: 100%;
+    transform-origin: center center;
+    transform: scaleX(var(--mx-scale, 0.86)) skewY(var(--mx-skew, -10deg)) rotate(var(--mx-rot, 6deg));
+    transition: transform 0.38s cubic-bezier(0.34, 1.4, 0.64, 1), filter 0.3s ease;
+    filter:
+      drop-shadow(var(--edge-x, -4px) 2px 0 rgba(74, 48, 22, 0.96))
+      drop-shadow(0 4px 6px rgba(4, 14, 20, 0.55));
+  }
+  .mirror-rig .mirror-disc img {
     display: block;
     width: 100%;
     height: auto;
-    filter: drop-shadow(0 4px 6px rgba(4, 14, 20, 0.55));
+    /* Slightly brighter glass because the sunbeam is shining onto the mirror */
+    filter: brightness(1.13) contrast(1.04) saturate(1.06);
+  }
+  /* Directional shading & warm specular sheen across the turned mirror disc */
+  .mirror-rig .mirror-disc::after {
+    content: '';
+    position: absolute;
+    inset: 14%;
+    border-radius: 50%;
+    pointer-events: none;
+    background: var(--mirror-sheen, linear-gradient(115deg, rgba(255, 245, 205, 0.38) 0%, rgba(255, 232, 160, 0.14) 45%, rgba(8, 24, 34, 0.28) 100%));
+    mix-blend-mode: screen;
+  }
+  .mirror-rig .mirror-disc::before {
+    content: '';
+    position: absolute;
+    inset: 13%;
+    border-radius: 50%;
+    pointer-events: none;
+    background: var(--mirror-shade, linear-gradient(90deg, rgba(6, 18, 26, 0.34) 0%, rgba(6, 18, 26, 0) 55%));
+    z-index: 2;
   }
 
-  /* Crystal prism on riverside rock pedestal */
+  /* Start vs Solved mirror swing variables */
+  .scene[data-moment="start"] .mirror-rig .mirror-disc {
+    --mx-scale: var(--s-scale, 0.52);
+    --mx-skew: var(--s-skew, 18deg);
+    --mx-rot: var(--s-rot, -14deg);
+    --edge-x: var(--s-edge, 5px);
+    --mirror-shade: var(--s-shade, linear-gradient(270deg, rgba(5, 16, 24, 0.52) 0%, rgba(5, 16, 24, 0.14) 46%, rgba(5, 16, 24, 0) 75%));
+    --mirror-sheen: var(--s-sheen, linear-gradient(95deg, rgba(255, 244, 195, 0.42) 0%, rgba(255, 224, 130, 0.12) 44%, transparent 72%));
+  }
+  .scene[data-moment="solved"] .mirror-rig .mirror-disc {
+    --mx-scale: var(--e-scale, 0.88);
+    --mx-skew: var(--e-skew, -12deg);
+    --mx-rot: var(--e-rot, 8deg);
+    --edge-x: var(--e-edge, -4px);
+    --mirror-shade: var(--e-shade, linear-gradient(90deg, rgba(5, 16, 24, 0.30) 0%, rgba(5, 16, 24, 0) 48%));
+    --mirror-sheen: var(--e-sheen, linear-gradient(125deg, rgba(255, 250, 218, 0.52) 0%, rgba(255, 226, 140, 0.22) 52%, transparent 82%));
+  }
+
+  /* ==================== CRYSTAL PRISM ==================== */
   .crystal-rig {
     position: absolute;
     transform: translate(-50%, -100%);
     z-index: 6;
-    transition: transform 0.3s ease;
+    pointer-events: none;
+  }
+  .crystal-rig .crystal-turn {
+    transform-origin: 50% 82%;
+    transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  .scene[data-moment="start"] .crystal-rig.turns-on-solve .crystal-turn {
+    transform: rotate(-6deg) scaleX(0.88);
+  }
+  .scene[data-moment="solved"] .crystal-rig.turns-on-solve .crystal-turn {
+    transform: rotate(0deg) scaleX(1);
   }
   .crystal-rig img {
     display: block; width: 100%; height: auto;
   }
   .crystal-rig .img-lit { display: none; }
-  .scene[data-moment="solved"] .crystal-rig.lit-on-solve .img-idle { display: none; }
-  .scene[data-moment="solved"] .crystal-rig.lit-on-solve .img-lit {
-    display: block;
-    filter: drop-shadow(0 0 14px rgba(103, 232, 249, 0.65));
+  /* Soft radial ambient glow BEHIND crystal when lit (no hard disc) */
+  .crystal-rig .soft-aura {
+    position: absolute;
+    left: 50%; top: 44%;
+    width: 240%; height: 150%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, rgba(84, 232, 255, 0.34) 0%, rgba(56, 210, 248, 0.12) 45%, rgba(56, 210, 248, 0) 74%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    pointer-events: none;
   }
+  .scene[data-moment="solved"] .crystal-rig.lit-on-solve .img-idle { display: none; }
+  .scene[data-moment="solved"] .crystal-rig.lit-on-solve .img-lit { display: block; }
+  .scene[data-moment="solved"] .crystal-rig.lit-on-solve .soft-aura { opacity: 1; }
+  /* When beam hits crystal in start state (Steps 2 & 3), crystal already glows gently */
+  .scene[data-moment="start"] .crystal-rig.lit-at-start .img-idle { display: none; }
+  .scene[data-moment="start"] .crystal-rig.lit-at-start .img-lit {
+    display: block;
+    filter: brightness(0.92);
+  }
+  .scene[data-moment="start"] .crystal-rig.lit-at-start .soft-aura { opacity: 0.6; }
 
-  /* Greenhouse on upper-right cliff plateau */
+  /* ==================== GREENHOUSE ====================
+     Uses real lit art + soft wide radial light BEHIND the building (zero hard oval sticker). */
   .greenhouse-rig {
     position: absolute;
     transform: translate(-50%, -100%);
     z-index: 4;
+    pointer-events: none;
   }
   .greenhouse-rig img {
     display: block; width: 100%; height: auto;
+    position: relative; z-index: 1;
   }
   .greenhouse-rig .img-lit { display: none; }
-  .scene[data-moment="solved"] .greenhouse-rig.lit-on-solve .img-unlit { display: none; }
-  .scene[data-moment="solved"] .greenhouse-rig.lit-on-solve .img-lit {
-    display: block;
-    filter: drop-shadow(0 0 22px rgba(251, 191, 36, 0.55));
+  .greenhouse-rig .soft-aura {
+    position: absolute;
+    left: 50%; top: 48%;
+    width: 215%; height: 185%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 214, 102, 0.34) 0%,
+      rgba(255, 192, 68, 0.15) 38%,
+      rgba(255, 178, 52, 0.04) 62%,
+      rgba(255, 178, 52, 0) 78%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 0;
+    pointer-events: none;
   }
+  .scene[data-moment="solved"] .greenhouse-rig.lit-on-solve .img-unlit { display: none; }
+  .scene[data-moment="solved"] .greenhouse-rig.lit-on-solve .img-lit { display: block; }
+  .scene[data-moment="solved"] .greenhouse-rig.lit-on-solve .soft-aura { opacity: 1; }
 
-  /* Watermill turning wheel on lower-right watermill cabin */
+  /* ==================== WATERMILL WHEEL ====================
+     Mounted on the right side wall of the mill house right under the waterfall chute,
+     foreshortened in perspective (scaleX + skewY) to match the mill wall angle, with
+     lower paddles submerged in the river splash. Spins smoothly in 3D perspective when lit,
+     with a soft radial aura BEHIND it (never a yellow disc covering the wheel!). */
   .wheel-rig {
     position: absolute;
-    transform: translate(-50%, -50%);
+    /* Perspective foreshortening matches the receding right side wall of the mill cabin */
+    transform: translate(-50%, -50%) scaleX(0.62) skewY(-12deg);
     z-index: 5;
+    pointer-events: none;
   }
-  .wheel-rig img {
+  /* Wall shadow behind the wheel so it anchors physically to the mill side wall */
+  .wheel-rig .wheel-wall-shadow {
+    position: absolute;
+    left: 38%; top: 52%;
+    width: 96%; height: 96%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(4, 14, 18, 0.65) 0%, rgba(4, 14, 18, 0.28) 58%, transparent 82%);
+    z-index: 0;
+  }
+  /* Soft radial light BEHIND the wheel when lit (zero hard edge, wheel stays 100% sharp) */
+  .wheel-rig .wheel-aura {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 220%; height: 180%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      ellipse at center,
+      rgba(103, 232, 249, 0.34) 0%,
+      rgba(103, 232, 249, 0.13) 40%,
+      rgba(103, 232, 249, 0) 74%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 0;
+  }
+  /* Non-rotating mask fades the lower paddles softly into the river splash */
+  .wheel-rig .wheel-water-clip {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 79%, rgba(0, 0, 0, 0.58) 91%, rgba(0, 0, 0, 0.14) 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 79%, rgba(0, 0, 0, 0.58) 91%, rgba(0, 0, 0, 0.14) 100%);
+  }
+  .wheel-rig .wheel-water-clip img {
     display: block; width: 100%; height: auto;
-    filter: brightness(0.92) contrast(1.03) drop-shadow(0 4px 8px rgba(3, 12, 18, 0.6));
+    filter: brightness(0.88) contrast(1.05);
+  }
+  /* Translucent river water foam over the submerged bottom paddles */
+  .wheel-rig .wheel-splash {
+    position: absolute;
+    left: -14%; right: -14%; bottom: -8%;
+    height: 26%;
+    z-index: 2;
+    background: radial-gradient(
+      ellipse at 50% 60%,
+      rgba(155, 224, 236, 0.48) 0%,
+      rgba(74, 166, 188, 0.24) 40%,
+      rgba(20, 74, 92, 0) 68%
+    );
   }
   @keyframes wheelSpin {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
   }
-  .scene[data-moment="solved"] .wheel-rig.spin-on-solve img {
-    animation: wheelSpin 6s linear infinite;
-    filter: brightness(1.06) drop-shadow(0 0 14px rgba(251, 191, 36, 0.48));
+  .scene[data-moment="solved"] .wheel-rig.spin-on-solve .wheel-aura {
+    opacity: 1;
+  }
+  .scene[data-moment="solved"] .wheel-rig.spin-on-solve .wheel-water-clip img {
+    animation: wheelSpin 5.5s linear infinite;
+    filter: brightness(1.08) contrast(1.04) saturate(1.06);
+  }
+  .scene[data-moment="solved"] .wheel-rig.spin-on-solve .wheel-splash {
+    background: radial-gradient(
+      ellipse at 50% 60%,
+      rgba(206, 248, 255, 0.62) 0%,
+      rgba(103, 214, 236, 0.28) 42%,
+      rgba(24, 86, 108, 0) 68%
+    );
   }
 
-  /* Meadow flowers (closed at start -> open when solved) */
+  /* ==================== MEADOW WILDFLOWERS ====================
+     Max 2 clumps per screen, clearly varied size (115% vs 85%), flipped, and tilted oppositely. */
   .flower-rig {
     position: absolute;
     transform: translate(-50%, -100%);
-    z-index: 8;
+    z-index: 9;
+    pointer-events: none;
   }
   .flower-rig img { display: block; width: 100%; height: auto; }
   .flower-rig .img-open { display: none; }
@@ -361,11 +572,12 @@
     filter: drop-shadow(0 0 10px rgba(56, 224, 255, 0.45));
   }
 
-  /* Helper hiker character (waiting/pointing at start -> cheering when solved) */
+  /* ==================== HELPER HIKER CHARACTER ==================== */
   .hiker-rig {
     position: absolute;
     transform: translate(-50%, -100%);
-    z-index: 7;
+    z-index: 9;
+    pointer-events: none;
   }
   .hiker-rig img {
     display: block; width: 100%; height: auto;
@@ -375,25 +587,17 @@
   .scene[data-moment="solved"] .hiker-rig .img-start { display: none; }
   .scene[data-moment="solved"] .hiker-rig .img-cheer { display: block; }
 
-  /* Soft glowing light beam layer (code effect — soft glow, never a hard yellow bar) */
+  /* ==================== LIGHT BEAM LAYER (ABOVE MIRROR, CRYSTAL & TARGETS) ====================
+     z-index: 8 sits strictly ABOVE mirror-rig (6), crystal-rig (6), wheel-rig (5), greenhouse (4),
+     so the sunbeam touches the exact center of the mirror glass with a bright glint (matching cover.jpg). */
   .beam-svg {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    overflow: visible;
     pointer-events: none;
-    z-index: 5;
-  }
-  .beam-group--solved { display: none; }
-  .scene[data-moment="solved"] .beam-group--start { display: none; }
-  .scene[data-moment="solved"] .beam-group--solved { display: inline; }
-
-  /* Mirror angle change between start and solved */
-  .scene[data-moment="start"] .mirror-rig .mirror-face-wrap {
-    transform: translate(-50%, -50%) rotate(var(--deg-start, -42deg));
-  }
-  .scene[data-moment="solved"] .mirror-rig .mirror-face-wrap {
-    transform: translate(-50%, -50%) rotate(var(--deg-solved, -14deg));
+    z-index: 8;
   }
 
   .voice-line {
@@ -441,6 +645,8 @@
   .spec-meta code {
     color: var(--gold);
     font-size: 11.5px;
+    direction: ltr;
+    unicode-bidi: isolate;
   }
 
   .cover-showcase {
@@ -479,8 +685,8 @@
 <header class="bar">
   <div class="bar-brand">
     <span class="pill-kicker" data-he="מסירה 1 — אמנות ומסכים" data-en="Hand-over 1 — Art &amp; Screens">מסירה 1 — אמנות ומסכים</span>
-    <h1 data-he="עמק מראות השמש — רקע נקי (2560px), חיתוכים ב-2×, עטיפה ו-4 שלבים"
-        data-en="Sun-Mirror Valley — Clean 2560 px Background, 2× Cut-outs, Cover &amp; 4 Steps">עמק מראות השמש — רקע נקי (2560px), חיתוכים ב-2×, עטיפה ו-4 שלבים</h1>
+    <h1 data-he="עמק מראות השמש — רקע נקי (<bdi dir='ltr'>2560px</bdi>), חיתוכים ב-<bdi dir='ltr'>2×</bdi>, עטיפה ו-4 שלבים"
+        data-en="Sun-Mirror Valley — Clean 2560 px Background, 2× Cut-outs, Cover &amp; 4 Steps">עמק מראות השמש — רקע נקי (<bdi dir="ltr">2560px</bdi>), חיתוכים ב-<bdi dir="ltr">2×</bdi>, עטיפה ו-4 שלבים</h1>
   </div>
   <div class="bar-actions">
     <button class="lang-btn" id="lang-btn" type="button">English</button>
@@ -490,25 +696,10 @@
 <main class="wrap">
 
   <div class="intro"
-       data-he="<strong>מסירה 1 (לפני כתיבת קוד המשחק):</strong> הרקע (<code>bg.jpg</code>, 2560×1429) נקי ממראה, גביש, גלגל טחנה, דמות וקרניים. כל עצם שהילד נוגע בו או שמתעורר לחיים הוא חיתוך PNG חד ב-2× ללא טשטוש וללא מונחים טכניים. בכל אחד מ-4 השלבים למטה אפשר לעבור בין <strong>תחילת סיבוב</strong> (התשובה לא מוצגת מראש; הקרן פוגעת בסלעים) לבין <strong>רגע התשובה הנכונה</strong> (גלגל הטחנה מסתובב, החממה נדלקת, הפרחים נפתחים והמטייל מריע)."
-       data-en="<strong>Hand-over 1 (before writing game code):</strong> The background (<code>bg.jpg</code>, 2560×1429) has no mirror, crystal, waterwheel, character, or beams painted in. Every playable object and reactive landmark is a sharp 2× PNG cut-out with zero blur and plain child-friendly words. On each of the 4 steps below, toggle between <strong>Start of Round</strong> (no answer shown upfront; beam fades on the rocks) and <strong>Right Answer Moment</strong> (mill wheel turns, greenhouse lights up, flowers open, and the helper cheers).">
-    <strong>מסירה 1 (לפני כתיבת קוד המשחק):</strong> הרקע (<code>bg.jpg</code>, 2560×1429) נקי ממראה, גביש, גלגל טחנה, דמות וקרניים. כל עצם שהילד נוגע בו או שמתעורר לחיים הוא חיתוך PNG חד ב-2× ללא טשטוש וללא מונחים טכניים. בכל אחד מ-4 השלבים למטה אפשר לעבור בין <strong>תחילת סיבוב</strong> (התשובה לא מוצגת מראש; הקרן פוגעת בסלעים) לבין <strong>רגע התשובה הנכונה</strong> (גלגל הטחנה מסתובב, החממה נדלקת, הפרחים נפתחים והמטייל מריע).
+       data-he="<strong>מסירה 1 (לפני כתיבת קוד המשחק):</strong> הרקע (<code dir='ltr'>bg.jpg</code>, <bdi dir='ltr'>2560×1429</bdi>) נקי ממראה, גביש, גלגל טחנה, דמות וקרניים. קרן השמש הזהובה פוגעת בדיוק במרכז זכוכית המראה (מעל המעמד והמסגרת) עם הבזק אור קטן, והמראה מסתובבת באופן ברור על הצירים שלה. כל קרן שיוצאת מהגביש היא תמיד בצבע טורקיז בהיר. בכל שלב אפשר לעבור בין <strong>תחילת סיבוב</strong> (החמצה שדועכת על הסלעים) לבין <strong>תשובה נכונה</strong>."
+       data-en="<strong>Hand-over 1 (before writing game code):</strong> The clean background (<code dir='ltr'>bg.jpg</code>, <bdi dir='ltr'>2560×1429</bdi>) has no mirror, crystal, waterwheel, hiker, or beams painted in. The golden sunbeam meets the exact centre of the mirror glass above the stand with a bright glint, and the mirror visibly swings on its side pins. Every ray leaving the crystal is always cyan. Toggle each step between <strong>Start of Round</strong> (a miss fading on the rocks) and <strong>Right Answer</strong>.">
+    <strong>מסירה 1 (לפני כתיבת קוד המשחק):</strong> הרקע (<code dir="ltr">bg.jpg</code>, <bdi dir="ltr">2560×1429</bdi>) נקי ממראה, גביש, גלגל טחנה, דמות וקרניים. קרן השמש הזהובה פוגעת בדיוק במרכז זכוכית המראה (מעל המעמד והמסגרת) עם הבזק אור קטן, והמראה מסתובבת באופן ברור על הצירים שלה. כל קרן שיוצאת מהגביש היא תמיד בצבע טורקיז בהיר. בכל שלב אפשר לעבור בין <strong>תחילת סיבוב</strong> (החמצה שדועכת על הסלעים) לבין <strong>תשובה נכונה</strong>.
   </div>
-
-  <!-- Shared SVG filters for soft glowing light beams (never a hard yellow bar) -->
-  <svg width="0" height="0" style="position:absolute">
-    <defs>
-      <filter id="beam-glow" x="-40%" y="-40%" width="180%" height="180%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="1.4" result="b1"/>
-        <feGaussianBlur in="SourceGraphic" stdDeviation="3.2" result="b2"/>
-        <feMerge>
-          <feMergeNode in="b2"/>
-          <feMergeNode in="b1"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-    </defs>
-  </svg>
 
   <!-- ==================== STEP 1: מראה / Mirror ==================== -->
   <section class="card" id="step-1">
@@ -527,59 +718,53 @@
       <!-- Laptop -->
       <div class="device-col device-col--laptop">
         <div class="device-label">
-          <span data-he="לפטופ (1280×800) — מסך מלא" data-en="Laptop (1280×800) — Full screen">לפטופ (1280×800) — מסך מלא</span>
-          <span class="device-sub" data-he="לחיצה/סיבוב של פני המראה אל החממה" data-en="Turn the mirror face toward the greenhouse">לחיצה/סיבוב של פני המראה אל החממה</span>
+          <span data-he="לפטופ (<bdi dir='ltr'>1280×800</bdi>) — מסך מלא" data-en="Laptop (1280×800) — Full screen">לפטופ (<bdi dir="ltr">1280×800</bdi>) — מסך מלא</span>
+          <span class="device-sub" data-he="המראה מסתובבת על הצירים אל החממה" data-en="Mirror swings on its pins toward the greenhouse">המראה מסתובבת על הצירים אל החממה</span>
         </div>
-        <div class="scene scene--laptop" data-moment="solved">
+        <div class="scene scene--laptop" data-step="1" data-moment="solved">
           <div class="camera-world">
             <img class="scene-bg" src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="">
             <!-- Greenhouse on upper-right cliff -->
-            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.8%; width:10.6%;">
+            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.6%; width:10.6%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
               <img class="img-unlit" src="../../assets/worlds/sun-mirror-valley/greenhouse-unlit.png" alt="">
               <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/greenhouse-lit.png" alt="">
             </div>
-            <!-- Watermill wheel -->
-            <div class="wheel-rig" style="left:83.0%; top:68.6%; width:6.0%;">
-              <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+            <!-- Watermill wheel mounted in perspective on the mill side wall by the waterfall chute -->
+            <div class="wheel-rig" style="left:81.9%; top:69.6%; width:5.8%;">
+              <span class="wheel-wall-shadow"></span>
+              <span class="wheel-aura"></span>
+              <div class="wheel-water-clip">
+                <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+              </div>
+              <span class="wheel-splash"></span>
             </div>
-            <!-- Stone Mirror on central hill -->
-            <div class="mirror-rig" style="left:43.8%; top:66.8%; width:7.8%; --deg-start:-44deg; --deg-solved:-14deg;">
+            <!-- Stone Mirror on central hill: swings visibly on its side pins between start & solved -->
+            <div class="mirror-rig" style="left:43.8%; top:66.6%; width:8.0%; --s-scale:0.50; --s-skew:19deg; --s-rot:-14deg; --s-edge:5px; --e-scale:0.88; --e-skew:-13deg; --e-rot:9deg; --e-edge:-4px;">
               <span class="ground-shadow"></span>
               <img class="mirror-stand-img" src="../../assets/worlds/sun-mirror-valley/mirror-stand.png" alt="">
               <div class="mirror-face-wrap">
-                <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                <div class="mirror-disc">
+                  <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                </div>
               </div>
             </div>
-            <!-- Soft glowing sunbeam -->
-            <svg class="beam-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <!-- Start of round: beam bounces off misaligned mirror and fades harmlessly on the rocks -->
-              <g class="beam-group--start" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 33.5,73.5" fill="none" stroke="rgba(255,190,65,0.42)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 33.5,73.5" fill="none" stroke="rgba(255,248,200,0.85)" stroke-width="0.65" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="33.5" cy="73.5" r="2.2" fill="rgba(255,210,95,0.45)"/>
-              </g>
-              <!-- Solved: beam bounces smoothly off the mirror right into the lit greenhouse -->
-              <g class="beam-group--solved" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 83.6,36.2" fill="none" stroke="rgba(255,185,55,0.48)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 83.6,36.2" fill="none" stroke="rgba(255,250,210,0.94)" stroke-width="0.78" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="43.8" cy="59.2" r="2.4" fill="rgba(255,240,150,0.75)"/>
-                <circle cx="83.6" cy="36.2" r="4.8" fill="rgba(255,215,90,0.38)"/>
-              </g>
-            </svg>
-            <!-- Hiker character -->
+            <!-- Light beam SVG rendered ABOVE mirror, crystal, wheel and greenhouse -->
+            <svg class="beam-svg" aria-hidden="true"></svg>
+            <!-- Helper hiker -->
             <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.0%;">
               <span class="ground-shadow"></span>
               <img class="img-start" src="../../assets/worlds/sun-mirror-valley/hiker-pointing.png" alt="">
               <img class="img-cheer" src="../../assets/worlds/sun-mirror-valley/hiker-cheering.png" alt="">
             </div>
-            <!-- Meadow wildflowers (max 2 copies, varied size & flip) -->
-            <div class="flower-rig" style="left:23%; top:91%; width:7.5%;">
+            <!-- Meadow wildflowers: max 2 copies, clearly varied size (115% vs 85%), flipped & tilted -->
+            <div class="flower-rig" style="left:21.5%; top:93.0%; width:8.2%; transform:translate(-50%,-100%) rotate(-7deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
             </div>
-            <div class="flower-rig" style="left:41%; top:93.5%; width:6.4%; transform:translate(-50%,-100%) scaleX(-1) rotate(5deg);">
+            <div class="flower-rig" style="left:47.5%; top:91.0%; width:5.8%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
@@ -595,45 +780,51 @@
       <!-- Phone upright -->
       <div class="device-col device-col--phone">
         <div class="device-label">
-          <span data-he="טלפון לאורך (390×844)" data-en="Phone upright (390×844)">טלפון לאורך (390×844)</span>
+          <span data-he="טלפון לאורך (<bdi dir='ltr'>390×844</bdi>)" data-en="Phone upright (390×844)">טלפון לאורך (<bdi dir="ltr">390×844</bdi>)</span>
           <span class="device-sub" data-he="מראה + חממה יחד במסך" data-en="Mirror + greenhouse on screen">מראה + חממה יחד במסך</span>
         </div>
-        <div class="scene scene--phone" data-moment="solved">
+        <div class="scene scene--phone" data-step="1" data-moment="solved">
+          <div class="phone-sky-ext"></div>
+          <div class="phone-meadow-ext"></div>
           <div class="camera-world">
             <img class="scene-bg" src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="">
-            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.8%; width:10.6%;">
+            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.6%; width:10.6%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
               <img class="img-unlit" src="../../assets/worlds/sun-mirror-valley/greenhouse-unlit.png" alt="">
               <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/greenhouse-lit.png" alt="">
             </div>
-            <div class="wheel-rig" style="left:83.0%; top:68.6%; width:6.0%;">
-              <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+            <div class="wheel-rig" style="left:81.9%; top:69.6%; width:5.8%;">
+              <span class="wheel-wall-shadow"></span>
+              <span class="wheel-aura"></span>
+              <div class="wheel-water-clip">
+                <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+              </div>
+              <span class="wheel-splash"></span>
             </div>
-            <div class="mirror-rig" style="left:49.5%; top:65.5%; width:8.8%; --deg-start:-44deg; --deg-solved:-14deg;">
+            <div class="mirror-rig" style="left:44.2%; top:66.4%; width:9.4%; --s-scale:0.50; --s-skew:19deg; --s-rot:-14deg; --s-edge:5px; --e-scale:0.88; --e-skew:-13deg; --e-rot:9deg; --e-edge:-4px;">
               <span class="ground-shadow"></span>
               <img class="mirror-stand-img" src="../../assets/worlds/sun-mirror-valley/mirror-stand.png" alt="">
               <div class="mirror-face-wrap">
-                <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                <div class="mirror-disc">
+                  <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                </div>
               </div>
             </div>
-            <svg class="beam-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <g class="beam-group--start" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 49.5,58.2 41.5,73.5" fill="none" stroke="rgba(255,190,65,0.42)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 49.5,58.2 41.5,73.5" fill="none" stroke="rgba(255,248,200,0.85)" stroke-width="0.65" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <g class="beam-group--solved" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 49.5,58.2 83.6,36.2" fill="none" stroke="rgba(255,185,55,0.48)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 49.5,58.2 83.6,36.2" fill="none" stroke="rgba(255,250,210,0.94)" stroke-width="0.78" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="49.5" cy="58.2" r="2.4" fill="rgba(255,240,150,0.75)"/>
-                <circle cx="83.6" cy="36.2" r="4.8" fill="rgba(255,215,90,0.38)"/>
-              </g>
-            </svg>
-            <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.6%;">
+            <svg class="beam-svg" aria-hidden="true"></svg>
+            <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.8%;">
               <span class="ground-shadow"></span>
               <img class="img-start" src="../../assets/worlds/sun-mirror-valley/hiker-pointing.png" alt="">
               <img class="img-cheer" src="../../assets/worlds/sun-mirror-valley/hiker-cheering.png" alt="">
             </div>
-            <div class="flower-rig" style="left:45%; top:92%; width:7.2%;">
+          </div>
+          <div class="phone-flowers-layer">
+            <div class="flower-rig" style="left:26%; top:88%; width:24%; transform:translate(-50%,-100%) rotate(-7deg);">
+              <span class="ground-shadow"></span>
+              <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
+              <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
+            </div>
+            <div class="flower-rig" style="left:75%; top:84%; width:17%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
@@ -671,59 +862,55 @@
       <!-- Laptop -->
       <div class="device-col device-col--laptop">
         <div class="device-label">
-          <span data-he="לפטופ (1280×800) — הקרן עוברת דרך הגביש אל טחנת המים" data-en="Laptop (1280×800) — Beam passes through the crystal to the watermill">לפטופ (1280×800) — הקרן עוברת דרך הגביש אל טחנת המים</span>
-          <span class="device-sub" data-he="גלגל הטחנה מסתובב כשהאור מגיע" data-en="Mill wheel turns when light arrives">גלגל הטחנה מסתובב כשהאור מגיע</span>
+          <span data-he="לפטופ (<bdi dir='ltr'>1280×800</bdi>) — הקרן עוברת דרך הגביש אל טחנת המים" data-en="Laptop (1280×800) — Beam passes through the crystal to the watermill">לפטופ (<bdi dir="ltr">1280×800</bdi>) — הקרן עוברת דרך הגביש אל טחנת המים</span>
+          <span class="device-sub" data-he="גלגל הטחנה נשאר חד ומסתובב כשהאור מגיע" data-en="Mill wheel stays crisp and spins when lit">גלגל הטחנה נשאר חד ומסתובב כשהאור מגיע</span>
         </div>
-        <div class="scene scene--laptop" data-moment="solved">
+        <div class="scene scene--laptop" data-step="2" data-moment="solved">
           <div class="camera-world">
             <img class="scene-bg" src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="">
-            <div class="greenhouse-rig" style="left:83.8%; top:44.8%; width:10.6%;">
+            <div class="greenhouse-rig" style="left:83.8%; top:44.6%; width:10.6%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
               <img class="img-unlit" src="../../assets/worlds/sun-mirror-valley/greenhouse-unlit.png" alt="">
               <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/greenhouse-lit.png" alt="">
             </div>
-            <div class="wheel-rig spin-on-solve" style="left:83.0%; top:68.6%; width:6.0%;">
-              <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+            <div class="wheel-rig spin-on-solve" style="left:81.9%; top:69.6%; width:5.8%;">
+              <span class="wheel-wall-shadow"></span>
+              <span class="wheel-aura"></span>
+              <div class="wheel-water-clip">
+                <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+              </div>
+              <span class="wheel-splash"></span>
             </div>
-            <div class="mirror-rig" style="left:43.8%; top:66.8%; width:7.8%; --deg-start:-6deg; --deg-solved:-6deg;">
+            <div class="mirror-rig" style="left:43.8%; top:66.6%; width:8.0%; --s-scale:0.86; --s-skew:-6deg; --s-rot:4deg; --s-edge:-4px; --e-scale:0.86; --e-skew:-6deg; --e-rot:4deg; --e-edge:-4px;">
               <span class="ground-shadow"></span>
               <img class="mirror-stand-img" src="../../assets/worlds/sun-mirror-valley/mirror-stand.png" alt="">
               <div class="mirror-face-wrap">
-                <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                <div class="mirror-disc">
+                  <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                </div>
               </div>
             </div>
-            <div class="crystal-rig lit-on-solve" style="left:57.6%; top:58.4%; width:4.2%;">
+            <div class="crystal-rig lit-on-solve lit-at-start turns-on-solve" style="left:57.6%; top:58.4%; width:4.2%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
-              <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
-              <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              <div class="crystal-turn">
+                <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
+                <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              </div>
             </div>
-            <svg class="beam-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <!-- Start: mirror aims into crystal, but crystal aims into the rocks -->
-              <g class="beam-group--start" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5 68.0,55.5" fill="none" stroke="rgba(255,190,65,0.42)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5 68.0,55.5" fill="none" stroke="rgba(255,248,200,0.85)" stroke-width="0.65" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <!-- Solved: crystal sends glowing beam right into the watermill wheel -->
-              <g class="beam-group--solved" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,185,55,0.48)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,250,210,0.94)" stroke-width="0.78" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(103,232,249,0.48)" stroke-width="2.6" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(224,252,255,0.95)" stroke-width="0.78" stroke-linecap="round"/>
-                <circle cx="57.6" cy="50.5" r="2.6" fill="rgba(103,232,249,0.75)"/>
-                <circle cx="83.0" cy="68.6" r="4.2" fill="rgba(255,215,90,0.42)"/>
-              </g>
-            </svg>
+            <svg class="beam-svg" aria-hidden="true"></svg>
             <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.0%;">
               <span class="ground-shadow"></span>
               <img class="img-start" src="../../assets/worlds/sun-mirror-valley/hiker-waiting.png" alt="">
               <img class="img-cheer" src="../../assets/worlds/sun-mirror-valley/hiker-cheering.png" alt="">
             </div>
-            <div class="flower-rig" style="left:23%; top:91%; width:7.5%;">
+            <div class="flower-rig" style="left:21.5%; top:93.0%; width:8.2%; transform:translate(-50%,-100%) rotate(-7deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
             </div>
-            <div class="flower-rig" style="left:41%; top:93.5%; width:6.4%; transform:translate(-50%,-100%) scaleX(-1) rotate(5deg);">
+            <div class="flower-rig" style="left:47.5%; top:91.0%; width:5.8%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
@@ -739,52 +926,59 @@
       <!-- Phone upright -->
       <div class="device-col device-col--phone">
         <div class="device-label">
-          <span data-he="טלפון לאורך (390×844)" data-en="Phone upright (390×844)">טלפון לאורך (390×844)</span>
-          <span class="device-sub" data-he="מראה, גביש וטחנה במסך" data-en="Mirror, crystal &amp; mill on screen">מראה, גביש וטחנה במסך</span>
+          <span data-he="טלפון לאורך (<bdi dir='ltr'>390×844</bdi>)" data-en="Phone upright (390×844)">טלפון לאורך (<bdi dir="ltr">390×844</bdi>)</span>
+          <span class="device-sub" data-he="מראה, גביש וטחנה יחד" data-en="Mirror, crystal &amp; mill together">מראה, גביש וטחנה יחד</span>
         </div>
-        <div class="scene scene--phone" data-moment="solved">
+        <div class="scene scene--phone" data-step="2" data-moment="solved">
+          <div class="phone-sky-ext"></div>
+          <div class="phone-meadow-ext"></div>
           <div class="camera-world">
             <img class="scene-bg" src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="">
-            <div class="greenhouse-rig" style="left:83.8%; top:44.8%; width:10.6%;">
+            <div class="greenhouse-rig" style="left:83.8%; top:44.6%; width:10.6%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
               <img class="img-unlit" src="../../assets/worlds/sun-mirror-valley/greenhouse-unlit.png" alt="">
               <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/greenhouse-lit.png" alt="">
             </div>
-            <div class="wheel-rig spin-on-solve" style="left:83.0%; top:68.6%; width:6.2%;">
-              <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+            <div class="wheel-rig spin-on-solve" style="left:81.9%; top:69.6%; width:5.8%;">
+              <span class="wheel-wall-shadow"></span>
+              <span class="wheel-aura"></span>
+              <div class="wheel-water-clip">
+                <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+              </div>
+              <span class="wheel-splash"></span>
             </div>
-            <div class="mirror-rig" style="left:43.8%; top:66.8%; width:8.6%; --deg-start:-6deg; --deg-solved:-6deg;">
+            <div class="mirror-rig" style="left:44.2%; top:66.4%; width:9.4%; --s-scale:0.86; --s-skew:-6deg; --s-rot:4deg; --s-edge:-4px; --e-scale:0.86; --e-skew:-6deg; --e-rot:4deg; --e-edge:-4px;">
               <span class="ground-shadow"></span>
               <img class="mirror-stand-img" src="../../assets/worlds/sun-mirror-valley/mirror-stand.png" alt="">
               <div class="mirror-face-wrap">
-                <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                <div class="mirror-disc">
+                  <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                </div>
               </div>
             </div>
-            <div class="crystal-rig lit-on-solve" style="left:57.6%; top:58.4%; width:4.6%;">
+            <div class="crystal-rig lit-on-solve lit-at-start turns-on-solve" style="left:57.6%; top:58.4%; width:5.0%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
-              <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
-              <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              <div class="crystal-turn">
+                <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
+                <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              </div>
             </div>
-            <svg class="beam-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <g class="beam-group--start" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5 68.0,55.5" fill="none" stroke="rgba(255,190,65,0.42)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5 68.0,55.5" fill="none" stroke="rgba(255,248,200,0.85)" stroke-width="0.65" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <g class="beam-group--solved" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,185,55,0.48)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,250,210,0.94)" stroke-width="0.78" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(103,232,249,0.48)" stroke-width="2.6" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(224,252,255,0.95)" stroke-width="0.78" stroke-linecap="round"/>
-                <circle cx="57.6" cy="50.5" r="2.6" fill="rgba(103,232,249,0.75)"/>
-                <circle cx="83.0" cy="68.6" r="4.2" fill="rgba(255,215,90,0.42)"/>
-              </g>
-            </svg>
-            <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.6%;">
+            <svg class="beam-svg" aria-hidden="true"></svg>
+            <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.8%;">
               <span class="ground-shadow"></span>
               <img class="img-start" src="../../assets/worlds/sun-mirror-valley/hiker-waiting.png" alt="">
               <img class="img-cheer" src="../../assets/worlds/sun-mirror-valley/hiker-cheering.png" alt="">
             </div>
-            <div class="flower-rig" style="left:45%; top:92%; width:7.2%;">
+          </div>
+          <div class="phone-flowers-layer">
+            <div class="flower-rig" style="left:26%; top:88%; width:24%; transform:translate(-50%,-100%) rotate(-7deg);">
+              <span class="ground-shadow"></span>
+              <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
+              <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
+            </div>
+            <div class="flower-rig" style="left:75%; top:84%; width:17%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
@@ -810,7 +1004,7 @@
     <div class="card-head">
       <div class="card-head-titles">
         <h2 data-he="שלב 3 — שני יעדים (Two Places)" data-en="Step 3 — Two Places (שני יעדים)">שלב 3 — שני יעדים (Two Places)</h2>
-        <span class="badge" data-he="רעיון אחד: פיצול האור בגביש כדי להאיר יחד את החממה ואת טחנת המים" data-en="One idea: split the beam in the crystal so both the mill and greenhouse light up">רעיון אחד: פיצול האור בגביש כדי להאיר יחד את החממה ואת טחנת המים</span>
+        <span class="badge" data-he="רעיון אחד: פיצול האור בגביש לשני היעדים יחד (תמיד בצבע טורקיז)" data-en="One idea: split the beam in the crystal to both targets (always cyan)">רעיון אחד: פיצול האור בגביש לשני היעדים יחד (תמיד בצבע טורקיז)</span>
       </div>
       <div class="moment-switch" data-target="step-3">
         <button type="button" class="moment-btn" data-set-moment="start" data-he="תחילת סיבוב" data-en="Start of round">תחילת סיבוב</button>
@@ -822,62 +1016,55 @@
       <!-- Laptop -->
       <div class="device-col device-col--laptop">
         <div class="device-label">
-          <span data-he="לפטופ (1280×800) — הגביש מפצל את הקרן לשני המקומות יחד" data-en="Laptop (1280×800) — Crystal splits the beam to both places together">לפטופ (1280×800) — הגביש מפצל את הקרן לשני המקומות יחד</span>
-          <span class="device-sub" data-he="בלי מספרים או יחסים על המסך — רק אור בהיר" data-en="No numbers or ratios on screen — just bright light">בלי מספרים או יחסים על המסך — רק אור בהיר</span>
+          <span data-he="לפטופ (<bdi dir='ltr'>1280×800</bdi>) — הגביש מפצל את הקרן לשני המקומות יחד" data-en="Laptop (1280×800) — Crystal splits the beam to both places together">לפטופ (<bdi dir="ltr">1280×800</bdi>) — הגביש מפצל את הקרן לשני המקומות יחד</span>
+          <span class="device-sub" data-he="שתי הזרועות מהגביש בטורקיז אחיד" data-en="Both crystal branches share one cyan colour">שתי הזרועות מהגביש בטורקיז אחיד</span>
         </div>
-        <div class="scene scene--laptop" data-moment="solved">
+        <div class="scene scene--laptop" data-step="3" data-moment="solved">
           <div class="camera-world">
             <img class="scene-bg" src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="">
-            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.8%; width:10.6%;">
+            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.6%; width:10.6%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
               <img class="img-unlit" src="../../assets/worlds/sun-mirror-valley/greenhouse-unlit.png" alt="">
               <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/greenhouse-lit.png" alt="">
             </div>
-            <div class="wheel-rig spin-on-solve" style="left:83.0%; top:68.6%; width:6.0%;">
-              <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+            <div class="wheel-rig spin-on-solve" style="left:81.9%; top:69.6%; width:5.8%;">
+              <span class="wheel-wall-shadow"></span>
+              <span class="wheel-aura"></span>
+              <div class="wheel-water-clip">
+                <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+              </div>
+              <span class="wheel-splash"></span>
             </div>
-            <div class="mirror-rig" style="left:43.8%; top:66.8%; width:7.8%; --deg-start:-6deg; --deg-solved:-6deg;">
+            <div class="mirror-rig" style="left:43.8%; top:66.6%; width:8.0%; --s-scale:0.86; --s-skew:-6deg; --s-rot:4deg; --s-edge:-4px; --e-scale:0.86; --e-skew:-6deg; --e-rot:4deg; --e-edge:-4px;">
               <span class="ground-shadow"></span>
               <img class="mirror-stand-img" src="../../assets/worlds/sun-mirror-valley/mirror-stand.png" alt="">
               <div class="mirror-face-wrap">
-                <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                <div class="mirror-disc">
+                  <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                </div>
               </div>
             </div>
-            <div class="crystal-rig lit-on-solve" style="left:57.6%; top:58.4%; width:4.2%;">
+            <div class="crystal-rig lit-on-solve lit-at-start turns-on-solve" style="left:57.6%; top:58.4%; width:4.2%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
-              <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
-              <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              <div class="crystal-turn">
+                <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
+                <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              </div>
             </div>
-            <svg class="beam-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <g class="beam-group--start" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5 51.0,32.0" fill="none" stroke="rgba(255,190,65,0.42)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5 51.0,32.0" fill="none" stroke="rgba(255,248,200,0.85)" stroke-width="0.65" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <g class="beam-group--solved" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,185,55,0.48)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,250,210,0.94)" stroke-width="0.78" stroke-linecap="round" stroke-linejoin="round"/>
-                <!-- Upper split ray to greenhouse -->
-                <line x1="57.6" y1="50.5" x2="83.6" y2="36.2" stroke="rgba(103,232,249,0.48)" stroke-width="2.4" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.6" y2="36.2" stroke="rgba(224,252,255,0.94)" stroke-width="0.74" stroke-linecap="round"/>
-                <!-- Lower split ray to watermill -->
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(255,195,70,0.48)" stroke-width="2.4" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(255,250,215,0.94)" stroke-width="0.74" stroke-linecap="round"/>
-                <circle cx="57.6" cy="50.5" r="2.8" fill="rgba(103,232,249,0.8)"/>
-                <circle cx="83.6" cy="36.2" r="4.5" fill="rgba(255,215,90,0.38)"/>
-                <circle cx="83.0" cy="68.6" r="4.2" fill="rgba(255,215,90,0.42)"/>
-              </g>
-            </svg>
+            <svg class="beam-svg" aria-hidden="true"></svg>
             <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.0%;">
               <span class="ground-shadow"></span>
               <img class="img-start" src="../../assets/worlds/sun-mirror-valley/hiker-pointing.png" alt="">
               <img class="img-cheer" src="../../assets/worlds/sun-mirror-valley/hiker-cheering.png" alt="">
             </div>
-            <div class="flower-rig" style="left:23%; top:91%; width:7.5%;">
+            <div class="flower-rig" style="left:21.5%; top:93.0%; width:8.2%; transform:translate(-50%,-100%) rotate(-7deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
             </div>
-            <div class="flower-rig" style="left:41%; top:93.5%; width:6.4%; transform:translate(-50%,-100%) scaleX(-1) rotate(5deg);">
+            <div class="flower-rig" style="left:47.5%; top:91.0%; width:5.8%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
@@ -893,55 +1080,59 @@
       <!-- Phone upright -->
       <div class="device-col device-col--phone">
         <div class="device-label">
-          <span data-he="טלפון לאורך (390×844)" data-en="Phone upright (390×844)">טלפון לאורך (390×844)</span>
-          <span class="device-sub" data-he="שני היעדים נדלקים יחד" data-en="Both targets light up">שני היעדים נדלקים יחד</span>
+          <span data-he="טלפון לאורך (<bdi dir='ltr'>390×844</bdi>)" data-en="Phone upright (390×844)">טלפון לאורך (<bdi dir="ltr">390×844</bdi>)</span>
+          <span class="device-sub" data-he="מראה, גביש ושני היעדים במסך" data-en="Mirror, crystal &amp; both targets on screen">מראה, גביש ושני היעדים במסך</span>
         </div>
-        <div class="scene scene--phone" data-moment="solved">
+        <div class="scene scene--phone" data-step="3" data-moment="solved">
+          <div class="phone-sky-ext"></div>
+          <div class="phone-meadow-ext"></div>
           <div class="camera-world">
             <img class="scene-bg" src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="">
-            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.8%; width:10.6%;">
+            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.6%; width:10.6%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
               <img class="img-unlit" src="../../assets/worlds/sun-mirror-valley/greenhouse-unlit.png" alt="">
               <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/greenhouse-lit.png" alt="">
             </div>
-            <div class="wheel-rig spin-on-solve" style="left:83.0%; top:68.6%; width:6.2%;">
-              <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+            <div class="wheel-rig spin-on-solve" style="left:81.9%; top:69.6%; width:5.8%;">
+              <span class="wheel-wall-shadow"></span>
+              <span class="wheel-aura"></span>
+              <div class="wheel-water-clip">
+                <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+              </div>
+              <span class="wheel-splash"></span>
             </div>
-            <div class="mirror-rig" style="left:43.8%; top:66.8%; width:8.6%; --deg-start:-6deg; --deg-solved:-6deg;">
+            <div class="mirror-rig" style="left:44.2%; top:66.4%; width:9.4%; --s-scale:0.86; --s-skew:-6deg; --s-rot:4deg; --s-edge:-4px; --e-scale:0.86; --e-skew:-6deg; --e-rot:4deg; --e-edge:-4px;">
               <span class="ground-shadow"></span>
               <img class="mirror-stand-img" src="../../assets/worlds/sun-mirror-valley/mirror-stand.png" alt="">
               <div class="mirror-face-wrap">
-                <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                <div class="mirror-disc">
+                  <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                </div>
               </div>
             </div>
-            <div class="crystal-rig lit-on-solve" style="left:57.6%; top:58.4%; width:4.6%;">
+            <div class="crystal-rig lit-on-solve lit-at-start turns-on-solve" style="left:57.6%; top:58.4%; width:5.0%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
-              <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
-              <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              <div class="crystal-turn">
+                <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
+                <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              </div>
             </div>
-            <svg class="beam-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <g class="beam-group--start" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5 51.0,32.0" fill="none" stroke="rgba(255,190,65,0.42)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5 51.0,32.0" fill="none" stroke="rgba(255,248,200,0.85)" stroke-width="0.65" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <g class="beam-group--solved" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,185,55,0.48)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,250,210,0.94)" stroke-width="0.78" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="57.6" y1="50.5" x2="83.6" y2="36.2" stroke="rgba(103,232,249,0.48)" stroke-width="2.4" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.6" y2="36.2" stroke="rgba(224,252,255,0.94)" stroke-width="0.74" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(255,195,70,0.48)" stroke-width="2.4" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(255,250,215,0.94)" stroke-width="0.74" stroke-linecap="round"/>
-                <circle cx="57.6" cy="50.5" r="2.8" fill="rgba(103,232,249,0.8)"/>
-                <circle cx="83.6" cy="36.2" r="4.5" fill="rgba(255,215,90,0.38)"/>
-                <circle cx="83.0" cy="68.6" r="4.2" fill="rgba(255,215,90,0.42)"/>
-              </g>
-            </svg>
-            <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.6%;">
+            <svg class="beam-svg" aria-hidden="true"></svg>
+            <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.8%;">
               <span class="ground-shadow"></span>
               <img class="img-start" src="../../assets/worlds/sun-mirror-valley/hiker-pointing.png" alt="">
               <img class="img-cheer" src="../../assets/worlds/sun-mirror-valley/hiker-cheering.png" alt="">
             </div>
-            <div class="flower-rig" style="left:45%; top:92%; width:7.2%;">
+          </div>
+          <div class="phone-flowers-layer">
+            <div class="flower-rig" style="left:26%; top:88%; width:24%; transform:translate(-50%,-100%) rotate(-7deg);">
+              <span class="ground-shadow"></span>
+              <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
+              <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
+            </div>
+            <div class="flower-rig" style="left:75%; top:84%; width:17%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
@@ -979,60 +1170,55 @@
       <!-- Laptop -->
       <div class="device-col device-col--laptop">
         <div class="device-label">
-          <span data-he="לפטופ (1280×800) — כיוון המראה והגביש יחד" data-en="Laptop (1280×800) — Aiming both mirror and crystal">לפטופ (1280×800) — כיוון המראה והגביש יחד</span>
-          <span class="device-sub" data-he="בתחילת הסיבוב גם המראה וגם הגביש בזווית אקראית" data-en="Both mirror and crystal start at random angles">בתחילת הסיבוב גם המראה וגם הגביש בזווית אקראית</span>
+          <span data-he="לפטופ (<bdi dir='ltr'>1280×800</bdi>) — כיוון המראה והגביש יחד" data-en="Laptop (1280×800) — Aiming both mirror and crystal">לפטופ (<bdi dir="ltr">1280×800</bdi>) — כיוון המראה והגביש יחד</span>
+          <span class="device-sub" data-he="בתחילת הסיבוב הקרן פוגעת בזכוכית ומוחזרת אל הסלעים" data-en="At start the beam hits the glass and bounces off onto the rocks">בתחילת הסיבוב הקרן פוגעת בזכוכית ומוחזרת אל הסלעים</span>
         </div>
-        <div class="scene scene--laptop" data-moment="solved">
+        <div class="scene scene--laptop" data-step="4" data-moment="solved">
           <div class="camera-world">
             <img class="scene-bg" src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="">
-            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.8%; width:10.6%;">
+            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.6%; width:10.6%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
               <img class="img-unlit" src="../../assets/worlds/sun-mirror-valley/greenhouse-unlit.png" alt="">
               <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/greenhouse-lit.png" alt="">
             </div>
-            <div class="wheel-rig spin-on-solve" style="left:83.0%; top:68.6%; width:6.0%;">
-              <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+            <div class="wheel-rig spin-on-solve" style="left:81.9%; top:69.6%; width:5.8%;">
+              <span class="wheel-wall-shadow"></span>
+              <span class="wheel-aura"></span>
+              <div class="wheel-water-clip">
+                <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+              </div>
+              <span class="wheel-splash"></span>
             </div>
-            <div class="mirror-rig" style="left:43.8%; top:66.8%; width:7.8%; --deg-start:38deg; --deg-solved:-6deg;">
+            <div class="mirror-rig" style="left:43.8%; top:66.6%; width:8.0%; --s-scale:0.48; --s-skew:21deg; --s-rot:-18deg; --s-edge:6px; --e-scale:0.86; --e-skew:-6deg; --e-rot:4deg; --e-edge:-4px;">
               <span class="ground-shadow"></span>
               <img class="mirror-stand-img" src="../../assets/worlds/sun-mirror-valley/mirror-stand.png" alt="">
               <div class="mirror-face-wrap">
-                <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                <div class="mirror-disc">
+                  <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                </div>
               </div>
             </div>
-            <div class="crystal-rig lit-on-solve" style="left:57.6%; top:58.4%; width:4.2%;">
+            <div class="crystal-rig lit-on-solve turns-on-solve" style="left:57.6%; top:58.4%; width:4.2%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
-              <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
-              <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              <div class="crystal-turn">
+                <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
+                <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              </div>
             </div>
-            <svg class="beam-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <g class="beam-group--start" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 51.5,74.5" fill="none" stroke="rgba(255,190,65,0.42)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 51.5,74.5" fill="none" stroke="rgba(255,248,200,0.85)" stroke-width="0.65" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <g class="beam-group--solved" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,185,55,0.48)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,250,210,0.94)" stroke-width="0.78" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="57.6" y1="50.5" x2="83.6" y2="36.2" stroke="rgba(103,232,249,0.48)" stroke-width="2.4" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.6" y2="36.2" stroke="rgba(224,252,255,0.94)" stroke-width="0.74" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(255,195,70,0.48)" stroke-width="2.4" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(255,250,215,0.94)" stroke-width="0.74" stroke-linecap="round"/>
-                <circle cx="57.6" cy="50.5" r="2.8" fill="rgba(103,232,249,0.8)"/>
-                <circle cx="83.6" cy="36.2" r="4.5" fill="rgba(255,215,90,0.38)"/>
-                <circle cx="83.0" cy="68.6" r="4.2" fill="rgba(255,215,90,0.42)"/>
-              </g>
-            </svg>
+            <svg class="beam-svg" aria-hidden="true"></svg>
             <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.0%;">
               <span class="ground-shadow"></span>
               <img class="img-start" src="../../assets/worlds/sun-mirror-valley/hiker-waiting.png" alt="">
               <img class="img-cheer" src="../../assets/worlds/sun-mirror-valley/hiker-cheering.png" alt="">
             </div>
-            <div class="flower-rig" style="left:23%; top:91%; width:7.5%;">
+            <div class="flower-rig" style="left:21.5%; top:93.0%; width:8.2%; transform:translate(-50%,-100%) rotate(-7deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
             </div>
-            <div class="flower-rig" style="left:41%; top:93.5%; width:6.4%; transform:translate(-50%,-100%) scaleX(-1) rotate(5deg);">
+            <div class="flower-rig" style="left:47.5%; top:91.0%; width:5.8%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
@@ -1048,55 +1234,59 @@
       <!-- Phone upright -->
       <div class="device-col device-col--phone">
         <div class="device-label">
-          <span data-he="טלפון לאורך (390×844)" data-en="Phone upright (390×844)">טלפון לאורך (390×844)</span>
-          <span class="device-sub" data-he="כל העמק מתעורר לחיים" data-en="The whole valley wakes up">כל העמק מתעורר לחיים</span>
+          <span data-he="טלפון לאורך (<bdi dir='ltr'>390×844</bdi>)" data-en="Phone upright (390×844)">טלפון לאורך (<bdi dir="ltr">390×844</bdi>)</span>
+          <span class="device-sub" data-he="מראה, גביש וכל היעדים במסך" data-en="Mirror, crystal &amp; targets on screen">מראה, גביש וכל היעדים במסך</span>
         </div>
-        <div class="scene scene--phone" data-moment="solved">
+        <div class="scene scene--phone" data-step="4" data-moment="solved">
+          <div class="phone-sky-ext"></div>
+          <div class="phone-meadow-ext"></div>
           <div class="camera-world">
             <img class="scene-bg" src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="">
-            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.8%; width:10.6%;">
+            <div class="greenhouse-rig lit-on-solve" style="left:83.8%; top:44.6%; width:10.6%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
               <img class="img-unlit" src="../../assets/worlds/sun-mirror-valley/greenhouse-unlit.png" alt="">
               <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/greenhouse-lit.png" alt="">
             </div>
-            <div class="wheel-rig spin-on-solve" style="left:83.0%; top:68.6%; width:6.2%;">
-              <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+            <div class="wheel-rig spin-on-solve" style="left:81.9%; top:69.6%; width:5.8%;">
+              <span class="wheel-wall-shadow"></span>
+              <span class="wheel-aura"></span>
+              <div class="wheel-water-clip">
+                <img src="../../assets/worlds/sun-mirror-valley/watermill-wheel.png" alt="">
+              </div>
+              <span class="wheel-splash"></span>
             </div>
-            <div class="mirror-rig" style="left:43.8%; top:66.8%; width:8.6%; --deg-start:38deg; --deg-solved:-6deg;">
+            <div class="mirror-rig" style="left:44.2%; top:66.4%; width:9.4%; --s-scale:0.48; --s-skew:21deg; --s-rot:-18deg; --s-edge:6px; --e-scale:0.86; --e-skew:-6deg; --e-rot:4deg; --e-edge:-4px;">
               <span class="ground-shadow"></span>
               <img class="mirror-stand-img" src="../../assets/worlds/sun-mirror-valley/mirror-stand.png" alt="">
               <div class="mirror-face-wrap">
-                <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                <div class="mirror-disc">
+                  <img src="../../assets/worlds/sun-mirror-valley/mirror-face.png" alt="">
+                </div>
               </div>
             </div>
-            <div class="crystal-rig lit-on-solve" style="left:57.6%; top:58.4%; width:4.6%;">
+            <div class="crystal-rig lit-on-solve turns-on-solve" style="left:57.6%; top:58.4%; width:5.0%;">
+              <span class="soft-aura"></span>
               <span class="ground-shadow"></span>
-              <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
-              <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              <div class="crystal-turn">
+                <img class="img-idle" src="../../assets/worlds/sun-mirror-valley/crystal-idle.png" alt="">
+                <img class="img-lit" src="../../assets/worlds/sun-mirror-valley/crystal-lit.png" alt="">
+              </div>
             </div>
-            <svg class="beam-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <g class="beam-group--start" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 51.5,74.5" fill="none" stroke="rgba(255,190,65,0.42)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 51.5,74.5" fill="none" stroke="rgba(255,248,200,0.85)" stroke-width="0.65" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <g class="beam-group--solved" filter="url(#beam-glow)">
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,185,55,0.48)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <polyline points="20.2,12.2 43.8,59.2 57.6,50.5" fill="none" stroke="rgba(255,250,210,0.94)" stroke-width="0.78" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="57.6" y1="50.5" x2="83.6" y2="36.2" stroke="rgba(103,232,249,0.48)" stroke-width="2.4" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.6" y2="36.2" stroke="rgba(224,252,255,0.94)" stroke-width="0.74" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(255,195,70,0.48)" stroke-width="2.4" stroke-linecap="round"/>
-                <line x1="57.6" y1="50.5" x2="83.0" y2="68.6" stroke="rgba(255,250,215,0.94)" stroke-width="0.74" stroke-linecap="round"/>
-                <circle cx="57.6" cy="50.5" r="2.8" fill="rgba(103,232,249,0.8)"/>
-                <circle cx="83.6" cy="36.2" r="4.5" fill="rgba(255,215,90,0.38)"/>
-                <circle cx="83.0" cy="68.6" r="4.2" fill="rgba(255,215,90,0.42)"/>
-              </g>
-            </svg>
-            <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.6%;">
+            <svg class="beam-svg" aria-hidden="true"></svg>
+            <div class="hiker-rig" style="left:65.4%; top:79.8%; width:6.8%;">
               <span class="ground-shadow"></span>
               <img class="img-start" src="../../assets/worlds/sun-mirror-valley/hiker-waiting.png" alt="">
               <img class="img-cheer" src="../../assets/worlds/sun-mirror-valley/hiker-cheering.png" alt="">
             </div>
-            <div class="flower-rig" style="left:45%; top:92%; width:7.2%;">
+          </div>
+          <div class="phone-flowers-layer">
+            <div class="flower-rig" style="left:26%; top:88%; width:24%; transform:translate(-50%,-100%) rotate(-7deg);">
+              <span class="ground-shadow"></span>
+              <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
+              <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
+            </div>
+            <div class="flower-rig" style="left:75%; top:84%; width:17%; transform:translate(-50%,-100%) scaleX(-1) rotate(11deg);">
               <span class="ground-shadow"></span>
               <img class="img-closed" src="../../assets/worlds/sun-mirror-valley/flowers-closed.png" alt="">
               <img class="img-open" src="../../assets/worlds/sun-mirror-valley/flowers-open.png" alt="">
@@ -1121,8 +1311,8 @@
   <section class="card" id="cover-and-bg">
     <div class="card-head">
       <div class="card-head-titles">
-        <h2 data-he="עטיפת המשחק (cover.jpg · 800×800) והרקע הנקי (bg.jpg · 2560×1429)"
-            data-en="Game Cover (cover.jpg · 800×800) &amp; Clean Background (bg.jpg · 2560×1429)">עטיפת המשחק (cover.jpg · 800×800) והרקע הנקי (bg.jpg · 2560×1429)</h2>
+        <h2 data-he="עטיפת המשחק (<bdi dir='ltr'>cover.jpg · 800×800</bdi>) והרקע הנקי (<bdi dir='ltr'>bg.jpg · 2560×1429</bdi>)"
+            data-en="Game Cover (cover.jpg · 800×800) &amp; Clean Background (bg.jpg · 2560×1429)">עטיפת המשחק (<bdi dir="ltr">cover.jpg · 800×800</bdi>) והרקע הנקי (<bdi dir="ltr">bg.jpg · 2560×1429</bdi>)</h2>
         <span class="badge" data-he="ללא טקסט · מורכב מאמנות המשחק עצמו" data-en="No text · composed from the game's own art">ללא טקסט · מורכב מאמנות המשחק עצמו</span>
       </div>
     </div>
@@ -1132,13 +1322,13 @@
         <div class="cover-card-preview">
           <img src="../../assets/worlds/sun-mirror-valley/cover.jpg" alt="Sun-Mirror Valley Cover">
         </div>
-        <span class="device-sub" data-he="cover.jpg בגודל כרטיס (800×800 · 101 KB)" data-en="cover.jpg at card size (800×800 · 101 KB)">cover.jpg בגודל כרטיס (800×800 · 101 KB)</span>
+        <span class="device-sub" data-he="<bdi dir='ltr'>cover.jpg</bdi> בגודל כרטיס (<bdi dir='ltr'>800×800 · 101 KB</bdi>)" data-en="cover.jpg at card size (800×800 · 101 KB)"><bdi dir="ltr">cover.jpg</bdi> בגודל כרטיס (<bdi dir="ltr">800×800 · 101 KB</bdi>)</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;">
         <div class="bg-full-preview">
           <img src="../../assets/worlds/sun-mirror-valley/bg.jpg" alt="Sun-Mirror Valley Clean Background">
         </div>
-        <span class="device-sub" data-he="bg.jpg (2560×1429 · 374 KB) — ללא מראה, ללא גביש, ללא גלגל טחנה, ללא דמות וללא קרניים מצוירות" data-en="bg.jpg (2560×1429 · 374 KB) — no mirror, crystal, waterwheel, hiker, or beams painted in">bg.jpg (2560×1429 · 374 KB) — ללא מראה, ללא גביש, ללא גלגל טחנה, ללא דמות וללא קרניים מצוירות</span>
+        <span class="device-sub" data-he="<bdi dir='ltr'>bg.jpg (2560×1429 · 374 KB)</bdi> — ללא מראה, ללא גביש, ללא גלגל טחנה, ללא דמות וללא קרניים מצוירות" data-en="bg.jpg (2560×1429 · 374 KB) — no mirror, crystal, waterwheel, hiker, or beams painted in"><bdi dir="ltr">bg.jpg (2560×1429 · 374 KB)</bdi> — ללא מראה, ללא גביש, ללא גלגל טחנה, ללא דמות וללא קרניים מצוירות</span>
       </div>
     </div>
   </section>
@@ -1147,9 +1337,9 @@
   <section class="card" id="all-cutouts">
     <div class="card-head">
       <div class="card-head-titles">
-        <h2 data-he="כל חיתוכי ה-PNG השקופים (בדיקת שוליים על רקע כהה ובהיר)"
-            data-en="All Transparent PNG Cut-outs (Edge check on dark &amp; light backgrounds)">כל חיתוכי ה-PNG השקופים (בדיקת שוליים על רקע כהה ובהיר)</h2>
-        <span class="badge" data-he="12 קובצי PNG · כולם מתחת ל-150 KB · גודל 2×" data-en="12 PNG files · all under 150 KB · 2× display size">12 קובצי PNG · כולם מתחת ל-150 KB · גודל 2×</span>
+        <h2 data-he="כל חיתוכי ה-<bdi dir='ltr'>PNG</bdi> השקופים (בדיקת שוליים על רקע כהה ובהיר)"
+            data-en="All Transparent PNG Cut-outs (Edge check on dark &amp; light backgrounds)">כל חיתוכי ה-<bdi dir="ltr">PNG</bdi> השקופים (בדיקת שוליים על רקע כהה ובהיר)</h2>
+        <span class="badge" data-he="12 קובצי PNG · כולם מתחת ל-<bdi dir='ltr'>150 KB</bdi> · גודל <bdi dir='ltr'>2×</bdi>" data-en="12 PNG files · all under 150 KB · 2× display size">12 קובצי PNG · כולם מתחת ל-<bdi dir="ltr">150 KB</bdi> · גודל <bdi dir="ltr">2×</bdi></span>
       </div>
     </div>
 
@@ -1208,6 +1398,207 @@
 </main>
 
 <script>
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  let uidCounter = 0;
+
+  /* Render crisp, pixel-accurate glowing light beams in true 1:1 coordinate space
+     (zero oval stretching!) directly ABOVE the mirror face, crystal, and targets.
+     Colour rule (consistent everywhere):
+       - Sunbeam (tower -> mirror, mirror -> greenhouse / crystal / rocks): warm GOLD
+       - Any ray leaving the crystal (single or split branches, start or solved): CYAN */
+  function renderSceneBeams(scene) {
+    const world = scene.querySelector('.camera-world');
+    const svg = scene.querySelector('.beam-svg');
+    if (!world || !svg) return;
+
+    const wRect = world.getBoundingClientRect();
+    const W = wRect.width;
+    const H = wRect.height;
+    if (W < 20 || H < 20) return;
+
+    const step = Number(scene.getAttribute('data-step'));
+    const moment = scene.getAttribute('data-moment') || 'solved';
+
+    /* Helper: get exact pixel center of an element relative to camera-world */
+    function centerOf(sel, ox = 0.5, oy = 0.5) {
+      const el = world.querySelector(sel);
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return {
+        x: (r.left - wRect.left) + r.width * ox,
+        y: (r.top - wRect.top) + r.height * oy,
+      };
+    }
+
+    const pt = (ux, uy) => ({ x: ux * W, y: uy * H });
+    const tower = pt(0.202, 0.122);
+    const mirror = centerOf('.mirror-face-wrap', 0.5, 0.5) || pt(0.440, 0.576);
+    const crystal = centerOf('.crystal-rig', 0.5, 0.43) || pt(0.576, 0.505);
+    const greenhouse = centerOf('.greenhouse-rig', 0.5, 0.54) || pt(0.838, 0.365);
+    const wheel = centerOf('.wheel-rig', 0.5, 0.50) || pt(0.819, 0.696);
+
+    const uid = `smv${++uidCounter}`;
+    const scale = W / 1000;
+    const outerW = Math.max(7, 13.5 * scale);
+    const midW = Math.max(3.5, 6.2 * scale);
+    const coreW = Math.max(1.8, 3.0 * scale);
+
+    svg.setAttribute('viewBox', `0 0 ${W.toFixed(1)} ${H.toFixed(1)}`);
+
+    const defs = [];
+    const body = [];
+
+    /* Radial glint gradients (soft feather all the way to 0 opacity — zero hard discs!) */
+    defs.push(`
+      <filter id="${uid}-blur" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="${(3.6 * scale).toFixed(2)}"/>
+      </filter>
+      <radialGradient id="${uid}-gold-glint">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+        <stop offset="28%" stop-color="#fffbe0" stop-opacity="0.96"/>
+        <stop offset="52%" stop-color="#ffd56b" stop-opacity="0.52"/>
+        <stop offset="76%" stop-color="#ffae2b" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="#ffaa22" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="${uid}-cyan-glint">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.96"/>
+        <stop offset="26%" stop-color="#c8fbff" stop-opacity="0.82"/>
+        <stop offset="58%" stop-color="#38d9f5" stop-opacity="0.32"/>
+        <stop offset="100%" stop-color="#38d9f5" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="${uid}-target-gold">
+        <stop offset="0%" stop-color="#fff8d6" stop-opacity="0.72"/>
+        <stop offset="35%" stop-color="#ffc248" stop-opacity="0.28"/>
+        <stop offset="100%" stop-color="#ffaa22" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="${uid}-target-cyan">
+        <stop offset="0%" stop-color="#e8fdff" stop-opacity="0.70"/>
+        <stop offset="38%" stop-color="#4ce0f8" stop-opacity="0.24"/>
+        <stop offset="100%" stop-color="#38d9f5" stop-opacity="0"/>
+      </radialGradient>
+    `);
+
+    let gradIdx = 0;
+    function addBeam(p1, p2, colour, fadeEnd) {
+      const isCyan = colour === 'cyan';
+      const cOuter = isCyan ? '#38d9f5' : '#ffae2b';
+      const cMid   = isCyan ? '#99f3ff' : '#ffe184';
+      const cCore  = isCyan ? '#f0feff' : '#fffdf0';
+
+      if (!fadeEnd) {
+        body.push(`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="${cOuter}" stroke-opacity="0.46" stroke-width="${outerW.toFixed(2)}" stroke-linecap="round" filter="url(#${uid}-blur)"/>`);
+        body.push(`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="${cMid}" stroke-opacity="0.62" stroke-width="${midW.toFixed(2)}" stroke-linecap="round"/>`);
+        body.push(`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="${cCore}" stroke-opacity="0.96" stroke-width="${coreW.toFixed(2)}" stroke-linecap="round"/>`);
+      } else {
+        const gOuter = `${uid}-fo-${++gradIdx}`;
+        const gCore  = `${uid}-fc-${gradIdx}`;
+        defs.push(`
+          <linearGradient id="${gOuter}" gradientUnits="userSpaceOnUse" x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}">
+            <stop offset="0%" stop-color="${cOuter}" stop-opacity="0.48"/>
+            <stop offset="58%" stop-color="${cOuter}" stop-opacity="0.24"/>
+            <stop offset="100%" stop-color="${cOuter}" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="${gCore}" gradientUnits="userSpaceOnUse" x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}">
+            <stop offset="0%" stop-color="${cCore}" stop-opacity="0.95"/>
+            <stop offset="52%" stop-color="${cMid}" stop-opacity="0.52"/>
+            <stop offset="100%" stop-color="${cCore}" stop-opacity="0"/>
+          </linearGradient>
+        `);
+        body.push(`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="url(#${gOuter})" stroke-width="${(outerW * 0.92).toFixed(2)}" stroke-linecap="round" filter="url(#${uid}-blur)"/>`);
+        body.push(`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="url(#${gCore})" stroke-width="${(coreW * 1.15).toFixed(2)}" stroke-linecap="round"/>`);
+      }
+    }
+
+    /* Small bright organic radial flash/glint right on the mirror glass (matching cover.jpg) */
+    function addMirrorGlint(p) {
+      const rHalo = Math.max(15, 25 * scale);
+      body.push(`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${rHalo.toFixed(1)}" fill="url(#${uid}-gold-glint)"/>`);
+    }
+
+    function addCrystalGlint(p, bright) {
+      const r = Math.max(12, (bright ? 22 : 16) * scale);
+      body.push(`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r.toFixed(1)}" fill="url(#${uid}-cyan-glint)"/>`);
+      body.push(`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(r * 0.25).toFixed(1)}" fill="#ffffff" fill-opacity="0.92"/>`);
+    }
+
+    /* Subtle feathered impact sparkle at target (never covers the wheel or greenhouse) */
+    function addImpactSpark(p, colour) {
+      const r = Math.max(9, 15 * scale);
+      const id = colour === 'cyan' ? `${uid}-target-cyan` : `${uid}-target-gold`;
+      body.push(`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r.toFixed(1)}" fill="url(#${id})"/>`);
+    }
+
+    /* Every step starts with the golden sunbeam hitting the exact center of the mirror glass */
+    addBeam(tower, mirror, 'gold', false);
+
+    if (step === 1) {
+      if (moment === 'start') {
+        /* Misaligned mirror bounces beam down-left onto the rocks and fades harmlessly */
+        const missRock = pt(0.328, 0.728);
+        addBeam(mirror, missRock, 'gold', true);
+      } else {
+        /* Solved: mirror bounces golden beam right into the lit greenhouse window */
+        addBeam(mirror, greenhouse, 'gold', false);
+        addImpactSpark(greenhouse, 'gold');
+      }
+      addMirrorGlint(mirror);
+    } else if (step === 2) {
+      /* Mirror aims golden beam into crystal */
+      addBeam(mirror, crystal, 'gold', false);
+      if (moment === 'start') {
+        /* Misaligned crystal sends CYAN ray off-target into empty valley slope & fades */
+        const missValley = pt(0.705, 0.435);
+        addBeam(crystal, missValley, 'cyan', true);
+        addCrystalGlint(crystal, false);
+      } else {
+        /* Solved: crystal sends CYAN ray right onto the spinning watermill wheel */
+        addBeam(crystal, wheel, 'cyan', false);
+        addImpactSpark(wheel, 'cyan');
+        addCrystalGlint(crystal, true);
+      }
+      addMirrorGlint(mirror);
+    } else if (step === 3) {
+      addBeam(mirror, crystal, 'gold', false);
+      if (moment === 'start') {
+        /* Misaligned crystal sends CYAN ray off-target into the misty mountain gap & fades */
+        const missHigh = pt(0.675, 0.295);
+        addBeam(crystal, missHigh, 'cyan', true);
+        addCrystalGlint(crystal, false);
+      } else {
+        /* Solved: BOTH split branches leaving the crystal are CYAN */
+        addBeam(crystal, greenhouse, 'cyan', false);
+        addBeam(crystal, wheel, 'cyan', false);
+        addImpactSpark(greenhouse, 'cyan');
+        addImpactSpark(wheel, 'cyan');
+        addCrystalGlint(crystal, true);
+      }
+      addMirrorGlint(mirror);
+    } else if (step === 4) {
+      if (moment === 'start') {
+        /* Step 4 miss: incoming beam hits the mirror glass and clearly bounces OFF
+           at a sharp wrong angle down-left onto the foreground rocks, fading away
+           (never passing straight through the mirror!) */
+        const missRock = pt(0.305, 0.705);
+        addBeam(mirror, missRock, 'gold', true);
+      } else {
+        /* Solved: golden beam hits mirror -> crystal, then splits into TWO CYAN branches */
+        addBeam(mirror, crystal, 'gold', false);
+        addBeam(crystal, greenhouse, 'cyan', false);
+        addBeam(crystal, wheel, 'cyan', false);
+        addImpactSpark(greenhouse, 'cyan');
+        addImpactSpark(wheel, 'cyan');
+        addCrystalGlint(crystal, true);
+      }
+      addMirrorGlint(mirror);
+    }
+
+    svg.innerHTML = `<defs>${defs.join('')}</defs>${body.join('')}`;
+  }
+
+  function renderAllBeams() {
+    document.querySelectorAll('.scene').forEach(renderSceneBeams);
+  }
+
   let lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'he';
   const langBtn = document.getElementById('lang-btn');
 
@@ -1233,12 +1624,23 @@
       btn.addEventListener('click', () => {
         const m = btn.getAttribute('data-set-moment');
         sw.querySelectorAll('.moment-btn').forEach((b) => b.classList.toggle('active', b === btn));
-        sec.querySelectorAll('.scene').forEach((sc) => sc.setAttribute('data-moment', m));
+        sec.querySelectorAll('.scene').forEach((sc) => {
+          sc.setAttribute('data-moment', m);
+          renderSceneBeams(sc);
+        });
       });
     });
   });
 
   applyLang();
+
+  /* Re-sync pixel-exact beam endpoints on load, resize, and after art images finish loading */
+  window.addEventListener('load', renderAllBeams);
+  window.addEventListener('resize', renderAllBeams);
+  document.querySelectorAll('.scene img').forEach((img) => {
+    if (!img.complete) img.addEventListener('load', renderAllBeams, { once: true });
+  });
+  requestAnimationFrame(renderAllBeams);
 </script>
 </body>
 </html>
