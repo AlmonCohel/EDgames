@@ -291,10 +291,13 @@
     'sc-shape-star': 'מִצְאוּ אֶת הַכּוֹכָב!',
     'sc-oops': 'כִּמְעַט! נְנַסֶּה אֶבֶן אַחֶרֶת',
     'sc-yay': 'כָּל הַכָּבוֹד! הַדֻּבּוֹן הִגִּיעַ הַבַּיְתָה!',
-    'smv-aim': 'סוֹבְבוּ אֶת מַרְאוֹת הָאֶבֶן הָעַתִּיקוֹת כְּדֵי לְכַוֵּן אֶת קֶרֶן הַשֶּׁמֶשׁ בְּרַחֲבֵי הָעֵמֶק',
-    'smv-split': 'פַּצְּלוּ אֶת קֶרֶן הַשֶּׁמֶשׁ בְּגָבִישׁ הַטּוּרְקִיז לִשְׁתֵּי אֲלֻמּוֹת שָׁווֹת כְּדֵי לְהַפְעִיל אֶת הַחֲמָמָה וְאֶת טַחֲנַת הַמַּיִם',
-    'smv-ratio': 'כַּוְּנוּ אֶת הַמַּרְאָה וְאֶת גָּבִישׁ הַפִּצּוּל כְּדֵי שֶׁכָּל מִבְנֶה בָּעֵמֶק יְקַבֵּל בְּדִיּוּק אֶת עָצְמַת הָאוֹר שֶׁהוּא צָרִיךְ',
-    'smv-master': 'מַאסְטֶר הָאוֹר: חַבְּרוּ אֶת כָּל הַמַּרְאוֹת, הָעֲדָשׁוֹת וְהַגְּבִישִׁים כְּדֵי לְהָאִיר אֶת הָעֵמֶק כֻּלּוֹ!',
+    'smv-mirror-greenhouse': 'כַּוְּנוּ אֶת הַמַּרְאָה כְּדֵי לְהָאִיר אֶת הַחֲמָמָה!',
+    'smv-mirror-mill': 'כַּוְּנוּ אֶת הַמַּרְאָה אֶל טַחֲנַת הַמַּיִם!',
+    'smv-crystal-greenhouse': 'סוֹבְבוּ אֶת הַגָּבִישׁ כְּדֵי לִשְׁלֹחַ אֶת הָאוֹר אֶל הַחֲמָמָה!',
+    'smv-crystal-mill': 'סוֹבְבוּ אֶת הַגָּבִישׁ כְּדֵי לִשְׁלֹחַ אֶת הָאוֹר אֶל טַחֲנַת הַמַּיִם!',
+    'smv-split-both': 'פַּצְּלוּ אֶת הָאוֹר בַּגָּבִישׁ כְּדֵי לְהָאִיר גַּם אֶת הַחֲמָמָה וְגַם אֶת טַחֲנַת הַמַּיִם!',
+    'smv-whole-valley': 'כַּוְּנוּ אֶת הַמַּרְאָה וְאֶת הַגָּבִישׁ כְּדֵי לְהָאִיר אֶת כָּל הָעֵמֶק!',
+    'smv-yay': 'כָּל הַכָּבוֹד! הָעֵמֶק כֻּלּוֹ מֵאִיר!',
   });
   Object.assign(en, {
     'spell-ask': 'Listen to the word and spell it',
@@ -364,10 +367,13 @@
     'sc-shape-star': 'Find the star!',
     'sc-oops': 'Almost! Let us try another stone',
     'sc-yay': 'Yay! Little Bear made it home!',
-    'smv-aim': 'Rotate the ancient stone mirrors to steer the golden sunbeam across the valley',
-    'smv-split': 'Split the sunbeam through the turquoise crystal prism into two equal beams to power the greenhouse and the watermill',
-    'smv-ratio': 'Tune the stone mirror and the crystal prism so each landmark receives its exact light power',
-    'smv-master': 'Master of the Valley: align all mirrors, lenses, and crystal prisms to awaken the entire valley!',
+    'smv-mirror-greenhouse': 'Turn the mirror to shine light on the greenhouse!',
+    'smv-mirror-mill': 'Turn the mirror toward the watermill!',
+    'smv-crystal-greenhouse': 'Turn the crystal to send the light to the greenhouse!',
+    'smv-crystal-mill': 'Turn the crystal to send the light to the watermill!',
+    'smv-split-both': 'Split the light in the crystal so both the greenhouse and the watermill light up!',
+    'smv-whole-valley': 'Turn the mirror and the crystal to light up the whole valley!',
+    'smv-yay': 'Well done! The whole valley is glowing!',
   });
   he['num-30'] = 'שְׁלוֹשִׁים'; he['num-40'] = 'אַרְבָּעִים';
   [[2, 3, 4, 5], [3, 3, 4, 5], [4, 3, 4, 5], [5, 3, 4], [10, 3, 4]].forEach(([sz, ...ks]) => ks.forEach((k) => {

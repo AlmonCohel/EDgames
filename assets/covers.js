@@ -877,23 +877,9 @@ const EDCovers = (() => {
     'stream-crossing': () => `
       <image href="assets/worlds/stream-crossing/cover.webp" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
 
-    /* The Sun-Mirror Valley: cliffside sun tower beaming golden light into a turquoise crystal prism splitting into two beams. */
+    /* The Sun-Mirror Valley: cover composed from the game's sculpted valley art. */
     'sun-mirror-valley': () => `
-      <rect width="200" height="200" fill="#0b1d2e"/>
-      <path d="M0 132 L48 82 L94 128 L148 76 L200 124 V200 H0 Z" fill="#132f42"/>
-      <path d="M0 156 Q100 138 200 162 V200 H0 Z" fill="#0f382a"/>
-      <!-- Sun Tower on Left -->
-      <rect x="20" y="42" width="28" height="72" rx="4" fill="#64748b" stroke="#cbd5e1" stroke-width="2"/>
-      <circle cx="34" cy="48" r="12" fill="url(#cv-sun)"/>
-      <!-- Golden Sunbeams Splitting at Crystal Prism -->
-      <line x1="34" y1="48" x2="104" y2="108" stroke="#ffd23f" stroke-width="6" stroke-linecap="round"/>
-      <line x1="104" y1="108" x2="174" y2="62" stroke="#ffd23f" stroke-width="5" stroke-linecap="round"/>
-      <line x1="104" y1="108" x2="174" y2="144" stroke="#ffd23f" stroke-width="5" stroke-linecap="round"/>
-      <!-- Turquoise Crystal Prism -->
-      <polygon points="104,78 122,108 104,138 86,108" fill="#22d3ee" stroke="#cffafe" stroke-width="2.5"/>
-      <!-- Glowing Cyan Wildflowers -->
-      <circle cx="38" cy="176" r="4" fill="#22d3ee"/><circle cx="72" cy="182" r="4.5" fill="#22d3ee"/><circle cx="144" cy="178" r="4" fill="#22d3ee"/>
-      ${sparkle(104, 66, 8, '#67e8f9')}${sparkle(174, 62, 7, '#ffd23f')}`,
+      <image href="assets/worlds/sun-mirror-valley/cover.jpg" width="200" height="200" preserveAspectRatio="xMidYMid slice"/>`,
   };
 
   const has = (id) => Boolean(ART[id]);

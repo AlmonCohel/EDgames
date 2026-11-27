@@ -77,10 +77,11 @@ const GAMES = [
     subject: 'logic',
     ageMin: 6, ageMax: 8,
     blurb: {
-      he: 'מסובבים מראות אבן עתיקות ומפצלים את קרן השמש דרך גבישי קריסטל זוהרים כדי להפעיל את טחנת המים, החממה ופרחי העמק!',
-      en: 'Rotate ancient stone mirrors and split the golden sunbeam through glowing crystal prisms to power the watermill, botanical greenhouse, and valley meadow!',
+      he: 'מכוונים מראת אבן ומפצלים את קרן השמש דרך גביש זוהר כדי להאיר את החממה, לסובב את טחנת המים ולפתוח את הפרחים בעמק.',
+      en: 'Turn a stone mirror and split the sunbeam through a glowing crystal to light up the greenhouse, spin the watermill, and open the valley flowers.',
     },
     sound: true,
+    fullscreen: true,
     status: 'ready',
   },
   {
