@@ -1907,12 +1907,8 @@
       if (solved) return;
 
       if (!wasMoved) {
-        /* Tap turns a reliable 8 degrees (toward the tap when off-pivot, clockwise on-pivot)
-           and snaps onto the target when landing within about one step of it. */
-        /* Always the same direction: turning "toward the tap" made repeated taps on
-           one spot rock back and forth forever, because the angle that lights the
-           target is not the angle that faces the tap. One direction + snap means
-           steady tapping always reaches the target (Claude, 2026-11-27). */
+        /* Step clockwise regardless of where the player taps so repeated taps
+           sweep through the target angle and snap into alignment. */
         applyTapStep(piece, 1);
       }
 

@@ -7,6 +7,7 @@ import { chromium } from 'playwright';
 import { checkCircuitLab } from './check-circuit-lab.mjs';
 import { checkPotionLab } from './check-potion-lab.mjs';
 import { checkStarFactory } from './check-star-factory.mjs';
+import { checkSunMirrorValley } from './check-sun-mirror-valley.mjs';
 import { checkStreamCrossing, checkWhisperingWoods } from './check-woodland-games.mjs';
 import { checkSentenceTrain } from './check-word-games.mjs';
 
@@ -15,6 +16,7 @@ const checks = {
   'circuit-lab': checkCircuitLab, 'potion-lab': checkPotionLab, 'star-factory': checkStarFactory,
   'stream-crossing': checkStreamCrossing, 'whispering-woods': checkWhisperingWoods,
   'sentence-train': checkSentenceTrain,
+  'sun-mirror-valley': checkSunMirrorValley,
 };
 const gameCheck = Object.keys(checks).find((id) => process.argv.includes(`--${id}`));
 // 844x390 = a phone held sideways (added 27 Nov 2026): the game is shrunk to
